@@ -1,0 +1,69 @@
+{
+    "stats": {
+        "registration": {
+            "school": {
+                "University of Illinois Urbana-Champaign": 500,
+                "University of Michigan": 340,
+                "Purdue": 230
+            },
+            "gender": {
+                "MALE": 500,
+                "FEMALE": 500,
+                "NONBINARY": 100
+            },
+            "graduation year": {
+                "2019": 500,
+                "2020": 300,
+                "2021": 200,
+                "2022": 50
+            }
+        },
+        "rsvp": {
+            "school": {
+                "University of Illinois Urbana-Champaign": 500,
+                "University of Michigan": 340,
+                "Purdue": 230
+            },
+            "gender": {
+                "MALE": 500,
+                "FEMALE": 500,
+                "NONBINARY": 100
+            },
+            "graduation year": {
+                "2019": 500,
+                "2020": 300,
+                "2021": 200,
+                "2022": 50
+            }
+        },
+        "checkin": {
+            "school": {
+                "University of Illinois Urbana-Champaign": 500,
+                "University of Michigan": 340,
+                "Purdue": 230
+            },
+            "gender": {
+                "MALE": 500,
+                "FEMALE": 500,
+                "NONBINARY": 100
+            },
+            "graduation year": {
+                "2019": 500,
+                "2020": 300,
+                "2021": 200,
+                "2022": 50
+            }
+        },
+        "events": {
+            "breakfast": {
+                "attendees": 1500
+            },
+            "lunch": {
+                "attendees": 1500
+            },
+            "opening ceremony": {
+                "attendees": 4000
+            }
+        }
+    }
+}
