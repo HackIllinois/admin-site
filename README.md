@@ -18,6 +18,11 @@ we'll be using [yarn](https://yarnpkg.com/) as our package manager.
 
 The webpage should open, and will automatically update when changes are made to the app.
 
+### Application Structure
+
+Follow [Alexis Mangin's article](https://medium.com/@alexmngn/how-to-better-organize-your-react-applications-2fd3ea1920f1)
+to understand how this project is structured.
+
 ## Building a Production Version
 
 Building the app is as simple as running
