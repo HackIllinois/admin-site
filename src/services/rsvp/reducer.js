@@ -1,5 +1,5 @@
 import {
-  UPDATE,
+  UPDATE_RSVP,
 } from './actions';
 
 const initialState = {
@@ -10,7 +10,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE:
+    case UPDATE_RSVP:
       return Object.assign({}, state, { school: action.school, gender: action.gender, gradYear: action.gradYear });
     default:
       return state;

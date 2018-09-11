@@ -1,6 +1,6 @@
-export const UPDATE = 'UPDATE';
-export const update = ( school, gender, gradYear ) => ({
-  type: UPDATE,
+export const UPDATE_RSVP = 'UPDATE_RSVP';
+export const updateRsvp = ( school, gender, gradYear ) => ({
+  type: UPDATE_RSVP,
   school,
   gender,
   gradYear,
