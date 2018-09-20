@@ -1,0 +1,54 @@
+.adminHeader {
+    text-align: center;
+    font-size: 3em;
+}
+
+.App{
+    /* This value creates the "padding" on the edges that goes away */
+    max-width: 1150px;
+    margin: 0 auto;
+}
+
+.login {
+
+}
+
+input{
+    padding: 3px;
+    font-size: 16px;
+    margin: 5px;
+    border: 0;
+}
+
+input::placeholder{
+    font-style: italic;
+    font-size: 1.25em;
+    color: #d2d2d2;
+}
+
+:focus {
+    outline: 0;
+}
+
+.grid {
+    display: grid;
+    /* We can increase the number of columns if preferred*/
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.divListElement {
+    min-height: 300px;
+    border: 1px black solid;
+    background-color: #f2f2f2;
+    padding: 10px;
+    font-size: 1.25em;
+    line-height: 1.5em;
+    box-sizing: border-box;
+}
+
+html{
+    /* Change this value if you want to have a different min width */
+    min-width: 1000px;
+    background-color: #fbfbfb;
+}
