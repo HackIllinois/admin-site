@@ -4,7 +4,6 @@
 }
 
 .App{
-    /* This value creates the "padding" on the edges that goes away */
     max-width: 1150px;
     margin: 0 auto;
 }
@@ -14,7 +13,7 @@
 }
 
 input{
-    padding: 3px;
+    padding: 5px;
     font-size: 16px;
     margin: 5px;
     border: 0;
@@ -32,12 +31,11 @@ input::placeholder{
 
 .grid {
     display: grid;
-    /* We can increase the number of columns if preferred*/
     grid-template-columns: 1fr 1fr;
     grid-gap: 10px;
 }
 
-.divListElement {
+.grid-element {
     min-height: 300px;
     border: 1px black solid;
     background-color: #f2f2f2;
@@ -48,7 +46,6 @@ input::placeholder{
 }
 
 html{
-    /* Change this value if you want to have a different min width */
     min-width: 1000px;
     background-color: #fbfbfb;
 }

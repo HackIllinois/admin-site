@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-// styles uses grid to have 2 columns, I think personally it looks better and easier to read
-//But again, what do I know what we need
 import './styles.css';
 
 class App extends Component {
@@ -11,7 +9,7 @@ class App extends Component {
         <h1 className="adminHeader">Admin Portal</h1>
 
         <div className="divList grid">
-          <div className="divListElement">
+          <div className="grid-element">
             <div>
               This is the Admin Page of Hack Illinois 2019. This page is in progress.
             </div>
@@ -26,12 +24,12 @@ class App extends Component {
 
           </div>
 
-          <div className="divListElement">
+          <div className="grid-element">
             Feb 22-24, 2019<br/>
             Maybe announcements here or something
           </div>
 
-          <div className="divListElement">
+          <div className="grid-element">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non arcu risus quis varius quam quisque id diam. Cras fermentum odio eu feugiat pretium. Id consectetur purus ut faucibus pulvinar elementum. Morbi tristique senectus et netus et malesuada fames ac. Tristique risus nec feugiat in fermentum posuere urna. Elementum sagittis vitae et leo duis ut. In fermentum et sollicitudin ac orci phasellus egestas tellus rutrum.
           </div>
 
