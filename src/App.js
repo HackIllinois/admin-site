@@ -6,9 +6,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1 className="adminHeader">Admin Portal</h1>
+        <h1 className="admin-Header">Admin Portal</h1>
 
-        <div className="divList grid">
+        <div className="div-List grid">
           <div className="grid-element">
             <div>
               This is the Admin Page of Hack Illinois 2019. This page is in progress.
