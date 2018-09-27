@@ -1,11 +1,32 @@
 import React, { Component } from 'react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import './styles.css';
+
 
 class App extends Component {
   render() {
     return (
       <div className="App">
+
+        <div className="topnav sticky">
+          <Tabs>
+            <TabList>
+              <Tab>Tab 1</Tab>
+              <Tab>Tab 2</Tab>
+              <Tab>Tab 3</Tab>
+              <Tab>Tab 4</Tab>
+            </TabList>
+
+            <TabPanel>First Attempt</TabPanel>
+            <TabPanel>At using React-Tabs</TabPanel>
+            <TabPanel>Also in a nav bar</TabPanel>
+            <TabPanel>With CSS</TabPanel>
+          </Tabs>
+
+        </div>
+
+
         <h1 className="admin-Header">Admin Portal</h1>
 
         <div className="div-List grid">

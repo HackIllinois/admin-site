@@ -3,6 +3,7 @@
     font-size: 3em;
 }
 
+
 .App{
     max-width: 1150px;
     margin: 0 auto;
@@ -43,6 +44,40 @@ input::placeholder{
     font-size: 1.25em;
     line-height: 1.5em;
     box-sizing: border-box;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.react-tabs__tab-panel, .react-tabs__tab{
+    float: left;
+    color: white;
+    font-size: 17px;
+}
+
+.react-tabs__tab-panel--selected{
+    padding: 14px 16px;
+}
+
+.react-tabs__tab{
+    list-style: none;
+    padding: 14px 16px;
+}
+
+.react-tabs__tab:hover {
+    background-color: #d2d2d2;
+    color: black;
+}
+
+.react-tabs__tab-list{
+    margin: 0;
 }
 
 html{
