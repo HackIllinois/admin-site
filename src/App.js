@@ -4,11 +4,13 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import './styles.css';
 
 
+import './styles.css';
+
 class App extends Component {
   render() {
     return (
       <div className="App">
-
+      
         <h1 className="admin-Header">Admin Portal</h1>
 
         <div className="div-List grid">
@@ -36,7 +38,7 @@ class App extends Component {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non arcu risus quis varius quam quisque id diam. Cras fermentum odio eu feugiat pretium. Id consectetur purus ut faucibus pulvinar elementum. Morbi tristique senectus et netus et malesuada fames ac. Tristique risus nec feugiat in fermentum posuere urna. Elementum sagittis vitae et leo duis ut. In fermentum et sollicitudin ac orci phasellus egestas tellus rutrum.
           </div>
 
-          <div className="grid-element" style={{padding:0}}>
+          <div className="grid-element grid-element-tabs">
             <Tabs>
               <TabList>
                 <Tab>Tab 1</Tab>
@@ -51,7 +53,6 @@ class App extends Component {
               <TabPanel>Elementum sagittis vitae et leo duis ut. In fermentum et sollicitudin ac orci phasellus egestas tellus rutrum.</TabPanel>
             </Tabs>
           </div>
-
 
         </div>
       </div>

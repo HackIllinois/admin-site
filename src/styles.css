@@ -3,7 +3,6 @@
     font-size: 3em;
 }
 
-
 .App{
     max-width: 1150px;
     margin: 0 auto;
@@ -44,6 +43,10 @@ input::placeholder{
     font-size: 1.25em;
     line-height: 1.5em;
     box-sizing: border-box;
+}
+
+.grid-element-tabs {
+    padding: 0;
 }
 
 .react-tabs__tab-panel, .react-tabs__tab{
