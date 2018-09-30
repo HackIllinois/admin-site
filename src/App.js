@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import School from './scenes/School';
+import School from './components/School';
 
 import './styles.css';
 
