@@ -45,6 +45,48 @@ input::placeholder{
     box-sizing: border-box;
 }
 
+.grid-element-tabs {
+    padding: 0;
+}
+
+.react-tabs__tab-panel, .react-tabs__tab{
+    color: black;
+    font-size: 17px;
+}
+
+.react-tabs__tab-panel--selected{
+    padding: 14px 16px;
+    clear: both;
+}
+
+.react-tabs__tab{
+    border-width: 0 1px 1px 0;
+    border-color: black;
+    border-style: solid;
+
+    float: left;
+    list-style: none;
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.react-tabs__tab--selected {
+    /*background-color: #dadada;*/
+    border-bottom: none;
+}
+
+.react-tabs__tab:hover {
+    background-color: #c2c2c2;
+}
+
+.react-tabs__tab-list{
+    margin: 0;
+}
+
+ul{
+    padding: 0;
+}
+
 html{
     min-width: 1000px;
     background-color: #fbfbfb;
