@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import School from "../School";
-import { addSchool } from "./actions";
+import { addSchool } from "../../services/school/actions";
 
 const getSchools = (schools) => {
   return schools.school;

@@ -1,7 +1,7 @@
 import {
   UPDATE_SCHOOL,
   ADD_SCHOOL,
-} from '../../components/School/actions';
+} from './actions';
 
 const defaultState = {
   school: []

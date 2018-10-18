@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
-import { addSchool } from "./actions";
+import { addSchool } from "../../services/school/actions";
 
 import { connect } from "react-redux";
 
@@ -28,7 +28,6 @@ class School extends React.Component {
               left: 30,
             }}
 
-            // data={this.state.data}
             data={this.props.schools.school}
 
             indexBy="name"
