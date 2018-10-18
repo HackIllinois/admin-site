@@ -10,7 +10,9 @@ export const updateSchool = ( schoolName, numStudents) => ({
 
 export const addSchool = (schoolName, numStudents) => ({
   type: ADD_SCHOOL,
-  schoolName,
-  numStudents,
+  school : {
+    schoolName,
+    numStudents
+  }
 });
 

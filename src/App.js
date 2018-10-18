@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import './styles.css';
 
 
-import Container from './components/School';
+import Container from './components/School/container';
 
 import './styles.css';
 

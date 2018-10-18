@@ -1,14 +1,14 @@
 import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
-import {addSchool} from "../../services/school/actions";
+import { addSchool } from "./actions";
 
 import { connect } from "react-redux";
+
+let counter = 0;
 
 class School extends React.Component {
   constructor(props) {
     super(props);
-    // this.props.dispatch(addSchool("Carl", 100));
-    console.log(this.props);
     this.state = {
       data:
       [
@@ -50,22 +50,20 @@ class School extends React.Component {
   };
 
   updateDate2 = () => {
-    console.log(this.props.schools);
+    this.props.dispatch(addSchool("" + counter, 100));
+    counter++;
+    var arr = [];
+    this.props.schools.school.forEach(function(element) {
+      arr.push({
+        school: element.name,
+        numStudents: element.numStudents
+      });
+    });
 
-    this.props.dispatch(addSchool("Carl", 100));
+
+
     this.setState({
-      data:[
-        {
-          school: 'University of Michigan',
-          numStudents: 340,
-          dogsColor: 'hsl(89, 70%, 50%)',
-        },
-        {
-          school: 'Purdue',
-          numStudents: 230,
-          dogsColor: 'hsl(157, 70%, 50%)',
-        },
-      ]
+      data: arr
     });
   };
 

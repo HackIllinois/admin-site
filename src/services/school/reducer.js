@@ -1,17 +1,23 @@
 import {
   UPDATE_SCHOOL,
   ADD_SCHOOL,
-} from './actions';
+} from '../../components/School/actions';
 
-const schoolReducer = (state = [], action) => {
+const defaultState = {
+  school: []
+};
+
+const schoolReducer = (state = defaultState, action) => {
   switch (action.type) {
     case ADD_SCHOOL:
-      return Object.assign({},
-        ...state, {
-          school: action.schoolName,
-          numStudents: action.numStudents,
-          dogsColor: 'hsl(89, 70%, 50%)'
-        });
+      return {
+        ...state,
+        school: [...state.school,
+          {
+            name: action.school.schoolName,
+            numStudents: action.school.numStudents
+          }
+        ]}
     case UPDATE_SCHOOL:
       return state.map(school =>
         (school.schoolName === action.schoolName)

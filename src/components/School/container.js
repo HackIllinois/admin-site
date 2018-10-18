@@ -1,21 +1,22 @@
 import { connect } from "react-redux";
-import School from "./School";
-import { VisibilityFilters } from ".../services/school/actions";
+import School from "../School";
+import { addSchool } from "./actions";
 
 const getSchools = (schools) => {
-  return [{
-    school: 'University of Illinois Urbana-Champaign',
-    numStudents: 500,
-    dogsColor: 'hsl(89, 70%, 50%)',
-  }];
-  }
-};
+  return schools.school;
+}
+
 
 
 const mapStateToProps = state => ({
-  schools: getSchools(state.schoolReducer)
+  schools: getSchools(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  add: (name, numStudents) => dispatch(addSchool(name, numStudents))
 });
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(School);
