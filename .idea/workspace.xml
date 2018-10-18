@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a62e770d-7c28-44c0-a129-2bb23e18a2d0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/School/folder/container.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/services/school/actions.js" afterPath="$PROJECT_DIR$/src/components/School/actions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/School/index.jsx" afterPath="$PROJECT_DIR$/src/components/School/index.jsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/services/school/reducer.js" afterPath="$PROJECT_DIR$/src/services/school/reducer.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,8 +23,8 @@
       <file leaf-file-name="index.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/School/index.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="51" column="23" lean-forward="false" selection-start-line="51" selection-start-column="23" selection-end-line="51" selection-end-column="23" />
+            <state relative-caret-position="483">
+              <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -290,12 +286,12 @@
       <workItem from="1539204936568" duration="16436000" />
       <workItem from="1539541269573" duration="5924000" />
       <workItem from="1539730841013" duration="3673000" />
-      <workItem from="1539821329638" duration="9112000" />
+      <workItem from="1539821329638" duration="10902000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40727000" />
+    <option name="totallyTimeSpent" value="42517000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -796,8 +792,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/School/index.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="51" column="23" lean-forward="false" selection-start-line="51" selection-start-column="23" selection-end-line="51" selection-end-column="23" />
+        <state relative-caret-position="483">
+          <caret line="23" column="21" lean-forward="true" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>

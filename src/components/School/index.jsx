@@ -9,62 +9,11 @@ let counter = 0;
 class School extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data:
-      [
-        {
-          school: 'University of Illinois Urbana-Champaign',
-          numStudents: 500,
-          dogsColor: 'hsl(89, 70%, 50%)',
-        },
-        {
-          school: 'University of Michigan',
-          numStudents: 340,
-          dogsColor: 'hsl(334, 70%, 50%)',
-        },
-        {
-          school: 'Purdue',
-          numStudents: 230,
-          dogsColor: 'hsl(157, 70%, 50%)',
-        },
-      ]
-    }
+    this.props.dispatch(addSchool("" + counter++, 100));
   }
 
   updateDate = () => {
-    console.log(this.props);
-    this.setState({
-       data:[// this.props.schools ]
-        {
-          school: 'University of Illinois Urbana-Champaign',
-          numStudents: 500,
-          dogsColor: 'hsl(89, 70%, 50%)',
-        },
-        {
-          school: 'University of Michigan',
-          numStudents: 340,
-          dogsColor: 'hsl(89, 70%, 50%)',
-        },
-      ]
-    });
-  };
-
-  updateDate2 = () => {
-    this.props.dispatch(addSchool("" + counter, 100));
-    counter++;
-    var arr = [];
-    this.props.schools.school.forEach(function(element) {
-      arr.push({
-        school: element.name,
-        numStudents: element.numStudents
-      });
-    });
-
-
-
-    this.setState({
-      data: arr
-    });
+    this.props.dispatch(addSchool("" + counter++, 100));
   };
 
   render() {
@@ -79,9 +28,10 @@ class School extends React.Component {
               left: 30,
             }}
 
-            data={this.state.data}
+            // data={this.state.data}
+            data={this.props.schools.school}
 
-            indexBy="school"
+            indexBy="name"
             keys={['numStudents']}
             padding={0.2}
             labelTextColor="inherit:darker(1.4)"
@@ -91,7 +41,6 @@ class School extends React.Component {
         </div>
 
         <button onClick={this.updateDate}>Click me</button>
-        <button onClick={this.updateDate2}>Click me</button>
       </div>
     );
   }
