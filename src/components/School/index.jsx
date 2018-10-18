@@ -1,66 +1,89 @@
 import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
+import {addSchool} from "../../services/school/actions";
 
+import { connect } from "react-redux";
 
 class School extends React.Component {
   constructor(props) {
     super(props);
+    // this.props.dispatch(addSchool("Carl", 100));
+    console.log(this.props);
     this.state = {
-      data:[
+      data:
+      [
         {
-          university: 'University of Illinois Urbana-Champaign',
-          numStudents: 151,
+          school: 'University of Illinois Urbana-Champaign',
+          numStudents: 500,
           dogsColor: 'hsl(89, 70%, 50%)',
         },
         {
-          university: 'University of Michigan',
-          numStudents: 93,
+          school: 'University of Michigan',
+          numStudents: 340,
           dogsColor: 'hsl(334, 70%, 50%)',
         },
         {
-          university: 'Carl Evan\'s CS 126 Class',
-          numStudents: 91,
-          dogsColor: 'hsl(334, 70%, 50%)',
-        },
-        {
-          university: 'Purdue',
-          numStudents: 51,
+          school: 'Purdue',
+          numStudents: 230,
           dogsColor: 'hsl(157, 70%, 50%)',
         },
       ]
     }
   }
 
-  test = () => {
+  updateDate = () => {
+    console.log(this.props);
     this.setState({
-      data:[
+       data:[// this.props.schools ]
         {
-          university: 'University of Illinois Urbana-Champaign',
-          numStudents: 151,
+          school: 'University of Illinois Urbana-Champaign',
+          numStudents: 500,
           dogsColor: 'hsl(89, 70%, 50%)',
         },
         {
-          university: 'University of Michigan',
-          numStudents: 93,
+          school: 'University of Michigan',
+          numStudents: 340,
           dogsColor: 'hsl(89, 70%, 50%)',
         },
       ]
     });
-  }
+  };
+
+  updateDate2 = () => {
+    console.log(this.props.schools);
+
+    this.props.dispatch(addSchool("Carl", 100));
+    this.setState({
+      data:[
+        {
+          school: 'University of Michigan',
+          numStudents: 340,
+          dogsColor: 'hsl(89, 70%, 50%)',
+        },
+        {
+          school: 'Purdue',
+          numStudents: 230,
+          dogsColor: 'hsl(157, 70%, 50%)',
+        },
+      ]
+    });
+  };
 
   render() {
     return (
       <div>
-        <div style={{height:'250px'}}>
+        <div style={{height:'265px'}}>
           <ResponsiveBar
             margin={{
-              top: 60,
+              top: 20,
               right: 20,
-              bottom: 60,
-              left: 20,
+              bottom: 20,
+              left: 30,
             }}
+
             data={this.state.data}
-            indexBy="university"
+
+            indexBy="school"
             keys={['numStudents']}
             padding={0.2}
             labelTextColor="inherit:darker(1.4)"
@@ -69,11 +92,12 @@ class School extends React.Component {
           />
         </div>
 
-        <button onClick={this.test}>Click me</button>
+        <button onClick={this.updateDate}>Click me</button>
+        <button onClick={this.updateDate2}>Click me</button>
       </div>
     );
   }
 }
 
 
-export default School;
+export default connect()(School);
