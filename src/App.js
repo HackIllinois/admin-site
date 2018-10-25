@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import './styles.css';
 
 
-import Container from './components/School/container';
+import School from './components/School/container';
 
 import './styles.css';
 
@@ -40,7 +40,7 @@ class App extends Component {
           </div>
       
           <div className="grid-element grid-element-tabs">
-            <Container />
+            <School />
           </div>
       
           <div className="grid-element grid-element-tabs">

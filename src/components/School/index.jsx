@@ -12,7 +12,7 @@ class School extends React.Component {
     this.props.dispatch(addSchool("" + counter++, 100));
   }
 
-  updateDate = () => {
+  addData = () => {
     this.props.dispatch(addSchool("" + counter++, 100));
   };
 
@@ -39,7 +39,7 @@ class School extends React.Component {
           />
         </div>
 
-        <button onClick={this.updateDate}>Click me</button>
+        <button onClick={this.addData}>Click me</button>
       </div>
     );
   }
