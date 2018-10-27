@@ -9,14 +9,12 @@ import checkinReducer from './services/checkin/reducer';
 import eventsReducer from './services/events/reducer';
 import registrationReducer from './services/registration/reducer';
 import rsvpReducer from './services/rsvp/reducer';
-import schoolReducer from './services/school/reducer';
 
 const rootReducer = combineReducers({
   checkin: checkinReducer,
   events: eventsReducer,
   registration: registrationReducer,
   rsvp: rsvpReducer,
-  school: schoolReducer
 });
 
 const store = createStore(rootReducer);
