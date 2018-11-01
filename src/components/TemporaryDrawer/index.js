@@ -11,7 +11,7 @@ import AnnouncementIcon from '@material-ui/icons/Announcement';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import EventsIcon from '@material-ui/icons/Event';
 
-import { toggleDrawer } from '../../services/session/actions';
+import { toggleDrawer } from '../../services/ui/actions';
 
 const styles = {
   list: {

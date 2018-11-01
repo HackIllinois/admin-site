@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { toggleDrawer } from '../../services/session/actions';
+import { toggleDrawer } from '../../services/ui/actions';
 
 const styles = {
   root: {
@@ -34,7 +34,7 @@ class MenuAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Photos
+              Admin Portal
             </Typography>
           </Toolbar>
         </AppBar>

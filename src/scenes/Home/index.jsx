@@ -1,6 +1,5 @@
 import React from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import Button from '@material-ui/core/Button';
 
 import School from '../../components/School';
 
