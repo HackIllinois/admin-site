@@ -1,0 +1,23 @@
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+.github {
+    color: gray;
+}
+
+.grid-element {
+    height: auto;
+}
+
+.profile-main {
+    padding: 10px;
+    font-size: 1.25em;
+    line-height: 1.5em;
+}
+
+.admission-accepted{
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #00FF00;
+}
