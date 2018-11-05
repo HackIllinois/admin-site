@@ -17,7 +17,28 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .admission-accepted{
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold;
     color: #00FF00;
+}
+
+.admission-denied{
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FF0000;
+}
+
+.admission-waiting{
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #0000FF;
+}
+
+@media screen and (min-width: 1000px) {
+    /* Moves PDF to right side if there is space*/
+    canvas {
+        position: fixed;
+        right: 0;
+        top: 0px;
+    }
 }

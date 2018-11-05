@@ -19,7 +19,7 @@ const Profile = () => (
         Admission Status
       </h4>
       <p className="admission-accepted">
-        Wave 1- Accepted
+        Wave 1 - Accepted
       </p>
     </div>
 
@@ -62,9 +62,7 @@ const Profile = () => (
     </div>
 
     <div>
-      <Document
-        file={pdfFile}
-      >
+      <Document file={pdfFile}>
         <Page pageNumber={1} />
       </Document>
     </div>
