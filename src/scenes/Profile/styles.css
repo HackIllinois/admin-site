@@ -34,6 +34,10 @@ h1, h2, h3, h4, h5, h6, p {
     color: #0000FF;
 }
 
+canvas {
+    border: 1px black solid;
+}
+
 @media screen and (min-width: 1000px) {
     /* Moves PDF to right side if there is space*/
     canvas {
