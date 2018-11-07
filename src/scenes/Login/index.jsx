@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,7 +14,7 @@ import '../../styles/login.css';
 import logo from '../../assets/logo.png';
 
 const Login = () => (
-    <Card id="title">
+    <Card id="card">
         {/* Title */}
         <AppBar position="static" color="default">
             <Toolbar>
@@ -23,6 +24,7 @@ const Login = () => (
             </Toolbar>
         </AppBar>
 
+        {/* Logo */}
         <CardMedia
           className="center"
           id="logo"
@@ -30,7 +32,7 @@ const Login = () => (
           title="HackIllinois"
         />
 
-        {/* Login Text Fields */}
+        {/* Login Form */}
         <CardContent className="center" id="card-content">
             <div id="form-input-div">
                 <TextField
@@ -42,6 +44,10 @@ const Login = () => (
                     margin="normal"
                     variant="outlined"
                 />
+                <Typography color="inherit">
+                    <Link id="forgot" to="/forgot">Forgot Email?</Link>
+                </Typography>
+                <br />
                 <TextField
                     label="Password"
                     type="password"
@@ -50,12 +56,26 @@ const Login = () => (
                     margin="normal"
                     variant="outlined"
                 />
-            </div>
+                <Typography color="inherit">
+                    <Link id="forgot" to="/forgot">Forgot Password?</Link>
+                </Typography>
 
-            <div id="login">
-                <Button variant="contained" color="primary">
+                <br />
+                <br />
+                <br />
+
+                {/* Login Button */}
+                <Button className="center" variant="contained" color="primary">
                     Login
                 </Button>
+                
+                <br />
+                <br />
+
+                {/* Signup Link */}
+                <Typography color="inherit">
+                    <Link to="/signup">Sign Up</Link>
+                </Typography>
             </div>
         </CardContent>      
     </Card>
