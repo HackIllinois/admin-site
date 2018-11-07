@@ -1,0 +1,38 @@
+#title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 35%;
+    height: 50%;
+    min-height: 500px;
+}
+
+#logo {
+    width: 100px;
+    height: 100px;
+    margin-top: 5%;
+}
+
+#card-content {
+    height: 100%;
+}
+
+#form-input-div {
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.text-fields {
+    width: 100%;
+}
+
+#login {
+    position: relative;
+    margin-top: 5%;
+    margin-bottom: 10%;
+    display: flex;
+    justify-content: center;
+}

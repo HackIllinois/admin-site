@@ -1,28 +1,16 @@
+html {
+    min-width: 1000px;
+    background-color: #fbfbfb;
+}
+
 .admin-Header {
     text-align: center;
     font-size: 3em;
 }
 
-.App{
+.App {
     max-width: 1150px;
     margin: 0 auto;
-}
-
-.login {
-
-}
-
-input{
-    padding: 5px;
-    font-size: 16px;
-    margin: 5px;
-    border: 0;
-}
-
-input::placeholder{
-    font-style: italic;
-    font-size: 1.25em;
-    color: #d2d2d2;
 }
 
 :focus {
@@ -87,7 +75,8 @@ ul{
     padding: 0;
 }
 
-html{
-    min-width: 1000px;
-    background-color: #fbfbfb;
+.center {
+    clear: both;
+    margin-left: auto;
+    margin-right: auto;
 }
