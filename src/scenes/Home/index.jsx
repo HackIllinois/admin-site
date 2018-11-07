@@ -1,15 +1,10 @@
 import React from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import Button from '@material-ui/core/Button';
 
 import School from '../../components/School';
 
 const Home = () => (
   <div className="App">
-    <Button variant="contained" color="primary">
-      Hello World
-    </Button>
-
     <h1 className="admin-Header">Admin Portal</h1>
 
     <div className="div-List grid">
