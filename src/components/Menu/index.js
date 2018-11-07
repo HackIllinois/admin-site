@@ -19,24 +19,7 @@ const styles = {
   },
 };
 
-class TemporaryDrawer extends React.Component {
-
-  // Switch statement used in render to assign icons
-  renderSwitch(text) {
-    switch(text) {
-      case 'Stats':
-        return <TrendingUpIcon />;
-      case 'Send email':
-        return <MailIcon />;
-      case 'Events':
-        return <EventsIcon />;
-      case 'Announcements':
-        return <AnnouncementIcon />;
-      default:
-        return null;
-    }
-  }
-
+class Menu extends React.Component {
   render() {
     const { classes } = this.props;
 
@@ -44,12 +27,22 @@ class TemporaryDrawer extends React.Component {
       <Drawer open={this.props.isOpen} onClose={() => this.props.toggle()} anchor="left">
         <div className={classes.list}>
           <List>
-            {['Stats', 'Send email', 'Events', 'Announcements'].map((text) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{this.renderSwitch(text)}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
+            <ListItem button key="Stats">
+              <ListItemIcon><TrendingUpIcon/></ListItemIcon>
+              <ListItemText primary="Stats" />
+            </ListItem>
+            <ListItem button key="Send email">
+              <ListItemIcon><MailIcon/></ListItemIcon>
+              <ListItemText primary="Send email" />
+            </ListItem>
+            <ListItem button key="Events">
+              <ListItemIcon><EventsIcon/></ListItemIcon>
+              <ListItemText primary="Events" />
+            </ListItem>
+            <ListItem button key="Announcements">
+              <ListItemIcon><AnnouncementIcon/></ListItemIcon>
+              <ListItemText primary="Announcements" />
+            </ListItem>
           </List>
         </div>
       </Drawer>
@@ -65,4 +58,4 @@ const mapDispatchToProps = (dispatch) => ({
   toggle: () => dispatch(toggleDrawer()),
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TemporaryDrawer));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Menu));
