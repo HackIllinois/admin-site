@@ -5,60 +5,66 @@ import './styles.css';
 
 import pdfFile from './examplePDF.pdf';
 
+let profile = {
+  name: "John Smith",
+  github: "github0000001",
+  status: "Accepted",
+  wave: 1,
+  email: "john.smith@example.com",
+  school: "University of Illinois at Urbana-Champaign",
+  major: "Computer Science",
+  year: "Freshman"
+};
+
 const Profile = () => (
   <div className="profile-main">
-    <div>
-      <h1 className="student_name">John Smith</h1>
-      <h4 className="github">Github: github0000001</h4>
-    </div>
+    <div className="profile-info">
+      <div>
+        <h1 className="student_name">{profile.name}</h1>
+        <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a></h4>
+      </div>
 
-    <br></br>
+      <br></br>
 
-    <div>
-      <h4>
-        Admission Status
-      </h4>
-      <p className="admission-accepted">
-        Wave 1 - Accepted
-      </p>
-    </div>
+      <div>
+        <h4>
+          Admission Status
+        </h4>
+        <p className={"admission-" + profile.status}>
+          Wave {profile.wave} - {profile.status}
+        </p>
+      </div>
 
-    <br></br>
+      <br></br>
 
-    <div>
-      <h4>
-        Email
-      </h4>
-      <p>
-        john.smith@example.com
-      </p>
-    </div>
+      <div>
+        <h4>
+          Email
+        </h4>
+        {profile.email}
+      </div>
 
-    <div>
-      <h4>
-        School
-      </h4>
-      <p>
-        University of Illinois at Urbana-Champaign
-      </p>
-    </div>
+      <div>
+        <h4>
+          School
+        </h4>
+        {profile.school}
+      </div>
 
-    <div>
-      <h4>
-        Major
-      </h4>
-      <p>
-        Computer Science
-      </p>
-    </div>
+      <div>
+        <h4>
+          Major
+        </h4>
+        {profile.major}
+      </div>
 
-    <div>
-      <h4>
-        Graduation Year
-      </h4>
-      <p>
-        Freshman
-      </p>
+      <div>
+        <h4>
+          Graduation Year
+        </h4>
+        {profile.year}
+      </div>
+
     </div>
 
     <div>

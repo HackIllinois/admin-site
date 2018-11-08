@@ -1,13 +1,10 @@
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
+    font-family: "Palatino Linotype", Georgia;
 }
 
 .github {
     color: gray;
-}
-
-.grid-element {
-    height: auto;
 }
 
 .profile-main {
@@ -16,19 +13,19 @@ h1, h2, h3, h4, h5, h6, p {
     line-height: 1.5em;
 }
 
-.admission-accepted{
+.admission-Accepted{
     font-size: 1.2em;
     font-weight: bold;
     color: #00FF00;
 }
 
-.admission-denied{
+.admission-Denied{
     font-size: 1.2em;
     font-weight: bold;
     color: #FF0000;
 }
 
-.admission-waiting{
+.admission-Waiting{
     font-size: 1.2em;
     font-weight: bold;
     color: #0000FF;
@@ -42,7 +39,13 @@ canvas {
     /* Moves PDF to right side if there is space*/
     canvas {
         position: fixed;
-        right: 0;
+        left: 45vw;
         top: 0px;
+    }
+
+    .profile-info {
+        position: fixed;
+        right: 60vw;
+        top: 5px;
     }
 }
