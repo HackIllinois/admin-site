@@ -5,7 +5,8 @@ import MenuAppBar from './components/MenuAppBar';
 import Menu from './components/Menu';
 
 import Home from './scenes/Home';
-import Login from './scenes/Login'
+import Login from './scenes/Login';
+import Events from './scenes/Events';
 
 import './styles.css';
 
@@ -20,6 +21,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
+              <Route path="/events" component={Events} />
             </Switch>
           </div>
         </BrowserRouter>
