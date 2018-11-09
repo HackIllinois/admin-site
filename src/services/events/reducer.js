@@ -19,13 +19,14 @@ const reducer = (state = initialState, action) => {
       ));
       return Object.assign({}, state, { events: newDeleteEvents });
     case CREATE_EVENT_SUCCESSFUL:
-      return Object.assign({}, state, { events: [...state.events, action.event] });
+      return Object.assign({}, state, { events: [...state.events, Object.assign({}, action.event)] });
     case UPDATE_EVENT_SUCCESSFUL:
       // Deep copy events array, or redux won't update correctly
       const newUpdateEvents = Array.from(state.events);
       for(let i = 0; i < newUpdateEvents.length; i++) {
         if(newUpdateEvents[i].id === action.event.id) {
-          newUpdateEvents[i] = action.event;
+          // Deep copy event or redux won't update correctly
+          newUpdateEvents[i] = Object.assign({}, action.event);
           break;
         }
       }

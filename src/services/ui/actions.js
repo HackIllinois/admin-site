@@ -19,15 +19,3 @@ export const CLOSE_EVENT_EDITOR = 'CLOSE_EVENT_EDITOR';
 export const closeEventEditor = () => ({
   type: CLOSE_EVENT_EDITOR,
 });
-
-/** Handle text input for event editor.
-  * 
-  * @param field    The event object field that is being modified (ie 'name', 'desc')
-  * @param value    The value for the corresponding field
-  */
-export const HANDLE_EVENT_INPUT_CHANGE = 'HANDLE_EVENT_INPUT_CHANGE';
-export const handleEventInputChange = (field, value) => ({
-  type: HANDLE_EVENT_INPUT_CHANGE,
-  field,
-  value,
-});

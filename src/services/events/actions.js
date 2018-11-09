@@ -1,3 +1,6 @@
+// Static counter variable for generating IDs while API isn't hoooked up
+let counter = 1000000;
+
 export const RECIEVE_EVENTS = 'RECIEVE_EVENTS';
 export const recieveEvents = data => ({
   type: RECIEVE_EVENTS,
@@ -45,7 +48,7 @@ export const createEventSuccessful = event => ({
 export function createEvent(event) {
   return function(dispatch) {
     // Make request to api server, then call createEventSuccessful()
-    event.id = 1022234;
+    event.id = counter++;
     dispatch(createEventSuccessful(event));
   };
 }
