@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import MenuAppBar from './components/MenuAppBar';
 import Menu from './components/Menu';
@@ -11,12 +12,15 @@ import './styles.css';
 
 class App extends Component {
   render() {
+    const { jwt } = this.props;
+
     return (
       <div>
         <BrowserRouter>
           <div>
             <MenuAppBar />
             <Menu />
+            { jwt ? null : <Redirect to="/login" /> }
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
@@ -28,4 +32,8 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  jwt: state.auth.jwt,
+});
+
+export default connect(mapStateToProps, null)(App);
