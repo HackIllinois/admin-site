@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import jwtDecode from 'jwt-decode';
 import { connect } from 'react-redux';
@@ -6,19 +6,31 @@ import { Redirect, withRouter } from 'react-router-dom';
 
 import { getUser } from 'services/user/actions';
 
-const Auth = (props) => {
-  const { location, jwt, user } = props;
-  if (location.pathname === "/login") {
-    return null;
-  }
-  if (jwt === null) {
-    return <Redirect to="/login" />;
-  }
-  if (user.user === null && !user.fetching && !user.error) {
-    props.getUser(jwtDecode(jwt).id)
+class Auth extends Component {
+  componentDidMount() {
+    const { getUser, user, jwt } = this.props;
+    if (user.user === null && !user.fetching && !user.error && jwt) {
+      getUser(jwtDecode(jwt).id, jwt);
+    }
   }
 
-  return null;
+  componentDidUpdate() {
+    const { getUser, user, jwt } = this.props;
+    if (user.user === null && !user.fetching && !user.error && jwt) {
+      getUser(jwtDecode(jwt).id, jwt);
+    }
+  }
+
+  render() {
+    const { location, jwt } = this.props;
+    if (location.pathname === "/login") {
+      return null;
+    }
+    if (jwt === null) {
+      return <Redirect to="/login" />;
+    }
+    return null;
+  }
 }
 
 const mapStateToProps = (state) => ({
@@ -27,7 +39,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getUser: (id) => { dispatch(getUser(id)); },
+  getUser: (id, token) => { dispatch(getUser(id, token)); },
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Auth));

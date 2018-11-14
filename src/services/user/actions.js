@@ -20,11 +20,11 @@ function receiveUser(err, user) {
   };
 }
 
-export function getUser(id) {
+export function getUser(id, token) {
   return (dispatch) => {
     dispatch(requestUser(id));
-    fetchUser(id)
+    fetchUser(id, token)
       .then(data => dispatch(receiveUser(false, data)))
-      .catch(err => dispatch(receiveUser(false, null)));
+      .catch(err => dispatch(receiveUser(true, null)));
   };
 }

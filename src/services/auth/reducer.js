@@ -3,7 +3,7 @@ import {
 } from './actions';
 
 const initialState = {
-  jwt: ''
+  jwt: null,
 };
 
 const reducer = (state = initialState, action) => {

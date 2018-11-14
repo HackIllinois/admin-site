@@ -34,6 +34,8 @@ const store = createStore(
   applyMiddleware(thunk, logger)
 );
 
+// Use admin token from environment variables in development
+// since OAuth won't work with local api instance
 if (process.env.NODE_ENV === "development") {
   store.dispatch(setJWT(process.env.REACT_APP_TOKEN));
 }
