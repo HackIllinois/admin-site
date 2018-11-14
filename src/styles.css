@@ -1,6 +1,6 @@
-html {
-    min-width: 1000px;
-    background-color: #fbfbfb;
+body, html {
+    height: 100%;
+    margin: 0;
 }
 
 .admin-Header {
@@ -79,4 +79,10 @@ ul{
     clear: both;
     margin-left: auto;
     margin-right: auto;
+}
+
+.flexbox-center {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
 }
