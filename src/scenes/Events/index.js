@@ -19,7 +19,7 @@ class Events extends React.Component {
         <EventEditor />
 
         {this.props.events.map((event) => {
-          return <Event key={event.name} event={event} />
+          return <Event key={event.id} event={event} />
         }
         )}
       </div>

@@ -5,8 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { deleteEvent } from '../../../services/events/actions';
-import { openEventEditor } from '../../../services/ui/actions';
+import { deleteEvent } from '../../services/events/actions';
+import { openEventEditor } from '../../services/ui/actions';
 
 const Event = ({ event, deleteEvent, updateEvent }) => (
   <Card>

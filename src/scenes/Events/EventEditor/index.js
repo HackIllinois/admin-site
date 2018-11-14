@@ -18,7 +18,7 @@ class EventEditor extends React.Component {
   constructor() {
     super();
     this.state = {
-      event: emptyEvent,
+      event: Object.assign({}, emptyEvent),
       isNew: true,
     }
     this.handleChange = this.handleChange.bind(this);
@@ -31,16 +31,18 @@ class EventEditor extends React.Component {
       return state;
     }
     const newState =  {
-      event: props.event ? props.event : emptyEvent,
+      event: props.event ? props.event : Object.assign({}, emptyEvent),
       isNew: !props.event,
     };
     return newState;
   }
 
-  handleChange(e, field) {
-    const curEvent = this.state.event;
-    curEvent[field] = e.target.value;
-    this.setState({ event: curEvent });
+  handleChange(field) {
+    return (e) => {
+      const curEvent = this.state.event;
+      curEvent[field] = e.target.value;
+      this.setState({ event: curEvent });
+    };
   }
 
   handleSubmit(e) {
@@ -50,6 +52,8 @@ class EventEditor extends React.Component {
     } else {
       this.props.update(this.state.event);
     }
+    // // Reset state
+    // this.setState({ event: emptyEvent, isNew: true });
   }
 
   render() {
@@ -60,19 +64,19 @@ class EventEditor extends React.Component {
             id="name"
             label="Name"
             value={this.state.event.name}
-            onChange={(e) => this.handleChange(e, 'name')}
+            onChange={this.handleChange('name')}
           />
           <TextField
             id="time"
             label="Time"
             value={this.state.event.time}
-            onChange={(e) => this.handleChange(e, 'time')}
+            onChange={this.handleChange('time')}
           />
           <TextField
             id="desc"
             label="Description"
             value={this.state.event.desc}
-            onChange={(e) => this.handleChange(e, 'desc')}
+            onChange={this.handleChange('desc')}
           />
           <Button type="submit">Submit</Button>
         </form>
