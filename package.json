@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.3.1",
     "@material-ui/icons": "^3.0.1",
     "@nivo/bar": "^0.49.1",
+    "jwt-decode": "^2.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
@@ -25,5 +26,13 @@
   "devDependencies": {
     "json-server": "^0.14.0",
     "redux-logger": "^3.0.6"
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:8000",
+      "pathRewrite": {
+        "^/api": ""
+      }
+    }
   }
 }
