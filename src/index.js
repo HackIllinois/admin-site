@@ -37,6 +37,9 @@ const store = createStore(
   )
 );
 
+// Change to material-ui updated typography
+window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
+
 // Use admin token from environment variables in development
 // since OAuth won't work with local api instance
 if (process.env.NODE_ENV === "development") {
