@@ -10,6 +10,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import EventsIcon from '@material-ui/icons/Event';
+import { Link } from 'react-router-dom';
 
 import { toggleDrawer } from '../../services/ui/actions';
 
@@ -35,10 +36,12 @@ class Menu extends React.Component {
               <ListItemIcon><MailIcon/></ListItemIcon>
               <ListItemText primary="Send email" />
             </ListItem>
-            <ListItem button key="Events">
-              <ListItemIcon><EventsIcon/></ListItemIcon>
-              <ListItemText primary="Events" />
-            </ListItem>
+            <Link to="/events" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <ListItem button key="Events">
+                <ListItemIcon><EventsIcon/></ListItemIcon>
+                <ListItemText primary="Events" />
+              </ListItem>
+            </Link>
             <ListItem button key="Announcements">
               <ListItemIcon><AnnouncementIcon/></ListItemIcon>
               <ListItemText primary="Announcements" />
@@ -51,7 +54,7 @@ class Menu extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  isOpen: state.session.drawerOpen,
+  isOpen: state.ui.drawerOpen,
 });
 
 const mapDispatchToProps = (dispatch) => ({

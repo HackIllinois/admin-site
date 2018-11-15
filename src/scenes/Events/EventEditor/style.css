@@ -1,0 +1,15 @@
+.event-editor-form {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    width: 40vh;
+}
+
+
+.event-editor-button-cont {
+    margin-top: .5em;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

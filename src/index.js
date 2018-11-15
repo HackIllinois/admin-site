@@ -14,7 +14,7 @@ import checkinReducer from './services/checkin/reducer';
 import eventsReducer from './services/events/reducer';
 import registrationReducer from './services/registration/reducer';
 import rsvpReducer from './services/rsvp/reducer';
-import sessionReducer from './services/ui/reducer';
+import uiReducer from './services/ui/reducer';
 import userReducer from './services/user/reducer';
 
 import './reset.css';
@@ -25,14 +25,20 @@ const rootReducer = combineReducers({
   events: eventsReducer,
   registration: registrationReducer,
   rsvp: rsvpReducer,
-  session: sessionReducer,
+  ui: uiReducer,
   user: userReducer
 });
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk, logger)
+  applyMiddleware(
+    thunk,
+    logger,
+  )
 );
+
+// Change to material-ui updated typography
+window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 // Use admin token from environment variables in development
 // since OAuth won't work with local api instance
