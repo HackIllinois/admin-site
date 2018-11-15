@@ -1,11 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 
 import { requestEvents } from '../../services/events/actions';
 import { openEventEditor } from '../../services/ui/actions';
 import Event from './Event';
 import EventEditor from './EventEditor';
+
+import './style.css';
+
+const styles = theme => ({
+  button: {
+    margin: '.8em 0',
+  },
+});
+
 
 class Events extends React.Component {
   componentDidMount() {
@@ -13,15 +23,25 @@ class Events extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <div>
-        <Button onClick={() => this.props.openEventEditor()}>Create event</Button>
+      <div className={'events-body'}>
+        <Button 
+          onClick={() => this.props.openEventEditor()}
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >Create event</Button>
         <EventEditor />
 
-        {this.props.events.map((event) => {
-          return <Event key={event.id} event={event} />
-        }
-        )}
+        <div className={'events-contcont'}>
+          <div className={'events-cont'}>
+            {this.props.events.map((event) => {
+              return <Event key={event.id} event={event} />
+            }
+            )}
+          </div>
+        </div>
       </div>
     )
   }
@@ -36,4 +56,4 @@ const mapDispatchToProps = (dispatch) => ({
   openEventEditor: () => dispatch(openEventEditor()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Events);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Events));

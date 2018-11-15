@@ -3,9 +3,12 @@ import { connect } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 
 import { closeEventEditor } from '../../../services/ui/actions';
 import { updateEvent, createEvent } from '../../../services/events/actions';
+
+import './style.css';
 
 const emptyEvent = {
   name: '',
@@ -13,6 +16,12 @@ const emptyEvent = {
   desc: '',
   id: -1,
 };
+
+const styles = theme => ({
+  textField: {
+    margin: '0 .2em',
+  },
+});
 
 class EventEditor extends React.Component {
   constructor() {
@@ -57,28 +66,36 @@ class EventEditor extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <Drawer open={this.props.isOpen} onClose={() => this.props.close()} anchor="right">
-        <form autoComplete="off" onSubmit={this.handleSubmit}>
+      <Drawer open={this.props.isOpen} onClose={() => this.props.close()} anchor="right" className={classes.drawer}>
+        <form autoComplete="off" onSubmit={this.handleSubmit} className="event-editor-form">
           <TextField
             id="name"
             label="Name"
             value={this.state.event.name}
             onChange={this.handleChange('name')}
+            className={classes.textField}
           />
           <TextField
             id="time"
             label="Time"
             value={this.state.event.time}
             onChange={this.handleChange('time')}
+            className={classes.textField}
           />
           <TextField
             id="desc"
             label="Description"
             value={this.state.event.desc}
             onChange={this.handleChange('desc')}
+            className={classes.textField}
+            multiline
+            rows="4"
           />
-          <Button type="submit">Submit</Button>
+          <div className='event-editor-button-cont'>
+            <Button type="submit" color="primary" variant="contained">Submit</Button>
+          </div>
         </form>
       </Drawer>
     )
@@ -102,4 +119,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventEditor);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(EventEditor));

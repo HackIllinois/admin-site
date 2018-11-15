@@ -1,0 +1,16 @@
+.events-body {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+}
+
+.events-cont {
+    width: 60%;
+}
+
+.events-contcont {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
