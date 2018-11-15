@@ -19,7 +19,8 @@ const emptyEvent = {
 
 const styles = theme => ({
   textField: {
-    margin: '0 .2em',
+    margin: '5px 0',
+    width: '30vh'
   },
 });
 
