@@ -12,8 +12,12 @@ import './style.css';
 
 const emptyEvent = {
   name: '',
-  time: '',
-  desc: '',
+  description: '',
+  startTime: '2019-04-24T10:30',
+  endTime: '2019-04-24T11:30',
+  locationDescription: '',
+  sponsor: '',
+  eventType: '',
   id: -1,
 };
 
@@ -51,6 +55,7 @@ class EventEditor extends React.Component {
     return (e) => {
       const curEvent = this.state.event;
       curEvent[field] = e.target.value;
+      console.log(curEvent);
       this.setState({ event: curEvent });
     };
   }
@@ -79,20 +84,50 @@ class EventEditor extends React.Component {
             className={classes.textField}
           />
           <TextField
-            id="time"
-            label="Time"
-            value={this.state.event.time}
-            onChange={this.handleChange('time')}
+            id="startTime"
+            label="Start Time"
+            type="datetime-local"
+            value={this.state.event.startTime}
+            onChange={this.handleChange('startTime')}
             className={classes.textField}
           />
           <TextField
-            id="desc"
+            id="endTime"
+            label="End Time"
+            type="datetime-local"
+            value={this.state.event.endTime}
+            onChange={this.handleChange('endTime')}
+            className={classes.textField}
+          />
+          <TextField
+            id="description"
             label="Description"
-            value={this.state.event.desc}
-            onChange={this.handleChange('desc')}
+            value={this.state.event.description}
+            onChange={this.handleChange('description')}
             className={classes.textField}
             multiline
             rows="4"
+          />
+          <TextField
+            id="locationDescription"
+            label="Location Description"
+            value={this.state.event.locationDescription}
+            onChange={this.handleChange('locationDescription')}
+            className={classes.textField}
+          />
+          <TextField
+            id="sponsor"
+            label="Sponsor"
+            value={this.state.event.sponsor}
+            onChange={this.handleChange('sponsor')}
+            className={classes.textField}
+          />
+          <TextField
+            id="eventType"
+            label="Event Type"
+            value={this.state.event.eventType}
+            onChange={this.handleChange('eventType')}
+            className={classes.textField}
           />
           <div className='event-editor-button-cont'>
             <Button type="submit" color="primary" variant="contained">Submit</Button>

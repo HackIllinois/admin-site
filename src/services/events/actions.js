@@ -1,4 +1,5 @@
-// Static counter variable for generating IDs while API isn't hoooked up
+import fetch from 'cross-fetch';
+// Static counter variable to generate IDs for each event since the API doesn't supply one
 let counter = 1000000;
 
 export const RECIEVE_EVENTS = 'RECIEVE_EVENTS';
@@ -9,20 +10,22 @@ export const recieveEvents = data => ({
 
 export function requestEvents() {
   return function(dispatch) {
-    // Pass in dummy data until api endpoint is made, assumes data is already sorted chronologically
-    const data = [{
-        id: 1,
-        name: 'Free McDoubles',
-        time: '7:00',
-        desc: 'All you can eat goodness.  No cheese included.'
-      }, {
-        id: 2,
-        name: 'Elon Musk TED Talk',
-        time: '7:01',
-        desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum'
+    return fetch(`/api/event/`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       }
-    ]
-    dispatch(recieveEvents(data));
+    })
+      .then(
+        res => res.json(),
+        err => {
+
+        }
+      )
+      .then((json) => {
+        dispatch(recieveEvents(json.events));
+      });
   };
 }
 

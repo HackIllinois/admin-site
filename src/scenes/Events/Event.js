@@ -20,7 +20,7 @@ const Event = ({ event, deleteEvent, updateEvent, classes }) => (
     <CardContent>
       <Typography>{event.name}</Typography>
       <Typography color="textSecondary" gutterBottom>{event.time}</Typography>
-      <Typography component="p" gutterBottom>{event.desc}</Typography>
+      <Typography component="p" gutterBottom>{event.description}</Typography>
       <Button color="primary" onClick={() => updateEvent(event)}>Update</Button>
       <Button color="secondary" onClick={() => deleteEvent(event.id)}>delete</Button>
     </CardContent>
