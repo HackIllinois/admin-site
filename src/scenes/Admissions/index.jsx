@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -32,11 +29,11 @@ class HackerFilter extends React.Component {
         <span id="search-icon">
           <SearchIcon />
         </span>
-        <InputBase 
-          id="search-input" 
+        <InputBase
+          id="search-input"
           placeholder="Search…"
           onChange={this.handleChange} 
-          value={this.props.searchText} 
+          value={this.props.searchText}
         />
       </div>
     );
