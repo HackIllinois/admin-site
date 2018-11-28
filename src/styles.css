@@ -86,3 +86,9 @@ ul{
     align-items: center; 
     justify-content: center;
 }
+
+.flexbox-columns {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+}
