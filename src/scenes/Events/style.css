@@ -14,3 +14,19 @@
     display: flex;
     justify-content: center;
 }
+
+.events-tab-bar {
+    margin-top: 1.5em;
+    margin-bottom: .5em;
+}
+
+.event-header-cont {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-time-cont {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}

@@ -19,3 +19,9 @@ export const CLOSE_EVENT_EDITOR = 'CLOSE_EVENT_EDITOR';
 export const closeEventEditor = () => ({
   type: CLOSE_EVENT_EDITOR,
 });
+
+export const CHANGE_EVENT_PAGE_TAB_BAR_INDEX = 'CHANGE_EVENT_PAGE_TAB_BAR_INDEX';
+export const changeEventPageTabBarIndex = (index) => ({
+  type: CHANGE_EVENT_PAGE_TAB_BAR_INDEX,
+  index,
+});

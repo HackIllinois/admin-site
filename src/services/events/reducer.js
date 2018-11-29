@@ -12,10 +12,6 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case RECIEVE_EVENTS:
-      // If no events exist, create array ourselves
-      if(action.events === null) {
-        action.events = [];
-      }
       return Object.assign({}, state, { events: action.events });
     case DELETE_EVENT_SUCCESSFUL:
       const newDeleteEvents = state.events.filter((event) => (

@@ -2,6 +2,7 @@ import {
   TOGGLE_DRAWER,
   OPEN_EVENT_EDITOR,
   CLOSE_EVENT_EDITOR,
+  CHANGE_EVENT_PAGE_TAB_BAR_INDEX,
 } from './actions';
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
     isOpen: false,
     event: null,
   },
+  eventPageTabBarIndex: 0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -20,6 +22,8 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, { eventEditor: { isOpen: true,  event: action.event }});
     case CLOSE_EVENT_EDITOR:
       return Object.assign({}, state, { eventEditor: { isOpen: false, event: null }});
+    case CHANGE_EVENT_PAGE_TAB_BAR_INDEX:
+      return Object.assign({}, state, { eventPageTabBarIndex: action.index });
     default:
       return state;
   }
