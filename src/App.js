@@ -15,7 +15,6 @@ import './styles.css';
 class App extends Component {
   render() {
     return (
-<<<<<<< HEAD
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Home} />
@@ -23,7 +22,6 @@ class App extends Component {
           <Route path="/profile" component={Profile} />
         </Switch>
       </BrowserRouter>
-=======
       <div>
         <BrowserRouter>
           <div>
@@ -38,7 +36,6 @@ class App extends Component {
           </div>
         </BrowserRouter>
       </div>
->>>>>>> master
     );
   }
 }
