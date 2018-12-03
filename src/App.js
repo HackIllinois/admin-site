@@ -15,14 +15,6 @@ import './styles.css';
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/profile" component={Profile} />
-        </Switch>
-      </BrowserRouter>
-      <div>
         <BrowserRouter>
           <div>
             <MenuAppBar />
