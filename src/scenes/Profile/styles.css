@@ -3,6 +3,10 @@ h1, h2, h3, h4, h5, h6, p {
     font-family: "Palatino Linotype", Georgia;
 }
 
+.profile-info {
+    margin-top: 0px;
+}
+
 .github {
     color: gray;
 }
@@ -47,5 +51,6 @@ canvas {
         position: fixed;
         right: 60vw;
         top: 5px;
+        margin-top: 64px;
     }
 }
