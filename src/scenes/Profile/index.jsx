@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Document, Page} from 'react-pdf'
 
 import './styles.css';
 
 import pdfFile from './examplePDF.pdf';
+import { getRegistration } from '../../services/registration/actions';
 
 let profile = {
   name: "John Smith",
@@ -16,63 +18,83 @@ let profile = {
   year: "Freshman"
 };
 
-const Profile = () => (
-  <div className="profile-main">
-    <div className="profile-info">
-      <div>
-        <h1 className="student_name">{profile.name}</h1>
-        <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a></h4>
+class Profile extends React.Component {
+  componentDidMount() {
+    const { getRegistration, jwt } = this.props;
+    if (jwt) {
+      getRegistration("localadmin", jwt);
+    }
+  }
+
+  render() {
+    return (
+      <div className="profile-main">
+        <div className="profile-info">
+          <div>
+            <h1 className="student_name">{profile.name}</h1>
+            <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a>
+            </h4>
+          </div>
+
+          <br></br>
+
+          <div>
+            <h4>
+              Admission Status
+            </h4>
+            <p className={"admission-" + profile.status}>
+              Wave {profile.wave} - {profile.status}
+            </p>
+          </div>
+
+          <br></br>
+
+          <div>
+            <h4>
+              Email
+            </h4>
+            {profile.email}
+          </div>
+
+          <div>
+            <h4>
+              School
+            </h4>
+            {profile.school}
+          </div>
+
+          <div>
+            <h4>
+              Major
+            </h4>
+            {profile.major}
+          </div>
+
+          <div>
+            <h4>
+              Graduation Year
+            </h4>
+            {profile.year}
+          </div>
+
+        </div>
+
+        <div>
+          <Document file={pdfFile}>
+            <Page pageNumber={1}/>
+          </Document>
+        </div>
       </div>
+    )
+  }
+}
 
-      <br></br>
+const mapStateToProps = (state) => ({
+  jwt: state.auth.jwt,
+});
 
-      <div>
-        <h4>
-          Admission Status
-        </h4>
-        <p className={"admission-" + profile.status}>
-          Wave {profile.wave} - {profile.status}
-        </p>
-      </div>
+const mapDispatchToProps = (dispatch) => ({
+  getRegistration: (id, token) => dispatch(getRegistration(id, token)),
+});
 
-      <br></br>
-
-      <div>
-        <h4>
-          Email
-        </h4>
-        {profile.email}
-      </div>
-
-      <div>
-        <h4>
-          School
-        </h4>
-        {profile.school}
-      </div>
-
-      <div>
-        <h4>
-          Major
-        </h4>
-        {profile.major}
-      </div>
-
-      <div>
-        <h4>
-          Graduation Year
-        </h4>
-        {profile.year}
-      </div>
-
-    </div>
-
-    <div>
-      <Document file={pdfFile}>
-        <Page pageNumber={1} />
-      </Document>
-    </div>
-  </div>
-);
-
-export default Profile;
+export default (connect(mapStateToProps, mapDispatchToProps)(Profile));

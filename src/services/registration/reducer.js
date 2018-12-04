@@ -1,17 +1,23 @@
 import {
-  UPDATE_REGISTRATION,
+  GET_REGISTRATION_REQUEST,
+  GET_REGISTRATION_SUCCESS,
+  GET_REGISTRATION_FAILURE,
 } from './actions';
 
 const initialState = {
-  school: null,
-  gender: null,
-  gradYear: null,
+  fetching: false,
+  error: false,
+  user: null,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_REGISTRATION:
-      return Object.assign({}, state, { school: action.school, gender: action.gender, gradYear: action.gradYear });
+    case GET_REGISTRATION_REQUEST:
+      return Object.assign({}, state, { fetching: true, error: false, user: null });
+    case GET_REGISTRATION_SUCCESS:
+      return Object.assign({}, state, { fetching: false, error: false, user: action.user });
+    case GET_REGISTRATION_FAILURE:
+      return Object.assign({}, state, { fetching: false, error: true, user: null });
     default:
       return state;
   }
