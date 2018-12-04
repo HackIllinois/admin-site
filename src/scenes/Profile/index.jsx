@@ -27,70 +27,81 @@ class Profile extends React.Component {
   }
 
   render() {
-    return (
-      <div className="profile-main">
-        <div className="profile-info">
-          <div>
-            <h1 className="student_name">{profile.name}</h1>
-            <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a>
-            </h4>
+    if (this.props.user != null){
+      return (
+        <div className="profile-main">
+          <div className="profile-info">
+            <div>
+              <h1 className="student_name">{this.props.user.attendee.firstName + " " + this.props.user.attendee.lastName}</h1>
+              <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a>
+              </h4>
+            </div>
+
+            <br></br>
+
+            <div>
+              <h4>
+                Admission Status
+              </h4>
+              <p className={"admission-" + profile.status}>
+                Wave {profile.wave} - {profile.status}
+              </p>
+            </div>
+
+            <br></br>
+
+            <div>
+              <h4>
+                Email
+              </h4>
+              {profile.email}
+            </div>
+
+            <div>
+              <h4>
+                School
+              </h4>
+              {profile.school}
+            </div>
+
+            <div>
+              <h4>
+                Major
+              </h4>
+              {profile.major}
+            </div>
+
+            <div>
+              <h4>
+                Graduation Year
+              </h4>
+              {profile.year}
+            </div>
+
           </div>
 
-          <br></br>
-
           <div>
-            <h4>
-              Admission Status
-            </h4>
-            <p className={"admission-" + profile.status}>
-              Wave {profile.wave} - {profile.status}
-            </p>
+            <Document file={pdfFile}>
+              <Page pageNumber={1}/>
+            </Document>
           </div>
-
-          <br></br>
-
-          <div>
-            <h4>
-              Email
-            </h4>
-            {profile.email}
-          </div>
-
-          <div>
-            <h4>
-              School
-            </h4>
-            {profile.school}
-          </div>
-
-          <div>
-            <h4>
-              Major
-            </h4>
-            {profile.major}
-          </div>
-
-          <div>
-            <h4>
-              Graduation Year
-            </h4>
-            {profile.year}
-          </div>
-
         </div>
-
-        <div>
-          <Document file={pdfFile}>
-            <Page pageNumber={1}/>
-          </Document>
+      )
+    } else {
+      return (
+        <div className="profile-main">
+          <div className="profile-info">
+            Loading
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
 
 const mapStateToProps = (state) => ({
   jwt: state.auth.jwt,
+  user: state.registration.user
 });
 
 const mapDispatchToProps = (dispatch) => ({

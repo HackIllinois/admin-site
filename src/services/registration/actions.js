@@ -12,7 +12,6 @@ export function requestRegistration(id) {
 }
 
 function receiveRegistration(err, registration) {
-  console.log(registration);
   if (err)
     return { type: GET_REGISTRATION_FAILURE };
   return {
