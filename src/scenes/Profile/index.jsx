@@ -20,19 +20,31 @@ let profile = {
 
 class Profile extends React.Component {
   componentDidMount() {
+    const username = this.props.match.params.handle;
     const { getRegistration, jwt } = this.props;
     if (jwt) {
-      getRegistration("localadmin", jwt);
+      getRegistration(username, jwt);
     }
   }
 
   render() {
     if (this.props.user != null){
+      if (this.props.user.attendee == null){
+        return (
+          <div className="profile-main">
+            <div className="profile-info">
+              No such attendee found
+            </div>
+          </div>
+        )
+      }
+      const attendee = this.props.user.attendee;
+      
       return (
         <div className="profile-main">
           <div className="profile-info">
             <div>
-              <h1 className="student_name">{this.props.user.attendee.firstName + " " + this.props.user.attendee.lastName}</h1>
+              <h1 className="student_name">{attendee.firstName + " " + attendee.lastName}</h1>
               <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a>
               </h4>
             </div>

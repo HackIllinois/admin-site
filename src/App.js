@@ -24,7 +24,7 @@ class App extends Component {
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route path="/events" component={Events} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/profile/:handle" component={Profile} />
             </Switch>
           </div>
         </BrowserRouter>
