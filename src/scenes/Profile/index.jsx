@@ -28,8 +28,8 @@ class Profile extends React.Component {
   }
 
   render() {
-    if (this.props.user != null){
-      if (this.props.user.attendee == null){
+    if (this.props.fetching === false){
+      if (this.props.user === null || this.props.user.attendee === null){
         return (
           <div className="profile-main">
             <div className="profile-info">
@@ -39,22 +39,22 @@ class Profile extends React.Component {
         )
       }
       const attendee = this.props.user.attendee;
-      
+
       return (
         <div className="profile-main">
           <div className="profile-info">
             <div>
               <h1 className="student_name">{attendee.firstName + " " + attendee.lastName}</h1>
-              <h4 className="github">Github: <a target="_blank" href={"github.com/" + profile.github}>{profile.github}</a>
+              <h4 className="github">Github: <a target="_blank" href={"github.com/" + attendee.github}>{attendee.github}</a>
               </h4>
             </div>
 
             <br></br>
 
             <div>
-              <h4>
+              <h3>
                 Admission Status
-              </h4>
+              </h3>
               <p className={"admission-" + profile.status}>
                 Wave {profile.wave} - {profile.status}
               </p>
@@ -63,31 +63,31 @@ class Profile extends React.Component {
             <br></br>
 
             <div>
-              <h4>
+              <h3>
                 Email
-              </h4>
-              {profile.email}
+              </h3>
+              {attendee.email}
             </div>
 
             <div>
-              <h4>
+              <h3>
                 School
-              </h4>
-              {profile.school}
+              </h3>
+              {attendee.school}
             </div>
 
             <div>
-              <h4>
+              <h3>
                 Major
-              </h4>
-              {profile.major}
+              </h3>
+              {attendee.major}
             </div>
 
             <div>
-              <h4>
+              <h3>
                 Graduation Year
-              </h4>
-              {profile.year}
+              </h3>
+              {attendee.graduationYear}
             </div>
 
           </div>
@@ -113,7 +113,9 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => ({
   jwt: state.auth.jwt,
-  user: state.registration.user
+  user: state.registration.user,
+  fetching: state.registration.fetching,
+  error: state.registration.error
 });
 
 const mapDispatchToProps = (dispatch) => ({
