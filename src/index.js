@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+import announcementReducer from './services/announcement/reducer';
 import authReducer from './services/auth/reducer';
 import { setJWT } from './services/auth/actions';
 import checkinReducer from './services/checkin/reducer';
@@ -20,6 +21,7 @@ import userReducer from './services/user/reducer';
 import './reset.css';
 
 const rootReducer = combineReducers({
+  announcement: announcementReducer,
   auth: authReducer,
   checkin: checkinReducer,
   events: eventsReducer,

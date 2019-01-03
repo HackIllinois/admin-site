@@ -9,6 +9,7 @@ import Home from './scenes/Home';
 import Login from './scenes/Login';
 import Profile from './scenes/Profile'
 import Events from './scenes/Events';
+import Announcements from './scenes/Announcements';
 
 import './styles.css';
 
@@ -25,6 +26,7 @@ class App extends Component {
               <Route path="/login" component={Login} />
               <Route path="/events" component={Events} />
               <Route path="/profile/:handle" component={Profile} />
+              <Route path="/announcements" component={Announcements} />
             </Switch>
           </div>
         </BrowserRouter>

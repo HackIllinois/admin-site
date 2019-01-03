@@ -1,0 +1,63 @@
+#card-container {
+    height: calc(100vh - 56px);
+    background: url("../../assets/waves.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#confirm-card {
+ display: none;
+}
+
+#announcement-card {
+    height: 525px;
+    width: 725px;
+    border: 1px solid #77aaff;
+}
+
+#card-logo {
+    width: 100px;
+    height: 100px;
+    margin-top: 40px;
+}
+
+#card-content {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+}
+
+#card-form {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.text-fields {
+    width: 100%;
+    overflow: hidden;
+}
+
+.forgot-info {
+    text-align: start;
+}
+
+#send, #view, #confirm{
+    margin-top: 20px;
+}
+
+#signup {
+    margin-top: 20px;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+@media screen and (min-width: 600px) {
+
+    #card-container {
+        height: calc(100vh - 64px);
+    }
+}
