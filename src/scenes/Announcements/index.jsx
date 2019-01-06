@@ -10,7 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import './styles.css';
 import logo from '../../assets/logo.png';
 
-import { sendAnnouncement } from '../../services/announcement/actions';
+import { saveAnnouncement } from '../../services/announcement/actions';
 
 class Announcements extends React.Component {
   render() {
@@ -48,7 +48,7 @@ class Announcements extends React.Component {
 
                   let text = document.getElementById("announcement").value;
 
-                  this.props.sendAnnouncement(text);
+                  this.props.saveAnnouncement(text);
                 }}>
                 Send Announcement
               </Button>
@@ -83,7 +83,7 @@ class Announcements extends React.Component {
                 onClick={() => {
                   console.log("Sent Announcement hypothetically");
                   document.getElementById("view").click();
-                  
+
                   document.getElementById("announcement").focus();
                 }}>
                 Confirm Announcement
@@ -104,7 +104,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  sendAnnouncement: (message) => dispatch(sendAnnouncement(message)),
+  saveAnnouncement: (message) => dispatch(saveAnnouncement(message)),
 });
 
 

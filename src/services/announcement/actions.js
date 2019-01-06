@@ -1,6 +1,6 @@
-export const SEND_ANNOUNCEMENT = 'SEND_ANNOUNCEMENT';
+export const SAVE_ANNOUNCEMENT = 'SAVE_ANNOUNCEMENT';
 
-export const sendAnnouncement = (announcement = "") => ({
-  type: SEND_ANNOUNCEMENT,
+export const saveAnnouncement = (announcement = "") => ({
+  type: SAVE_ANNOUNCEMENT,
   announcement: announcement
 });

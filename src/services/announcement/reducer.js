@@ -1,5 +1,5 @@
 import {
-  SEND_ANNOUNCEMENT,
+  SAVE_ANNOUNCEMENT,
 } from './actions';
 
 const initialState = {
@@ -8,7 +8,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SEND_ANNOUNCEMENT:
+    case SAVE_ANNOUNCEMENT:
       return Object.assign({}, state, { announcement: action.announcement});
     default:
       return state;
