@@ -11,7 +11,7 @@ const Hacker = (props) => (
       <Avatar>
         <ImageIcon />
       </Avatar>
-      <ListItemText primary={props.name} secondary={props.date} />
+      <ListItemText primary={props.firstname} secondary={props.lastname} />
     </ListItem>
   );
   
@@ -36,21 +36,19 @@ class HackerFilter extends React.Component {
 }
 
 class HackerList extends React.Component {
-  filter = (hackers) => {
-    if (!this.props.filter) {
-      return hackers;
+  parseHackers = (hackers) => {
+    console.log(hackers);
+    if (!hackers) {
+      return [];
     }
-    return hackers.filter(
-      hacker =>
-        hacker.toLowerCase().indexOf(this.props.filter.toLowerCase()) >= 0
-    );
+    return hackers;
   }
 
   render() {
     return (
       <ul className="student-list">
-        {this.filter(this.props.hackers).map((hackerName) => (
-          <Hacker name={hackerName} date="Feb 24, 2019" />
+        {this.parseHackers(this.props.hackers).map((hacker) => (
+          <Hacker name={hacker.firstname} date={hacker.lastname} />
         ))}
       </ul>
     );
@@ -58,33 +56,10 @@ class HackerList extends React.Component {
 }
 
 class HackerSearch extends React.Component {
-  constructor() {
-    super();
-    const HACKERS = [
-      "Elia Larkey",
-      "Joyce Bearce",
-      "Clint Strahan",
-      "Maude Defrank",
-      "Soila Hendren",
-      "Eliana Carrales",
-      "Marquerite Bettes",
-      "Mikaela Authement",
-      "Elyse Toscano",
-      "Ginette Solomon",
-      "Wanita Sprinkle",
-      "Yen Hagans",
-      "Annmarie Schaper",
-      "Gregg Wilkins",
-      "Eura Prue",
-      "Addie Madding",
-      "Tameika Murph",
-      "Keenan Woolsey",
-      "Hertha Hyer",
-      "Sharan Letsinger"
-    ];
+  constructor(props) {
+    super(props);
 
     this.state = {
-      hackers: HACKERS,
       filter: ""
     };
   }
@@ -93,6 +68,7 @@ class HackerSearch extends React.Component {
     this.setState({
       filter: inputValue
     });
+    this.props.filterListener(inputValue);
   }
 
   render() {
@@ -104,7 +80,7 @@ class HackerSearch extends React.Component {
         />
         <HackerList
           filter={this.state.filter}
-          hackers={this.state.hackers}
+          hackers={this.props.decisions}
         />
       </div>
     );
