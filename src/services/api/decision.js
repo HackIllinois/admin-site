@@ -1,6 +1,6 @@
 const getDecisionRoute = `${process.env.REACT_APP_API_ENDPOINT}/decision`;
 
-export function fetchDecision(query, token) {
+export function fetchDecisionList(query, token) {
   return fetch(`${getDecisionRoute}/filter/?${query}`, {
     method: 'GET',
     headers: {

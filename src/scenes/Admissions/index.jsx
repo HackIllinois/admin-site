@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import HackerSearch from '../../components/HackerSearch';
-import { getDecision } from '../../services/decision/actions';
-import { getRegistration } from '../../services/registration/actions';
+import { getDecisionList } from '../../services/decision/actions';
+import { getRegistrationList } from '../../services/registration/actions';
 
 import './styles.css';
 
@@ -13,17 +13,17 @@ class Admissions extends React.Component {
   }
 
   getHackers = (filter) => {
-    const { getDecision, getUserInfo, jwt } = this.props;
+    const { getDecisionList, getRegistrationList, jwt } = this.props;
     if (jwt) {
-      getDecision(filter, jwt);
-      getUserInfo("localadmin", jwt);
+      getRegistrationList(filter, jwt);
+      getDecisionList(filter, jwt);
     }
   }
 
   render() {
     return (
       <div className="flexbox-center flexbox-columns" id="admissions">
-        <HackerSearch decisions={this.props.decisions} filterListener={this.getHackers}/>
+        <HackerSearch filterListener={this.getHackers}/>
       </div>
     )
   }
@@ -34,8 +34,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getDecision: (query, token) => dispatch(getDecision(query, token)),
-  getUserInfo: (id, token) => dispatch(getRegistration(id, token)),
+  getDecisionList: (query, token) => dispatch(getDecisionList(query, token)),
+  getRegistrationList: (query, token) => dispatch(getRegistrationList(query, token)),
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(Admissions));

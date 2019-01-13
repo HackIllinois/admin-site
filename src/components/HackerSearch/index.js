@@ -41,6 +41,7 @@ class HackerList extends React.Component {
   render() {
     return (
       <ul className="student-list">
+        {console.log(this.props.usersList)}
         {this.props.decisions.map((decision) => (
           <Hacker key={decision.id} id={decision.id} status={decision.finalized} />
         ))}
@@ -75,6 +76,7 @@ class HackerSearch extends React.Component {
         <HackerList
           filter={this.state.filter}
           decisions={this.props.decisions}
+          usersList={this.props.usersList}
         />
       </div>
     );
@@ -83,6 +85,7 @@ class HackerSearch extends React.Component {
 
 const mapStateToProps = (state) => ({
   decisions: state.decision.decisions,
+  usersList: state.registration.usersList,
 });
 
 export default connect(mapStateToProps)(HackerSearch);
