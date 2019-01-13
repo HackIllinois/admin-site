@@ -11,13 +11,19 @@ export function requestDecision(query) {
   }
 }
 
-function receiveDecision(err, decision) {
+export function receiveDecision(err, data) {
   if (err) {
     return { type: GET_DECISION_FAILURE };
   }
+
+  let decisionsArr = [];
+  if (data.decisions) {
+    decisionsArr = data.decisions;
+  }
+
   return {
     type: GET_DECISION_SUCCESS,
-    decision: decision,
+    decisions: decisionsArr,
   };
 }
 

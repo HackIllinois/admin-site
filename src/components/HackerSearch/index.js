@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
@@ -7,13 +9,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
 const Hacker = (props) => (
-    <ListItem>
-      <Avatar>
-        <ImageIcon />
-      </Avatar>
-      <ListItemText primary={props.firstname} secondary={props.lastname} />
-    </ListItem>
-  );
+  <ListItem>
+    <Avatar>
+      <ImageIcon />
+    </Avatar>
+    <ListItemText primary={props.id} secondary={props.status.toString()} />
+  </ListItem>
+);
   
 class HackerFilter extends React.Component {
   handleChange = (event) => {
@@ -36,19 +38,11 @@ class HackerFilter extends React.Component {
 }
 
 class HackerList extends React.Component {
-  parseHackers = (hackers) => {
-    console.log(hackers);
-    if (!hackers) {
-      return [];
-    }
-    return hackers;
-  }
-
   render() {
     return (
       <ul className="student-list">
-        {this.parseHackers(this.props.hackers).map((hacker) => (
-          <Hacker name={hacker.firstname} date={hacker.lastname} />
+        {this.props.decisions.map((decision) => (
+          <Hacker key={decision.id} id={decision.id} status={decision.finalized} />
         ))}
       </ul>
     );
@@ -80,11 +74,15 @@ class HackerSearch extends React.Component {
         />
         <HackerList
           filter={this.state.filter}
-          hackers={this.props.decisions}
+          decisions={this.props.decisions}
         />
       </div>
     );
   }
 }
 
-export default HackerSearch;
+const mapStateToProps = (state) => ({
+  decisions: state.decision.decisions,
+});
+
+export default connect(mapStateToProps)(HackerSearch);

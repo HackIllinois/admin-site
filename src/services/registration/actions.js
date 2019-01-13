@@ -11,7 +11,7 @@ export function requestRegistration(id) {
   }
 }
 
-function receiveRegistration(err, registration) {
+export function receiveRegistration(err, registration) {
   if (err)
     return { type: GET_REGISTRATION_FAILURE };
   return {

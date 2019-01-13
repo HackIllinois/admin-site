@@ -31,7 +31,6 @@ class Admissions extends React.Component {
 
 const mapStateToProps = (state) => ({
   jwt: state.auth.jwt,
-  decisions: state.decisions,
 });
 
 const mapDispatchToProps = (dispatch) => ({

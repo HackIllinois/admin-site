@@ -1,5 +1,3 @@
-import { checkServerIdentity } from "tls";
-
 const getDecisionRoute = `${process.env.REACT_APP_API_ENDPOINT}/decision`;
 
 export function fetchDecision(query, token) {
