@@ -16,14 +16,14 @@ export function receiveDecisionList(err, data) {
     return { type: GET_DECISION_FAILURE };
   }
 
-  let decisionsArr = [];
+  let decisions = [];
   if (data.decisions) {
-    decisionsArr = data.decisions;
+    decisions = data.decisions;
   }
 
   return {
     type: GET_DECISION_SUCCESS,
-    decisions: decisionsArr,
+    decisions: decisions,
   };
 }
 

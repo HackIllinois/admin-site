@@ -9,15 +9,28 @@ import './styles.css';
 
 class Admissions extends React.Component {
   componentDidMount() {
-    this.getHackers("");
+    this.getHackers("", 0);
   }
 
-  getHackers = (filter) => {
+  getHackers = (github, wave) => {
     const { getDecisionList, getRegistrationList, jwt } = this.props;
+    
     if (jwt) {
-      getRegistrationList(filter, jwt);
-      getDecisionList(filter, jwt);
+      let registrationQuery = "";
+      if (github.length > 0) {
+        registrationQuery = "id=" + github;
+      }
+
+      let decisionQuery = registrationQuery;
+      // TODO: check what the starting wave number is
+      if (wave > 0) {
+        decisionQuery += "&wave=" + wave.toString();
+      }
+
+      getRegistrationList(registrationQuery, jwt);
+      getDecisionList(decisionQuery, jwt);  
     }
+
   }
 
   render() {
