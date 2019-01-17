@@ -28,4 +28,3 @@ export function fetchRegistrationList(query, token) {
     }
     return response.json()
   });
-}

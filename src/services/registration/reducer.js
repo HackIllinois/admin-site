@@ -22,7 +22,7 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, { fetching: false, error: false, user: action.user });
     case GET_REGISTRATION_FAILURE:
       return Object.assign({}, state, { fetching: false, error: true, user: null });
-      case GET_REGISTRATION_LIST_REQUEST:
+    case GET_REGISTRATION_LIST_REQUEST:
       return Object.assign({}, state, { fetching: true, error: false, usersList: [] });
     case GET_REGISTRATION_LIST_SUCCESS:
       return Object.assign({}, state, { fetching: false, error: false, usersList: action.usersList });
