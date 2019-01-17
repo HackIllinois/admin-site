@@ -52,7 +52,7 @@ class Profile extends React.Component {
             <br></br>
 
             <div>
-              <h3>
+              <h3 className="category">
                 Admission Status
               </h3>
               <p className={"admission-" + profile.status}>
@@ -63,28 +63,28 @@ class Profile extends React.Component {
             <br></br>
 
             <div>
-              <h3>
+              <h3 className="category">
                 Email
               </h3>
               {attendee.email}
             </div>
 
             <div>
-              <h3>
+              <h3 className="category">
                 School
               </h3>
               {attendee.school}
             </div>
 
             <div>
-              <h3>
+              <h3 className="category">
                 Major
               </h3>
               {attendee.major}
             </div>
 
             <div>
-              <h3>
+              <h3 className="category">
                 Graduation Year
               </h3>
               {attendee.graduationYear}
