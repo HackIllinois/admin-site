@@ -21,6 +21,9 @@ const styles = {
   pending: {
     color: yellow[600],
   },
+  decision: {
+
+  }
 };
   
 const HackerIcon = (props) => {
@@ -34,11 +37,15 @@ const HackerIcon = (props) => {
   }
 }
   
-const Hacker = (props) => (
-  <ListItem>
-      <HackerIcon status={props.status} styles={props.classes} />
-      <ListItemText primary={props.firstName + " " + props.lastName} secondary={props.status} />
-  </ListItem>
-);
-
-export default withStyles(styles)(Hacker);
+const HackerListItem = (props) => {
+  const { classes } = props;
+  return (
+    <div>
+      <ListItem>
+          <HackerIcon status={props.status} styles={classes} />
+          <ListItemText secondary={"Name: " + props.firstName + " " + props.lastName} primary={"ID: " + props.github} />
+      </ListItem>
+    </div>
+  );
+}
+export default withStyles(styles)(HackerListItem);
