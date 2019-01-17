@@ -73,9 +73,7 @@ class HackerSearchInput extends React.Component {
           <Select
             value={this.state.wave}
             onChange={this.handleWaveChange}
-            input={
-            <OutlinedInput labelWidth={this.state.labelWidth} name="wave" />
-            }
+            input={<OutlinedInput labelWidth={this.state.labelWidth} name="wave" />}
           >
             <MenuItem value={0}><em>Any</em></MenuItem>
             <MenuItem value={1}>1</MenuItem>

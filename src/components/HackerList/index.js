@@ -12,7 +12,6 @@ import TableRow from "@material-ui/core/TableRow";
 import HackerListItem from '../HackerListItem';
 import HackerListPagination from '../HackerListPagination';
 
-
 const styles = (theme) => ({
   root: {
     width: "100%",

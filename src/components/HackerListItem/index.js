@@ -21,9 +21,6 @@ const styles = {
   pending: {
     color: yellow[600],
   },
-  decision: {
-
-  }
 };
   
 const HackerIcon = (props) => {
@@ -43,7 +40,10 @@ const HackerListItem = (props) => {
     <div>
       <ListItem>
           <HackerIcon status={props.status} styles={classes} />
-          <ListItemText secondary={"Name: " + props.firstName + " " + props.lastName} primary={"ID: " + props.github} />
+          <ListItemText  
+            primary={"ID: " + props.github}
+            secondary={"Name: " + props.firstName + " " + props.lastName} 
+          />
       </ListItem>
     </div>
   );
