@@ -1,0 +1,61 @@
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    font-family: "Palatino Linotype", Georgia;
+}
+
+.category {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.profile-info {
+    margin-top: 0px;
+}
+
+.github {
+    color: gray;
+}
+
+.profile-main {
+    padding: 10px;
+    font-size: 1.25em;
+    line-height: 1.5em;
+}
+
+.admission-Accepted{
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #00FF00;
+}
+
+.admission-Denied{
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FF0000;
+}
+
+.admission-Waiting{
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #0000FF;
+}
+
+canvas {
+    border: 1px black solid;
+}
+
+@media screen and (min-width: 1000px) {
+    /* Moves PDF to right side if there is space*/
+    canvas {
+        position: fixed;
+        left: 45vw;
+        top: 0px;
+    }
+
+    .profile-info {
+        position: fixed;
+        right: 60vw;
+        top: 5px;
+        margin-top: 64px;
+    }
+}

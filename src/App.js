@@ -7,6 +7,7 @@ import Menu from './components/Menu';
 
 import Home from './scenes/Home';
 import Login from './scenes/Login';
+import Profile from './scenes/Profile'
 import Events from './scenes/Events';
 
 import './styles.css';
@@ -14,7 +15,6 @@ import './styles.css';
 class App extends Component {
   render() {
     return (
-      <div>
         <BrowserRouter>
           <div>
             <MenuAppBar />
@@ -24,10 +24,10 @@ class App extends Component {
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route path="/events" component={Events} />
+              <Route path="/profile/:handle" component={Profile} />
             </Switch>
           </div>
         </BrowserRouter>
-      </div>
     );
   }
 }
