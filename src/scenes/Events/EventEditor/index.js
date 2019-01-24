@@ -84,8 +84,13 @@ class EventEditor extends React.Component {
     submitEvent.endTime = Date.parse(this.state.event.endTime);
     submitEvent.longitude = submitEvent.location.longitude;
     submitEvent.latitude = submitEvent.location.latitude;
+    console.log(submitEvent)
 
-    if(submitEvent.name === '' || submitEvent.description === '' || submitEvent.sponser === '' || submitEvent.locationDescription === '') {
+    if(submitEvent.name === '' ||
+       submitEvent.description === '' ||
+       submitEvent.sponser === '' ||
+       submitEvent.locationDescription === ''
+      ) {
       return;
     }
 

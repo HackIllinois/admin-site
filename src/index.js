@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
-
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -40,6 +40,24 @@ const store = createStore(
 // Change to material-ui updated typography
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+    type: 'dark',
+  },
+});
+
 // Use admin token from environment variables in development
 // since OAuth won't work with local api instance
 if (process.env.NODE_ENV === "development") {
@@ -48,7 +66,9 @@ if (process.env.NODE_ENV === "development") {
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
 );

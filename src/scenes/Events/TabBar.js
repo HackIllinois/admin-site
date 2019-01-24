@@ -8,7 +8,9 @@ import Tab from '@material-ui/core/Tab';
 import { changeEventPageTabBarIndex } from 'services/ui/actions';
 
 const styles = {
-
+  root: {
+    width: '60%',
+  }
 };
 
 class TabBar extends React.Component {
