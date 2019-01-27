@@ -1,15 +1,23 @@
 import {
   SAVE_ANNOUNCEMENT,
+  UPDATE_SELECTED_TOPIC,
+  GET_NOTIFICATION_SUCCESS,
 } from './actions';
 
 const initialState = {
   announcement: null,
+  selectedTopic: null,
+  topics: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_ANNOUNCEMENT:
       return Object.assign({}, state, { announcement: action.announcement});
+    case UPDATE_SELECTED_TOPIC:
+      return Object.assign({}, state, { selectedTopic: action.selectedTopic});
+    case GET_NOTIFICATION_SUCCESS:
+      return Object.assign({}, state, { topics: action.topics});
     default:
       return state;
   }
