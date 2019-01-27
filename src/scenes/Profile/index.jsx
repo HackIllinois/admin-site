@@ -29,7 +29,7 @@ class Profile extends React.Component {
 
   render() {
     if (this.props.fetching === false){
-      if (this.props.user === null || this.props.user.attendee === null){
+      if (this.props.attendee === null || this.props.attendee.attendee === null){
         return (
           <div className="profile-main">
             <div className="profile-info">
@@ -38,8 +38,7 @@ class Profile extends React.Component {
           </div>
         )
       }
-      const attendee = this.props.user.attendee;
-
+      const attendee = this.props.attendee;
       return (
         <div className="profile-main">
           <div className="profile-info">
@@ -113,7 +112,7 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => ({
   jwt: state.auth.jwt,
-  user: state.registration.user,
+  attendee: state.registration.attendee,
   fetching: state.registration.fetching,
   error: state.registration.error
 });

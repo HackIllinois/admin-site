@@ -14,6 +14,7 @@ import { setJWT } from './services/auth/actions';
 import checkinReducer from './services/checkin/reducer';
 import eventsReducer from './services/events/reducer';
 import rsvpReducer from './services/rsvp/reducer';
+import registrationReducer from './services/registration/reducer';
 import uiReducer from './services/ui/reducer';
 import userReducer from './services/user/reducer';
 
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   checkin: checkinReducer,
   events: eventsReducer,
   rsvp: rsvpReducer,
+  registration: registrationReducer,
   ui: uiReducer,
   user: userReducer
 });

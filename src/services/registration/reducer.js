@@ -7,17 +7,17 @@ import {
 const initialState = {
   fetching: false,
   error: false,
-  user: null,
+  attendee: null,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_REGISTRATION_REQUEST:
-      return Object.assign({}, state, { fetching: true, error: false, user: null });
+      return Object.assign({}, state, { fetching: true, error: false, attendee: null });
     case GET_REGISTRATION_SUCCESS:
-      return Object.assign({}, state, { fetching: false, error: false, user: action.user });
+      return Object.assign({}, state, { fetching: false, error: false, attendee: action.attendee.attendee});
     case GET_REGISTRATION_FAILURE:
-      return Object.assign({}, state, { fetching: false, error: true, user: null });
+      return Object.assign({}, state, { fetching: false, error: true, attendee: null });
     default:
       return state;
   }

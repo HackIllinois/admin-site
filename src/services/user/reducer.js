@@ -15,7 +15,7 @@ const reducer = (state = initialState, action) => {
     case GET_USER_REQUEST:
       return Object.assign({}, state, { fetching: true, error: false, user: null });
     case GET_USER_SUCCESS:
-      return Object.assign({}, state, { fetching: false, error: false, user: action.user });
+      return Object.assign({}, state, { fetching: false, error: false, user: action.user});
     case GET_USER_FAILURE:
       return Object.assign({}, state, { fetching: false, error: true, user: null });
     default:

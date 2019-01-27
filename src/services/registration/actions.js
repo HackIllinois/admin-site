@@ -16,7 +16,7 @@ function receiveRegistration(err, registration) {
     return { type: GET_REGISTRATION_FAILURE };
   return {
     type: GET_REGISTRATION_SUCCESS,
-    user: registration,
+    attendee: registration,
   };
 }
 
