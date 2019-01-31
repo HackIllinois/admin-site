@@ -84,19 +84,24 @@ class HackerList extends React.Component {
 
           <TableFooter>
             <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[1, 5, 10]}
-                colSpan={3}
-                count={hackerInfo.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  native: true
-                }}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                ActionsComponent={HackerListPagination}
-              />
+              <TableCell>
+                <TablePagination
+                  rowsPerPageOptions={[1, 5, 10, 25]}
+                  component="div"
+                  count={hackerInfo.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                  }}
+                  nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                  }}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  ActionsComponent={HackerListPagination}
+                />
+              </TableCell>
             </TableRow>
           </TableFooter>
           </Table>
