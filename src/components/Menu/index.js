@@ -10,6 +10,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import EventsIcon from '@material-ui/icons/Event';
+import BeenhereIcon from '@material-ui/icons/Beenhere';
 import { Link } from 'react-router-dom';
 
 import { toggleDrawer } from '../../services/ui/actions';
@@ -45,6 +46,10 @@ class Menu extends React.Component {
             <ListItem button key="Announcements">
               <ListItemIcon><AnnouncementIcon/></ListItemIcon>
               <ListItemText primary="Announcements" />
+            </ListItem>
+            <ListItem button key="Admissions">
+              <ListItemIcon><BeenhereIcon/></ListItemIcon>
+              <ListItemText primary="Admissions" />
             </ListItem>
           </List>
         </div>

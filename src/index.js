@@ -16,6 +16,7 @@ import registrationReducer from './services/registration/reducer';
 import rsvpReducer from './services/rsvp/reducer';
 import uiReducer from './services/ui/reducer';
 import userReducer from './services/user/reducer';
+import decisionReducer from './services/decision/reducer';
 
 import './reset.css';
 
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   registration: registrationReducer,
   rsvp: rsvpReducer,
   ui: uiReducer,
-  user: userReducer
+  user: userReducer,
+  decision: decisionReducer,
 });
 
 const store = createStore(
