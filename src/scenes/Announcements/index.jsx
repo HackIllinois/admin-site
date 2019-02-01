@@ -17,20 +17,8 @@ import logo from '../../assets/logo.png';
 
 import { saveAnnouncement, getNotification, updateSelectedNotification, sendAnnouncement } from '../../services/announcement/actions';
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 const selected = {topic: ''};
+let topics = [];
 
 class Announcements extends React.Component {
   componentDidMount() {
@@ -38,118 +26,120 @@ class Announcements extends React.Component {
     if (jwt) {
       getNotification(jwt);
     }
-    const topics = this.props.announcement.topics;
   }
 
   render() {
-    return (
-      <div className="flexbox-center" id="card-container">
-        <Card id="announcement-card">
-          <CardMedia
-            className="center"
-            id="card-logo"
-            image={logo}
-            title="HackIllinois"
-          />
+    if (this.props.announcement.topics.topics === undefined){
+      return (<div>No topics gathered</div>)
+    } else {
+      topics = this.props.announcement.topics.topics;
+      return (
+        <div className="flexbox-center" id="card-container">
+          <Card id="announcement-card">
+            <CardMedia
+              className="center"
+              id="card-logo"
+              image={logo}
+              title="HackIllinois"
+            />
 
-          <div className="flexbox-center">
-            <FormControl className="select">
-              <InputLabel htmlFor="select-multiple">Name</InputLabel>
-              <Select
-                value={selected.topic}
-                onChange={(event) => {
-                  const topic = event.target.value;
-                  selected.topic = topic;
-                  this.props.updateNotification(selected.topic);
-                }}>
-                {names.map(name => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-
-          <CardContent id="card-content">
-            <div id="card-form">
-              <TextField
-                id="announcement"
-                label="Announcements"
-                name="announcements"
-                className="center text-fields"
-                margin="normal"
-                variant="outlined"
-                multiline={true}
-                rowsMax={12}
-              />
-
-              <Button className="center" id="send" variant="contained" color="primary"
-                onClick={() => {
-
-                  let text = document.getElementById("announcement").value;
-
-                  if (this.props.announcement.selectedTopic === '' || text.trim() === ''){
-                    return;
-                  }
-
-                  let announcement_card = document.getElementById("announcement-card");
-                  announcement_card.style.display = "none";
-
-                  let confirm_card = document.getElementById("confirm-card");
-                  confirm_card.style.display = "block";
-
-
-                  this.props.saveAnnouncement(text);
-                }}>
-                Send Announcement
-              </Button>
+            <div className="flexbox-center">
+              <FormControl className="select">
+                <InputLabel htmlFor="select-multiple">Name</InputLabel>
+                <Select
+                  value={selected.topic}
+                  onChange={(event) => {
+                    const topic = event.target.value;
+                    selected.topic = topic;
+                    this.props.updateNotification(selected.topic);
+                  }}>
+                  {topics.map(name => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
-          </CardContent>
-        </Card>
 
-        <Card id="confirm-card">
-          <CardMedia
-            className="center"
-            id="card-logo"
-            image={logo}
-            title="HackIllinois"
-          />
+            <CardContent id="card-content">
+              <div id="card-form">
+                <TextField
+                  id="announcement"
+                  label="Announcements"
+                  name="announcements"
+                  className="center text-fields"
+                  margin="normal"
+                  variant="outlined"
+                  multiline={true}
+                  rowsMax={12}
+                />
 
-          <CardContent id="card-content">
-            <div id="card-form">
-              <Button className="center" id="view" variant="contained" color="primary"
-                onClick={() => {
-                  let announcement_card = document.getElementById("announcement-card");
-                  announcement_card.style.display = "block";
+                <Button className="center" id="send" variant="contained" color="primary"
+                        onClick={() => {
 
-                  let confirm_card = document.getElementById("confirm-card");
-                  confirm_card.style.display = "none";
+                          let text = document.getElementById("announcement").value;
 
-                  document.getElementById("announcement").focus();
-                }}>
-                Review
-              </Button>
+                          if (this.props.announcement.selectedTopic === '' || text.trim() === '') {
+                            return;
+                          }
 
-              <Button className="center" id="confirm" variant="contained" color="secondary"
-                onClick={() => {
-                  const message = this.props.announcement.announcement;
-                  const topic = this.props.announcement.selectedTopic;
-                  const jwt = this.props.jwt;
-                  this.props.sendAnnouncement(message, topic, jwt);
-                  document.getElementById("view").click();
+                          let announcement_card = document.getElementById("announcement-card");
+                          announcement_card.style.display = "none";
 
-                  document.getElementById("announcement").focus();
-                }}>
-                Confirm Announcement
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                          let confirm_card = document.getElementById("confirm-card");
+                          confirm_card.style.display = "block";
 
-      </div>
-    )
+                          this.props.saveAnnouncement(text);
+                        }}>
+                  Send Announcement
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
+          <Card id="confirm-card">
+            <CardMedia
+              className="center"
+              id="card-logo"
+              image={logo}
+              title="HackIllinois"
+            />
+
+            <CardContent id="card-content">
+              <div id="card-form">
+                <Button className="center" id="view" variant="contained" color="primary"
+                        onClick={() => {
+                          let announcement_card = document.getElementById("announcement-card");
+                          announcement_card.style.display = "block";
+
+                          let confirm_card = document.getElementById("confirm-card");
+                          confirm_card.style.display = "none";
+
+                          document.getElementById("announcement").focus();
+                        }}>
+                  Review
+                </Button>
+
+                <Button className="center" id="confirm" variant="contained" color="secondary"
+                        onClick={() => {
+                          const message = this.props.announcement.announcement;
+                          const topic = this.props.announcement.selectedTopic;
+                          const jwt = this.props.jwt;
+                          this.props.sendAnnouncement(message, topic, jwt);
+                          document.getElementById("view").click();
+
+                          document.getElementById("announcement").focus();
+                        }}>
+                  Confirm Announcement
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+        </div>
+      )
+    }
   }
 }
 

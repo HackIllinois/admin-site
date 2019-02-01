@@ -5,8 +5,8 @@ import {
 } from './actions';
 
 const initialState = {
-  announcement: null,
-  selectedTopic: null,
+  announcement: '',
+  selectedTopic: '',
   topics: [],
 };
 

@@ -16,16 +16,18 @@ export function fetchNotificationTopics(token) {
 }
 
 export function pushAnnouncement(announcement, topic, token) {
-  return fetch(`${getNotificationsRoute}/` + topic, {
+  const body_object = {
+    'topic' : topic,
+    'body': announcement,
+  };
+  const body_JSON = JSON.stringify(body_object);
+  return fetch(`${getNotificationsRoute}` + topic + '/', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       Authorization: token,
     },
-    body: {
-      'topic' : topic,
-      'body': announcement,
-    },
+    body: body_JSON,
   }).then(response => {
     if (response.status >= 400) {
       throw new Error(response);
