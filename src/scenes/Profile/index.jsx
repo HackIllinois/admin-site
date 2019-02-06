@@ -59,8 +59,8 @@ class Profile extends React.Component {
           <div className="profile-info">
             <div>
               <h1 className="student_name">{attendee.firstname + " " + attendee.lastname}</h1>
-              <h4 className="github">Github: <a target="_blank" href={"github.com/" + attendee.github}>{attendee.github}</a>
-              </h4>
+              <h4 className="github">Github: <a target="_blank" href={"github.com/" + attendee.github}>{attendee.github}</a></h4>
+              <h4 className="github">Linkedin: <a target="_blank" href={"github.com/" + attendee.github}>{attendee.linkedin}</a></h4>
             </div>
 
             <br></br>
@@ -81,6 +81,13 @@ class Profile extends React.Component {
                 Email
               </h3>
               {attendee.email}
+            </div>
+
+            <div>
+              <h3 className="category">
+                Phone
+              </h3>
+              {attendee.phonenumber}
             </div>
 
             <div>
