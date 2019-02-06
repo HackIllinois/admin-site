@@ -6,17 +6,6 @@ import './styles.css';
 
 import { getRegistration, getPDF } from '../../services/registration/actions';
 
-let profile = {
-  name: "John Smith",
-  github: "github0000001",
-  status: "Accepted",
-  wave: 1,
-  email: "john.smith@example.com",
-  school: "University of Illinois at Urbana-Champaign",
-  major: "Computer Science",
-  year: "Freshman"
-};
-
 class Profile extends React.Component {
   componentDidMount() {
     const username = this.props.match.params.handle;
@@ -69,8 +58,8 @@ class Profile extends React.Component {
               <h3 className="category">
                 Admission Status
               </h3>
-              <p className={"admission-" + profile.status}>
-                Wave {profile.wave} - {profile.status}
+              <p className={"admission-Unimplemented"}>
+                Wave 0 - Unimplemented
               </p>
             </div>
 
