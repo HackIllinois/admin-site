@@ -4,8 +4,7 @@ import {Document, Page} from 'react-pdf'
 
 import './styles.css';
 
-import pdfFile from './examplePDF.pdf';
-import { getRegistration } from '../../services/registration/actions';
+import { getRegistration, getPDF } from '../../services/registration/actions';
 
 let profile = {
   name: "John Smith",
@@ -21,13 +20,28 @@ let profile = {
 class Profile extends React.Component {
   componentDidMount() {
     const username = this.props.match.params.handle;
-    const { getRegistration, jwt } = this.props;
+    const { getRegistration, getPDF, jwt } = this.props;
     if (jwt) {
       getRegistration(username, jwt);
+      getPDF(username, jwt);
     }
   }
 
   render() {
+    function getPDFDEV(pdfObject){
+      if (/*__DEV__*/ true){
+        return <Document file={"https://hackillinois.org/assets/sponsorship-2019.pdf"}>
+          <Page pageNumber={1}/>
+        </Document>;
+      }   else if (pdfObject !== undefined && pdfObject !== null && pdfObject.resume !== undefined && pdfObject.resume !== null){
+        return <Document file={pdfObject.resume}>
+          <Page pageNumber={1}/>
+        </Document>;
+      } else {
+        return "Loading PDF";
+      }
+    }
+
     if (this.props.fetching === false){
       if (this.props.user === null || this.props.user.attendee === null){
         return (
@@ -44,7 +58,7 @@ class Profile extends React.Component {
         <div className="profile-main">
           <div className="profile-info">
             <div>
-              <h1 className="student_name">{attendee.firstName + " " + attendee.lastName}</h1>
+              <h1 className="student_name">{attendee.firstname + " " + attendee.lastname}</h1>
               <h4 className="github">Github: <a target="_blank" href={"github.com/" + attendee.github}>{attendee.github}</a>
               </h4>
             </div>
@@ -87,15 +101,13 @@ class Profile extends React.Component {
               <h3 className="category">
                 Graduation Year
               </h3>
-              {attendee.graduationYear}
+              {attendee.graduationyear}
             </div>
 
           </div>
 
           <div>
-            <Document file={pdfFile}>
-              <Page pageNumber={1}/>
-            </Document>
+            { getPDFDEV(this.props.pdf) }
           </div>
         </div>
       )
@@ -114,12 +126,14 @@ class Profile extends React.Component {
 const mapStateToProps = (state) => ({
   jwt: state.auth.jwt,
   user: state.registration.user,
+  pdf: state.registration.PDF,
   fetching: state.registration.fetching,
   error: state.registration.error
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getRegistration: (id, token) => dispatch(getRegistration(id, token)),
+  getPDF: (id, token) => dispatch(getPDF(id, token)),
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(Profile));

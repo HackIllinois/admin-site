@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-import School from '../../components/School';
+import School from '../../components/School/index';
 
 const Home = () => (
   <div className="App">
