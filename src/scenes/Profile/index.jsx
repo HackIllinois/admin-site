@@ -29,7 +29,7 @@ class Profile extends React.Component {
 
   render() {
     function getPDFDEV(pdfObject){
-      if (/*__DEV__*/ true){
+      if (process.env.NODE_ENV !== 'production'){
         return <Document file={"https://hackillinois.org/assets/sponsorship-2019.pdf"}>
           <Page pageNumber={1}/>
         </Document>;
