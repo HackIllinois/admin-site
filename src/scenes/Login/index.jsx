@@ -23,7 +23,7 @@ const Login = () => (
             />
 
             {/* Login Form */}
-            <CardContent id="card-content">
+            <CardContent className="flexbox-columns" id="card-content">
                 <div id="card-form">
                     {/* Email */}
                     <TextField

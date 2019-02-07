@@ -19,12 +19,6 @@
     margin-top: 40px;
 }
 
-#card-content {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    text-align: center;
-}
-
 #card-form {
     padding-left: 20%;
     padding-right: 20%;

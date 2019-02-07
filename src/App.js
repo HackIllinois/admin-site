@@ -7,6 +7,7 @@ import Menu from './components/Menu';
 
 import Home from './scenes/Home';
 import Login from './scenes/Login';
+import Admissions from './scenes/Admissions';
 import Profile from './scenes/Profile'
 import Events from './scenes/Events';
 import Announcements from './scenes/Announcements';
@@ -24,6 +25,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
+              <Route path="/admissions" component={Admissions} />
               <Route path="/events" component={Events} />
               <Route path="/announcements" component={Announcements} />
               <Route path="/profile/:handle" component={Profile} />
