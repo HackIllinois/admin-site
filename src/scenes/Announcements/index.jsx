@@ -45,7 +45,7 @@ class Announcements extends React.Component {
 
             <div className="flexbox-center">
               <FormControl className="select">
-                <InputLabel htmlFor="select-multiple">Name</InputLabel>
+                <InputLabel htmlFor="select-multiple">Topic</InputLabel>
                 <Select
                   value={selected.topic}
                   onChange={(event) => {
