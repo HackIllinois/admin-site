@@ -12,11 +12,11 @@
 }
 
 #confirm-card {
- display: none;
+    display: none;
 }
 
 #announcement-card {
-    height: 525px;
+    height: auto;
     width: 725px;
     border: 1px solid #77aaff;
 }

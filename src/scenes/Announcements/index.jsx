@@ -64,6 +64,18 @@ class Announcements extends React.Component {
 
             <CardContent id="card-content">
               <div id="card-form">
+
+                <TextField
+                  id="title"
+                  label="Title"
+                  name="title"
+                  className="center text-fields"
+                  margin="normal"
+                  variant="outlined"
+                  multiline={true}
+                  rowsMax={1}
+                />
+
                 <TextField
                   id="announcement"
                   label="Announcements"
@@ -79,6 +91,7 @@ class Announcements extends React.Component {
                         onClick={() => {
 
                           let text = document.getElementById("announcement").value;
+                          let title = document.getElementById("title").value;
 
                           if (this.props.announcement.selectedTopic === '' || text.trim() === '') {
                             return;
@@ -90,7 +103,7 @@ class Announcements extends React.Component {
                           let confirm_card = document.getElementById("confirm-card");
                           confirm_card.style.display = "block";
 
-                          this.props.saveAnnouncement(text);
+                          this.props.saveAnnouncement(text, title);
                         }}>
                   Send Announcement
                 </Button>
@@ -116,6 +129,7 @@ class Announcements extends React.Component {
                           let confirm_card = document.getElementById("confirm-card");
                           confirm_card.style.display = "none";
 
+                          document.getElementById("title").focus();
                           document.getElementById("announcement").focus();
                         }}>
                   Review
@@ -124,11 +138,13 @@ class Announcements extends React.Component {
                 <Button className="center" id="confirm" variant="contained" color="secondary"
                         onClick={() => {
                           const message = this.props.announcement.announcement;
+                          const title = this.props.announcement.title;
                           const topic = this.props.announcement.selectedTopic;
                           const jwt = this.props.jwt;
-                          this.props.sendAnnouncement(message, topic, jwt);
+                          this.props.sendAnnouncement(message, title, topic, jwt);
                           document.getElementById("view").click();
 
+                          document.getElementById("title").focus();
                           document.getElementById("announcement").focus();
                         }}>
                   Confirm Announcement
@@ -150,10 +166,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveAnnouncement: (message) => dispatch(saveAnnouncement(message)),
+  saveAnnouncement: (message, title) => dispatch(saveAnnouncement(message, title)),
   getNotification: (token) => dispatch(getNotification(token)),
   updateNotification: (notification) => dispatch(updateSelectedNotification(notification)),
-  sendAnnouncement: (announcement, topic, token) => dispatch(sendAnnouncement(announcement, topic, token))
+  sendAnnouncement: (announcement, title, topic, token) => dispatch(sendAnnouncement(announcement, title, topic, token))
 });
 
 

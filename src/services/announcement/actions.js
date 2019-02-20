@@ -10,25 +10,27 @@ export const GET_NOTIFICATION_SUCCESS = 'GET_NOTIFICATION_SUCCESS';
 export const GET_NOTIFICATION_FAILURE = 'GET_NOTIFICATION_FAILURE';
 export const UPDATE_SELECTED_TOPIC = 'UPDATE_SELECTED_TOPIC';
 
-export function saveAnnouncement(announcement = "") {
+export function saveAnnouncement(announcement = "", title = "") {
   return {
     type: SAVE_ANNOUNCEMENT,
-    announcement: announcement
+    announcement: announcement,
+    title: title
   }
 }
 
-export function sentAnnouncement(announcement, topic) {
+export function sentAnnouncement(announcement, title, topic) {
   return {
     type: SEND_ANNOUNCEMENT,
     announcement: announcement,
+    title: title,
     topic: topic
   }
 }
 
-export function sendAnnouncement(announcement, topic, token) {
+export function sendAnnouncement(announcement, title, topic, token) {
   return (dispatch) => {
-    dispatch(sentAnnouncement(announcement, topic));
-    pushAnnouncement(announcement, topic, token)
+    dispatch(sentAnnouncement(announcement, title, topic));
+    pushAnnouncement(announcement, title, topic, token)
       .then(data => dispatch(sendAnnouncementResponse(false, data)))
       .catch(err => dispatch(sendAnnouncementResponse(true, null)));
   };

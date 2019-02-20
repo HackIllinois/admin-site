@@ -15,10 +15,11 @@ export function fetchNotificationTopics(token) {
   });
 }
 
-export function pushAnnouncement(announcement, topic, token) {
+export function pushAnnouncement(announcement, title, topic, token) {
   const body_object = {
     'topic' : topic,
     'body': announcement,
+    'title' : title,
   };
   const body_JSON = JSON.stringify(body_object);
   return fetch(`${getNotificationsRoute}` + topic + '/', {
