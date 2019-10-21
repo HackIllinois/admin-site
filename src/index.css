@@ -5,4 +5,5 @@ body {
   font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-x: none; /* prevents horizontal overscrolling from causing browser to go to the previous page (back) */
 }
