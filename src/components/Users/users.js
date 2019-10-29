@@ -1,23 +1,21 @@
-import sampleData from './sample-data.json';
-
 export function formatCamelCase(camelCase) {
   const [firstWord, ...remainingWords] = camelCase.split(/(?=[A-Z])/);
   const captialFirstWord = firstWord[0].toUpperCase() + firstWord.slice(1);
   return captialFirstWord + ' ' + remainingWords.join(' ');
 }
 
-export function getRegistrations() {
-  // For now, we're creating copies of sample data; will eventually be replaced with API request
-  return new Promise(resolve => {
-    sampleData.registrations = sampleData.registrations.map(formatUser);
-    let registrations = [];
-    for (let i = 0; i < 500; i++) {
-      registrations = registrations.concat(JSON.parse(JSON.stringify(sampleData.registrations)));
-      registrations[2 * i].id = 'github' + String(2 * i + 1).padStart(7, '0');
-      registrations[2 * i + 1].id = 'github' + String(2 * i + 2).padStart(7, '0');
-    }
-    resolve(registrations);
-  });
+
+// the registrations data is huge so we don't want to refetch it every time 
+let savedRegistrations = [];
+export async function getRegistrations(forceRefresh = false) {
+  if (savedRegistrations.length > 0 && !forceRefresh) {
+    return savedRegistrations;
+  }
+  const response = await fetch('https://hackillinois-mock-api.netlify.com/registrations.json');
+  const registrations = await response.json();
+  const formattedRegistrations = registrations.map(formatUser);
+  savedRegistrations = formattedRegistrations;
+  return formattedRegistrations;
 }
 
 function formatUser(user) {

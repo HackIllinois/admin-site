@@ -5,6 +5,7 @@ import './styles.scss';
 import { formatCamelCase, getRegistrations } from './users';
 
 const filterableColumns = ['school', 'graduationYear', 'major', 'isNovice', 'isPrivate'];
+const sortableColumns = ['id', 'firstName', 'lastName', 'age', 'graduationYear', 'school'];
 
 const tableOptions = {
   filterType: 'checkbox',
@@ -12,6 +13,11 @@ const tableOptions = {
   download: false,
   selectableRowsOnClick: true,
   responsive: 'scrollMaxHeight',
+  textLabels: {
+    body: {
+      noMatch: "Loading...",
+    }
+  },
 }
 
 export default class Users extends React.Component {
@@ -35,7 +41,7 @@ export default class Users extends React.Component {
         label: formatCamelCase(key),
         options: {
           filter: filterableColumns.includes(key),
-          sort: false
+          sort: sortableColumns.includes(key),
         },
       }));
     }
