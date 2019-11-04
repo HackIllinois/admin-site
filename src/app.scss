@@ -1,3 +1,5 @@
+@import 'constants.scss';
+
 .App {
   display: flex;
 
@@ -5,7 +7,7 @@
     width: 300px;
 
     .navigation-menu {
-      background-color: #505F85;
+      background-color: $primary-color;
       height: 80vh;
       margin: 10vh 25px;
       border-radius: 10px;
@@ -25,7 +27,7 @@
         border-radius: 100px;
 
         &.active {
-          background-color: #5D9A7A;
+          background-color: $secondary-color;
         }
       }
     }
