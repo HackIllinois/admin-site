@@ -22,7 +22,7 @@ function App() {
           <div className="navigation-menu">
             {
               routes.map(route => (
-                <NavLink to={route.path} exact className="navigation-link" activeClassName="active">
+                <NavLink exact to={route.path} className="navigation-link" activeClassName="active" key={route.name}>
                   <FontAwesomeIcon icon={route.icon} fixedWidth/>&nbsp; {route.name}
                 </NavLink>
               ))

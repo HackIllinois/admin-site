@@ -40,6 +40,10 @@
         display: flex;
         flex-direction: column;
         cursor: pointer;
+        &:hover {
+          background-color: #f0f0f0;
+        }
+        
 
         .event-header {
           display: flex;

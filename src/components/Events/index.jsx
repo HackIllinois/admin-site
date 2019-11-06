@@ -1,5 +1,6 @@
 import React from 'react';
-import { getEvents, sortEventsIntoDays } from './events';
+import EventEditPopup from './EventEditPopup';
+import { getEvents, sortEventsIntoDays } from './eventsUtil';
 
 import './styles.scss';
 
@@ -8,10 +9,15 @@ export default class Events extends React.Component {
     super(props);
     this.state = {
       days: [],
+      editingEvent: null,
     }
   }
 
   componentDidMount() {
+    this.reloadEvents();
+  }
+
+  reloadEvents() {
     getEvents().then(events => {
       this.setState({ days: sortEventsIntoDays(events) });
     });
@@ -24,6 +30,14 @@ export default class Events extends React.Component {
   render() {
     return (
       <div className="events-page">
+        { 
+          this.state.editingEvent &&
+            <EventEditPopup
+              event={this.state.editingEvent}
+              onDismiss={() => this.setState({ editingEvent: null })}
+              onUpdateEvent={() => this.reloadEvents()}
+            />
+        }
         {
           this.state.days.map(day => (
             <div className="day" key={day.date}>
@@ -33,7 +47,7 @@ export default class Events extends React.Component {
               <div className="events">
                 {
                   day.events.map(event => (
-                    <div className="event" key={event.name}>
+                    <div className="event" key={event.name} onClick={() => this.setState({ editingEvent: event })}>
                       <div className="event-header">
                         <div className="event-name">{event.name}</div>
                         <div className="event-time">

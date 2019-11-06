@@ -46,3 +46,13 @@ export function sortEventsIntoDays(events) {
 
   return days;
 }
+
+export function updateEvent(event) {
+  return fetch(`${API}/event/`, {
+    method: 'PUT',
+    body: JSON.stringify(event),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => response.json())
+}
