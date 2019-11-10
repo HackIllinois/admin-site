@@ -16,7 +16,7 @@ const locations = [
   }
 ];
 
-export default function LocationCheckbox({ field, form, ...props }) {
+export default function LocationCheckbox({ field, form }) {
   const selectedLocationNames = field.value.map(x => x.description);
 
   const addLocation = locationName => {
@@ -32,7 +32,7 @@ export default function LocationCheckbox({ field, form, ...props }) {
   }
 
   return (
-    <div>
+    <div className="location-input">
       {
         locations.map(location => location.description).map(locationName => (
           <Checkbox

@@ -1,0 +1,32 @@
+@import 'constants.scss';
+
+.time-input {
+  margin: 15px 0;
+
+  .label {
+    margin: 0 5px;
+  }
+
+  select {
+    font-size: 1.05em; 
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    margin: 0 3px;
+    border-radius: 5px;
+    padding: 5px;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    outline: none;
+    border: #dadce0 1px solid;
+    transition: border-color .1s, border-width .1s, padding .1s;
+
+    &:focus {
+      border-color: $primary-color;
+      border-width: 2px;
+      padding: 4px;
+    }
+  }
+
+  .colon {
+    font-size: 1.2em;
+    
+  }
+}

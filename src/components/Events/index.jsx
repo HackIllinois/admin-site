@@ -6,6 +6,12 @@ import { getEvents, sortEventsIntoDays } from './eventsUtil';
 
 import './styles.scss';
 
+// When adding a new event, most of the field values default to empty strings, but we need
+// to make sure that the start and end times are on the day which the add button was pressed on
+function createBlankEventOnDate(date) {
+  const time = Math.floor(date.getTime() / 1000);
+  return { startTime: time, endTime: time };
+}
 
 export default class Events extends React.Component {
   constructor(props) {
@@ -45,7 +51,7 @@ export default class Events extends React.Component {
           this.state.days.map(day => (
             <div className="day" key={day.date}>
               <div className="day-of-week">{day.dayOfWeek}</div>
-              <div className="date">{day.date}</div>
+              <div className="date">{day.dateString}</div>
               <div className="underline"/>
               <div className="events">
                 {
@@ -69,7 +75,7 @@ export default class Events extends React.Component {
                   ))
                 }
 
-                <div className="event" onClick={() => this.setState({ editingEvent: {} })}>
+                <div className="event" onClick={() => this.setState({ editingEvent: createBlankEventOnDate(day.date) })}>
                   <FontAwesomeIcon className="add-event-icon" icon={faPlus}/>
                 </div>
               </div>

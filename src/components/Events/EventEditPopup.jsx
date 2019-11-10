@@ -2,7 +2,8 @@ import React from 'react';
 import { Formik, Form, Field } from 'formik';
 
 import { updateEvent, deleteEvent } from './eventsUtil';
-import LocationCheckbox from './LocationInput';
+import LocationInput from './LocationInput';
+import TimeInput from './TimeInput';
 import './EventEditPopup.scss';
 
 export default class EventEditPopup extends React.Component {
@@ -10,7 +11,16 @@ export default class EventEditPopup extends React.Component {
     super(props);
 
     // we explicitly select which properties of the event are editable
-    const { startTime = '', endTime = '', name = '', description = '', locations = [], sponsor = '', eventType = '' } = props.event;
+    const {
+      startTime = '',
+      endTime = '',
+      name = '',
+      description = '',
+      locations = [],
+      sponsor = '',
+      eventType = ''
+    } = props.event;
+    
     this.state = {
       eventValues: { startTime, endTime, name, description, locations, sponsor, eventType }
     }
@@ -48,10 +58,10 @@ export default class EventEditPopup extends React.Component {
             {() => (
               <Form className="form">
                 <Field className="form-field" name="name" placeholder="Event Name"/>
-                <Field className="form-field" name="startTime" placeholder="Start Time"/>
-                <Field className="form-field" name="endTime" placeholder="End Time"/>
+                <Field component={TimeInput} name="startTime" label="Start Time: "/>
+                <Field component={TimeInput} name="endTime" label="End Time: "/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
-                <Field component={LocationCheckbox} name="locations"/>
+                <Field component={LocationInput} name="locations"/>
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
                 <Field className="form-field" name="eventType" placeholder="Event Type"/>
                 <div className="buttons">

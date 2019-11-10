@@ -35,8 +35,9 @@ export function sortEventsIntoDays(events) {
   Array.from(eventsByDay.entries()).forEach(([dateString, events]) => {
     const date = new Date(dateString);
     days.push({
+      date,
       dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'long'}),
-      date: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+      dateString: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
       events: events.sort((event1, event2) => event1.startTime - event2.startTime),
     });
   });
