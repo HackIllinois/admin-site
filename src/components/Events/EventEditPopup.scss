@@ -50,9 +50,13 @@
 
       .buttons {
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
         margin-bottom: 10px;
         margin-top: 20px;
+
+        .spacer {
+          flex: 1;
+        }
 
         .button {
           background: none;
@@ -66,10 +70,21 @@
           font-size: .95em;
           cursor: pointer;
           transition: color .2s, background-color .2s;
+          margin: 0 10px;
 
           &:hover, &:focus {
             background-color: $primary-color;
             color: white;
+          }
+
+          &.delete {
+            border-color: $red;
+            color: $red;
+
+            &:hover, &:focus {
+              background-color: $red;
+              color: white
+            }
           }
         }
       }

@@ -1,8 +1,11 @@
 import React from 'react';
 import EventEditPopup from './EventEditPopup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getEvents, sortEventsIntoDays } from './eventsUtil';
 
 import './styles.scss';
+
 
 export default class Events extends React.Component {
   constructor(props) {
@@ -47,7 +50,7 @@ export default class Events extends React.Component {
               <div className="events">
                 {
                   day.events.map(event => (
-                    <div className="event" key={event.name} onClick={() => this.setState({ editingEvent: event })}>
+                    <div className="event" key={event.id} onClick={() => this.setState({ editingEvent: event })}>
                       <div className="event-header">
                         <div className="event-name">{event.name}</div>
                         <div className="event-time">
@@ -58,11 +61,17 @@ export default class Events extends React.Component {
 
                       <div className="event-details">
                         <div className="description">{event.description}</div>
-                        <div className="locations">{event.locations.map(location => location.description).join(',')}</div>
+                        <div className="locations">
+                          {(event.locations || []).map(location => location.description).join(', ')}
+                        </div>
                       </div>
                     </div>
                   ))
                 }
+
+                <div className="event" onClick={() => this.setState({ editingEvent: {} })}>
+                  <FontAwesomeIcon className="add-event-icon" icon={faPlus}/>
+                </div>
               </div>
             </div>
           ))

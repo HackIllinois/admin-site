@@ -48,11 +48,16 @@ export function sortEventsIntoDays(events) {
 }
 
 export function updateEvent(event) {
+  const addingNewEvent = !event.id; // if the id doesn't exist, then we're adding a new event
   return fetch(`${API}/event/`, {
-    method: 'PUT',
+    method: addingNewEvent ? 'POST' : 'PUT',
     body: JSON.stringify(event),
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(response => response.json())
+}
+
+export function deleteEvent(eventId) {
+  return fetch(`${API}/event/${eventId}`, { method: 'DELETE' }).then(response => response.json());
 }
