@@ -1,0 +1,149 @@
+@import 'constants.scss';
+
+.notifications-page {
+  flex: 1;
+
+  .form-field {
+    display: block;
+    margin: 17px 0;
+    font-size: 1em;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    outline: none;
+    border: #dadce0 1px solid;
+    transition: border-color .1s, border-width .1s, padding .1s;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 7px;
+    width: 100%;
+    resize: none;
+
+    &:focus {
+      border-color: $primary-color;
+      border-width: 2px;
+      padding: 6px;
+    }
+  }
+
+  .top {
+    padding: 40px 20px;
+    display: flex;
+
+    .tile {
+      border: $primary-color 2px solid;
+      padding: 10px;
+      border-radius: 10px;
+      flex: 1;
+      margin: 10px;
+  
+      .title {
+        font-size: 1.5em;
+        text-align: center;
+        margin: 10px 0;
+        font-weight: bold;
+        color: #444444;
+      }
+  
+      .form-container {
+        display: flex;
+  
+        .form-section {
+          flex: 1;
+          margin: 10px;
+        }
+      }
+  
+      .buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        &.centered {
+          justify-content: center;
+        }
+  
+        button {
+          float: right;
+          background: none;
+          outline: none;
+          border: none;
+          padding: 7px 20px;
+          border-radius: 5px;
+          border: $primary-color 2px solid;
+          font-weight: bold;
+          color: $primary-color;
+          font-size: .95em;
+          cursor: pointer;
+          transition: color .2s, background-color .2s;
+          margin: 0 10px;
+    
+          &:hover, &:focus {
+            background-color: $primary-color;
+            color: white;
+          }
+        }
+      }
+    }
+
+    .add-topic, .remove-topic {
+      width: 300px;
+
+      .title {
+        font-size: 1.25em;
+      }
+    }
+  }
+
+  .heading {
+    display: inline-block;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #444444;
+
+    .underline {
+      height: 5px;
+      background-color: $secondary-color;
+      width: 100%;
+      margin: 3px auto;
+      border-radius: 10px;
+    }
+  }
+
+  .notifications-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    padding-left: 20px;
+
+    .notification {
+      border: $primary-color 2px solid;
+      padding: 10px;
+      border-radius: 10px;
+      width: 28%;
+      margin: 10px 1%;
+
+      .topic {
+        font-size: .85em;
+        color: $secondary-color;
+        font-weight: bold;
+      }
+
+      .title {
+        font-size: 1.2em;
+        margin: 7px 0;
+        font-weight: bold;
+        color: #444444;
+      }
+
+      .body {
+        font-size: .9em;
+      }
+
+      .time {
+        text-align: right;
+        font-size: .8em;
+        color: $secondary-color;
+        font-weight: bold;
+        margin-top: 5px;
+      }
+    }
+  }
+}
