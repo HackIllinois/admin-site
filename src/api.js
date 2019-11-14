@@ -56,5 +56,25 @@ export function addEvent(event) {
 }
 
 export function deleteEvent(eventId) {
-  return request('DELETE', `/event/${eventId}`);
+  return request('DELETE', `/event/${eventId}/`);
+}
+
+export function getNotificationTopics() {
+  return request('GET', '/notifications/topic/').then(res => res.topics);
+}
+
+export function addNotificationTopic(topic) {
+  return request('POST', '/notifications/topic/', { id: topic });
+}
+
+export function removeNotificationTopic(topic) {
+  return request('DELETE', `/notifications/topic/${topic}/`);
+}
+
+export function getNotifications() {
+  return request('GET', '/notifications/topic/all/').then(res => res.notifications);
+}
+
+export function sendNotification(notification, topic) {
+  return request('POST', `/notifications/topic/${topic}/`, notification);
 }
