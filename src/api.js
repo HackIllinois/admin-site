@@ -43,27 +43,18 @@ export function getRoles() {
     .then(res => res.roles);
 }
 
-export function getApplication() {
-  return request('GET', '/registration/attendee/');
+export function getEvents() {
+  return request('GET', '/event/').then(res => res.events);
 }
 
-export function uploadResume(resume) {
-  return request('GET', '/upload/resume/upload/')
-    .then(res => res.resume)
-    .then(url => fetch(url, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/pdf' },
-      body: resume,
-    }))
-    .then(res => {
-      if (res.ok) {
-        return res;
-      }
-      throw Error(res);
-    });
+export function updateEvent(event) {
+  return request('PUT', '/event/', event);
 }
 
-export function apply(isEditing, application) {
-  const method = isEditing ? 'PUT' : 'POST';
-  return request(method, '/registration/attendee/', application);
+export function addEvent(event) {
+  return request('POST', '/event/', event);
+}
+
+export function deleteEvent(eventId) {
+  return request('DELETE', `/event/${eventId}`);
 }
