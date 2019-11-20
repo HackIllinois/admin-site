@@ -1,8 +1,9 @@
 import React from 'react';
-import EventEditPopup from './EventEditPopup';
+import EventEditPopup from 'components/EventsEditPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { getEvents, sortEventsIntoDays } from './eventsUtil';
+import { getEvents } from 'api';
+import { sortEventsIntoDays } from './eventsUtil';
 
 import './styles.scss';
 

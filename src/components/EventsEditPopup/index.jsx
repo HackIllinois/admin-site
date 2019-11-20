@@ -1,10 +1,11 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 
-import { updateEvent, deleteEvent } from './eventsUtil';
+import { addEvent, updateEvent, deleteEvent } from 'api';
 import LocationInput from './LocationInput';
 import TimeInput from './TimeInput';
-import './EventEditPopup.scss';
+import DayInput from './DayInput';
+import './styles.scss';
 
 export default class EventEditPopup extends React.Component {
   constructor(props) {
@@ -28,8 +29,8 @@ export default class EventEditPopup extends React.Component {
 
   submit(values) {
     const newEvent = Object.assign({}, this.props.event, values);
-    console.log(newEvent);
-    updateEvent(newEvent).then(() => {
+    const addOrUpdateEvent = this.isNewEvent() ? addEvent : updateEvent;
+    addOrUpdateEvent(newEvent).then(() => {
       this.props.onUpdateEvent();
       this.props.onDismiss();
     });
@@ -55,9 +56,10 @@ export default class EventEditPopup extends React.Component {
         <div className="popup-container" onClick={e => e.stopPropagation()}>
           <div className="title">{this.isNewEvent() ? 'Add Event' : 'Edit Event'}</div>
           <Formik initialValues={this.state.eventValues} onSubmit={values => this.submit(values)}>
-            {() => (
+            {({ values, setFieldValue }) => (
               <Form className="form">
                 <Field className="form-field" name="name" placeholder="Event Name"/>
+                <DayInput values={values} setFieldValue={setFieldValue}/>
                 <Field component={TimeInput} name="startTime" label="Start Time: "/>
                 <Field component={TimeInput} name="endTime" label="End Time: "/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
@@ -69,7 +71,7 @@ export default class EventEditPopup extends React.Component {
                     <button className="button delete" onClick={() => this.delete()}>Delete</button>}
                   
                   <div className="spacer"/>
-                  <button className="button" onClick={() => this.props.onDismiss()}>Cancel</button>
+                  <button className="button" type="button" onClick={() => this.props.onDismiss()}>Cancel</button>
                   <button className="button" type="submit">Save</button>
                 </div>
               </Form>

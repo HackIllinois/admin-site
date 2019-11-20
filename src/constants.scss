@@ -1,3 +1,24 @@
 $primary-color: #505F85;
 $secondary-color: #5D9A7A;
-$red: #ee6969;
+$red: #cc0000;
+
+@mixin form-field {
+  display: block;
+  margin: 17px 0;
+  font-size: 1em;
+  font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+  outline: none;
+  border: #dadce0 1px solid;
+  transition: border-color .1s, border-width .1s, padding .1s;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 7px;
+  width: 100%;
+  resize: none;
+
+  &:focus {
+    border-color: $primary-color;
+    border-width: 2px;
+    padding: 6px;
+  }
+}

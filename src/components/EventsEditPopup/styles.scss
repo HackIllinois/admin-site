@@ -28,29 +28,11 @@
 
     .form {
       .form-field {
-        display: block;
-        margin: 17px 0;
-        font-size: 1.05em;
-        font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
-        outline: none;
-        border: #dadce0 1px solid;
-        transition: border-color .2s, border-width .2s, padding .2s;
-        box-sizing: border-box;
-        border-radius: 5px;
-        padding: 7px;
-        width: 100%;
-        resize: none;
-
-        &:focus {
-          border-color: $primary-color;
-          border-width: 2px;
-          padding: 6px;
-        }
+        @include form-field;
       }
 
       .buttons {
         display: flex;
-        // justify-content: space-between;
         margin-bottom: 10px;
         margin-top: 20px;
 

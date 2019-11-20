@@ -1,16 +1,9 @@
 const API = 'https://hackillinois-mock-api.netlify.com';
 
-export async function getEvents() {
-  const data = await fetch(`${API}/event/`, {
-    method: 'GET',
-  });
-  const json = await data.json();
-  return json.events;
-}
-
 /* Example return object:
 [
   {
+    date: Date(),
     dayOfWeek: "Friday",
     date: "February 28",
     events: [ ... ] // all the event objects occuring on this day
@@ -46,19 +39,4 @@ export function sortEventsIntoDays(events) {
   days.sort((a, b) => a.events[0].startTime - b.events[0].startTime);
 
   return days;
-}
-
-export function updateEvent(event) {
-  const addingNewEvent = !event.id; // if the id doesn't exist, then we're adding a new event
-  return fetch(`${API}/event/`, {
-    method: addingNewEvent ? 'POST' : 'PUT',
-    body: JSON.stringify(event),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(response => response.json())
-}
-
-export function deleteEvent(eventId) {
-  return fetch(`${API}/event/${eventId}`, { method: 'DELETE' }).then(response => response.json());
 }
