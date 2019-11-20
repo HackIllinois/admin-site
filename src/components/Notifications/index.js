@@ -4,7 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './styles.scss';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import * as notificationsUtil from './notificationsUtil';
+import {
+  getNotificationTopics,
+  getNotifications,
+  sendNotification,
+  addNotificationTopic,
+  removeNotificationTopic,
+} from 'api';
 
 const notificationInitialValues = {
   title: '',
@@ -40,13 +46,13 @@ export default class Notifications extends React.Component {
   }
 
   updateNotificationTopics() {
-    notificationsUtil.getNotificationTopics().then(topics => {
+    getNotificationTopics().then(topics => {
       this.setState({ notificationTopics: topics });
     });
   }
 
   updateNotifications() {
-    notificationsUtil.getNotifications().then(notifications => {
+    getNotifications().then(notifications => {
       this.setState({
         notifications: notifications.sort((a, b) => b.time - a.time)
       })
@@ -55,7 +61,7 @@ export default class Notifications extends React.Component {
 
   submit({ title, body, topic }, formik) {
     if (title && topic) {
-      notificationsUtil.sendNotification({ title, body }, topic).then(() => {
+      sendNotification({ title, body }, topic).then(() => {
         this.updateNotifications();
         formik.resetForm();
       });
@@ -64,7 +70,7 @@ export default class Notifications extends React.Component {
 
   addTopic({ topic }, formik) {
     if (topic) {
-      notificationsUtil.addNotificationTopic(topic).then(() => {
+      addNotificationTopic(topic).then(() => {
         this.updateNotificationTopics();
         formik.resetForm();
       })
@@ -74,7 +80,7 @@ export default class Notifications extends React.Component {
   removeTopic({ topic }, formik) {
     console.log(topic);
     if (topic) {
-      notificationsUtil.removeNotificationTopic(topic).then(() => {
+      removeNotificationTopic(topic).then(() => {
         this.updateNotificationTopics();
         formik.resetForm();
       })
