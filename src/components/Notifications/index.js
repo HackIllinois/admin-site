@@ -41,21 +41,17 @@ export default class Notifications extends React.Component {
   }
 
   componentDidMount() {
-    this.updateNotificationTopics();
     this.updateNotifications();
   }
 
-  updateNotificationTopics() {
+  updateNotifications() {
     getNotificationTopics().then(topics => {
       this.setState({ notificationTopics: topics });
-    });
-  }
-
-  updateNotifications() {
-    getNotifications().then(notifications => {
-      this.setState({
-        notifications: notifications.sort((a, b) => b.time - a.time)
-      })
+      getNotifications(topics).then(notifications => {
+        this.setState({
+          notifications: notifications.sort((a, b) => b.time - a.time)
+        })
+      });
     });
   }
 
@@ -71,7 +67,7 @@ export default class Notifications extends React.Component {
   addTopic({ topic }, formik) {
     if (topic) {
       addNotificationTopic(topic).then(() => {
-        this.updateNotificationTopics();
+        this.updateNotifications();
         formik.resetForm();
       })
     }
@@ -81,7 +77,7 @@ export default class Notifications extends React.Component {
     console.log(topic);
     if (topic) {
       removeNotificationTopic(topic).then(() => {
-        this.updateNotificationTopics();
+        this.updateNotifications();
         formik.resetForm();
       })
     }
