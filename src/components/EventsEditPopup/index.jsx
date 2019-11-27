@@ -7,6 +7,8 @@ import TimeInput from './TimeInput';
 import DayInput from './DayInput';
 import './styles.scss';
 
+const possibleEventTypes = ['MEAL', 'SPONSOR', 'WORKSHOP', 'OTHER'];
+
 export default class EventEditPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +21,7 @@ export default class EventEditPopup extends React.Component {
       description = '',
       locations = [],
       sponsor = '',
-      eventType = ''
+      eventType = possibleEventTypes[0],
     } = props.event;
     
     this.state = {
@@ -65,7 +67,11 @@ export default class EventEditPopup extends React.Component {
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
                 <Field component={LocationInput} name="locations"/>
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
-                <Field className="form-field" name="eventType" placeholder="Event Type"/>
+                <Field as="select" className="form-field" name="eventType">
+                  {
+                    possibleEventTypes.map(eventType => <option key={eventType}>{eventType}</option>)
+                  }
+                </Field>
                 <div className="buttons">
                   { !this.isNewEvent() && 
                     <button className="button delete" onClick={() => this.delete()}>Delete</button>}

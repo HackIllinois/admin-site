@@ -6,10 +6,16 @@ import './styles.scss';
 
 export default function Checkbox(props) {
   const checkboxClass = 'checkbox' + (props.value ? ' checked' : ''); 
-  return (  
+  const handleKeyPress = event => {
+    if (event.which === 13) { // enter key
+      props.onChange(!props.value);
+    }
+  }
+  return (
     <div className="checkbox-container" onClick={() => props.onChange(!props.value)}>
-      <div className={ checkboxClass }>
+      <div className={checkboxClass} onKeyPress={handleKeyPress} tabIndex="0">
         <FontAwesomeIcon className="check" icon={faCheck}/>
+        <div className="highlight"/>
       </div>
 
       <div className="label">{ props.label }</div>

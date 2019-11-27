@@ -23,7 +23,8 @@
     cursor: pointer;
     min-width: 20px;
     position: relative;
-
+    outline: none;
+    
     .check {
       transform: scale(0);
       transition: transform .2s;
@@ -34,6 +35,22 @@
       border-width: 10px;
       .check {
         transform: scale(1);
+      }
+    }
+
+    .highlight {
+      width: 36px;
+      height: 36px;
+      background-color: black;
+      position: absolute;
+      border-radius: 100px;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    &:focus {
+      .highlight {
+        opacity: 0.2;
       }
     }
   }
