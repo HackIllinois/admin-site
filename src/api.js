@@ -1,5 +1,4 @@
-// const API = 'https://api.hackillinois.org';
-const API = 'https://hackillinois-mock-api.netlify.com';
+const API = 'https://api.hackillinois.org';
 
 function headers() {
   return {

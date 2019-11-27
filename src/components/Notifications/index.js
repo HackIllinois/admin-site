@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './styles.scss';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import {
   getNotificationTopics,
   getNotifications,
@@ -125,7 +125,9 @@ export default class Notifications extends React.Component {
                     <Field className="form-field" name="topic" placeholder="Topic"/>
 
                     <div className="buttons">
-                      <button type="submit">Add</button>
+                      <button type="submit">
+                        <FontAwesomeIcon icon={faPlusCircle}/> &nbsp;Add
+                      </button>
                     </div>
                   </Form>
                 )}
@@ -150,7 +152,9 @@ export default class Notifications extends React.Component {
                     </Field>
 
                     <div className="buttons">
-                      <button type="submit">Remove</button>
+                      <button type="submit">
+                        <FontAwesomeIcon icon={faMinusCircle}/> &nbsp;Remove
+                      </button>
                     </div>
                   </Form>
                 )}
