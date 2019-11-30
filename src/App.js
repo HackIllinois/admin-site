@@ -5,6 +5,7 @@ import { faColumns, faUsers, faBell, faCalendar } from '@fortawesome/free-solid-
 
 import './app.scss';
 import Dashboard from './components/Dashboard';
+import Users from './components/Users';
 
 const routes = [
   { path: '/', name: "Dashboard", icon: faColumns },
@@ -33,7 +34,9 @@ function App() {
           <Route exact path="/">
             <Dashboard/>
           </Route>
-          <Route path="/users"></Route>
+          <Route path="/users">
+            <Users/>
+          </Route>
           <Route path="/notifications"></Route>
           <Route path="/events"></Route>
         </Switch>
