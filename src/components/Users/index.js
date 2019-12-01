@@ -1,5 +1,6 @@
 import React from 'react';
 import Clusterize from 'react-clusterize';
+import Select from 'react-select';
 
 import './styles.scss';
 
@@ -49,12 +50,41 @@ export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      registrations: []
+      registrations: [],
+      longColumnKeys: new Set(),
+      columnOptions: [],
+      excludedColumns: [],
     };
   }
 
   componentDidMount() {
-    getRegistrations().then(registrations => this.setState({ registrations }));
+    getRegistrations().then(registrations => {
+      if (registrations.length > 0) {
+        const longMinimumLength = 16; // the minumum length of a value for the column to be considered long
+        const longColumnKeys = new Set();
+        registrations.forEach(registration => {
+          Object.entries(registration).forEach(([key, value]) => {
+            if (String(value).length > longMinimumLength) {
+              longColumnKeys.add(key);
+            }
+          })
+        });
+
+        const columnOptions = Object.keys(registrations[0]).map(key => (
+          { value: key, label: formatCamelCase(key) }
+        ));
+
+        this.setState({ registrations, longColumnKeys, columnOptions });
+      }
+    });
+  }
+
+  getElementClass(columnKey) {
+    let className = 'element';
+    if (this.state.longColumnKeys.has(columnKey)) {
+      className += ' long';
+    }
+    return className;
   }
 
   getTableHeader() {
@@ -62,9 +92,11 @@ export default class Users extends React.Component {
       return (
         <div className="header row">
           {
-            Object.keys(this.state.registrations[0]).map(key => (
-              <div className="element">{formatCamelCase(key)}</div>
-            ))
+            Object.keys(this.state.registrations[0])
+              .filter(key => !this.state.excludedColumns.includes(key))
+              .map(key => (
+                <div className={this.getElementClass(key)} key={key}>{formatCamelCase(key)}</div>
+              ))
           }
         </div>
       );
@@ -76,9 +108,11 @@ export default class Users extends React.Component {
     return [this.getTableHeader()].concat(this.state.registrations.map(registration => (
       <div className="row">
         {
-          Object.values(registration).map(value => (
-            <div className="element">{value}</div>
-          ))
+          Object.entries(registration)
+            .filter(([key]) => !this.state.excludedColumns.includes(key))
+            .map(([key, value]) => (
+              <div className={this.getElementClass(key)} key={key}>{value}</div>
+            ))
         }
       </div>
     )))
@@ -87,7 +121,17 @@ export default class Users extends React.Component {
   render() {
     return (
       <div className="users-page">
-        <Clusterize className="table" rows={this.getTableRows()}/>
+        <div className="table-options">
+          <Select
+            placeholder="Columns to Exclude"
+            className="column-select"
+            isMulti={true}
+            options={this.state.columnOptions}
+            onChange={selected => this.setState({ excludedColumns: (selected || []).map(column => column.value) })}/>
+        </div>
+        <div className="table-container">
+          <Clusterize className="table" rows={this.getTableRows()}/>
+        </div>
       </div>
     );
   }

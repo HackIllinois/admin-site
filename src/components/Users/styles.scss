@@ -4,17 +4,31 @@
   height: 100vh;
   overflow: auto;
 
-  .row {
-    display: flex;
+  .table-options {
+    height: 10vh;
+    padding: 10px;
+    box-sizing: border-box;
+  }
 
-    &.header {
-      font-weight: bold;
-      color: #444444;
-    }
+  .table-container {
+    height: 90vh;
 
-    .element {
-      margin: 10px;
-      flex: 0 0 150px;
+    .row {
+      display: flex;
+  
+      &.header {
+        font-weight: bold;
+        color: #444444;
+      }
+  
+      .element {
+        margin: 10px;
+        flex: 0 0 150px;
+  
+        &.long {
+          flex: 0 0 250px;
+        }
+      }
     }
   }
 }
