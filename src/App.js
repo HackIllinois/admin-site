@@ -3,8 +3,11 @@ import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faColumns, faUsers, faBell, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
-import './app.scss';
+import './App.scss';
+import PrivateRoute from './components/PrivateRoute';
+import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
+import Notifications from './components/Notifications';
 
 const routes = [
   { path: '/', name: "Dashboard", icon: faColumns },
@@ -30,12 +33,17 @@ function App() {
         </div>
 
         <Switch>
-          <Route exact path="/">
+          <Route path="/auth" component={Auth}></Route>
+          
+          <PrivateRoute exact path="/">
             <Dashboard/>
-          </Route>
-          <Route path="/users"></Route>
-          <Route path="/notifications"></Route>
-          <Route path="/events"></Route>
+          </PrivateRoute>
+          
+          <PrivateRoute path="/users"></PrivateRoute>
+          <PrivateRoute path="/notifications">
+            <Notifications/>
+          </PrivateRoute>
+          <PrivateRoute path="/events"></PrivateRoute>
         </Switch>
       </BrowserRouter>
     </div>
