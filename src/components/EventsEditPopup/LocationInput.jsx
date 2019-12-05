@@ -5,14 +5,24 @@ import './LocationInput.scss';
 
 const locations = [
   {
-    "description": "Siebel",
-    "latitude": 40.1138,
-    "longitude": -88.2249
+    description: 'Siebel',
+    latitude: 40.113812,
+    longitude: -88.224937
   },
   {
-    "description": "ECEB",
-    "latitude": 40.1138,
-    "longitude": -88.2249
+    description: 'ECEB',
+    latitude: 40.114937,
+    longitude: -88.228063
+  },
+  {
+    description: 'DCL',
+    latitude: 40.113062,
+    longitude: -88.226563
+  },
+  {
+    description: 'Kenney Gym',
+    latitude: 40.113062,
+    longitude: -88.228438
   }
 ];
 
@@ -35,11 +45,13 @@ export default function LocationCheckbox({ field, form }) {
     <div className="location-input">
       {
         locations.map(location => location.description).map(locationName => (
-          <Checkbox
-            key={locationName}
-            value={selectedLocationNames.includes(locationName)}
-            label={locationName}
-            onChange={checked => checked ? addLocation(locationName) : removeLocation(locationName)}/>
+          <div className="location-option">
+            <Checkbox
+              key={locationName}
+              value={selectedLocationNames.includes(locationName)}
+              label={locationName}
+              onChange={checked => checked ? addLocation(locationName) : removeLocation(locationName)}/>
+          </div>
         ))
       }
     </div>

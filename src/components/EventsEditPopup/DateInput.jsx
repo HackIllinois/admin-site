@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './DayInput.scss';
+import './DateInput.scss';
 
 const months = [
   'January', 'February', 'March',
@@ -9,7 +9,7 @@ const months = [
   'October', 'November', 'December'
 ];
 
-export default function DayInput({ values, setFieldValue }) {
+export default function DateInput({ values, setFieldValue }) {
   const date = new Date(Number(values.startTime) * 1000);
   const selectedMonth = months[date.getMonth()];
 
@@ -40,7 +40,7 @@ export default function DayInput({ values, setFieldValue }) {
   }
 
   return (
-    <div className="day-input">
+    <div className="date-input">
       <select value={selectedMonth} onChange={e => updateTimes({ month: months.indexOf(e.target.value) })}>
         {
           months.map(month => <option key={month}>{month}</option>)

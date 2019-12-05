@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import { addEvent, updateEvent, deleteEvent } from 'api';
 import LocationInput from './LocationInput';
 import TimeInput from './TimeInput';
-import DayInput from './DayInput';
+import DateInput from './DateInput';
 import './styles.scss';
 
 const possibleEventTypes = ['MEAL', 'SPONSOR', 'WORKSHOP', 'OTHER'];
@@ -61,7 +61,7 @@ export default class EventEditPopup extends React.Component {
             {({ values, setFieldValue }) => (
               <Form className="form">
                 <Field className="form-field" name="name" placeholder="Event Name"/>
-                <DayInput values={values} setFieldValue={setFieldValue}/>
+                <DateInput values={values} setFieldValue={setFieldValue}/>
                 <Field component={TimeInput} name="startTime" label="Start Time: "/>
                 <Field component={TimeInput} name="endTime" label="End Time: "/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>

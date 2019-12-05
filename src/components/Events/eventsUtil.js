@@ -1,5 +1,3 @@
-const API = 'https://hackillinois-mock-api.netlify.com';
-
 /* Example return object:
 [
   {
