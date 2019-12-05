@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import Events from './components/Events';
+import Notifications from './components/Notifications';
 
 const routes = [
   { path: '/', name: "Dashboard", icon: faColumns },
@@ -40,9 +41,11 @@ function App() {
           </PrivateRoute>
           
           <PrivateRoute path="/users"></PrivateRoute>
-          <PrivateRoute path="/notifications"></PrivateRoute>
           <PrivateRoute path="/events">
             <Events/>
+          </PrivateRoute>
+          <PrivateRoute path="/notifications">
+            <Notifications/>
           </PrivateRoute>
         </Switch>
       </BrowserRouter>

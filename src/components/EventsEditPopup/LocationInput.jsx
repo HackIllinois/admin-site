@@ -45,9 +45,8 @@ export default function LocationCheckbox({ field, form }) {
     <div className="location-input">
       {
         locations.map(location => location.description).map(locationName => (
-          <div className="location-option">
+          <div className="location-option" key={locationName}>
             <Checkbox
-              key={locationName}
               value={selectedLocationNames.includes(locationName)}
               label={locationName}
               onChange={checked => checked ? addLocation(locationName) : removeLocation(locationName)}/>
