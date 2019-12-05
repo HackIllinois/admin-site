@@ -1,7 +1,9 @@
 import React from 'react';
-import Clusterize from 'react-clusterize';
 import Select from 'react-select';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
+import Checkbox from 'components/Checkbox';
 import './styles.scss';
 
 function formatCamelCase(camelCase) {
@@ -46,56 +48,87 @@ async function getRegistrations(forceRefresh = false) {
   return formattedRegistrations;
 }
 
+const DEFAULT_COLUMN_WIDTH = 150;
+const LONG_COLUMN_WIDTH = 300;
+
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       registrations: [],
-      longColumnKeys: new Set(),
       columnOptions: [],
-      excludedColumns: [],
+      selectedColumnKeys: [],
+      columnWidths: {},
+      selectedUserIds: [],
     };
   }
 
   componentDidMount() {
     getRegistrations().then(registrations => {
       if (registrations.length > 0) {
+        // Initialize all the column widths to the default
+        const columnWidths = {};
+        Object.keys(registrations[0]).forEach(key => {
+          columnWidths[key] = DEFAULT_COLUMN_WIDTH;
+        });
+
+        // Go through each registration and if any of the values for a given column is long,
+        // then increase that column's width
         const longMinimumLength = 16; // the minumum length of a value for the column to be considered long
-        const longColumnKeys = new Set();
         registrations.forEach(registration => {
           Object.entries(registration).forEach(([key, value]) => {
             if (String(value).length > longMinimumLength) {
-              longColumnKeys.add(key);
+              columnWidths[key] = LONG_COLUMN_WIDTH;
             }
           })
         });
 
-        const columnOptions = Object.keys(registrations[0]).map(key => (
-          { value: key, label: formatCamelCase(key) }
-        ));
+        const columnOptions = this.columnKeysToOptions(Object.keys(registrations[0]));
 
-        this.setState({ registrations, longColumnKeys, columnOptions });
+        const selectedColumnKeys = Object.keys(registrations[0]);
+
+        this.setState({ registrations, columnOptions, selectedColumnKeys, columnWidths });
       }
     });
   }
 
-  getElementClass(columnKey) {
-    let className = 'element';
-    if (this.state.longColumnKeys.has(columnKey)) {
-      className += ' long';
-    }
-    return className;
+  columnKeysToOptions(columnKeys) {
+    return columnKeys.map(key => ({ value: key, label: formatCamelCase(key)}))
+  }
+
+  selectUser(userId, select = true) {
+    this.setState(prevState => {
+      if (select) {
+        return { selectedUserIds: prevState.selectedUserIds.concat(userId)}
+      } else {
+        return { selectedUserIds: prevState.selectedUserIds.filter(id => id !== userId) }
+      }
+    });
+  }
+
+  getTableElementProps(columnKey, elementValue) {
+    return {
+      className: 'element',
+      style: { width: `${this.state.columnWidths[columnKey]}px` },
+      key: columnKey,
+      title: elementValue,
+    };
+  }
+
+  getRowWidth() {
+    return Object.values(this.state.columnWidths).reduce((total, value) => total + value, 0);
   }
 
   getTableHeader() {
     if (this.state.registrations.length > 0) {
       return (
         <div className="header row">
+          <div className="checkbox element"/>
           {
             Object.keys(this.state.registrations[0])
-              .filter(key => !this.state.excludedColumns.includes(key))
+              .filter(key => this.state.selectedColumnKeys.includes(key))
               .map(key => (
-                <div className={this.getElementClass(key)} key={key}>{formatCamelCase(key)}</div>
+                <div {...this.getTableElementProps(key)}>{formatCamelCase(key)}</div>
               ))
           }
         </div>
@@ -104,18 +137,31 @@ export default class Users extends React.Component {
     return <div/>
   }
 
-  getTableRows() {
-    return [this.getTableHeader()].concat(this.state.registrations.map(registration => (
-      <div className="row">
-        {
-          Object.entries(registration)
-            .filter(([key]) => !this.state.excludedColumns.includes(key))
-            .map(([key, value]) => (
-              <div className={this.getElementClass(key)} key={key}>{value}</div>
-            ))
-        }
-      </div>
-    )))
+  getTableRow(row) {
+    if (row === 0) {
+      return this.getTableHeader();
+    } else {
+      const registration = this.state.registrations[row - 1];
+      const isRowSelected = this.state.selectedUserIds.includes(registration.id);
+      const className = 'row' + (isRowSelected ? ' selected' : '');
+      return (
+        <div className={className}>
+          <div className="checkbox element">
+            <Checkbox
+              value={isRowSelected}
+              onChange={value => this.selectUser(registration.id, value)}
+              fast/>
+          </div>
+          {
+            Object.entries(registration)
+              .filter(([key]) => this.state.selectedColumnKeys.includes(key))
+              .map(([key, value]) => (
+                <div {...this.getTableElementProps(key, value)}>{value}</div>
+              ))
+          }
+        </div>
+      )
+    }
   }
 
   render() {
@@ -123,14 +169,26 @@ export default class Users extends React.Component {
       <div className="users-page">
         <div className="table-options">
           <Select
-            placeholder="Columns to Exclude"
+            placeholder="Columns to Display"
             className="column-select"
             isMulti={true}
             options={this.state.columnOptions}
-            onChange={selected => this.setState({ excludedColumns: (selected || []).map(column => column.value) })}/>
+            value={this.columnKeysToOptions(this.state.selectedColumnKeys)}
+            onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
         </div>
+
         <div className="table-container">
-          <Clusterize className="table" rows={this.getTableRows()}/>
+          <AutoSizer>
+            {({height, width}) => (
+              <List
+                height={height}
+                width={width}
+                itemCount={this.state.registrations.length + 1}
+                itemSize={50}>
+                  {({index, style}) => (<div style={style}>{this.getTableRow(index)}</div>)}
+              </List>
+            )}
+          </AutoSizer>
         </div>
       </div>
     );
