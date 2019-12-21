@@ -1,0 +1,97 @@
+@import 'src/constants.scss';
+
+.user-filters {
+  white-space: nowrap;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    border-radius: 20px;
+    border: $secondary-color 1.5px solid;
+    color: $secondary-color;
+    padding: 5px 15px;
+    display: inline-block;
+    font-size: .95em;
+    margin: 0 5px;
+
+    &.add-filter {
+      cursor: pointer;
+      background-color: $secondary-color;
+      color: white;
+      transition: background-color .2s, border-color .2s;
+
+      &:hover {
+        background-color: darken($secondary-color, 8%);
+        border-color: darken($secondary-color, 8%);
+      }
+    }
+  }
+
+  .add-filter-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 100vh;
+    width: 100vw;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .content {
+      background-color: white;
+      padding: 0 20px;
+      border-radius: 8px;
+
+      .title {
+        text-align: center;
+        color: #444444;
+      }
+
+      .column-select__control {
+        box-shadow: none;
+
+        &.column-select__control--is-focused {
+          border-width: 2px;
+          border-color: $primary-color;
+        }
+      }
+      
+      .filter-input {
+        @include form-field;
+      }
+
+      .buttons {
+        display: flex;
+        margin-top: 25px;
+        margin-bottom: 15px;
+
+        .spacer {
+          flex: 1;
+        }
+
+        .button {
+          background: none;
+          outline: none;
+          border: none;
+          padding: 7px 20px;
+          border-radius: 5px;
+          border: $primary-color 2px solid;
+          font-weight: bold;
+          color: $primary-color;
+          font-size: .95em;
+          cursor: pointer;
+          transition: color .2s, background-color .2s;
+
+          &:hover, &:focus {
+            background-color: $primary-color;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

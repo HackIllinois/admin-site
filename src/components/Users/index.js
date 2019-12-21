@@ -4,50 +4,11 @@ import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import Checkbox from 'components/Checkbox';
+import UserFilters from './UserFilters';
+import { formatCamelCase, getRegistrations, filterRegistrations } from './registrations';
 import './styles.scss';
 
-function formatCamelCase(camelCase) {
-  const [firstWord, ...remainingWords] = camelCase.split(/(?=[A-Z])/);
-  const captialFirstWord = firstWord[0].toUpperCase() + firstWord.slice(1);
-  return captialFirstWord + ' ' + remainingWords.join(' ');
-}
-
-function formatUser(user) {
-  const formattedUser = {};
-  Object.entries(user).forEach(([key, value]) => {
-    formattedUser[key] = formatUserValue(value);
-  });
-  return formattedUser;
-}
-
-function formatUserValue(value) {
-  if (typeof value == 'string' || typeof value == 'number') {
-    return value;
-  } else if (Array.isArray(value)) {
-    if (value.length === 1) {
-      return removeFirstAndLastLine(JSON.stringify(value[0], null, 2))
-    }
-  }
-  return JSON.stringify(value, null, 2);
-}
-
-function removeFirstAndLastLine(str) {
-  return str.split('\n').map(line => line.trim()).slice(1, -1).join('\n');
-}
-
-// the registrations data is huge so we don't want to refetch it every time 
-let savedRegistrations = [];
-async function getRegistrations(forceRefresh = false) {
-  if (savedRegistrations.length > 0 && !forceRefresh) {
-    return savedRegistrations;
-  }
-  const response = await fetch('https://hackillinois-mock-api.netlify.com/registrations.json');
-  const registrations = await response.json();
-  const formattedRegistrations = registrations.map(formatUser);
-  savedRegistrations = formattedRegistrations;
-  return formattedRegistrations;
-}
-
+const TABLE_HEADER_ROWS = 1;
 const DEFAULT_COLUMN_WIDTH = 150;
 const LONG_COLUMN_WIDTH = 300;
 
@@ -60,6 +21,7 @@ export default class Users extends React.Component {
       selectedColumnKeys: [],
       columnWidths: {},
       selectedUserIds: [],
+      filters: [], // filters are stored like so [[columnKey1, filterValue1], ...]
     };
   }
 
@@ -90,6 +52,14 @@ export default class Users extends React.Component {
         this.setState({ registrations, columnOptions, selectedColumnKeys, columnWidths });
       }
     });
+  }
+
+  addFilter(newFilter) {
+    this.setState(prevState => ({ filters: [...prevState.filters, newFilter] }));
+  }
+
+  removeFilter(oldFilter) {
+    this.setState(prevState => prevState.filter(filter => filter[0] !== oldFilter[0] || filter[1] !== oldFilter[1]));
   }
 
   columnKeysToOptions(columnKeys) {
@@ -137,11 +107,11 @@ export default class Users extends React.Component {
     return <div/>
   }
 
-  getTableRow(row) {
+  getTableRow(row, registrations) {
     if (row === 0) {
       return this.getTableHeader();
     } else {
-      const registration = this.state.registrations[row - 1];
+      const registration = registrations[row - TABLE_HEADER_ROWS];
       const isRowSelected = this.state.selectedUserIds.includes(registration.id);
       const className = 'row' + (isRowSelected ? ' selected' : '');
       return (
@@ -165,6 +135,8 @@ export default class Users extends React.Component {
   }
 
   render() {
+    const registrations = filterRegistrations(this.state.registrations, this.state.filters);
+
     return (
       <div className="users-page">
         <div className="table-options">
@@ -175,6 +147,11 @@ export default class Users extends React.Component {
             options={this.state.columnOptions}
             value={this.columnKeysToOptions(this.state.selectedColumnKeys)}
             onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
+
+          <UserFilters
+            filters={this.state.filters}
+            columnOptions={this.state.columnOptions}
+            onAddFilter={newFilter => this.addFilter(newFilter)}/>
         </div>
 
         <div className="table-container">
@@ -183,9 +160,9 @@ export default class Users extends React.Component {
               <List
                 height={height}
                 width={width}
-                itemCount={this.state.registrations.length + 1}
+                itemCount={registrations.length + TABLE_HEADER_ROWS}
                 itemSize={50}>
-                  {({index, style}) => (<div style={style}>{this.getTableRow(index)}</div>)}
+                  {({index, style}) => (<div style={style}>{this.getTableRow(index, registrations)}</div>)}
               </List>
             )}
           </AutoSizer>
