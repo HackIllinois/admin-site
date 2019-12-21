@@ -11,10 +11,19 @@
     border-radius: 20px;
     border: $secondary-color 1.5px solid;
     color: $secondary-color;
-    padding: 5px 15px;
     display: inline-block;
     font-size: .95em;
     margin: 0 5px;
+    padding: 0 5px;
+
+    .remove, .text {
+      display: inline-block;
+      padding: 5px 7px;
+    }
+    
+    .remove {
+      cursor: pointer;
+    }
 
     &.add-filter {
       cursor: pointer;

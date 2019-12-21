@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 import Select from 'react-select';
 
 import { formatCamelCase } from '../registrations';
@@ -24,16 +24,26 @@ export default class UserFilters extends React.Component {
     }
   }
 
+  removeFilter(filter) {
+    this.props.onRemoveFilter(filter);
+  }
+
   render() {
     return (
       <div className="user-filters">
         <div className="filters">
           <div className="add-filter chip" onClick={() => this.setState({ showPopup: true })}>
-            <FontAwesomeIcon icon={faPlus}/>&nbsp; Add Filter
+            <div className="text"><FontAwesomeIcon icon={faPlus}/>&nbsp; Add Filter</div>
           </div>
           {
             this.props.filters.map(([columnKey, filterValue]) => (
-              <div className="chip">{formatCamelCase(columnKey)}: {filterValue}</div>
+              <div className="chip">
+                <div className="remove" onClick={() => this.removeFilter([columnKey, filterValue])}>
+                  <FontAwesomeIcon icon={faTimes}/>
+                </div>
+                
+                <div className="text">{formatCamelCase(columnKey)}: {filterValue}</div>
+              </div>
             ))
           }
         </div>

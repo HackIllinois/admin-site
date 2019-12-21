@@ -59,7 +59,11 @@ export default class Users extends React.Component {
   }
 
   removeFilter(oldFilter) {
-    this.setState(prevState => prevState.filter(filter => filter[0] !== oldFilter[0] || filter[1] !== oldFilter[1]));
+    this.setState(prevState => ({
+      filters: prevState.filters.filter(
+        filter => filter[0] !== oldFilter[0] || filter[1] !== oldFilter[1]
+      )
+    }));
   }
 
   columnKeysToOptions(columnKeys) {
@@ -151,7 +155,8 @@ export default class Users extends React.Component {
           <UserFilters
             filters={this.state.filters}
             columnOptions={this.state.columnOptions}
-            onAddFilter={newFilter => this.addFilter(newFilter)}/>
+            onAddFilter={newFilter => this.addFilter(newFilter)}
+            onRemoveFilter={filter => this.removeFilter(filter)}/>
         </div>
 
         <div className="table-container">
