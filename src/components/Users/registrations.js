@@ -4,12 +4,8 @@ export function formatCamelCase(camelCase) {
   return (captialFirstWord + ' ' + remainingWords.join(' ')).trim();
 }
 
-function formatUser(user) {
-  const formattedUser = {};
-  Object.entries(user).forEach(([key, value]) => {
-    formattedUser[key] = formatUserValue(value);
-  });
-  return formattedUser;
+function removeFirstAndLastLine(str) {
+  return str.split('\n').map(line => line.trim()).slice(1, -1).join('\n');
 }
 
 function formatUserValue(value) {
@@ -23,26 +19,37 @@ function formatUserValue(value) {
   return JSON.stringify(value, null, 2);
 }
 
-function removeFirstAndLastLine(str) {
-  return str.split('\n').map(line => line.trim()).slice(1, -1).join('\n');
+function formatUser(user) {
+  const formattedUser = {};
+  Object.entries(user).forEach(([key, value]) => {
+    formattedUser[key] = formatUserValue(value);
+  });
+  return formattedUser;
 }
 
-// the registrations data is huge so we don't want to refetch it every time (for example when switching between pages)
-let savedRegistrations = [];
-export async function getRegistrations(forceRefresh = false) {
-  if (savedRegistrations.length > 0 && !forceRefresh) {
-    return savedRegistrations;
-  }
-  const response = await fetch('https://hackillinois-mock-api.netlify.com/registrations.json');
-  const registrations = await response.json();
-  const formattedRegistrations = registrations.map(formatUser);
-  savedRegistrations = formattedRegistrations;
-  return formattedRegistrations;
+export function formatRegistrations(registrations) {
+  return registrations.map(formatUser);
+}
+
+// the api returns the registrations with the keys in alphabetical order
+// so we order the keys with certain keys coming first to improve readability of table
+const orderedKeys = ['id', 'firstName', 'lastName', 'email'];
+export function getColumnKeys(registrations) {
+  // we add all the keys not present in KEY_ORDER to the end (since we don't care about where they go)
+  registrations.forEach(registration => {
+    Object.keys(registration).forEach(key => {
+      if (!orderedKeys.includes(key)) {
+        orderedKeys.push(key);
+      }
+    });
+  });
+
+  return orderedKeys;
 }
 
 export function filterRegistrations(registrations, filters) {
-  // const filterEntries = Object.entries(filters);
   return registrations.filter(registration => {
+    // if any of the column values don't match the corresponding filter, then we remove the whole registeration
     for (const [columnKey, filterValue] of filters) {
       if (!String(registration[columnKey]).toLowerCase().includes(filterValue.toLowerCase())) {
         return false;

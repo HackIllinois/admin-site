@@ -5,7 +5,8 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
-import { formatCamelCase, getRegistrations, filterRegistrations } from './registrations';
+import { getRegistrations } from 'api';
+import { formatCamelCase, formatRegistrations, filterRegistrations, getColumnKeys } from './registrations';
 import './styles.scss';
 
 const TABLE_HEADER_ROWS = 1;
@@ -16,6 +17,7 @@ export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      columnKeys: [], // this array also determines order of the columns
       registrations: [],
       columnOptions: [],
       selectedColumnKeys: [],
@@ -27,10 +29,17 @@ export default class Users extends React.Component {
 
   componentDidMount() {
     getRegistrations().then(registrations => {
+      registrations = formatRegistrations(registrations);
+
       if (registrations.length > 0) {
+        const columnKeys = getColumnKeys(registrations);
+        const selectedColumnKeys = columnKeys.slice(0);
+        
+        const columnOptions = this.columnKeysToOptions(columnKeys);
+
         // Initialize all the column widths to the default
         const columnWidths = {};
-        Object.keys(registrations[0]).forEach(key => {
+        columnKeys.forEach(key => {
           columnWidths[key] = DEFAULT_COLUMN_WIDTH;
         });
 
@@ -45,17 +54,20 @@ export default class Users extends React.Component {
           })
         });
 
-        const columnOptions = this.columnKeysToOptions(Object.keys(registrations[0]));
-
-        const selectedColumnKeys = Object.keys(registrations[0]);
-
-        this.setState({ registrations, columnOptions, selectedColumnKeys, columnWidths });
+        this.setState({ columnKeys, registrations, columnOptions, selectedColumnKeys, columnWidths });
       }
     });
   }
+  
+  columnKeysToOptions(columnKeys) {
+    return columnKeys.map(key => ({ value: key, label: formatCamelCase(key)}))
+  }
 
   addFilter(newFilter) {
-    this.setState(prevState => ({ filters: [...prevState.filters, newFilter] }));
+    this.setState(prevState => ({
+      filters: [...prevState.filters, newFilter],
+      selectedUserIds: [], // we unselect all users (don't want to keep filtered out users still selected)
+    }));
   }
 
   removeFilter(oldFilter) {
@@ -64,10 +76,6 @@ export default class Users extends React.Component {
         filter => filter[0] !== oldFilter[0] || filter[1] !== oldFilter[1]
       )
     }));
-  }
-
-  columnKeysToOptions(columnKeys) {
-    return columnKeys.map(key => ({ value: key, label: formatCamelCase(key)}))
   }
 
   selectUser(userId, select = true) {
@@ -99,10 +107,10 @@ export default class Users extends React.Component {
         <div className="header row">
           <div className="checkbox element"/>
           {
-            Object.keys(this.state.registrations[0])
+            this.state.columnKeys
               .filter(key => this.state.selectedColumnKeys.includes(key))
               .map(key => (
-                <div {...this.getTableElementProps(key)}>{formatCamelCase(key)}</div>
+                <div {...this.getTableElementProps(key, formatCamelCase(key))}>{formatCamelCase(key)}</div>
               ))
           }
         </div>
@@ -127,10 +135,10 @@ export default class Users extends React.Component {
               fast/>
           </div>
           {
-            Object.entries(registration)
-              .filter(([key]) => this.state.selectedColumnKeys.includes(key))
-              .map(([key, value]) => (
-                <div {...this.getTableElementProps(key, value)}>{value}</div>
+            this.state.columnKeys
+              .filter(key => this.state.selectedColumnKeys.includes(key))
+              .map(key => (
+                <div {...this.getTableElementProps(key, registration[key])}>{registration[key]}</div>
               ))
           }
         </div>
