@@ -5,8 +5,8 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 
 import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
-import { getRegistrations } from 'api';
-import { formatCamelCase, formatRegistrations, filterRegistrations, getColumnKeys } from './registrations';
+import { getRegistrations, getDecisions } from 'api';
+import { formatCamelCase, formatRegistrations, filterRegistrations, getColumnKeys, addDecisionsColumn } from './registrations';
 import './styles.scss';
 
 const TABLE_HEADER_ROWS = 1;
@@ -28,34 +28,35 @@ export default class Users extends React.Component {
   }
 
   componentDidMount() {
-    getRegistrations().then(registrations => {
-      registrations = formatRegistrations(registrations);
+    Promise.all([getRegistrations(), getDecisions()])
+      .then(([registrations, decisions]) => addDecisionsColumn(registrations, decisions))
+      .then(registrations => formatRegistrations(registrations))
+      .then(registrations => {
+        if (registrations.length > 0) {
+          const columnKeys = getColumnKeys(registrations);
+          const selectedColumnKeys = columnKeys.slice(0);
+          
+          const columnOptions = this.columnKeysToOptions(columnKeys);
 
-      if (registrations.length > 0) {
-        const columnKeys = getColumnKeys(registrations);
-        const selectedColumnKeys = columnKeys.slice(0);
-        
-        const columnOptions = this.columnKeysToOptions(columnKeys);
+          // Initialize all the column widths to the default
+          const columnWidths = {};
+          columnKeys.forEach(key => {
+            columnWidths[key] = DEFAULT_COLUMN_WIDTH;
+          });
 
-        // Initialize all the column widths to the default
-        const columnWidths = {};
-        columnKeys.forEach(key => {
-          columnWidths[key] = DEFAULT_COLUMN_WIDTH;
-        });
+          // Go through each registration and if any of the values for a given column is long,
+          // then increase that column's width
+          const longMinimumLength = 16; // the minumum length of a value for the column to be considered long
+          registrations.forEach(registration => {
+            Object.entries(registration).forEach(([key, value]) => {
+              if (String(value).length > longMinimumLength) {
+                columnWidths[key] = LONG_COLUMN_WIDTH;
+              }
+            })
+          });
 
-        // Go through each registration and if any of the values for a given column is long,
-        // then increase that column's width
-        const longMinimumLength = 16; // the minumum length of a value for the column to be considered long
-        registrations.forEach(registration => {
-          Object.entries(registration).forEach(([key, value]) => {
-            if (String(value).length > longMinimumLength) {
-              columnWidths[key] = LONG_COLUMN_WIDTH;
-            }
-          })
-        });
-
-        this.setState({ columnKeys, registrations, columnOptions, selectedColumnKeys, columnWidths });
-      }
+          this.setState({ columnKeys, registrations, columnOptions, selectedColumnKeys, columnWidths });
+        }
     });
   }
   

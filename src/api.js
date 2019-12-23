@@ -89,3 +89,7 @@ export function sendNotification(notification, topic) {
 export function getRegistrations() {
   return request('GET', '/registration/attendee/filter/').then(res => res.registrations);
 }
+
+export function getDecisions() {
+  return request('GET', '/decision/filter/').then(res => res.decisions);
+}

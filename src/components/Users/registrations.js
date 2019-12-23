@@ -4,6 +4,15 @@ export function formatCamelCase(camelCase) {
   return (captialFirstWord + ' ' + remainingWords.join(' ')).trim();
 }
 
+export function addDecisionsColumn(registerations, decisions) {
+  const decisionsMap = {};
+  decisions.forEach(decision => decisionsMap[decision.id] = decision.status);
+
+  return registerations.map(registeration => 
+    Object.assign({}, registeration, { decisionStatus: decisionsMap[registeration.id]})
+  );
+}
+
 function removeFirstAndLastLine(str) {
   return str.split('\n').map(line => line.trim()).slice(1, -1).join('\n');
 }
@@ -33,7 +42,7 @@ export function formatRegistrations(registrations) {
 
 // the api returns the registrations with the keys in alphabetical order
 // so we order the keys with certain keys coming first to improve readability of table
-const orderedKeys = ['id', 'firstName', 'lastName', 'email'];
+const orderedKeys = ['id', 'decisionStatus', 'firstName', 'lastName', 'email'];
 export function getColumnKeys(registrations) {
   // we add all the keys not present in KEY_ORDER to the end (since we don't care about where they go)
   registrations.forEach(registration => {
