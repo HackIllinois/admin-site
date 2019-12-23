@@ -7,6 +7,7 @@ import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
 import { getRegistrations, getDecisions } from 'api';
 import { formatCamelCase, formatRegistrations, filterRegistrations, getColumnKeys, addDecisionsColumn } from './registrations';
+import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import './styles.scss';
 
 const TABLE_HEADER_ROWS = 1;
@@ -148,24 +149,45 @@ export default class Users extends React.Component {
   }
 
   render() {
-    const registrations = filterRegistrations(this.state.registrations, this.state.filters);
+    const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;
+    const filteredRegistrations = filterRegistrations(registrations, filters);
+
+    const columnSelectTheme = defaultTheme => ({
+      ...defaultTheme,
+      colors: {
+        ...defaultTheme.colors,
+        primary: secondaryColor,
+        primary25: secondaryColorLight,
+        primary50: secondaryColorLight
+      }
+    });
 
     return (
       <div className="users-page">
         <div className="table-options">
           <Select
-            placeholder="Columns to Display"
+            placeholder="Select Which Columns to Display"
             className="column-select"
             isMulti={true}
-            options={this.state.columnOptions}
-            value={this.columnKeysToOptions(this.state.selectedColumnKeys)}
+            options={columnOptions}
+            controlShouldRenderValue={false}
+            hideSelectedOptions={false}
+            closeMenuOnSelect={false}
+            theme={columnSelectTheme}
+            value={this.columnKeysToOptions(selectedColumnKeys)}
             onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
 
           <UserFilters
-            filters={this.state.filters}
-            columnOptions={this.state.columnOptions}
+            filters={filters}
+            columnOptions={columnOptions}
             onAddFilter={newFilter => this.addFilter(newFilter)}
             onRemoveFilter={filter => this.removeFilter(filter)}/>
+
+          <div className={`decision-buttons ${selectedUserIds.length === 0 ? 'disabled' : ''}`}>
+            <button className="accept button">Accept</button>
+            <button className="deny button">Deny</button>
+            <button className="finalize button">Finalize</button>
+          </div>
         </div>
 
         <div className="table-container">
@@ -174,9 +196,9 @@ export default class Users extends React.Component {
               <List
                 height={height}
                 width={width}
-                itemCount={registrations.length + TABLE_HEADER_ROWS}
+                itemCount={filteredRegistrations.length + TABLE_HEADER_ROWS}
                 itemSize={50}>
-                  {({index, style}) => (<div style={style}>{this.getTableRow(index, registrations)}</div>)}
+                  {({index, style}) => (<div style={style}>{this.getTableRow(index, filteredRegistrations)}</div>)}
               </List>
             )}
           </AutoSizer>

@@ -1,3 +1,5 @@
+@import 'constants.scss';
+
 .users-page {
   --table-header-height: 40px;
   flex: 1;
@@ -5,17 +7,35 @@
   overflow: auto;
 
   .table-options {
-    height: 25vh;
+    height: 20vh;
     padding: 10px;
     box-sizing: border-box;
 
     .column-select {
       margin-bottom: 15px;
     }
+
+    .decision-buttons {
+      margin-top: 15px;
+
+      .button {
+        @include button;
+        margin: 0 5px;
+      }
+      
+      &.disabled {
+        .button {
+          color: #aaaaaa;
+          border-color: #aaaaaa;
+          background-color: white;
+          cursor: default;
+        }
+      }
+    }
   }
 
   .table-container {
-    height: 75vh;
+    height: 80vh;
 
     .row {
       box-shadow: 0px -1px 0px #dddddd inset;

@@ -54,6 +54,7 @@
       background-color: white;
       padding: 0 20px;
       border-radius: 8px;
+      border: 1.5px solid $primary-color;
 
       .title {
         text-align: center;
@@ -83,22 +84,7 @@
         }
 
         .button {
-          background: none;
-          outline: none;
-          border: none;
-          padding: 7px 20px;
-          border-radius: 5px;
-          border: $primary-color 2px solid;
-          font-weight: bold;
-          color: $primary-color;
-          font-size: .95em;
-          cursor: pointer;
-          transition: color .2s, background-color .2s;
-
-          &:hover, &:focus {
-            background-color: $primary-color;
-            color: white;
-          }
+          @include button;
         }
       }
     }
