@@ -1,0 +1,87 @@
+@import 'constants.scss';
+
+.events-page {
+  flex: 1;
+  display: flex;
+  padding-top: 40px;
+
+  .day {
+    flex: 1;
+
+    .day-of-week {
+      font-size: 1.65em;
+      text-align: center;
+      font-weight: bold;
+      color: #444444;
+    }
+
+    .date {
+      text-align: center;
+      font-weight: bold;
+      color: #777777;
+      margin-top: 2px;
+      font-size: .9em;
+    }
+
+    .underline {
+      height: 5px;
+      background-color: $secondary-color;
+      width: 70%;
+      margin: 3px auto;
+      border-radius: 10px;
+    }
+
+    .events {
+      .event {
+        border: $primary-color 2px solid;
+        border-radius: 7px;
+        margin: 20px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        &:hover {
+          background-color: #f0f0f0;
+        }
+        
+
+        .event-header {
+          display: flex;
+          width: 100%;
+          font-weight: bold;
+          align-items: center;
+
+          .event-name {
+            flex: 1;
+            color: #444444;
+            font-size: 1.2em;
+          }
+
+          .event-time {
+            font-size: .85em;
+            color: $primary-color;
+          }
+        }
+
+        .event-details {
+          .description {
+            margin-top: 5px;
+            font-size: .9em;
+          }
+
+          .locations {
+            margin-top: 7px;
+            font-size: .85em;
+            color: $secondary-color;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .add-event-icon {
+        align-self: center;
+        color: $primary-color;
+      }
+    }
+  }
+}

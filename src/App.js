@@ -7,6 +7,7 @@ import './App.scss';
 import PrivateRoute from './components/PrivateRoute';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
+import Events from './components/Events';
 import Notifications from './components/Notifications';
 
 const routes = [
@@ -24,7 +25,7 @@ function App() {
           <div className="navigation-menu">
             {
               routes.map(route => (
-                <NavLink to={route.path} exact className="navigation-link" activeClassName="active">
+                <NavLink exact to={route.path} className="navigation-link" activeClassName="active" key={route.name}>
                   <FontAwesomeIcon icon={route.icon} fixedWidth/>&nbsp; {route.name}
                 </NavLink>
               ))
@@ -40,10 +41,12 @@ function App() {
           </PrivateRoute>
           
           <PrivateRoute path="/users"></PrivateRoute>
+          <PrivateRoute path="/events">
+            <Events/>
+          </PrivateRoute>
           <PrivateRoute path="/notifications">
             <Notifications/>
           </PrivateRoute>
-          <PrivateRoute path="/events"></PrivateRoute>
         </Switch>
       </BrowserRouter>
     </div>

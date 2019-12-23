@@ -1,0 +1,21 @@
+@import 'constants.scss';
+
+.time-input {
+  margin: 15px 0;
+
+  .label {
+    margin: 0 5px;
+  }
+
+  select {
+    @include form-field;
+    width: auto;
+    display: inline-block;
+    margin: 0 3px;
+  }
+
+  .colon {
+    font-size: 1.2em;
+    
+  }
+}

@@ -1,0 +1,75 @@
+@import 'constants.scss';
+
+.event-edit-popup {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .popup-container {
+    background-color: white;
+    border: $primary-color 2px solid;
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 400px;
+
+    .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.5em;
+      color: #444444;
+      margin-top: 10px;
+    }
+
+    .form {
+      .form-field {
+        @include form-field;
+      }
+
+      .buttons {
+        display: flex;
+        margin-bottom: 10px;
+        margin-top: 20px;
+
+        .spacer {
+          flex: 1;
+        }
+
+        .button {
+          background: none;
+          outline: none;
+          border: none;
+          padding: 7px 20px;
+          border-radius: 5px;
+          border: $primary-color 2px solid;
+          font-weight: bold;
+          color: $primary-color;
+          font-size: .95em;
+          cursor: pointer;
+          transition: color .2s, background-color .2s;
+          margin: 0 10px;
+
+          &:hover, &:focus {
+            background-color: $primary-color;
+            color: white;
+          }
+
+          &.delete {
+            border-color: $red;
+            color: $red;
+
+            &:hover, &:focus {
+              background-color: $red;
+              color: white
+            }
+          }
+        }
+      }
+    }
+  }
+}
