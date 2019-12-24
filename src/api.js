@@ -28,14 +28,15 @@ export function authenticate(to) {
   if (process.env.REACT_APP_TOKEN) {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
   } else {
-    to = `${process.env.REACT_APP_URL}/auth/?to=${to}`;
+    to = `${window.location.origin}/auth/?to=${to}`;
     to = `${API}/auth/github/?redirect_uri=${to}`;
   }
   window.location.replace(to);
 }
 
 export function getToken(code) {
-  return request('POST', '/auth/code/github/', { code });
+  return request('POST', '/auth/code/github/', { code })
+    .then(res => res.token);
 }
 
 export function getRoles() {
@@ -44,7 +45,8 @@ export function getRoles() {
 }
 
 export function getEvents() {
-  return request('GET', '/event/').then(res => res.events);
+  return request('GET', '/event/')
+    .then(res => res.events);
 }
 
 export function updateEvent(event) {
@@ -60,7 +62,8 @@ export function deleteEvent(eventId) {
 }
 
 export function getNotificationTopics() {
-  return request('GET', '/notifications/topic/').then(res => res.topics);
+  return request('GET', '/notifications/topic/')
+    .then(res => res.topics);
 }
 
 export function addNotificationTopic(topic) {
@@ -74,7 +77,8 @@ export function removeNotificationTopic(topic) {
 export function getNotifications(topicIds) {
   // using Promise.all to send web request for each topic so that they are sent simultaneously
   const promises = topicIds.map(topicId => 
-    request('GET', `/notifications/topic/${topicId}/`).then(res => res.notifications || [])
+    request('GET', `/notifications/topic/${topicId}/`)
+      .then(res => res.notifications || [])
   );
 
   return Promise.all(promises).then(notificationsById =>
