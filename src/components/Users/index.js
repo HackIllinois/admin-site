@@ -78,12 +78,42 @@ export default class Users extends React.Component {
     }));
   }
 
+  // Note: userId can be an array of user ids (since Array.concat works with values and arrays)
   selectUser(userId) {
     this.setState(prevState => ({ selectedUserIds: prevState.selectedUserIds.concat(userId)}));
   }
 
   unselectUser(userId) {
     this.setState(prevState => ({ selectedUserIds: prevState.selectedUserIds.filter(id => id !== userId) }));
+  }
+
+  handleCheckbox(isChecked, event, userId, filteredRegistrations) {
+    const { selectedUserIds } = this.state;
+    if (isChecked) {
+      if (event.shiftKey && selectedUserIds.length >= 1) {
+        // If the shift key is pressed, we select every row in between the most recently selected row and the current
+        // We assume that the last element of selectedUserIds is most recently select
+        const previousId = selectedUserIds[selectedUserIds.length - 1];
+        const previousIndex = filteredRegistrations.findIndex(registration => registration.id === previousId);
+        const currentIndex = filteredRegistrations.findIndex(registration => registration.id === userId);
+        const idsToSelect = filteredRegistrations
+          .slice(Math.min(previousIndex, currentIndex), Math.max(previousIndex, currentIndex) + 1)
+          .map(registration => registration.id);
+        
+
+        // We want the ids ordered so that the current userId is last element
+        // in order to make it the most recently selected row if the user shift clicks again
+        if (previousIndex > currentIndex) {
+          idsToSelect.reverse();
+        }
+
+        this.selectUser(idsToSelect.slice(1)); // select everything except previousId (which is at the first index)
+      } else {
+        this.selectUser(userId);
+      }
+    } else {
+      this.unselectUser(userId);
+    }
   }
 
   updateDecisions() {
@@ -138,7 +168,7 @@ export default class Users extends React.Component {
           <div className="checkbox element">
             <Checkbox
               value={isRowSelected}
-              onChange={value => value ? this.selectUser(registration.id) : this.unselectUser(registration.id)}
+              onChange={(isChecked, event) => this.handleCheckbox(isChecked, event, registration.id, registrations)}
               fast/>
           </div>
           {

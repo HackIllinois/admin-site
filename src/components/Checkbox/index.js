@@ -8,13 +8,13 @@ export default function Checkbox(props) {
   const checkboxClass = 'checkbox' + (props.value ? ' checked' : ''); 
   const handleKeyPress = event => {
     if (event.which === 13) { // enter key
-      props.onChange(!props.value);
+      props.onChange(!props.value, event);
     }
   }
 
   const clickListenerType = props.fast ? 'onMouseDown' : 'onClick';
   const clickListener = {
-    [clickListenerType]: () => props.onChange(!props.value)
+    [clickListenerType]: event => props.onChange(!props.value, event)
   };
 
   return (
