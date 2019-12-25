@@ -1,0 +1,10 @@
+.location-input {
+  margin: 0 5px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .location-option {
+    width: 50%;
+    margin-top: 15px;
+  }
+}

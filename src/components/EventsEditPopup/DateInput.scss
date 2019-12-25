@@ -1,0 +1,11 @@
+@import 'constants.scss';
+
+.date-input {
+  select {
+    @include form-field;
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    margin-right: 10px;
+  }
+}

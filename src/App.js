@@ -3,9 +3,13 @@ import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faColumns, faUsers, faBell, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
-import './app.scss';
+import './App.scss';
+import PrivateRoute from './components/PrivateRoute';
+import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import Users from './components/Users';
+import Events from './components/Events';
+import Notifications from './components/Notifications';
 
 const routes = [
   { path: '/', name: "Dashboard", icon: faColumns },
@@ -22,7 +26,7 @@ function App() {
           <div className="navigation-menu">
             {
               routes.map(route => (
-                <NavLink to={route.path} exact className="navigation-link" activeClassName="active">
+                <NavLink exact to={route.path} className="navigation-link" activeClassName="active" key={route.name}>
                   <FontAwesomeIcon icon={route.icon} fixedWidth/>&nbsp; {route.name}
                 </NavLink>
               ))
@@ -31,14 +35,23 @@ function App() {
         </div>
 
         <Switch>
-          <Route exact path="/">
+          <Route path="/auth" component={Auth}></Route>
+          
+          <PrivateRoute exact path="/">
             <Dashboard/>
-          </Route>
-          <Route path="/users">
+          </PrivateRoute>
+          
+          <PrivateRoute path="/users">
             <Users/>
-          </Route>
-          <Route path="/notifications"></Route>
-          <Route path="/events"></Route>
+          </PrivateRoute>
+
+          <PrivateRoute path="/events">
+            <Events/>
+          </PrivateRoute>
+
+          <PrivateRoute path="/notifications">
+            <Notifications/>
+          </PrivateRoute>
         </Switch>
       </BrowserRouter>
     </div>
