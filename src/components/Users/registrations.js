@@ -4,45 +4,31 @@ export function formatCamelCase(camelCase) {
   return (captialFirstWord + ' ' + remainingWords.join(' ')).trim();
 }
 
-export function addDecisionsColumn(registerations, decisions) {
+export function addDecisionColumns(registerations, decisions) {
+  // create a map ({userId: [status, wave, finalized]}) to avoid looping through the potentially huge decisions array
   const decisionsMap = {};
-  decisions.forEach(decision => decisionsMap[decision.id] = decision.status);
-
-  return registerations.map(registeration => 
-    Object.assign({}, registeration, { decisionStatus: decisionsMap[registeration.id]})
-  );
-}
-
-function removeFirstAndLastLine(str) {
-  return str.split('\n').map(line => line.trim()).slice(1, -1).join('\n');
-}
-
-function formatUserValue(value) {
-  if (typeof value == 'string' || typeof value == 'number') {
-    return value;
-  } else if (Array.isArray(value)) {
-    if (value.length === 1) {
-      return removeFirstAndLastLine(JSON.stringify(value[0], null, 2))
-    }
-  }
-  return JSON.stringify(value, null, 2);
-}
-
-function formatUser(user) {
-  const formattedUser = {};
-  Object.entries(user).forEach(([key, value]) => {
-    formattedUser[key] = formatUserValue(value);
+  decisions.forEach(decision => {
+    const {id, status, wave, finalized } = decision
+    decisionsMap[id] = [status, wave, finalized];
   });
-  return formattedUser;
+
+  // for each registration, create a new registration object with the three decisions columns added
+  return registerations.map(registeration => {
+    const [decisionStatus, wave, finalized] = decisionsMap[registeration.id];
+    return Object.assign({}, registeration, { decisionStatus, wave, finalized });
+  });
 }
 
-export function formatRegistrations(registrations) {
-  return registrations.map(formatUser);
+export function formatRegistrationValue(value) {
+  if (typeof value === 'object') {
+    return JSON.stringify(value, null, 2);
+  }
+  return String(value);
 }
 
 // the api returns the registrations with the keys in alphabetical order
 // so we order the keys with certain keys coming first to improve readability of table
-const orderedKeys = ['id', 'decisionStatus', 'firstName', 'lastName', 'email'];
+const orderedKeys = ['id', 'decisionStatus', 'wave', 'finalized', 'firstName', 'lastName', 'email'];
 export function getColumnKeys(registrations) {
   // we add all the keys not present in KEY_ORDER to the end (since we don't care about where they go)
   registrations.forEach(registration => {

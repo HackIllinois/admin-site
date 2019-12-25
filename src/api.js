@@ -93,3 +93,11 @@ export function getRegistrations() {
 export function getDecisions() {
   return request('GET', '/decision/filter/').then(res => res.decisions);
 }
+
+export function makeDecision(id, status, wave) {
+  return request('POST', '/decision/', { id, status, wave });
+}
+
+export function finalizeDecision(id, finalized = true) {
+  return request('POST', '/decision/finalize/', { id, finalized });
+}

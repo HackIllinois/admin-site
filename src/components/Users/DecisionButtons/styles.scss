@@ -1,0 +1,27 @@
+@import 'constants.scss';
+
+.decision-buttons {
+  margin-top: 15px;
+
+  .wave-select {
+    display: inline-block;
+    width: 130px;
+    margin-right: 5px;
+  }
+
+  .button {
+    @include button;
+    margin: 0 5px;
+
+    &.accept {
+      margin-right: 25px;
+    }
+
+    &:disabled {
+      color: #999999;
+      border-color: #999999;
+      background-color: white;
+      cursor: default;
+    }
+  }
+}
