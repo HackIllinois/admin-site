@@ -1,14 +1,14 @@
 import React from 'react';
-import Select from 'react-select';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import Checkbox from 'components/Checkbox';
+import SelectField from 'components/SelectField';
 import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
 import { getRegistrations, getDecisions } from 'api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns, formatRegistrationValue } from './registrations';
-import { primaryColor, primaryColorLight, secondaryColor, secondaryColorLight } from 'constants.scss';
+import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import './styles.scss';
 
 const TABLE_HEADER_ROWS = 1;
@@ -87,6 +87,14 @@ export default class Users extends React.Component {
     this.setState(prevState => ({ selectedUserIds: prevState.selectedUserIds.filter(id => id !== userId) }));
   }
 
+  selectAll(registrations = this.state.registrations) {
+    this.setState({ selectedUserIds: registrations.map(registration => registration.id)});
+  }
+
+  unselectAll() {
+    this.setState({ selectedUserIds: [] });
+  }
+
   handleCheckbox(isChecked, event, userId, filteredRegistrations) {
     const { selectedUserIds } = this.state;
     if (isChecked) {
@@ -125,7 +133,7 @@ export default class Users extends React.Component {
   handleDecision(decisionPromises) {
     Promise.all(decisionPromises).then(() => {
       this.updateDecisions();
-      this.setState({ selectedUserIds: [] });
+      this.unselectAll();
     });
   }
 
@@ -138,11 +146,16 @@ export default class Users extends React.Component {
     };
   }
 
-  getTableHeader() {
+  getTableHeader(filteredRegistrations) {
     if (this.state.registrations.length > 0) {
       return (
         <div className="header row">
-          <div className="checkbox element"/>
+          <div className="checkbox element">
+            <Checkbox
+              value={this.state.selectedUserIds.length >= 1}
+              onChange={isChecked => isChecked ? this.selectAll(filteredRegistrations) : this.unselectAll()}
+              fast/>
+          </div>
           {
             this.state.columnKeys
               .filter(key => this.state.selectedColumnKeys.includes(key))
@@ -156,11 +169,11 @@ export default class Users extends React.Component {
     return <div/>
   }
 
-  getTableRow(row, registrations) {
+  getTableRow(row, filteredRegistrations) {
     if (row === 0) {
-      return this.getTableHeader();
+      return this.getTableHeader(filteredRegistrations);
     } else {
-      const registration = registrations[row - TABLE_HEADER_ROWS];
+      const registration = filteredRegistrations[row - TABLE_HEADER_ROWS];
       const isRowSelected = this.state.selectedUserIds.includes(registration.id);
       const className = 'row' + (isRowSelected ? ' selected' : '');
       return (
@@ -168,7 +181,7 @@ export default class Users extends React.Component {
           <div className="checkbox element">
             <Checkbox
               value={isRowSelected}
-              onChange={(isChecked, event) => this.handleCheckbox(isChecked, event, registration.id, registrations)}
+              onChange={(isChecked, event) => this.handleCheckbox(isChecked, event, registration.id, filteredRegistrations)}
               fast/>
           </div>
           {
@@ -189,20 +202,12 @@ export default class Users extends React.Component {
     const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;
     const filteredRegistrations = filterRegistrations(registrations, filters);
 
-    const selectTheme = (color, colorLight) => defaultTheme => ({
-      ...defaultTheme,
-      colors: {
-        ...defaultTheme.colors,
-        primary: color,
-        primary25: colorLight,
-        primary50: colorLight
-      }
-    });
-
     return (
       <div className="users-page">
         <div className="table-options">
-          <Select
+          <SelectField
+            color={secondaryColor}
+            colorLight={secondaryColorLight}
             placeholder="Select Which Columns to Display"
             className="column-select"
             isMulti={true}
@@ -210,7 +215,6 @@ export default class Users extends React.Component {
             controlShouldRenderValue={false}
             hideSelectedOptions={false}
             closeMenuOnSelect={false}
-            theme={selectTheme(secondaryColor, secondaryColorLight)}
             value={this.columnKeysToOptions(selectedColumnKeys)}
             onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
 
@@ -223,7 +227,6 @@ export default class Users extends React.Component {
           <DecisionButtons
             registrations={filteredRegistrations}
             selectedUserIds={selectedUserIds}
-            selectTheme={selectTheme(primaryColor, primaryColorLight)}
             onDecision={decisionPromises => this.handleDecision(decisionPromises)}/>
         </div>
 

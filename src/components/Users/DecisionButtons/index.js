@@ -1,8 +1,8 @@
 import React from 'react';
-import Select from 'react-select';
 
 import './styles.scss';
 import { makeDecision, finalizeDecision } from 'api';
+import SelectField from 'components/SelectField';
 
 export default class DecisionButtons extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ export default class DecisionButtons extends React.Component {
   }
 
   render() {
-    const { registrations, selectedUserIds, selectTheme } = this.props;
+    const { registrations, selectedUserIds } = this.props;
     const { selectedWave } = this.state;
 
     const isSelected = registration => selectedUserIds.includes(registration.id);
@@ -37,9 +37,8 @@ export default class DecisionButtons extends React.Component {
 
     return (
       <div className="decision-buttons">
-        <Select
+        <SelectField
           className="wave-select"
-          theme={selectTheme}
           value={{ value: selectedWave, label: `Wave ${selectedWave}` }}
           options={oneThroughTen.map(num => ({ value: num, label: `Wave ${num}`}))}
           onChange={selected => this.setState({ selectedWave: selected.value })}/>

@@ -60,15 +60,6 @@
         text-align: center;
         color: #444444;
       }
-
-      .column-select__control {
-        box-shadow: none;
-
-        &.column-select__control--is-focused {
-          border-width: 2px;
-          border-color: $primary-color;
-        }
-      }
       
       .filter-input {
         @include form-field;
