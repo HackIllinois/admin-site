@@ -89,3 +89,21 @@ export function getNotifications(topicIds) {
 export function sendNotification(notification, topic) {
   return request('POST', `/notifications/topic/${topic}/`, notification);
 }
+
+export function getRegistrations() {
+  return request('GET', '/registration/attendee/filter/')
+    .then(res => res.registrations);
+}
+
+export function getDecisions() {
+  return request('GET', '/decision/filter/')
+    .then(res => res.decisions);
+}
+
+export function makeDecision(id, status, wave) {
+  return request('POST', '/decision/', { id, status, wave });
+}
+
+export function finalizeDecision(id, finalized = true) {
+  return request('POST', '/decision/finalize/', { id, finalized });
+}

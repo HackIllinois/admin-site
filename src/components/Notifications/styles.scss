@@ -6,24 +6,7 @@
   overflow: auto;
 
   .form-field {
-    display: block;
-    margin: 17px 0;
-    font-size: 1em;
-    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
-    outline: none;
-    border: #dadce0 1px solid;
-    transition: border-color .1s, border-width .1s, padding .1s;
-    box-sizing: border-box;
-    border-radius: 5px;
-    padding: 7px;
-    width: 100%;
-    resize: none;
-
-    &:focus {
-      border-color: $primary-color;
-      border-width: 2px;
-      padding: 6px;
-    }
+    @include form-field;
   }
 
   .top {
@@ -63,24 +46,9 @@
         }
   
         button {
+          @include button;
           float: right;
-          background: none;
-          outline: none;
-          border: none;
-          padding: 7px 20px;
-          border-radius: 5px;
-          border: $primary-color 2px solid;
-          font-weight: bold;
-          color: $primary-color;
-          font-size: .95em;
-          cursor: pointer;
-          transition: color .2s, background-color .2s;
           margin: 0 10px;
-    
-          &:hover, &:focus {
-            background-color: $primary-color;
-            color: white;
-          }
         }
       }
     }

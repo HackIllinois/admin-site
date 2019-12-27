@@ -1,0 +1,62 @@
+@import 'constants.scss';
+
+.users-page {
+  --table-options-height: 160px;
+  flex: 1;
+  height: 100vh;
+  overflow: auto;
+
+  .table-options {
+    height: var(--table-options-height);
+    padding: 10px;
+    box-sizing: border-box;
+
+    .column-select {
+      margin-bottom: 15px;
+    }
+  }
+
+  .table-container {
+    height: calc(100vh - var(--table-options-height));
+
+    .row {
+      box-shadow: 0px -1px 0px #dddddd inset;
+      white-space: nowrap;
+      width: fit-content;
+      width: -moz-fit-content;
+      height: 50px;
+      display: table-cell;
+      vertical-align: middle;
+  
+      &.header {
+        font-weight: bold;
+        color: #444444;
+      }
+
+      &.selected {
+        background-color: #eeeeee;
+      }
+  
+      .element {
+        margin: 0 10px;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 4px;
+
+        &.checkbox {
+          width: 25px;
+          justify-content: center;
+        }
+      }
+
+      .separator {
+        position: absolute;
+        bottom: 0;
+        height: 1px;
+        width: 100%;
+        background-color: #dddddd;
+      }
+    }
+  }
+}

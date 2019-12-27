@@ -1,6 +1,13 @@
 $primary-color: #505F85;
-$secondary-color: #5D9A7A;
+$secondary-color: #5E997A;
 $red: #cc0000;
+
+:export { // allows you to import these variables from javascript
+  primaryColor: $primary-color;
+  primaryColorLight: lighten($primary-color, 40%);
+  secondaryColor: $secondary-color;
+  secondaryColorLight: lighten($secondary-color, 40%);
+}
 
 @mixin form-field {
   display: block;
@@ -20,5 +27,24 @@ $red: #cc0000;
     border-color: $primary-color;
     border-width: 2px;
     padding: 6px;
+  }
+}
+
+@mixin button($color: $primary-color) {
+  background: none;
+  outline: none;
+  border: none;
+  padding: 7px 20px;
+  border-radius: 5px;
+  border: $color 2px solid;
+  font-weight: bold;
+  color: $color;
+  font-size: .95em;
+  cursor: pointer;
+  transition: color .2s, background-color .2s;
+
+  &:hover, &:focus {
+    background-color: $color;
+    color: white;
   }
 }
