@@ -3,9 +3,9 @@ import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 import Checkbox from 'components/Checkbox';
-import SelectField from 'components/SelectField';
 import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
+import { StyledSelect } from 'components/SelectField';
 import { getRegistrations, getDecisions } from 'api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns, formatRegistrationValue } from './registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
@@ -205,7 +205,7 @@ export default class Users extends React.Component {
     return (
       <div className="users-page">
         <div className="table-options">
-          <SelectField
+          <StyledSelect
             color={secondaryColor}
             colorLight={secondaryColorLight}
             placeholder="Select Which Columns to Display"

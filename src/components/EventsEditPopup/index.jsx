@@ -5,6 +5,7 @@ import { addEvent, updateEvent, deleteEvent } from 'api';
 import LocationInput from './LocationInput';
 import TimeInput from './TimeInput';
 import DateInput from './DateInput';
+import SelectField from 'components/SelectField';
 import './styles.scss';
 
 const possibleEventTypes = ['MEAL', 'SPONSOR', 'WORKSHOP', 'OTHER'];
@@ -67,13 +68,15 @@ export default class EventEditPopup extends React.Component {
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
                 <Field component={LocationInput} name="locations"/>
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
-                <Field as="select" className="form-field" name="eventType">
-                  {
-                    possibleEventTypes.map(eventType => <option key={eventType}>{eventType}</option>)
-                  }
-                </Field>
+                <SelectField
+                  className="select"
+                  name="eventType"
+                  menuPlacement="auto"
+                  options={possibleEventTypes.map(eventType => ({ label: eventType, value: eventType }))}
+                />
+
                 <div className="buttons">
-                  { !this.isNewEvent() && 
+                  { !this.isNewEvent() &&
                     <button className="button delete" onClick={() => this.delete()}>Delete</button>}
                   
                   <div className="spacer"/>

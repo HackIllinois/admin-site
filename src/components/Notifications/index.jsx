@@ -1,9 +1,10 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperPlane, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import './styles.scss';
-import { faPaperPlane, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import SelectField from 'components/SelectField';
 import {
   getNotificationTopics,
   getNotifications,
@@ -74,7 +75,6 @@ export default class Notifications extends React.Component {
   }
 
   removeTopic({ topic }, formik) {
-    console.log(topic);
     if (topic) {
       removeNotificationTopic(topic).then(() => {
         this.updateNotifications();
@@ -84,6 +84,8 @@ export default class Notifications extends React.Component {
   }
 
   render() {
+    const { notifications, notificationTopics } = this.state;
+    const topicOptions = notificationTopics.map(topic => ({ label: topic, value: topic }));
     return (
       <div className="notifications-page">
         <div className="top">
@@ -93,14 +95,13 @@ export default class Notifications extends React.Component {
               {() => (
                 <Form>
                   <Field className="form-field" name="title" placeholder="Title"/>
-                  <Field as="select" name="topic" className="form-field">
-                    <option value="">Select Topic</option>
-                    {
-                      this.state.notificationTopics.map(topic => (
-                        <option key={topic}>{topic}</option>
-                      ))
-                    }
-                  </Field>
+                  
+                  <SelectField
+                    name="topic"
+                    className="select"
+                    placeholder="Select Topic"
+                    options={topicOptions}/>
+
                   <Field className="form-field" as="textarea" name="body" placeholder="Body" rows="4"/>
 
                   <div className="buttons">
@@ -113,7 +114,7 @@ export default class Notifications extends React.Component {
             </Formik>
           </div>
 
-          <div>
+          <div className="topic-change-container">
             <div className="add-topic tile">
               <Formik
                 initialValues={{ topic: '' }}
@@ -142,14 +143,11 @@ export default class Notifications extends React.Component {
                   <Form>
                     <div className="title">Remove Topic</div>
 
-                    <Field as="select" className="form-field" name="topic">
-                      <option value="">Select Topic</option>
-                      {
-                        this.state.notificationTopics.map(topic => (
-                          <option key={topic}>{topic}</option>
-                        ))
-                      }
-                    </Field>
+                    <SelectField
+                      name="topic"
+                      className="select"
+                      placeholder="Select Topic"
+                      options={topicOptions}/>
 
                     <div className="buttons">
                       <button type="submit">
@@ -171,7 +169,7 @@ export default class Notifications extends React.Component {
 
         <div className="notifications-container">
           {
-            this.state.notifications.map(notification => (
+            notifications.map(notification => (
               <div className="notification" key={notification.id}>
                 <div className="topic">{ notification.topic }</div>
                 <div className="title">{ notification.title }</div>

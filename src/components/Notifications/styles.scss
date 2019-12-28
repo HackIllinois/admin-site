@@ -13,11 +13,15 @@
     padding: 40px 20px;
     display: flex;
 
+    .select {
+      margin: 17px 0;
+    }
+
     .tile {
       border: $primary-color 2px solid;
       padding: 10px;
       border-radius: 10px;
-      flex: 1;
+      flex: 2;
       margin: 10px;
   
       .title {
@@ -53,8 +57,9 @@
       }
     }
 
-    .add-topic, .remove-topic {
-      width: 300px;
+    .topic-change-container {
+      flex: 1;
+      min-width: 225px;
 
       .title {
         font-size: 1.25em;

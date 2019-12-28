@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './TimeInput.scss';
+import { StyledSelect } from 'components/SelectField';
 
 // array of possible hours [1, 2, ..., 12]
 const hourOptions = Array(12).fill(0).map((_, index) => index + 1);
@@ -36,23 +37,29 @@ export default function TimeInput({ field, form, ...props }) {
   return (
     <div className="time-input">
       <span className="label">{props.label}</span>
-      <select value={hour} onChange={e => updateTime({ newHour: e.target.value })}>
-        {
-          hourOptions.map(hour => <option key={hour}>{hour}</option>)
-        }
-      </select>
-      <span className="colon">:</span>
-      <select value={minute} onChange={e => updateTime({ newMinute: e.target.value })}>
-        {
-          minuteOptions.map(minute => <option key={minute}>{minute}</option>)
-        }
-      </select>
 
-      <select value={ampm} onChange={e => updateTime({ newAmpm: e.target.value })}>
-        {
-          ampmOptions.map(ampm => <option key={ampm}>{ampm}</option>)
-        }
-      </select>
+      <StyledSelect
+        className="hour select"
+        options={hourOptions.map(hour => ({ value: hour, label: hour }))}
+        value={{ value: hour, label: hour }}
+        onChange={selected => updateTime({ newHour: selected.value })}
+      />
+
+      <span className="colon">:</span>
+
+      <StyledSelect
+        className="minute select"
+        options={minuteOptions.map(minute => ({ value: minute, label: minute }))}
+        value={{ value: minute, label: minute }}
+        onChange={selected => updateTime({ newMinute: selected.value })}
+      />
+
+      <StyledSelect
+        className="ampm select"
+        options={ampmOptions.map(ampm => ({ value: ampm, label: ampm }))}
+        value={{ value: ampm, label: ampm }}
+        onChange={selected => updateTime({ newAmpm: selected.value })}
+      />
     </div>
   )
 }

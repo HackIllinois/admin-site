@@ -2,7 +2,7 @@ import React from 'react';
 
 import './styles.scss';
 import { makeDecision, finalizeDecision } from 'api';
-import SelectField from 'components/SelectField';
+import { StyledSelect } from 'components/SelectField';
 
 export default class DecisionButtons extends React.Component {
   constructor(props) {
@@ -37,7 +37,7 @@ export default class DecisionButtons extends React.Component {
 
     return (
       <div className="decision-buttons">
-        <SelectField
+        <StyledSelect
           className="wave-select"
           value={{ value: selectedWave, label: `Wave ${selectedWave}` }}
           options={oneThroughTen.map(num => ({ value: num, label: `Wave ${num}`}))}
