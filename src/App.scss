@@ -1,10 +1,53 @@
 @import 'constants.scss';
 
 .App {
+  --navigation-menu-width: 300px;
   display: flex;
 
+  .menu-open-button {
+    display: none;
+    position: fixed;
+    top: 4px;
+    left: 9px;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: $secondary-color;
+    padding: 6px;
+    -webkit-tap-highlight-color: transparent;
+    
+    .highlight {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      position: absolute;
+      border-radius: 100px;
+      opacity: 0;
+      transition: opacity .3s;
+      top: 0;
+      left: 0;
+    }
+
+    &:hover, &:active {
+      .highlight {
+        opacity: 0.15;
+      }
+    }
+  }
+
+  .menu-background {
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity .2s, z-index .2s;
+  }
+
   .navigation-menu-container {
-    width: 300px;
+    width: var(--navigation-menu-width);
 
     .navigation-menu {
       background-color: $primary-color;
@@ -35,5 +78,38 @@
         }
       }
     }
+  }
+
+  @include mobile {
+    .menu-open-button {
+      display: block;
+    }
+
+    .menu-background.open {
+      opacity: 0.3;
+      z-index: 50;
+    }
+
+    .navigation-menu-container {
+      position: fixed;
+      z-index: 51;
+      left: calc(-1 * var(--navigation-menu-width));
+      transition: left .2s;
+
+      &.open {
+        left: 0;
+      }
+
+      .navigation-menu {
+        margin: 0;
+        height: 100vh;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+
+  @include phone {
+    --navigation-menu-width: 80vw;
   }
 }
