@@ -1,7 +1,7 @@
 @import 'constants.scss';
 
 .users-page {
-  --table-options-height: 160px;
+  --table-options-height: 170px;
   flex: 1;
   height: 100vh;
   overflow: auto;
@@ -13,6 +13,10 @@
 
     .column-select {
       margin-bottom: 15px;
+
+      @include mobile {
+        margin-left: 50px;
+      }
     }
   }
 

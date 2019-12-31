@@ -2,6 +2,20 @@
 
 .decision-buttons {
   margin-top: 15px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: unset;
+
+  .selected-users-count {
+    display: inline-block;
+    margin-right: 20px;
+    position: relative;
+    top: 7px;
+
+    .small-text {
+      font-size: 0.7em;
+    }
+  }
 
   .wave-select {
     display: inline-block;
@@ -14,14 +28,14 @@
     margin: 0 5px;
 
     &.accept {
-      margin-right: 25px;
+      margin-right: 20px;
     }
 
     &:disabled {
       color: #999999;
       border-color: #999999;
       background-color: white;
-      cursor: default;
+      cursor: not-allowed;
     }
   }
 }

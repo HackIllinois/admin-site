@@ -2,13 +2,24 @@
 
 .date-input {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
   .select {
-    flex: 1;
-    margin: 0 5px;
+    display: inline-block;
+    width: 28%;
+
+    @include phone  {
+      width: 49%;
+      margin-top: 15px;
+    }
 
     &.month {
-      flex: 2;
+      width: 40%;
+      @include phone {
+        width: 100%;
+        margin-top: 0;
+      }
     }
   }
 }

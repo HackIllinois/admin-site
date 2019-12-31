@@ -8,7 +8,7 @@ export function addDecisionColumns(registerations, decisions) {
   // create a map ({userId: [status, wave, finalized]}) to avoid looping through the potentially huge decisions array
   const decisionsMap = {};
   decisions.forEach(decision => {
-    const {id, status, wave, finalized } = decision
+    const { id, status, wave, finalized } = decision;
     decisionsMap[id] = [status, wave, finalized];
   });
 

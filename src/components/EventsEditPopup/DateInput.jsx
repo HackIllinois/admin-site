@@ -50,14 +50,14 @@ export default function DateInput({ values, setFieldValue }) {
       />
 
       <StyledSelect
-        className="day select"
+        className="select"
         options={days.map(day => ({ value: day, label: day }))}
         value={{ value: selectedDay, label: selectedDay}}
         onChange={selected => updateTimes({ day: selected.value})}
       />
 
       <StyledSelect
-        className="year select"
+        className="select"
         options={years.map(year => ({ value: year, label: year }))}
         value={{ value: selectedYear, label: selectedYear}}
         onChange={selected => updateTimes({ year: selected.value })}

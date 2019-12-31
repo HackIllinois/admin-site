@@ -71,7 +71,7 @@ export default class EventEditPopup extends React.Component {
                 <SelectField
                   className="select"
                   name="eventType"
-                  menuPlacement="auto"
+                  menuPlacement="top"
                   options={possibleEventTypes.map(eventType => ({ label: eventType, value: eventType }))}
                 />
 

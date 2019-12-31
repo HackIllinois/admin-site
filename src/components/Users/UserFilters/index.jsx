@@ -37,7 +37,7 @@ export default class UserFilters extends React.Component {
           </div>
           {
             this.props.filters.map(([columnKey, filterValue]) => (
-              <div className="chip">
+              <div className="chip" key={columnKey + filterValue}>
                 <div className="remove" onClick={() => this.removeFilter([columnKey, filterValue])}>
                   <FontAwesomeIcon icon={faTimes}/>
                 </div>

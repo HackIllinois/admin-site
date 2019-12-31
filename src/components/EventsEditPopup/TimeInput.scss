@@ -7,6 +7,10 @@
 
   .label {
     margin: 0 5px;
+    
+    @include phone {
+      display: none;
+    }
   }
 
   .colon {
