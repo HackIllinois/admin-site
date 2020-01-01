@@ -27,7 +27,8 @@ const locations = [
 ];
 
 export default function LocationCheckbox({ field, form }) {
-  const selectedLocationNames = field.value.map(x => x.description);
+  const selectedLocations = field.value || [];
+  const selectedLocationNames = selectedLocations.map(x => x.description);
 
   const addLocation = locationName => {
     form.setFieldValue(field.name, locations.filter(location => (
