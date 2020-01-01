@@ -1,16 +1,12 @@
 const API = 'https://api.hackillinois.org';
 
-function headers() {
-  return {
-    Authorization: sessionStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  };
-}
-
 function request(method, endpoint, body) {
   return fetch(API + endpoint, {
     method,
-    headers: headers(),
+    headers: {
+      Authorization: sessionStorage.getItem('token'),
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   }).then(res => {
     if (res.ok) {
@@ -42,6 +38,19 @@ export function getToken(code) {
 export function getRoles() {
   return request('GET', '/auth/roles/')
     .then(res => res.roles);
+}
+
+export function getDecisions() {
+  return request('GET', '/decision/filter/')
+    .then(res => res.decisions);
+}
+
+export function makeDecision(id, status, wave) {
+  return request('POST', '/decision/', { id, status, wave });
+}
+
+export function finalizeDecision(id, finalized = true) {
+  return request('POST', '/decision/finalize/', { id, finalized });
 }
 
 export function getEvents() {
@@ -95,15 +104,6 @@ export function getRegistrations() {
     .then(res => res.registrations);
 }
 
-export function getDecisions() {
-  return request('GET', '/decision/filter/')
-    .then(res => res.decisions);
-}
-
-export function makeDecision(id, status, wave) {
-  return request('POST', '/decision/', { id, status, wave });
-}
-
-export function finalizeDecision(id, finalized = true) {
-  return request('POST', '/decision/finalize/', { id, finalized });
+export function getStats() {
+  return request('GET', '/stat/');
 }
