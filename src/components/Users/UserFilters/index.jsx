@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
-import SelectField from 'components/SelectField';
+import { StyledSelect } from 'components/SelectField';
 import { formatCamelCase } from '../registrations';
 import './styles.scss';
 
@@ -37,7 +37,7 @@ export default class UserFilters extends React.Component {
           </div>
           {
             this.props.filters.map(([columnKey, filterValue]) => (
-              <div className="chip">
+              <div className="chip" key={columnKey + filterValue}>
                 <div className="remove" onClick={() => this.removeFilter([columnKey, filterValue])}>
                   <FontAwesomeIcon icon={faTimes}/>
                 </div>
@@ -53,7 +53,7 @@ export default class UserFilters extends React.Component {
             <div className="content" onClick={e => e.stopPropagation()}>
               <h2 className="title">Add Filter</h2>
 
-              <SelectField
+              <StyledSelect
                 placeholder="Select a Column"
                 options={this.props.columnOptions}
                 onChange={option => this.setState({addColumn: option.value})}/>

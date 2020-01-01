@@ -9,6 +9,30 @@ $red: #cc0000;
   secondaryColorLight: lighten($secondary-color, 40%);
 }
 
+$tablet-min-width: 768px;
+$desktop-min-width: 1024px;
+
+// Mobile includes both tablets and phones
+@mixin mobile {
+  @media (max-width: #{$desktop-min-width - .1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-min-width}) and (max-width: #{$desktop-min-width - .1px}) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media (max-width: #{$tablet-min-width - .1px}) {
+    @content;
+  }
+}
+
+
+
 @mixin form-field {
   display: block;
   margin: 17px 0;

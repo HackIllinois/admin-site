@@ -1,11 +1,25 @@
 @import 'constants.scss';
 
 .date-input {
-  select {
-    @include form-field;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .select {
     display: inline-block;
-    width: auto;
-    margin: 0;
-    margin-right: 10px;
+    width: 28%;
+
+    @include phone  {
+      width: 49%;
+      margin-top: 15px;
+    }
+
+    &.month {
+      width: 40%;
+      @include phone {
+        width: 100%;
+        margin-top: 0;
+      }
+    }
   }
 }

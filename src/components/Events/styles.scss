@@ -3,10 +3,19 @@
 .events-page {
   flex: 1;
   display: flex;
-  padding-top: 40px;
+  height: 100vh;
+  overflow: auto;
+  @include mobile {
+    overflow: initial;
+  }
+
+  @include phone {
+    display: block;
+  }
 
   .day {
     flex: 1;
+    margin-top: 40px;
 
     .day-of-week {
       font-size: 1.65em;
@@ -44,7 +53,6 @@
           background-color: #f0f0f0;
         }
         
-
         .event-header {
           display: flex;
           width: 100%;
