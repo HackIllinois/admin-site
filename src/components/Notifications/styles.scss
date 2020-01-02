@@ -7,6 +7,9 @@
   @include mobile {
     overflow: initial;
   }
+  @include phone {
+    text-align: center;
+  }
 
   .form-field {
     @include form-field;
@@ -26,7 +29,7 @@
     }
 
     .tile {
-      border: $primary-color 2px solid;
+      border: $primary-color 1.5px solid;
       padding: 10px;
       border-radius: 10px;
       margin: 10px;
@@ -87,11 +90,6 @@
     color: #444444;
     margin-left: 20px;
 
-    @include phone {
-      margin-left: 50%;
-      transform: translateX(-50%);
-    }
-
     .underline {
       height: 5px;
       background-color: $secondary-color;
@@ -116,10 +114,11 @@
     @include phone {
       grid-template-columns: 1fr;
       padding-left: 0;
+      text-align: initial;
     }
 
     .notification {
-      border: $primary-color 2px solid;
+      border: $primary-color 1.5px solid;
       padding: 10px;
       border-radius: 10px;
       margin: 8px;
