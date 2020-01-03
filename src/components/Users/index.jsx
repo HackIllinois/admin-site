@@ -1,7 +1,7 @@
 import React from 'react';
-import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
+import StickyList from 'components/StickyList';
 import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
@@ -11,7 +11,7 @@ import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import './styles.scss';
 
-const TABLE_HEADER_ROWS = 1;
+
 const DEFAULT_COLUMN_WIDTH = 150;
 const LONG_COLUMN_WIDTH = 300;
 
@@ -78,9 +78,14 @@ export default class Users extends React.Component {
     }));
   }
 
-  // Note: userId can be an array of user ids (since Array.concat works with values and arrays)
+  // Note: userId can be an array of user ids
   selectUser(userId) {
-    this.setState(prevState => ({ selectedUserIds: prevState.selectedUserIds.concat(userId)}));
+    // If userId is an array, we want to ensure that the last element of userId is the last element of the
+    // new selectedUserIds, so we remove duplicates from the old selectedUserIds rather than from userId
+    const equalsUserId = id => Array.isArray(userId) ? userId.includes(id) : id === userId;
+    this.setState(prevState => ({
+      selectedUserIds: prevState.selectedUserIds.filter(id => !equalsUserId(id)).concat(userId)
+    }));
   }
 
   unselectUser(userId) {
@@ -154,7 +159,8 @@ export default class Users extends React.Component {
             <Checkbox
               value={this.state.selectedUserIds.length >= 1}
               onChange={isChecked => isChecked ? this.selectAll(filteredRegistrations) : this.unselectAll()}
-              fast/>
+              fast
+              noHighlight/>
           </div>
           {
             this.state.columnKeys
@@ -170,32 +176,28 @@ export default class Users extends React.Component {
   }
 
   getTableRow(row, filteredRegistrations) {
-    if (row === 0) {
-      return this.getTableHeader(filteredRegistrations);
-    } else {
-      const registration = filteredRegistrations[row - TABLE_HEADER_ROWS];
-      const isRowSelected = this.state.selectedUserIds.includes(registration.id);
-      const className = 'row' + (isRowSelected ? ' selected' : '');
-      return (
-        <div className={className}>
-          <div className="checkbox element">
-            <Checkbox
-              value={isRowSelected}
-              onChange={(isChecked, event) => this.handleCheckbox(isChecked, event, registration.id, filteredRegistrations)}
-              fast/>
-          </div>
-          {
-            this.state.columnKeys
-              .filter(key => this.state.selectedColumnKeys.includes(key))
-              .map(key => (
-                <div {...this.getTableElementProps(key, registration[key])}>
-                  {formatRegistrationValue(registration[key])}
-                </div>
-              ))
-          }
+    const registration = filteredRegistrations[row];
+    const isRowSelected = this.state.selectedUserIds.includes(registration.id);
+    const className = 'row' + (isRowSelected ? ' selected' : '');
+    return (
+      <div className={className}>
+        <div className="checkbox element">
+          <Checkbox
+            value={isRowSelected}
+            onChange={(isChecked, event) => this.handleCheckbox(isChecked, event, registration.id, filteredRegistrations)}
+            fast/>
         </div>
-      )
-    }
+        {
+          this.state.columnKeys
+            .filter(key => this.state.selectedColumnKeys.includes(key))
+            .map(key => (
+              <div {...this.getTableElementProps(key, registration[key])}>
+                {formatRegistrationValue(registration[key])}
+              </div>
+            ))
+        }
+      </div>
+    );
   }
 
   render() {
@@ -233,13 +235,14 @@ export default class Users extends React.Component {
         <div className="table-container">
           <AutoSizer>
             {({height, width}) => (
-              <List
+              <StickyList
                 height={height}
                 width={width}
-                itemCount={filteredRegistrations.length + TABLE_HEADER_ROWS}
-                itemSize={50}>
+                itemCount={filteredRegistrations.length}
+                itemSize={50}
+                stickyRows={[this.getTableHeader(filteredRegistrations)]}>
                   {({index, style}) => (<div style={style}>{this.getTableRow(index, filteredRegistrations)}</div>)}
-              </List>
+              </StickyList>
             )}
           </AutoSizer>
         </div>
