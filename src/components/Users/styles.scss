@@ -1,10 +1,17 @@
 @import 'constants.scss';
 
 .users-page {
-  --table-options-height: 170px;
+  --table-options-height: 110px;
   flex: 1;
   height: 100vh;
   overflow: auto;
+  
+  &.admin {
+    --table-options-height: 170px;
+    .table-container .row .element.checkbox {
+      display: inline-block;
+    }
+  }
 
   .table-options {
     height: var(--table-options-height);
@@ -51,6 +58,7 @@
         &.checkbox {
           width: 25px;
           justify-content: center;
+          display: none;
         }
       }
 

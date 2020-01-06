@@ -13,6 +13,15 @@
     display: block;
   }
 
+  &.admin {
+    .day .events .event {
+      cursor: pointer;
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+
   .day {
     flex: 1;
     margin-top: 40px;
@@ -48,10 +57,6 @@
         padding: 15px;
         display: flex;
         flex-direction: column;
-        cursor: pointer;
-        &:hover {
-          background-color: #f0f0f0;
-        }
         
         .event-header {
           display: flex;
