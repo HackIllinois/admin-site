@@ -21,7 +21,7 @@ export default function Checkbox(props) {
     <div className="checkbox-container" {...clickListener}>
       <div className={checkboxClass} onKeyPress={handleKeyPress} tabIndex="0">
         <FontAwesomeIcon className="check" icon={faCheck}/>
-        <div className="highlight"/>
+        {!props.noHighlight && <div className="highlight"/>}
       </div>
 
       <div className="label">{ props.label }</div>
