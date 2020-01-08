@@ -49,6 +49,16 @@
   .navigation-menu-container {
     width: var(--navigation-menu-width);
 
+    .logo {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px solid white;
+      
+      img {
+        width: 60%;
+      }
+    }
+
     .navigation-menu {
       background-color: $primary-color;
       height: 80vh;
@@ -68,8 +78,9 @@
         color: white;
         text-decoration: none;
         border-radius: 100px;
+        outline: none;
 
-        &:hover {
+        &:hover, &:focus {
           background-color: rgba(255, 255, 255, .15);
         }
 

@@ -1,18 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faColumns, faUsers, faBell, faCalendar, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faBell, faCalendar, faBars, faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 import './App.scss';
+import logo from './assets/logo.svg';
 import PrivateRoute from './components/PrivateRoute';
 import Auth from './components/Auth';
-import Dashboard from './components/Dashboard';
 import Users from './components/Users';
 import Events from './components/Events';
 import Notifications from './components/Notifications';
+import Statistics from 'components/Statistics';
 
 const routes = [
-  { path: '/', name: "Dashboard", icon: faColumns },
+  { path: '/', name: "Statistics", icon: faCalculator },
   { path: '/users', name: "Users", icon: faUsers },
   { path: '/notifications', name: "Notifications", icon: faBell },
   { path: '/events', name: "Events", icon: faCalendar },
@@ -42,6 +43,9 @@ class App extends React.Component {
   
           <div className={'navigation-menu-container' + (menuOpen ? ' open' : '')}>
             <div className="navigation-menu">
+              <div className="logo">
+                <img src={logo} alt="HackIllinois Logo"/>
+              </div>
               {
                 routes.map(route => (
                   <NavLink
@@ -63,7 +67,7 @@ class App extends React.Component {
             <Route path="/auth" component={Auth}></Route>
             
             <PrivateRoute exact path="/">
-              <Dashboard/>
+              <Statistics/>
             </PrivateRoute>
             
             <PrivateRoute path="/users">
