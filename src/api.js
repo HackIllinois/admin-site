@@ -25,7 +25,7 @@ export function authenticate(to) {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
   } else {
     to = `${window.location.origin}/auth/?to=${to}`;
-    to = `${API}/auth/github/?redirect_uri=${to}`;
+    to = `${API}/auth/google/?redirect_uri=${to}`;
   }
   window.location.replace(to);
 }
@@ -36,8 +36,12 @@ export function getToken(code) {
 }
 
 export function getRoles() {
-  return request('GET', '/auth/roles/')
-    .then(res => res.roles);
+  const token = sessionStorage.getItem('token');
+  if (token) {
+    const tokenData = JSON.parse(atob(token.split('.')[1]));
+    return tokenData.roles;
+  }
+  return [];
 }
 
 export function getDecisions() {

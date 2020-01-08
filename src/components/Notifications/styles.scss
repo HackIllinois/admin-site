@@ -4,6 +4,8 @@
   flex: 1;
   height: 100vh;
   overflow: auto;
+  padding-top: 20px;
+  box-sizing: border-box;
   @include mobile {
     overflow: initial;
   }
@@ -13,12 +15,12 @@
   }
 
   .top {
-    padding: 40px 20px;
+    padding: 20px 20px;
     display: flex;
     flex-wrap: wrap;
     
     @include phone {
-      padding: 40px 0;
+      padding: 20px 0;
     }
 
     .select {
@@ -86,6 +88,7 @@
     font-weight: bold;
     color: #444444;
     margin-left: 20px;
+    margin-top: 20px;
 
     @include phone {
       margin-left: 50%;

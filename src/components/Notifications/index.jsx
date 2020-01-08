@@ -11,6 +11,7 @@ import {
   sendNotification,
   addNotificationTopic,
   removeNotificationTopic,
+  getRoles,
 } from 'api';
 
 const notificationInitialValues = {
@@ -86,81 +87,83 @@ export default class Notifications extends React.Component {
   render() {
     const { notifications, notificationTopics } = this.state;
     const topicOptions = notificationTopics.map(topic => ({ label: topic, value: topic }));
+    const isAdmin = getRoles().includes('Admin');
     return (
       <div className="notifications-page">
-        <div className="top">
-          <div className="send-notification tile">
-            <div className="title">Send Notification</div>
-            <Formik initialValues={notificationInitialValues} onSubmit={(values, formik) => this.submit(values, formik)}>
-              {() => (
-                <Form>
-                  <Field className="form-field" name="title" placeholder="Title"/>
-                  
-                  <SelectField
-                    name="topic"
-                    className="select"
-                    placeholder="Select Topic"
-                    options={topicOptions}/>
-
-                  <Field className="form-field" as="textarea" name="body" placeholder="Body" rows="4"/>
-
-                  <div className="buttons">
-                    <button type="submit">
-                      <FontAwesomeIcon icon={faPaperPlane}/> &nbsp;Send
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-
-          <div className="topic-change-container">
-            <div className="add-topic tile">
-              <Formik
-                initialValues={{ topic: '' }}
-                onSubmit={(values, formik) => this.addTopic(values, formik)}>
+        {isAdmin &&
+          <div className="top">
+            <div className="send-notification tile">
+              <div className="title">Send Notification</div>
+              <Formik initialValues={notificationInitialValues} onSubmit={(values, formik) => this.submit(values, formik)}>
                 {() => (
                   <Form>
-                    <div className="title">Add Topic</div>
-
-                    <Field className="form-field" name="topic" placeholder="Topic"/>
-
-                    <div className="buttons">
-                      <button type="submit">
-                        <FontAwesomeIcon icon={faPlusCircle}/> &nbsp;Add
-                      </button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
-            </div>
-
-            <div className="remove-topic tile">
-              <Formik
-                initialValues={{ topic: '' }}
-                onSubmit={(values, formik) => this.removeTopic(values, formik)}>
-                {() => (
-                  <Form>
-                    <div className="title">Remove Topic</div>
-
+                    <Field className="form-field" name="title" placeholder="Title"/>
+                    
                     <SelectField
                       name="topic"
                       className="select"
                       placeholder="Select Topic"
                       options={topicOptions}/>
 
+                    <Field className="form-field" as="textarea" name="body" placeholder="Body" rows="4"/>
+
                     <div className="buttons">
                       <button type="submit">
-                        <FontAwesomeIcon icon={faMinusCircle}/> &nbsp;Remove
+                        <FontAwesomeIcon icon={faPaperPlane}/> &nbsp;Send
                       </button>
                     </div>
                   </Form>
                 )}
               </Formik>
             </div>
+
+            <div className="topic-change-container">
+              <div className="add-topic tile">
+                <Formik
+                  initialValues={{ topic: '' }}
+                  onSubmit={(values, formik) => this.addTopic(values, formik)}>
+                  {() => (
+                    <Form>
+                      <div className="title">Add Topic</div>
+
+                      <Field className="form-field" name="topic" placeholder="Topic"/>
+
+                      <div className="buttons">
+                        <button type="submit">
+                          <FontAwesomeIcon icon={faPlusCircle}/> &nbsp;Add
+                        </button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+
+              <div className="remove-topic tile">
+                <Formik
+                  initialValues={{ topic: '' }}
+                  onSubmit={(values, formik) => this.removeTopic(values, formik)}>
+                  {() => (
+                    <Form>
+                      <div className="title">Remove Topic</div>
+
+                      <SelectField
+                        name="topic"
+                        className="select"
+                        placeholder="Select Topic"
+                        options={topicOptions}/>
+
+                      <div className="buttons">
+                        <button type="submit">
+                          <FontAwesomeIcon icon={faMinusCircle}/> &nbsp;Remove
+                        </button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
           </div>
-          
-        </div>
+        }
 
         <div className="heading">
           Past Notifications

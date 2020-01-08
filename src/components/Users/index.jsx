@@ -6,7 +6,7 @@ import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
 import { StyledSelect } from 'components/SelectField';
-import { getRegistrations, getDecisions } from 'api';
+import { getRegistrations, getDecisions, getRoles } from 'api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns, formatRegistrationValue } from './registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import './styles.scss';
@@ -204,8 +204,10 @@ export default class Users extends React.Component {
     const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;
     const filteredRegistrations = filterRegistrations(registrations, filters);
 
+    const isAdmin = getRoles().includes('Admin');
+    const className = "users-page" + (isAdmin ? ' admin' : '');
     return (
-      <div className="users-page">
+      <div className={className}>
         <div className="table-options">
           <StyledSelect
             color={secondaryColor}
@@ -226,10 +228,14 @@ export default class Users extends React.Component {
             onAddFilter={newFilter => this.addFilter(newFilter)}
             onRemoveFilter={filter => this.removeFilter(filter)}/>
 
-          <DecisionButtons
-            registrations={filteredRegistrations}
-            selectedUserIds={selectedUserIds}
-            onDecision={decisionPromises => this.handleDecision(decisionPromises)}/>
+          {isAdmin &&
+            <DecisionButtons
+              registrations={filteredRegistrations}
+              selectedUserIds={selectedUserIds}
+              onDecision={decisionPromises => this.handleDecision(decisionPromises)}
+            />
+          }
+          
         </div>
 
         <div className="table-container">

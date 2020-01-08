@@ -2,7 +2,7 @@ import React from 'react';
 import EventEditPopup from 'components/EventsEditPopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { getEvents } from 'api';
+import { getEvents, getRoles } from 'api';
 import { sortEventsIntoDays } from './eventsUtil';
 
 import './styles.scss';
@@ -38,26 +38,30 @@ export default class Events extends React.Component {
   }
 
   render() {
+    const isAdmin = getRoles().includes('Admin');
+    const className = 'events-page' + (isAdmin ? ' admin' : '');
     return (
-      <div className="events-page">
-        { 
-          this.state.editingEvent &&
-            <EventEditPopup
-              event={this.state.editingEvent}
-              onDismiss={() => this.setState({ editingEvent: null })}
-              onUpdateEvent={() => this.reloadEvents()}
-            />
+      <div className={className}>
+        {this.state.editingEvent &&
+          <EventEditPopup
+            event={this.state.editingEvent}
+            onDismiss={() => this.setState({ editingEvent: null })}
+            onUpdateEvent={() => this.reloadEvents()}
+          />
         }
-        {
-          this.state.days.map(day => (
-            <div className="day" key={day.date}>
-              <div className="day-of-week">{day.dayOfWeek}</div>
-              <div className="date">{day.dateString}</div>
-              <div className="underline"/>
-              <div className="events">
-                {
-                  day.events.map(event => (
-                    <div className="event" key={event.id} onClick={() => this.setState({ editingEvent: event })}>
+        
+        {this.state.days.map(day => (
+          <div className="day" key={day.date}>
+            <div className="day-of-week">{day.dayOfWeek}</div>
+            <div className="date">{day.dateString}</div>
+            <div className="underline"/>
+            <div className="events">
+              {
+                day.events.map(event => (
+                  <div
+                    className="event"
+                    key={event.id}
+                    onClick={() => isAdmin && this.setState({ editingEvent: event })}>
                       <div className="event-header">
                         <div className="event-name">{event.name}</div>
                         <div className="event-time">
@@ -72,17 +76,18 @@ export default class Events extends React.Component {
                           {(event.locations || []).map(location => location.description).join(', ')}
                         </div>
                       </div>
-                    </div>
-                  ))
-                }
+                  </div>
+                ))
+              }
 
+              {isAdmin && 
                 <div className="event" onClick={() => this.setState({ editingEvent: createBlankEventOnDate(day.date) })}>
                   <FontAwesomeIcon className="add-event-icon" icon={faPlus}/>
                 </div>
-              </div>
+              }
             </div>
-          ))
-        }
+          </div>
+        ))}
       </div>
     )
   }

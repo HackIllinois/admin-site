@@ -1,13 +1,18 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { isAuthenticated, authenticate } from 'api';
+import { isAuthenticated, authenticate, getRoles } from 'api';
 
 export default function PrivateRoute(props) {
-  if (isAuthenticated()) {
-    return <Route {...props}/>
-  } else {
+  if (!isAuthenticated()) {
     authenticate(props.path);
     return <div>Redirecting...</div>
+  }
+
+  const roles = getRoles();
+  if (roles.includes('Staff') || roles.includes('Admin')) {
+    return <Route {...props}/>
+  } else {
+    window.location.replace('https://hackillinois.org/');
   }
 }
