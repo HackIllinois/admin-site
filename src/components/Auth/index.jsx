@@ -13,6 +13,7 @@ export default class Auth extends React.Component {
         sessionStorage.setItem('token', token);
         const to = localStorage.getItem('to');
         if (to) {
+          localStorage.removeItem('to');
           window.location.replace(to);
         } else {
           window.location.replace(window.location.origin);
