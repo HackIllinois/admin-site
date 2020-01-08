@@ -24,14 +24,16 @@ export function authenticate(to) {
   if (process.env.REACT_APP_TOKEN) {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
   } else {
-    to = `${window.location.origin}/auth/?to=${to}`;
+    localStorage.setItem('to', to);
+    to = `${window.location.origin}/auth/`;
     to = `${API}/auth/google/?redirect_uri=${to}`;
   }
   window.location.replace(to);
 }
 
 export function getToken(code) {
-  return request('POST', '/auth/code/github/', { code })
+  const redirectUri = `${window.location.origin}/auth/`;
+  return request('POST', `/auth/code/google/?redirect_uri=${redirectUri}`, { code })
     .then(res => res.token);
 }
 
