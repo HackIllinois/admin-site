@@ -7,12 +7,16 @@ export default class Auth extends React.Component {
 
     const params = new URLSearchParams(location.search);
     const code = params.get('code');
-    const to = params.get('to');
 
     if (code) {
       getToken(code).then(token => {
         sessionStorage.setItem('token', token);
-        window.location.replace(to);
+        const to = localStorage.getItem('to');
+        if (to) {
+          window.location.replace(to);
+        } else {
+          window.location.replace(window.location.origin);
+        }
       });
     }
   }
