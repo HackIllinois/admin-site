@@ -3,7 +3,7 @@
 import React from 'react';
 import { FixedSizeList as List } from 'react-window';
 
-import './styles.scss';
+import './style.scss';
 
 // StickyList works by overriding the list container to always display the sticky rows
 // with position: sticky and by overriding the row renderer to leave the first n rows

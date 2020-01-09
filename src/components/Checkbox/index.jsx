@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
-import './styles.scss';
+import './style.scss';
 
 export default function Checkbox(props) {
   const checkboxClass = 'checkbox' + (props.value ? ' checked' : ''); 

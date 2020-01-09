@@ -6,7 +6,7 @@ import LocationInput from './LocationInput';
 import TimeInput from './TimeInput';
 import DateInput from './DateInput';
 import SelectField from 'components/SelectField';
-import './styles.scss';
+import './style.scss';
 
 const possibleEventTypes = ['MEAL', 'SPONSOR', 'WORKSHOP', 'OTHER'];
 

@@ -4,7 +4,7 @@ import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import { StyledSelect } from 'components/SelectField';
 import { formatCamelCase } from '../registrations';
-import './styles.scss';
+import './style.scss';
 
 export default class UserFilters extends React.Component {
   constructor(props) {
