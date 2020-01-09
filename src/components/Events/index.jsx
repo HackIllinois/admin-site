@@ -1,11 +1,12 @@
 import React from 'react';
+
+import './style.scss';
 import EventEditPopup from 'components/EventsEditPopup';
+import Loading from 'components/Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getEvents, getRoles } from 'api';
 import { sortEventsIntoDays } from './eventsUtil';
-
-import './styles.scss';
 
 // When adding a new event, most of the field values default to empty strings, but we need
 // to make sure that the start and end times are on the day which the add button was pressed on
@@ -18,6 +19,7 @@ export default class Events extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       days: [],
       editingEvent: null,
     }
@@ -29,7 +31,7 @@ export default class Events extends React.Component {
 
   reloadEvents() {
     getEvents().then(events => {
-      this.setState({ days: sortEventsIntoDays(events) });
+      this.setState({ days: sortEventsIntoDays(events), isLoading: false });
     });
   }
 
@@ -38,19 +40,25 @@ export default class Events extends React.Component {
   }
 
   render() {
+    const { days, editingEvent, isLoading } = this.state;
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
     const isAdmin = getRoles().includes('Admin');
     const className = 'events-page' + (isAdmin ? ' admin' : '');
     return (
       <div className={className}>
-        {this.state.editingEvent &&
+        {editingEvent &&
           <EventEditPopup
-            event={this.state.editingEvent}
+            event={editingEvent}
             onDismiss={() => this.setState({ editingEvent: null })}
             onUpdateEvent={() => this.reloadEvents()}
           />
         }
         
-        {this.state.days.map(day => (
+        {days.map(day => (
           <div className="day" key={day.date}>
             <div className="day-of-week">{day.dayOfWeek}</div>
             <div className="date">{day.dateString}</div>

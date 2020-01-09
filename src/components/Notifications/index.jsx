@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
-import './styles.scss';
+import './style.scss';
 import SelectField from 'components/SelectField';
 import {
   getNotificationTopics,

@@ -5,11 +5,12 @@ import StickyList from 'components/StickyList';
 import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
+import Loading from 'components/Loading';
 import { StyledSelect } from 'components/SelectField';
 import { getRegistrations, getDecisions, getRoles } from 'api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns, formatRegistrationValue } from './registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
-import './styles.scss';
+import './style.scss';
 
 
 const DEFAULT_COLUMN_WIDTH = 150;
@@ -19,6 +20,7 @@ export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       columnKeys: [], // this array also determines order of the columns
       registrations: [],
       columnOptions: [],
@@ -35,9 +37,6 @@ export default class Users extends React.Component {
       .then(registrations => {
         if (registrations.length > 0) {
           const columnKeys = getColumnKeys(registrations);
-          const selectedColumnKeys = columnKeys.slice(0);
-          
-          const columnOptions = this.columnKeysToOptions(columnKeys);
 
           // Initialize all the column widths to the default
           const columnWidths = {};
@@ -54,7 +53,14 @@ export default class Users extends React.Component {
             });
           });
 
-          this.setState({ columnKeys, registrations, columnOptions, selectedColumnKeys, columnWidths });
+          this.setState({
+            columnKeys,
+            registrations,
+            columnOptions: this.columnKeysToOptions(columnKeys),
+            selectedColumnKeys: columnKeys.slice(0),
+            columnWidths,
+            isLoading: false,
+          });
         }
     });
   }
@@ -201,6 +207,10 @@ export default class Users extends React.Component {
   }
 
   render() {
+    if (this.state.isLoading) {
+      return <Loading />;
+    }
+
     const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;
     const filteredRegistrations = filterRegistrations(registrations, filters);
 

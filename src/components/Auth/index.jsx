@@ -1,6 +1,8 @@
 import React from 'react';
 import { getToken } from 'api';
 
+import Loading from 'components/Loading';
+
 export default class Auth extends React.Component {
   componentDidMount() {
     const { location } = this.props;
@@ -24,7 +26,7 @@ export default class Auth extends React.Component {
 
   render() {
     return (
-      <div>Loading...</div>
+      <Loading />
     )
   }
 }

@@ -1,9 +1,10 @@
 import React from 'react';
 import Chart from "react-frappe-charts";
 
+import './style.scss';
 import { primaryColor, secondaryColor } from 'constants.scss';
 import { getStats } from 'api';
-import './styles.scss';
+import Loading from 'components/Loading';
 
 const barGraphProps = {
   type: 'bar',
@@ -37,13 +38,14 @@ export default class Statistics extends React.Component {
     super(props);
 
     this.state = {
+      isLoading: true,
       stats: {},
     }
   }
 
   componentDidMount() {
     getStats().then(stats => {
-      this.setState({ stats }, () => {
+      this.setState({ stats, isLoading: false }, () => {
         // causes charts to re render after delay (sometimes the charts are incorrectly sized for some reason)
         setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
       });
@@ -51,10 +53,10 @@ export default class Statistics extends React.Component {
   }
 
   render() {
-    const { stats } = this.state;
+    const { stats, isLoading } = this.state;
 
-    if (!stats.checkin) {
-      return <div>Loading</div>;
+    if (isLoading) {
+      return <Loading />;
     }
 
     const counts = {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './styles.scss';
+import './style.scss';
 import { makeDecision, finalizeDecision } from 'api';
 import { StyledSelect } from 'components/SelectField';
 
