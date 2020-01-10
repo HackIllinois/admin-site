@@ -2,35 +2,28 @@ import React from 'react';
 import Chart from "react-frappe-charts";
 
 import './style.scss';
-import { primaryColor, secondaryColor } from 'constants.scss';
+import { primaryColor } from 'constants.scss';
 import { getStats } from 'api';
 import Loading from 'components/Loading';
 
-const barGraphProps = {
-  type: 'bar',
-  colors: [primaryColor],
-  height: 250,
-}
-
-const percentageGraphProps = {
-  type: 'percentage',
-  colors: [secondaryColor, primaryColor],
-  height: 150,
-}
-
 const decisionStatuses = ['ACCEPTED', 'PENDING', 'REJECTED', 'WAITLISTED'];
 const decisionFinalized = ['true', 'false'];
-const applicantGenders = ['', 'FEMALE', 'MALE', 'NONBINARY'];
+const genders = ['', 'FEMALE', 'MALE', 'NONBINARY'];
 const graduationYears = ['2020', '2021', '2022', '2023'];
 const majors = ['CS', 'CE', 'EE', 'ENG', 'BUS', 'LAS', 'OTHER'];
 
 // If a category has a count of 0, it's excluded from the api data, so we add it back
-const generateCompleteData = (allOptions, data) => {
+function generateCompleteData(allOptions, data) {
   const completeData = {};
   allOptions.forEach(option => {
     completeData[option] = data[option] || 0;
   });
   return completeData;
+}
+
+function calculatePercentage(value, data) {
+  const total = Object.values(data).reduce((total, current) => total + current, 0);
+  return `${(value / total * 100).toFixed(2)}%`;
 }
 
 export default class Statistics extends React.Component {
@@ -69,27 +62,22 @@ export default class Statistics extends React.Component {
     const graphs = [
       {
         title: 'Decision',
-        props: barGraphProps,
         data: generateCompleteData(decisionStatuses, stats.decision.status),
       },
       {
         title: 'Decision Finalized',
-        props: percentageGraphProps,
         data: generateCompleteData(decisionFinalized, stats.decision.finalized),
       },
       {
         title: 'Gender',
-        props: barGraphProps,
-        data: generateCompleteData(applicantGenders, stats.registration.attendees.gender),
+        data: generateCompleteData(genders, stats.registration.attendees.gender),
       },
       {
         title: 'Graduation Year',
-        props: barGraphProps,
         data: generateCompleteData(graduationYears, stats.registration.attendees.graduationYear)
       },
       {
         title: 'Major',
-        props: barGraphProps,
         data: generateCompleteData(majors, stats.registration.attendees.major)
       }
     ]
@@ -112,10 +100,15 @@ export default class Statistics extends React.Component {
             <div className="graph box" key={graph.title}>
               <div className="title">{graph.title}</div>
               <Chart
-                {...graph.props}
+                type="bar"
+                colors={[primaryColor]}
+                height={250}
                 data={{
                   labels: Object.keys(graph.data),
-                  datasets: [{ name: 'Applicants', values: Object.values(graph.data) }]
+                  datasets: [{ name: 'Applicants', values: Object.values(graph.data) }],
+                }}
+                tooltipOptions={{
+                  formatTooltipY: value => `${value} (${calculatePercentage(value, graph.data)})`
                 }}
               />
             </div>
