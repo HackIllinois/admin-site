@@ -5,6 +5,7 @@ import './style.scss';
 import { primaryColor } from 'constants.scss';
 import { getStats } from 'api';
 import Loading from 'components/Loading';
+import Message from 'components/Message';
 
 const decisionStatuses = ['ACCEPTED', 'PENDING', 'REJECTED', 'WAITLISTED'];
 const decisionFinalized = ['true', 'false'];
@@ -32,6 +33,7 @@ export default class Statistics extends React.Component {
 
     this.state = {
       isLoading: true,
+      error: false,
       stats: {},
     }
   }
@@ -42,14 +44,20 @@ export default class Statistics extends React.Component {
         // causes charts to re render after delay (sometimes the charts are incorrectly sized for some reason)
         setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
       });
+    }).catch(() => {
+      this.setState({ error: true, isLoading: false });
     });
   }
 
   render() {
-    const { stats, isLoading } = this.state;
+    const { stats, isLoading, error } = this.state;
 
     if (isLoading) {
       return <Loading />;
+    }
+
+    if (error) {
+      return <Message>Error fetching data</Message>;
     }
 
     const counts = {

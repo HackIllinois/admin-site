@@ -6,6 +6,7 @@ import Checkbox from 'components/Checkbox';
 import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
 import Loading from 'components/Loading';
+import Message from 'components/Message';
 import { StyledSelect } from 'components/SelectField';
 import { getRegistrations, getDecisions, getRoles } from 'api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns, formatRegistrationValue } from './registrations';
@@ -21,6 +22,7 @@ export default class Users extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
+      error: false,
       columnKeys: [], // this array also determines order of the columns
       registrations: [],
       columnOptions: [],
@@ -62,6 +64,8 @@ export default class Users extends React.Component {
             isLoading: false,
           });
         }
+    }).catch(() => {
+      this.setState({ error: true, isLoading: false });
     });
   }
   
@@ -207,8 +211,14 @@ export default class Users extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
+    const { isLoading, error } = this.state;
+    
+    if (isLoading) {
       return <Loading />;
+    }
+
+    if (error) {
+      return <Message>Error fetching data</Message>;
     }
 
     const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;

@@ -1,12 +1,9 @@
 #Loading {
-  background: url(../../assets/gradient_background.png);
   background-repeat: no-repeat;
   background-size: cover;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  left: 0;
-  top: 0;
+  // height: 100vh;
+  align-self: center;
+  flex: 1;
 
   display: flex;
   align-items: center;
