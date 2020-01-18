@@ -3,6 +3,7 @@ import React from 'react';
 import './style.scss';
 import EventEditPopup from 'components/EventsEditPopup';
 import Loading from 'components/Loading';
+import Message from 'components/Message';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getEvents, getRoles } from 'api';
@@ -20,6 +21,7 @@ export default class Events extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
+      error: false,
       days: [],
       editingEvent: null,
     }
@@ -32,6 +34,8 @@ export default class Events extends React.Component {
   reloadEvents() {
     getEvents().then(events => {
       this.setState({ days: sortEventsIntoDays(events), isLoading: false });
+    }).catch(() => {
+      this.setState({ error: true, isLoading: false });
     });
   }
 
@@ -40,10 +44,14 @@ export default class Events extends React.Component {
   }
 
   render() {
-    const { days, editingEvent, isLoading } = this.state;
+    const { days, editingEvent, isLoading, error } = this.state;
 
     if (isLoading) {
       return <Loading />;
+    }
+
+    if (error) {
+      return <Message>Error fetching data</Message>;
     }
 
     const isAdmin = getRoles().includes('Admin');

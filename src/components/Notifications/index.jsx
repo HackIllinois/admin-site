@@ -5,6 +5,7 @@ import { faPaperPlane, faMinusCircle, faPlusCircle } from '@fortawesome/free-sol
 
 import './style.scss';
 import SelectField from 'components/SelectField';
+import Loading from 'components/Loading';
 import {
   getNotificationTopics,
   getNotifications,
@@ -35,6 +36,7 @@ export default class Notifications extends React.Component {
     super(props);
 
     this.state = {
+      isLoading: true,
       notificationTopics: [],
       notifications: [],
       addTopicValue: '',
@@ -51,8 +53,10 @@ export default class Notifications extends React.Component {
       this.setState({ notificationTopics: topics });
       getNotifications(topics).then(notifications => {
         this.setState({
-          notifications: notifications.sort((a, b) => b.time - a.time)
-        })
+          notifications: notifications.sort((a, b) => b.time - a.time),
+        });
+      }).finally(() => {
+        this.setState({ isLoading: false });
       });
     });
   }
@@ -85,7 +89,12 @@ export default class Notifications extends React.Component {
   }
 
   render() {
-    const { notifications, notificationTopics } = this.state;
+    const { notifications, notificationTopics, isLoading } = this.state;
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
     const topicOptions = notificationTopics.map(topic => ({ label: topic, value: topic }));
     const isAdmin = getRoles().includes('Admin');
     return (
