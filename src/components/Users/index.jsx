@@ -165,6 +165,7 @@ export default class Users extends React.Component {
     if (this.state.registrations.length > 0) {
       return (
         <div className="header row">
+          <div className="row-number element" />
           <div className="checkbox element">
             <Checkbox
               value={this.state.selectedUserIds.length >= 1}
@@ -191,6 +192,7 @@ export default class Users extends React.Component {
     const className = 'row' + (isRowSelected ? ' selected' : '');
     return (
       <div className={className}>
+        <div className="row-number element" title={row + 1}>{row + 1}</div>
         <div className="checkbox element">
           <Checkbox
             value={isRowSelected}
@@ -212,7 +214,7 @@ export default class Users extends React.Component {
 
   render() {
     const { isLoading, error } = this.state;
-    
+
     if (isLoading) {
       return <Loading />;
     }

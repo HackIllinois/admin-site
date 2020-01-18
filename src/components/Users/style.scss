@@ -56,6 +56,15 @@
         text-overflow: ellipsis;
         margin-top: 4px;
 
+        &.row-number {
+          width: 38px;
+          font-size: 0.85em;
+          margin-bottom: 2px;
+          font-weight: 600;
+          text-align: center;
+          color: #444444;
+        }
+
         &.checkbox {
           width: 25px;
           justify-content: center;
