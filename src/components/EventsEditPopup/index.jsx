@@ -3,7 +3,6 @@ import { Formik, Form, Field } from 'formik';
 
 import { addEvent, updateEvent, deleteEvent } from 'api';
 import LocationInput from './LocationInput';
-import TimeInput from './TimeInput';
 import DateInput from './DateInput';
 import SelectField from 'components/SelectField';
 import './style.scss';
@@ -59,12 +58,11 @@ export default class EventEditPopup extends React.Component {
         <div className="popup-container" onClick={e => e.stopPropagation()}>
           <div className="title">{this.isNewEvent() ? 'Add Event' : 'Edit Event'}</div>
           <Formik initialValues={this.state.eventValues} onSubmit={values => this.submit(values)}>
-            {({ values, setFieldValue }) => (
+            {() => (
               <Form className="form">
                 <Field className="form-field" name="name" placeholder="Event Name"/>
-                <DateInput values={values} setFieldValue={setFieldValue}/>
-                <Field component={TimeInput} name="startTime" label="Start Time: "/>
-                <Field component={TimeInput} name="endTime" label="End Time: "/>
+                <Field component={DateInput} name="startTime" label="Start:"/>
+                <Field component={DateInput} name="endTime" label="End:"/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
                 <Field component={LocationInput} name="locations"/>
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>

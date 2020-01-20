@@ -30,7 +30,7 @@ export function sortEventsIntoDays(events) {
       dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'long'}),
       dateString: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
       events: events.sort((a, b) => {
-        if (a.startTime == b.startTime) {
+        if (a.startTime === b.startTime) {
           return a.endTime - b.endTime;
         }
         return a.startTime - b.startTime;
