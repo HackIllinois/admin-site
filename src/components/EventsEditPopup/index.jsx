@@ -76,7 +76,8 @@ export default class EventEditPopup extends React.Component {
 
                 <div className="buttons">
                   { !this.isNewEvent() &&
-                    <button className="button delete" onClick={() => this.delete()}>Delete</button>}
+                    <button className="button delete" type="button" onClick={() => this.delete()}>Delete</button>
+                  }
 
                   <div className="spacer"/>
                   <button className="button" type="button" onClick={() => this.props.onDismiss()}>Cancel</button>
