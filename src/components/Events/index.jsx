@@ -44,6 +44,20 @@ export default class Events extends React.Component {
     return new Date(seconds * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric'});
   }
 
+  calculateDayDifference(event) {
+    const startDay = new Date(event.startTime * 1000);
+    const endDay = new Date(event.endTime * 1000);
+    startDay.setHours(0, 0, 0, 0);
+    endDay.setHours(0, 0, 0, 0);
+
+    const difference = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
+    const prefix = (difference < 0) ? '-' : '+';
+    if (difference !== 0) {
+      return prefix + Math.abs(difference);
+    }
+    return '';
+  }
+
   render() {
     const { days, editingEvent, isLoading, error } = this.state;
 
@@ -83,7 +97,10 @@ export default class Events extends React.Component {
                         <div className="event-name">{event.name}</div>
                         <div className="event-time">
                           <div className="start">{this.formatTime(event.startTime)}</div>
-                          <div className="end">{this.formatTime(event.endTime)}</div>
+                          <div className="end">
+                            {this.formatTime(event.endTime)}
+                            <span className="day-difference">{this.calculateDayDifference(event)}</span>
+                          </div>
                         </div>
                       </div>
 

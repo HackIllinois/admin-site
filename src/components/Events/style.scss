@@ -25,6 +25,7 @@
   .day {
     flex: 1;
     margin-top: 40px;
+    min-width: 350px;
 
     .day-of-week {
       font-size: 1.65em;
@@ -68,11 +69,18 @@
             flex: 1;
             color: #444444;
             font-size: 1.2em;
+            margin-right: 5px;
           }
 
           .event-time {
             font-size: .85em;
             color: $primary-color;
+
+            .day-difference {
+              position: relative;
+              top: -3px;
+              font-size: .8em;
+            }
           }
         }
 

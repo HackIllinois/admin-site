@@ -1,25 +1,24 @@
 @import 'constants.scss';
 
 .date-input {
+  margin: 15px 0;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  align-items: center;
 
-  .select {
-    display: inline-block;
-    width: 28%;
+  .label {
+    margin-right: 10px;
+    font-size: .85em;
+    font-weight: 600;
+    color: #444444;
+  }
 
-    @include phone  {
-      width: 49%;
-      margin-top: 15px;
-    }
+  // Override date picker wrapper's style to fill width
+  > .react-datepicker-wrapper {
+    flex: 1;
+  }
 
-    &.month {
-      width: 40%;
-      @include phone {
-        width: 100%;
-        margin-top: 0;
-      }
-    }
+  .date-picker {
+    @include form-field;
+    margin: 0;
   }
 }
