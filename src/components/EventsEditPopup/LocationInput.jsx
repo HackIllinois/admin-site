@@ -58,9 +58,9 @@ export default function LocationCheckbox({ field, form }) {
     const selectedDescription = selectedLocations
       .map(selected => selected.description)
       .find(description => description.includes(location.description));
-    
+
     // Remove the base location name to only return the details
-    return (selectedDescription || '').replace(location.description, '').trim();
+    return (selectedDescription || '').replace(location.description, '').trimStart();
   }
 
   return (
