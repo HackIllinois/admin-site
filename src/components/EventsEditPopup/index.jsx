@@ -8,7 +8,7 @@ import DateInput from './DateInput';
 import SelectField from 'components/SelectField';
 import './style.scss';
 
-const possibleEventTypes = ['MEAL', 'SPONSOR', 'WORKSHOP', 'OTHER'];
+const possibleEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'OTHER'];
 
 export default class EventEditPopup extends React.Component {
   constructor(props) {
@@ -22,9 +22,9 @@ export default class EventEditPopup extends React.Component {
       description = '',
       locations = [],
       sponsor = '',
-      eventType = possibleEventTypes[0],
+      eventType = '',
     } = props.event;
-    
+
     this.state = {
       eventValues: { startTime, endTime, name, description, locations, sponsor, eventType }
     }
@@ -73,12 +73,13 @@ export default class EventEditPopup extends React.Component {
                   name="eventType"
                   menuPlacement="top"
                   options={possibleEventTypes.map(eventType => ({ label: eventType, value: eventType }))}
+                  placeholder="Type"
                 />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&
                     <button className="button delete" onClick={() => this.delete()}>Delete</button>}
-                  
+
                   <div className="spacer"/>
                   <button className="button" type="button" onClick={() => this.props.onDismiss()}>Cancel</button>
                   <button className="button" type="submit">Save</button>
