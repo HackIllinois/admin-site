@@ -12,7 +12,8 @@ import { sortEventsIntoDays } from './eventsUtil';
 // When adding a new event, most of the field values default to empty strings, but we need
 // to make sure that the start and end times are on the day which the add button was pressed on
 function createBlankEventOnDate(date) {
-  const time = Math.floor(date.getTime() / 1000);
+  const secondsUntilNoon = 12 * 60 * 60;
+  const time = Math.floor(date.getTime() / 1000) + secondsUntilNoon;
   return { startTime: time, endTime: time };
 }
 
@@ -65,7 +66,7 @@ export default class Events extends React.Component {
             onUpdateEvent={() => this.reloadEvents()}
           />
         }
-        
+
         {days.map(day => (
           <div className="day" key={day.date}>
             <div className="day-of-week">{day.dayOfWeek}</div>
@@ -96,7 +97,7 @@ export default class Events extends React.Component {
                 ))
               }
 
-              {isAdmin && 
+              {isAdmin &&
                 <div className="event" onClick={() => this.setState({ editingEvent: createBlankEventOnDate(day.date) })}>
                   <FontAwesomeIcon className="add-event-icon" icon={faPlus}/>
                 </div>
