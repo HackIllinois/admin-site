@@ -1,10 +1,17 @@
+@import 'constants.scss';
+
 .location-input {
   margin: 0 5px;
-  display: flex;
-  flex-wrap: wrap;
 
   .location-option {
-    width: 50%;
     margin-top: 15px;
+    display: flex;
+
+    .details {
+      @include form-field;
+      width: auto;
+      flex: 1;
+      margin: 0 0 0 15px;
+    }
   }
 }
