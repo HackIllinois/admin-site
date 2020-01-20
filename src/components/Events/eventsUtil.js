@@ -29,7 +29,12 @@ export function sortEventsIntoDays(events) {
       date,
       dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'long'}),
       dateString: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
-      events: events.sort((event1, event2) => event1.startTime - event2.startTime),
+      events: events.sort((a, b) => {
+        if (a.startTime == b.startTime) {
+          return a.endTime - b.endTime;
+        }
+        return a.startTime - b.startTime;
+      }),
     });
   });
 
