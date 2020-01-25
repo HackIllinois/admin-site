@@ -46,7 +46,9 @@ export function filterRegistrations(registrations, filters) {
   return registrations.filter(registration => {
     // if any of the column values don't match the corresponding filter, then we remove the whole registeration
     for (const [columnKey, filterValue] of filters) {
-      if (!String(registration[columnKey]).toLowerCase().includes(filterValue.toLowerCase())) {
+      const filterValues = filterValue.toLowerCase().split(',');
+      const columnValue = String(registration[columnKey]).toLowerCase();
+      if (!filterValues.some(val => columnValue.includes(val))) {
         return false;
       }
     }
