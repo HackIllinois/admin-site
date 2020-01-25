@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
-import { StyledSelect } from 'components/SelectField';
+import AddFilterPopup from './AddFilterPopup';
 import { formatCamelCase } from '../registrations';
 import './style.scss';
 
@@ -11,24 +11,12 @@ export default class UserFilters extends React.Component {
     super(props);
     this.state = {
       showPopup: false,
-      addColumn: '',
-      addValue: '',
     };
-  }
-  
-  addFilter() {
-    const { addColumn, addValue } = this.state;
-    if (addColumn && addValue) {
-      this.props.onAddFilter([addColumn, addValue]);
-      this.setState({ showPopup: false, addColumn: '', addValue: ''});
-    }
-  }
-
-  removeFilter(filter) {
-    this.props.onRemoveFilter(filter);
   }
 
   render() {
+    const { showPopup } = this.state;
+
     return (
       <div className="user-filters">
         <div className="filters">
@@ -36,41 +24,24 @@ export default class UserFilters extends React.Component {
             <div className="text"><FontAwesomeIcon icon={faPlus}/>&nbsp; Add Filter</div>
           </div>
           {
-            this.props.filters.map(([columnKey, filterValue]) => (
-              <div className="chip" key={columnKey + filterValue}>
-                <div className="remove" onClick={() => this.removeFilter([columnKey, filterValue])}>
+            this.props.filters.map(({ columnKey, value, multiple, exact }, index) => (
+              <div className="chip" key={columnKey + value + multiple + exact}>
+                <div className="remove" onClick={() => this.props.onRemoveFilter(index)}>
                   <FontAwesomeIcon icon={faTimes}/>
                 </div>
                 
-                <div className="text">{formatCamelCase(columnKey)}: {filterValue}</div>
+                <div className="text">{formatCamelCase(columnKey)}: {value}</div>
               </div>
             ))
           }
         </div>
 
-        {this.state.showPopup &&
-          <div className="add-filter-popup" onClick={() => this.setState({showPopup: false})}>
-            <div className="content" onClick={e => e.stopPropagation()}>
-              <h2 className="title">Add Filter</h2>
-
-              <StyledSelect
-                placeholder="Select a Column"
-                options={this.props.columnOptions}
-                onChange={option => this.setState({addColumn: option.value})}/>
-
-              <input
-                className="filter-input"
-                placeholder="Filter Value"
-                onChange={e => this.setState({ addValue: e.target.value })}
-                onKeyPress={e => e.which === 13 && this.addFilter()}/>
-
-              <div className="buttons">
-                <button className="cancel button" onClick={() => this.setState({showPopup: false})}>Cancel</button>
-                <div className="spacer"/>
-                <button className="add button" onClick={() => this.addFilter()}>Add</button>
-              </div>
-            </div>
-          </div>
+        {showPopup &&
+          <AddFilterPopup
+            columnOptions={this.props.columnOptions}
+            onAddFilter={filter => this.props.onAddFilter(filter)}
+            onClosePopup={() => this.setState({ showPopup: false })}
+          />
         }
       </div>
     )

@@ -80,11 +80,9 @@ export default class Users extends React.Component {
     }));
   }
 
-  removeFilter(oldFilter) {
+  removeFilter(index) {
     this.setState(prevState => ({
-      filters: prevState.filters.filter(
-        filter => filter[0] !== oldFilter[0] || filter[1] !== oldFilter[1]
-      )
+      filters: prevState.filters.filter((_, i) => i !== index),
     }));
   }
 

@@ -4,27 +4,27 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import './style.scss';
 
-export default function Checkbox(props) {
-  const checkboxClass = 'checkbox' + (props.value ? ' checked' : ''); 
+export default function Checkbox({ value, onChange, label, fast, noHighlight, ...props }) {
+  const checkboxClass = 'checkbox' + (value ? ' checked' : ''); 
   const handleKeyPress = event => {
     if (event.which === 13) { // enter key
-      props.onChange(!props.value, event);
+      onChange(!value, event);
     }
   }
 
-  const clickListenerType = props.fast ? 'onMouseDown' : 'onClick';
+  const clickListenerType = fast ? 'onMouseDown' : 'onClick';
   const clickListener = {
-    [clickListenerType]: event => props.onChange(!props.value, event)
+    [clickListenerType]: event => onChange(!value, event)
   };
 
   return (
-    <div className="checkbox-container" {...clickListener}>
+    <div className="checkbox-container" {...clickListener} {...props}>
       <div className={checkboxClass} onKeyPress={handleKeyPress} tabIndex="0">
         <FontAwesomeIcon className="check" icon={faCheck}/>
-        {!props.noHighlight && <div className="highlight"/>}
+        {!noHighlight && <div className="highlight"/>}
       </div>
 
-      <div className="label">{ props.label }</div>
+      <div className="label">{ label }</div>
     </div>
   )
 }

@@ -45,10 +45,11 @@ export function getColumnKeys(registrations) {
 export function filterRegistrations(registrations, filters) {
   return registrations.filter(registration => {
     // if any of the column values don't match the corresponding filter, then we remove the whole registeration
-    for (const [columnKey, filterValue] of filters) {
-      const filterValues = filterValue.toLowerCase().split(',');
-      const columnValue = String(registration[columnKey]).toLowerCase();
-      if (!filterValues.some(val => columnValue.includes(val))) {
+    for (const { columnKey, value, multiple, exact } of filters) {
+      const areEqual = (val1, val2) => exact ? val1 === val2 : val1.includes(val2);
+      const columnValue = String(registration[columnKey]);
+      const filterValues = multiple ? value.split(',') : [value];
+      if (filterValues.every(val => !areEqual(columnValue.toLowerCase(), val.toLowerCase()))) {
         return false;
       }
     }
