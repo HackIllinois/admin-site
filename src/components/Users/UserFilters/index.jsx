@@ -14,6 +14,25 @@ export default class UserFilters extends React.Component {
     };
   }
 
+  formatFilter({ columnKey, value, multiple, exact, invert }) {
+    let text = `${formatCamelCase(columnKey)}: `;
+
+    if (multiple) {
+      text += value.split(',')
+        .map(val => val.trim())
+        .map(val => exact ? `"${val}"` : val)
+        .map(val => invert ? `!${val}` : val)
+        .join(invert ? ' && ' : ' || ');
+    } else {
+      if (invert) {
+        text += '!';
+      }
+      text += exact ? `"${value}"` : value;
+    }
+
+    return text;
+  }
+
   render() {
     const { showPopup } = this.state;
 
@@ -24,13 +43,13 @@ export default class UserFilters extends React.Component {
             <div className="text"><FontAwesomeIcon icon={faPlus}/>&nbsp; Add Filter</div>
           </div>
           {
-            this.props.filters.map(({ columnKey, value, multiple, exact }, index) => (
-              <div className="chip" key={columnKey + value + multiple + exact}>
+            this.props.filters.map((filter, index) => (
+              <div className="chip" key={JSON.stringify(filter)}>
                 <div className="remove" onClick={() => this.props.onRemoveFilter(index)}>
                   <FontAwesomeIcon icon={faTimes}/>
                 </div>
                 
-                <div className="text">{formatCamelCase(columnKey)}: {value}</div>
+                <div className="text">{this.formatFilter(filter)}</div>
               </div>
             ))
           }

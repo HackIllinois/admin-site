@@ -75,7 +75,7 @@ export default class Users extends React.Component {
 
   addFilter(newFilter) {
     this.setState(prevState => ({
-      filters: [...prevState.filters, newFilter],
+      filters: [newFilter, ...prevState.filters],
       selectedUserIds: [], // we unselect all users (don't want to keep filtered out users still selected)
     }));
   }

@@ -11,19 +11,20 @@ export default class AddFilterPopup extends React.Component {
       value: '',
       multiple: false,
       exact: false,
+      invert: false,
     }
   }
 
   addFilter() {
-    const { columnKey, value, multiple, exact } = this.state;
-    if (columnKey && value) {
-      this.props.onAddFilter({ columnKey, value, multiple, exact });
+    const { columnKey, value, multiple, exact, invert } = this.state;
+    if (columnKey) {
+      this.props.onAddFilter({ columnKey, value, multiple, exact, invert });
       this.props.onClosePopup();
     }
   }
 
   render() {
-    const { multiple, exact } = this.state;
+    const { value, multiple, exact, invert } = this.state;
 
     return (
       <div className="add-filter-popup" onClick={() => this.props.onClosePopup()}>
@@ -33,13 +34,16 @@ export default class AddFilterPopup extends React.Component {
           <StyledSelect
             placeholder="Select a Column"
             options={this.props.columnOptions}
-            onChange={option => this.setState({columnKey: option.value})}/>
+            onChange={option => this.setState({columnKey: option.value})}
+          />
 
           <input
             className="filter-input"
             placeholder="Filter Value"
+            value={value}
             onChange={e => this.setState({ value: e.target.value })}
-            onKeyPress={e => e.which === 13 && this.addFilter()}/>
+            onKeyPress={e => e.which === 13 && this.addFilter()}
+          />
 
           <Checkbox
             value={multiple}
@@ -55,6 +59,15 @@ export default class AddFilterPopup extends React.Component {
             onChange={newValue => this.setState({ exact: newValue })}
             label="Exact"
             title="Value in column must match exactly (still case-insensitive though)"
+          />
+
+          <br/>
+
+          <Checkbox
+            value={invert}
+            onChange={newValue => this.setState({ invert: newValue })}
+            label="Invert"
+            title="Display all rows that do NOT contain Filter Value"
           />
 
           <div className="buttons">
