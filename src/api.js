@@ -113,3 +113,8 @@ export function getRegistrations() {
 export function getStats() {
   return request('GET', '/stat/');
 }
+
+export function getRsvps() {
+  return request('GET', '/rsvp/filter/')
+    .then(res => res.rsvps);
+}

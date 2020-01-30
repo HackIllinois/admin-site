@@ -8,8 +8,8 @@ import DecisionButtons from './DecisionButtons';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 import { StyledSelect } from 'components/SelectField';
-import { getRegistrations, getDecisions, getRoles } from 'api';
-import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionColumns, formatRegistrationValue } from './registrations';
+import { getRegistrations, getDecisions, getRoles, getRsvps } from 'api';
+import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from './registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import './style.scss';
 
@@ -34,8 +34,8 @@ export default class Users extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([getRegistrations(), getDecisions()])
-      .then(([registrations, decisions]) => addDecisionColumns(registrations, decisions))
+    Promise.all([getRegistrations(), getDecisions(), getRsvps()])
+      .then(([registrations, decisions, rsvps]) => addDecisionAndRsvp(registrations, decisions, rsvps))
       .then(registrations => {
         if (registrations.length > 0) {
           const columnKeys = getColumnKeys(registrations);
@@ -138,8 +138,10 @@ export default class Users extends React.Component {
   }
 
   updateDecisions() {
-    getDecisions().then(decisions => {
-      this.setState(prevState => ({ registrations: addDecisionColumns(prevState.registrations, decisions) }));
+    Promise.all([getDecisions(), getRsvps()]).then(([decisions, rsvps]) => {
+      this.setState(prevState => (
+        { registrations: addDecisionAndRsvp(prevState.registrations, decisions, rsvps) }
+      ));
     });
   }
 
