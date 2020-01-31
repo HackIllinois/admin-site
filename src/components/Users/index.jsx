@@ -255,6 +255,7 @@ export default class Users extends React.Component {
               registrations={filteredRegistrations}
               selectedUserIds={selectedUserIds}
               onDecision={decisionPromises => this.handleDecision(decisionPromises)}
+              unselectUser={userId => this.unselectUser(userId)}
             />
           }
           
