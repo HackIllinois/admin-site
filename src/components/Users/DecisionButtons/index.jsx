@@ -4,6 +4,8 @@ import './style.scss';
 import { makeDecision, finalizeDecision } from 'api';
 import { StyledSelect } from 'components/SelectField';
 
+const DECISIONS_PER_SECOND = 5;
+
 export default class DecisionButtons extends React.Component {
   constructor(props) {
     super(props);
@@ -12,8 +14,21 @@ export default class DecisionButtons extends React.Component {
     };
   }
 
+  waitAndMakeDecision(delay, id, decision, wave) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        makeDecision(id, decision, wave).then(() => {
+          this.props.unselectUser(id); // makeshift progress bar
+          resolve();
+        }, reject);
+      }, delay);
+    });
+  }
+
   makeDecisionForSelected(decision, wave) {
-    this.props.onDecision(this.props.selectedUserIds.map(id => makeDecision(id, decision, wave)));
+    this.props.onDecision(this.props.selectedUserIds.map((id, index) => 
+      this.waitAndMakeDecision(index * (1000 / DECISIONS_PER_SECOND), id, decision, wave))
+    );
   }
 
   finalizeSelected(finalized = true) {
