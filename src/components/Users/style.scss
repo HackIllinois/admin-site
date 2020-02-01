@@ -18,11 +18,24 @@
     padding: 10px;
     box-sizing: border-box;
 
-    .column-select {
+    .top-row {
+      display: flex;
+      align-items: center;
       margin-bottom: 15px;
 
-      @include mobile {
-        margin-left: 50px;
+      .column-select {
+        flex: 1;
+  
+        @include mobile { 
+          margin-left: 50px;
+        }
+      }
+
+      .refresh-icon {
+        padding: 10px;
+        margin-left: 5px;
+        cursor: pointer;
+        color: $primary-color;
       }
     }
   }
