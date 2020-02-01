@@ -25,6 +25,17 @@ export default class DecisionButtons extends React.Component {
     });
   }
 
+  waitAndFinalize(delay, id, finalized) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        finalizeDecision(id, finalized).then(() => {
+          this.props.unselectUser(id); // makeshift progress bar
+          resolve();
+        }, reject);
+      }, delay);
+    });
+  }
+
   makeDecisionForSelected(decision, wave) {
     this.props.onDecision(this.props.selectedUserIds.map((id, index) => 
       this.waitAndMakeDecision(index * (1000 / DECISIONS_PER_SECOND), id, decision, wave))
@@ -32,7 +43,9 @@ export default class DecisionButtons extends React.Component {
   }
 
   finalizeSelected(finalized = true) {
-    this.props.onDecision(this.props.selectedUserIds.map(id => finalizeDecision(id, finalized)));
+    this.props.onDecision(this.props.selectedUserIds.map((id, index) =>
+      this.waitAndFinalize(index * (1000 / DECISIONS_PER_SECOND), id, finalized)
+    ));
   }
 
   render() {
