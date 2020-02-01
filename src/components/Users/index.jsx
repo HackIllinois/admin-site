@@ -11,6 +11,8 @@ import { StyledSelect } from 'components/SelectField';
 import { getRegistrations, getDecisions, getRoles, getRsvps } from 'api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from './registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 import './style.scss';
 
 
@@ -34,6 +36,10 @@ export default class Users extends React.Component {
   }
 
   componentDidMount() {
+    this.reloadData();
+  }
+
+  reloadData() {
     Promise.all([getRegistrations(), getDecisions(), getRsvps()])
       .then(([registrations, decisions, rsvps]) => addDecisionAndRsvp(registrations, decisions, rsvps))
       .then(registrations => {
@@ -152,6 +158,10 @@ export default class Users extends React.Component {
     });
   }
 
+  refresh() {
+    this.setState({ isLoading: true, error: false }, () => this.reloadData());
+  }
+
   getTableElementProps(columnKey, elementValue) {
     return {
       className: 'element',
@@ -231,18 +241,23 @@ export default class Users extends React.Component {
     return (
       <div className={className}>
         <div className="table-options">
-          <StyledSelect
-            color={secondaryColor}
-            colorLight={secondaryColorLight}
-            placeholder="Select Which Columns to Display"
-            className="column-select"
-            isMulti={true}
-            options={columnOptions}
-            controlShouldRenderValue={false}
-            hideSelectedOptions={false}
-            closeMenuOnSelect={false}
-            value={this.columnKeysToOptions(selectedColumnKeys)}
-            onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
+          <div className="top-row">
+            <StyledSelect
+              color={secondaryColor}
+              colorLight={secondaryColorLight}
+              placeholder="Select Which Columns to Display"
+              className="column-select"
+              isMulti={true}
+              options={columnOptions}
+              controlShouldRenderValue={false}
+              hideSelectedOptions={false}
+              closeMenuOnSelect={false}
+              value={this.columnKeysToOptions(selectedColumnKeys)}
+              onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
+
+            <FontAwesomeIcon className="refresh-icon" icon={faSync} onClick={() => this.refresh()}/>
+          </div>
+          
 
           <UserFilters
             filters={filters}
