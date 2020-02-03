@@ -5,6 +5,7 @@ import { makeDecision, finalizeDecision } from 'api';
 import { StyledSelect } from 'components/SelectField';
 
 const DECISIONS_PER_SECOND = 5;
+const getDelay = index => index * (1000 / DECISIONS_PER_SECOND);
 
 export default class DecisionButtons extends React.Component {
   constructor(props) {
@@ -14,37 +15,26 @@ export default class DecisionButtons extends React.Component {
     };
   }
 
-  waitAndMakeDecision(delay, id, decision, wave) {
+  waitAndUserAction(milliseconds, userId, action) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        makeDecision(id, decision, wave).then(() => {
-          this.props.unselectUser(id); // makeshift progress bar
+        action(userId).then(() => {
+          this.props.unselectUser(userId); // makeshift progress bar
           resolve();
         }, reject);
-      }, delay);
-    });
-  }
-
-  waitAndFinalize(delay, id, finalized) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        finalizeDecision(id, finalized).then(() => {
-          this.props.unselectUser(id); // makeshift progress bar
-          resolve();
-        }, reject);
-      }, delay);
-    });
+      }, milliseconds);
+    })
   }
 
   makeDecisionForSelected(decision, wave) {
-    this.props.onDecision(this.props.selectedUserIds.map((id, index) => 
-      this.waitAndMakeDecision(index * (1000 / DECISIONS_PER_SECOND), id, decision, wave))
-    );
+    this.props.onDecision(this.props.selectedUserIds.map((id, index) =>
+      this.waitAndUserAction(getDelay(index), id, userId => makeDecision(userId, decision, wave))
+    ));
   }
 
   finalizeSelected(finalized = true) {
     this.props.onDecision(this.props.selectedUserIds.map((id, index) =>
-      this.waitAndFinalize(index * (1000 / DECISIONS_PER_SECOND), id, finalized)
+      this.waitAndUserAction(getDelay(index), id, userId => finalizeDecision(userId, finalized))
     ));
   }
 
