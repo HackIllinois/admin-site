@@ -13,8 +13,8 @@ import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import StatsPopup from './StatsPopup';
 import './style.scss';
-
 
 const DEFAULT_COLUMN_WIDTH = 150;
 const LONG_COLUMN_WIDTH = 300;
@@ -32,6 +32,7 @@ export default class Users extends React.Component {
       columnWidths: {},
       selectedUserIds: [],
       filters: [], // filters are stored like so [[columnKey1, filterValue1], ...]
+      showStats: false,
     };
   }
 
@@ -233,7 +234,7 @@ export default class Users extends React.Component {
       return <Message>Error fetching data</Message>;
     }
 
-    const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;
+    const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds, showStats } = this.state;
     const filteredRegistrations = filterRegistrations(registrations, filters);
 
     const isAdmin = getRoles().includes('Admin');
@@ -255,6 +256,13 @@ export default class Users extends React.Component {
               value={this.columnKeysToOptions(selectedColumnKeys)}
               onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
 
+            <div
+              className="stats-button"
+              onClick={() => this.setState({ showStats: true })}
+            >
+              Show Stats
+            </div>
+            
             <FontAwesomeIcon className="refresh-icon" icon={faSync} onClick={() => this.refresh()}/>
           </div>
           
@@ -290,6 +298,8 @@ export default class Users extends React.Component {
             )}
           </AutoSizer>
         </div>
+
+        {showStats && <StatsPopup registrations={filteredRegistrations} />}
       </div>
     );
   }
