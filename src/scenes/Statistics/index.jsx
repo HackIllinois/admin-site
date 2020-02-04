@@ -3,7 +3,7 @@ import Chart from "react-frappe-charts";
 
 import './style.scss';
 import { primaryColor } from 'constants.scss';
-import { getStats } from 'api';
+import { getStats } from 'util/api';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 

@@ -31,6 +31,23 @@
         }
       }
 
+      .stats-button {
+        border: 1.5px solid $secondary-color;
+        color: $secondary-color;
+        border-radius: 25px;
+        padding: 5px 10px;
+        margin-left: 15px;
+        font-size: 0.9em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color .2s, color .2s;
+
+        &:hover {
+          background-color: $secondary-color;
+          color: white;
+        }
+      }
+
       .refresh-icon {
         padding: 10px;
         margin-left: 5px;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getToken } from 'api';
+import { getToken } from 'util/api';
 
 import Loading from 'components/Loading';
 

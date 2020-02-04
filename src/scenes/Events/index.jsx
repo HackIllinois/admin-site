@@ -1,13 +1,13 @@
 import React from 'react';
 
 import './style.scss';
-import EventEditPopup from 'components/EventsEditPopup';
+import EventEditPopup from './EventsEditPopup';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { getEvents, getRoles } from 'api';
-import { sortEventsIntoDays } from './eventsUtil';
+import { getEvents, getRoles } from 'util/api';
+import { sortEventsIntoDays } from 'util/events';
 
 // When adding a new event, most of the field values default to empty strings, but we need
 // to make sure that the start and end times are on the day which the add button was pressed on

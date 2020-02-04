@@ -7,10 +7,10 @@ import './App.scss';
 import logo from './assets/logo.svg';
 import PrivateRoute from './components/PrivateRoute';
 import Auth from './components/Auth';
-import Users from './components/Users';
-import Events from './components/Events';
-import Notifications from './components/Notifications';
-import Statistics from 'components/Statistics';
+import Users from './scenes/Users';
+import Events from './scenes/Events';
+import Notifications from './scenes/Notifications';
+import Statistics from 'scenes/Statistics';
 
 const routes = [
   { path: '/', name: "Statistics", icon: faCalculator },

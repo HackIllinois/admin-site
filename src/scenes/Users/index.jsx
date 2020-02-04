@@ -8,8 +8,8 @@ import DecisionButtons from './DecisionButtons';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 import { StyledSelect } from 'components/SelectField';
-import { getRegistrations, getDecisions, getRoles, getRsvps } from 'api';
-import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from './registrations';
+import { getRegistrations, getDecisions, getRoles, getRsvps } from 'util/api';
+import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from 'util/registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
@@ -260,9 +260,9 @@ export default class Users extends React.Component {
               className="stats-button"
               onClick={() => this.setState({ showStats: true })}
             >
-              Show Stats
+              Calculate Stats
             </div>
-            
+
             <FontAwesomeIcon className="refresh-icon" icon={faSync} onClick={() => this.refresh()}/>
           </div>
           

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import { isAuthenticated, authenticate, getRoles } from 'api';
+import { isAuthenticated, authenticate, getRoles } from 'util/api';
 
 export default function PrivateRoute(props) {
   if (!isAuthenticated()) {

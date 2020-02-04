@@ -3,11 +3,11 @@ import Chart from "react-frappe-charts";
 
 import './style.scss';
 import { primaryColor } from 'constants.scss';
-import { formatCamelCase } from '../registrations';
+import { formatCamelCase } from 'util/registrations';
 
 const statsColumns = [
-  "finalized", "gender", "graduationYear", "hasAttended", "isAttending", "major",
-  "needsBus", "programmingAbility", "programmingYears", "school", "status", "wave"
+  "finalized", "gender", "graduationYear", "hasAttended", "isAttending", "isOSContributor",
+  "major", "needsBus", "programmingAbility", "programmingYears", "school", "status", "wave"
 ];
 
 function calculatePercentage(value, data) {
@@ -42,7 +42,6 @@ export default function StatsPopup({ registrations }) {
 
   // Sort the charts such that charts with fewer categories come first (to avoid certain formatting problems)
   charts.sort((chart1, chart2) => chart1.data.size - chart2.data.size);
-
 
   console.log(charts);
   const getChartBox = chart => (
