@@ -7,13 +7,13 @@ import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
+import Stats from 'components/Stats';
 import { StyledSelect } from 'components/SelectField';
 import { getRegistrations, getDecisions, getRoles, getRsvps } from 'util/api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from 'util/registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
-import StatsPopup from './StatsPopup';
 import './style.scss';
 
 const DEFAULT_COLUMN_WIDTH = 150;
@@ -299,7 +299,13 @@ export default class Users extends React.Component {
           </AutoSizer>
         </div>
 
-        {showStats && <StatsPopup registrations={filteredRegistrations} />}
+        {showStats && 
+          <div className="stats-popup" onClick={() => this.setState({ showStats: false })}>
+            <div className="stats-content" onClick={e => e.stopPropagation()}>
+              <Stats registrations={filteredRegistrations} />
+            </div>
+          </div>
+        }
       </div>
     );
   }

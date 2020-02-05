@@ -6,8 +6,9 @@ import { primaryColor } from 'constants.scss';
 import { formatCamelCase } from 'util/registrations';
 
 const statsColumns = [
-  "finalized", "gender", "graduationYear", "hasAttended", "isAttending", "isOSContributor",
-  "major", "needsBus", "programmingAbility", "programmingYears", "school", "status", "wave"
+  "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
+  "hasDisability", "isAttending", "isOSContributor", "major", "needsBus",
+  "programmingAbility", "programmingYears", "school", "status", "wave"
 ];
 
 function calculatePercentage(value, data) {
@@ -80,12 +81,10 @@ export default function StatsPopup({ registrations }) {
   );
 
   return (
-    <div className="stats-popup">
-      <div className="stats-content">
-        {charts.map(chart => 
-          chart.data.size < 11 ? getChartBox(chart) : getCountsBox(chart)
-        )}
-      </div>
+    <div className="stats">
+      {charts.map(chart =>
+        chart.data.size < 11 ? getChartBox(chart) : getCountsBox(chart)
+      )}
     </div>
   )
 }

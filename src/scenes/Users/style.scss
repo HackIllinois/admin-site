@@ -111,4 +111,25 @@
       }
     }
   }
+
+  .stats-popup {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+
+    .stats-content {
+      background-color: white;
+      width: 90vw;
+      height: 90vh;
+      border-radius: 10px;
+      overflow: auto;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 
-import { addEvent, updateEvent, deleteEvent } from './node_modules/util/api';
+import { addEvent, updateEvent, deleteEvent } from 'util/api';
 import LocationInput from './LocationInput';
 import DateInput from './DateInput';
 import SelectField from 'components/SelectField';
