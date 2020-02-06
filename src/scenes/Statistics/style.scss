@@ -1,0 +1,56 @@
+@import 'constants.scss';
+
+.statistics-page {
+  flex: 1;
+  height: 100vh;
+  overflow: auto;
+  @include mobile {
+    overflow: initial;
+  }
+
+  .main-counts {
+    display: flex;
+
+    .count-box {
+      flex: 1;
+      margin: 20px;
+      border-radius: 10px;
+      box-shadow: 0 1px 5px rgba(27,31,35,0.15);
+      padding: 15px 25px;
+      box-sizing: border-box;
+      text-align: center;
+
+      .count {
+        font-size: 2em;
+        color: $primary-color;
+        font-weight: 600;
+      }
+
+      .category {
+        color: #555555;
+        font-size: .9em;
+        margin-top: 10px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+
+    .group-select {
+      width: 200px;
+    }
+    
+    .reload-icon {
+      font-size: 1.2em;
+      padding: 8px;
+      cursor: pointer;
+      color: $primary-color;
+    }
+  }
+  
+}

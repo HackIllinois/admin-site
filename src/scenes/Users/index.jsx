@@ -7,14 +7,14 @@ import UserFilters from './UserFilters';
 import DecisionButtons from './DecisionButtons';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
+import Stats from 'components/Stats';
 import { StyledSelect } from 'components/SelectField';
-import { getRegistrations, getDecisions, getRoles, getRsvps } from 'api';
-import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from './registrations';
+import { getRegistrations, getDecisions, getRoles, getRsvps } from 'util/api';
+import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from 'util/registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import './style.scss';
-
 
 const DEFAULT_COLUMN_WIDTH = 150;
 const LONG_COLUMN_WIDTH = 300;
@@ -31,7 +31,8 @@ export default class Users extends React.Component {
       selectedColumnKeys: [],
       columnWidths: {},
       selectedUserIds: [],
-      filters: [], // filters are stored like so [[columnKey1, filterValue1], ...]
+      filters: [],
+      showStats: false,
     };
   }
 
@@ -233,7 +234,7 @@ export default class Users extends React.Component {
       return <Message>Error fetching data</Message>;
     }
 
-    const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds } = this.state;
+    const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds, showStats } = this.state;
     const filteredRegistrations = filterRegistrations(registrations, filters);
 
     const isAdmin = getRoles().includes('Admin');
@@ -254,6 +255,13 @@ export default class Users extends React.Component {
               closeMenuOnSelect={false}
               value={this.columnKeysToOptions(selectedColumnKeys)}
               onChange={selected => this.setState({ selectedColumnKeys: (selected || []).map(option => option.value) })}/>
+
+            <div
+              className="stats-button"
+              onClick={() => this.setState({ showStats: true })}
+            >
+              Calculate Stats
+            </div>
 
             <FontAwesomeIcon className="refresh-icon" icon={faSync} onClick={() => this.refresh()}/>
           </div>
@@ -290,6 +298,14 @@ export default class Users extends React.Component {
             )}
           </AutoSizer>
         </div>
+
+        {showStats && 
+          <div className="stats-popup" onClick={() => this.setState({ showStats: false })}>
+            <div className="stats-content" onClick={e => e.stopPropagation()}>
+              <Stats registrations={filteredRegistrations} />
+            </div>
+          </div>
+        }
       </div>
     );
   }

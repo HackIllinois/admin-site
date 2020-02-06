@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './style.scss';
-import { makeDecision, finalizeDecision } from 'api';
+import { makeDecision, finalizeDecision } from 'util/api';
 import { StyledSelect } from 'components/SelectField';
 
 const DECISIONS_PER_SECOND = 5;

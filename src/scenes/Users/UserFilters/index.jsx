@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import AddFilterPopup from './AddFilterPopup';
-import { formatCamelCase } from '../registrations';
+import { formatCamelCase } from 'util/registrations';
 import './style.scss';
 
 export default class UserFilters extends React.Component {

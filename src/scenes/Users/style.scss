@@ -31,6 +31,23 @@
         }
       }
 
+      .stats-button {
+        border: 1.5px solid $secondary-color;
+        color: $secondary-color;
+        border-radius: 25px;
+        padding: 5px 10px;
+        margin-left: 15px;
+        font-size: 0.9em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color .2s, color .2s;
+
+        &:hover {
+          background-color: $secondary-color;
+          color: white;
+        }
+      }
+
       .refresh-icon {
         padding: 10px;
         margin-left: 5px;
@@ -92,6 +109,27 @@
         width: 100%;
         background-color: #dddddd;
       }
+    }
+  }
+
+  .stats-popup {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+
+    .stats-content {
+      background-color: white;
+      width: 90vw;
+      height: 90vh;
+      border-radius: 10px;
+      overflow: auto;
     }
   }
 }

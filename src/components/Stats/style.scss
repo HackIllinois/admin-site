@@ -1,0 +1,73 @@
+@import 'constants.scss';
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  .box {
+    box-shadow: 0 1px 5px rgba(27,31,35,0.15);
+    margin: 15px;
+    border-radius: 10px;
+    padding: 15px 25px;
+    box-sizing: border-box;
+
+    .title {
+      font-size: 1.3em;
+      text-align: center;
+      color: #555555;
+      font-weight: 600;
+    }
+  }
+
+  .chart-wrapper {
+    padding: 15px 0;
+    min-width: 300px;
+
+    @include phone {
+      min-width: 240px;
+      max-width: calc(100% - 30px);
+    }
+  }
+
+  .counts {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    white-space: nowrap;
+    min-width: 90%; // we don't want any other charts in the same row (prevents them from stretching excessively)
+    @include phone {
+      white-space: normal;
+    }
+
+    .title {
+      grid-column-end: span 2;
+      margin-bottom: 5px;
+    }
+
+    .text {
+      margin-right: 75px;
+      padding: 15px 0;
+      color: #555555;
+      font-size: 0.9em;
+    }
+
+    .count {
+      font-weight: 600;
+      color: #555555;
+      font-size: 1.2em;
+      color: $primary-color;
+      text-align: right;
+    }
+
+    .separator {
+      grid-column-end: span 2;
+      height: .9px;
+      background-color: #dddddd;
+
+      &:last-child {
+        display: none;
+      }
+    }
+  }
+}

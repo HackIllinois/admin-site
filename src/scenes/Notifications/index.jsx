@@ -13,7 +13,7 @@ import {
   addNotificationTopic,
   removeNotificationTopic,
   getRoles,
-} from 'api';
+} from 'util/api';
 
 const notificationInitialValues = {
   title: '',
