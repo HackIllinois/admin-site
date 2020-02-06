@@ -31,7 +31,7 @@ export default class Users extends React.Component {
       selectedColumnKeys: [],
       columnWidths: {},
       selectedUserIds: [],
-      filters: [], // filters are stored like so [[columnKey1, filterValue1], ...]
+      filters: [],
       showStats: false,
     };
   }

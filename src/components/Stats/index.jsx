@@ -7,16 +7,11 @@ import { formatCamelCase } from 'util/registrations';
 
 const statsColumns = [
   "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
-  "hasDisability", "isAttending", "isOSContributor", "major", "needsBus",
-  "programmingAbility", "programmingYears", "school", "status", "wave"
+  "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
+  "programmingYears", "school", "status", "wave"
 ];
 
-function calculatePercentage(value, data) {
-  const total = Array.from(data.values()).reduce((total, current) => total + current, 0);
-  return `${(value / total * 100).toFixed(2)}%`;
-}
-
-export default function StatsPopup({ registrations }) {
+export default function Stats({ registrations }) {
   const charts = statsColumns.map(columnName => {
     const data = new Map();
     registrations.forEach(registration => {
@@ -38,13 +33,13 @@ export default function StatsPopup({ registrations }) {
         return String(key1).localeCompare(key2);
       }
     }));
+
     return { name: formatCamelCase(columnName), data: sortedData };
   });
 
   // Sort the charts such that charts with fewer categories come first (to avoid certain formatting problems)
   charts.sort((chart1, chart2) => chart1.data.size - chart2.data.size);
 
-  console.log(charts);
   const getChartBox = chart => (
     <div className="chart-wrapper box" key={chart.name} style={{ flex: chart.data.size }}>
       <div className="title">{chart.name}</div>
@@ -57,7 +52,7 @@ export default function StatsPopup({ registrations }) {
             datasets: [{ name: 'Applicants', values: Array.from(chart.data.values()) }],
           }}
           tooltipOptions={{
-            formatTooltipY: value => `${value} (${calculatePercentage(value, chart.data)})`
+            formatTooltipY: value => `${value} (${(value / registrations.length * 100).toFixed(2)}%)`
           }}
         />
     </div>
