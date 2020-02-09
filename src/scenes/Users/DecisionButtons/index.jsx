@@ -82,13 +82,6 @@ export default class DecisionButtons extends React.Component {
         </button>
 
         <button
-          className="reject button"
-          onClick={() => this.makeDecisionForSelected('REJECTED', 0)}
-          disabled={!(anySelected && areSelectedAllUnfinalized)}>
-            Reject
-        </button>
-
-        <button
           className="finalize button"
           onClick={() => this.finalizeSelected()}
           disabled={!(anySelected && areSelectedAllUnfinalized && areSelectedAllDecided)}>
