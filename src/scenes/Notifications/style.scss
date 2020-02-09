@@ -74,31 +74,35 @@
         }
       }
     }
-
-    .topic-change-container {
-      flex: 1;
-      min-width: 225px;
-
-      .title {
-        font-size: 1.25em;
-      }
-    }
   }
 
-  .heading {
-    display: inline-block;
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #444444;
-    margin-left: 20px;
+  .heading-container {
     margin-top: 20px;
+    display: flex;
+    padding: 0 20px;
+    justify-content: space-between;
+    align-items: center;
 
-    .underline {
-      height: 5px;
-      background-color: $secondary-color;
-      width: 100%;
-      margin: 3px auto;
-      border-radius: 10px;
+    .heading {
+      display: inline-block;
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #444444;
+
+      .underline {
+        height: 5px;
+        background-color: $secondary-color;
+        width: 100%;
+        margin: 3px auto;
+        border-radius: 10px;
+      }
+    }
+
+    .refresh {
+      font-size: 1.25em;
+      color: $primary-color;
+      cursor: pointer;
+      margin-right: 10px;
     }
   }
 
