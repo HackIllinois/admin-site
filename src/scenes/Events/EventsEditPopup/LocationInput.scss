@@ -9,9 +9,14 @@
 
     .details {
       @include form-field;
-      width: auto;
+      flex: 2;
+      margin: 0 10px 0 15px;
+      
+    }
+
+    .tags-select {
+      min-width: 100px;
       flex: 1;
-      margin: 0 0 0 15px;
     }
   }
 }
