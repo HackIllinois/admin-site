@@ -13,8 +13,11 @@ export function addDecisionAndRsvp(registerations, decisions, rsvps) {
   });
   
   rsvps.forEach(rsvp => {
-    const { id, isAttending, dietaryRestrictions, hasDisability } = rsvp;
-    map[id] = Object.assign(map[id] || {}, { isAttending, dietaryRestrictions, hasDisability });
+    const { id, isAttending, dietaryRestrictions, hasDisability, shirtSize } = rsvp;
+    map[id] = Object.assign(
+      map[id] || {},
+      { isAttending, dietaryRestrictions, hasDisability, shirtSize }
+    );
   })
 
   // for each registration, create a new registration object with the decision and rsvp columns added

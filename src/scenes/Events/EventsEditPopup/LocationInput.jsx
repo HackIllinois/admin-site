@@ -109,6 +109,7 @@ export default function LocationCheckbox({ field, form }) {
               isMulti={true}
               controlShouldRenderValue={false}
               hideSelectedOptions={false}
+              closeMenuOnSelect={false}
               isClearable={false}
             />
           </div>

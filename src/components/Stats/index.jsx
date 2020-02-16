@@ -8,7 +8,7 @@ import { formatCamelCase } from 'util/registrations';
 const statsColumns = [
   "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
   "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
-  "programmingYears", "school", "status", "wave"
+  "programmingYears", "school", "shirtSize", "status", "wave"
 ];
 
 export default function Stats({ registrations }) {
