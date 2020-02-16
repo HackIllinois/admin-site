@@ -17,10 +17,11 @@
     border: $primary-color 2px solid;
     padding: 10px 20px;
     border-radius: 10px;
-    width: 400px;
+    max-width: 600px;
     max-height: 80%;
     overflow: auto;
     margin: 0 10px;
+    margin-top: -15px;
 
     .title {
       text-align: center;

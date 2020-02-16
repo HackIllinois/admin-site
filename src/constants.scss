@@ -37,7 +37,7 @@ $desktop-min-width: 1024px;
   font-size: 1em;
   font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
   outline: none;
-  border: #dadce0 1px solid;
+  border: hsl(0,0%,80%) 1px solid;
   transition: border-color .1s, border-width .1s, padding .1s;
   box-sizing: border-box;
   border-radius: 5px;
@@ -49,6 +49,11 @@ $desktop-min-width: 1024px;
     border-color: $primary-color;
     border-width: 2px;
     padding: 6px;
+  }
+
+  &:disabled {
+    background-color: hsl(0,0%,95%);
+    border-color: hsl(0,0%,90%);
   }
 }
 
