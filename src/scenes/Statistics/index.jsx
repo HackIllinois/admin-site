@@ -21,6 +21,14 @@ const applicantGroups = [
   ]}
 ]
 
+// numbers from 1-10 (the wave numbers)
+Array(10).fill(0).map((_, i) => i + 1).forEach(num => {
+  applicantGroups.push({
+    label: `Wave ${num}`,
+    value: [ { columnKey: 'wave', value: String(num), multiple: false, exact: true, invert: false } ]
+  });
+})
+
 export default class Statistics extends React.Component {
   constructor(props) {
     super(props);
