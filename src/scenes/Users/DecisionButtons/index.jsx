@@ -1,4 +1,6 @@
 import React from 'react';
+import copy from 'copy-text-to-clipboard';
+
 
 import './style.scss';
 import { makeDecision, finalizeDecision } from 'util/api';
@@ -38,6 +40,26 @@ export default class DecisionButtons extends React.Component {
     ));
   }
 
+  copyAsCsv() {
+    const { selectedUserIds, registrations, columnKeys } = this.props;
+    const selectedRegistrations = registrations
+      .filter(registration => selectedUserIds.includes(registration.id));
+
+    const csv = selectedRegistrations.reduce((str, registration) => {
+      const formattedValues = columnKeys.map(key => registration[key]).map(value => {
+        if (Array.isArray(value)) {
+          return value.join(' ');
+        }
+        return value;
+      })
+      return `${str}\n${formattedValues.join(',')}`
+    }, columnKeys.join(','));
+
+    copy(csv);
+
+    this.props.unselectAll();
+  }
+
   render() {
     const { registrations, selectedUserIds } = this.props;
     const { selectedWave } = this.state;
@@ -65,34 +87,47 @@ export default class DecisionButtons extends React.Component {
           value={{ value: selectedWave, label: `Wave ${selectedWave}` }}
           menuPortalTarget={document.body}
           options={oneThroughTen.map(num => ({ value: num, label: `Wave ${num}`}))}
-          onChange={selected => this.setState({ selectedWave: selected.value })}/>
+          onChange={selected => this.setState({ selectedWave: selected.value })}
+        />
         
         <button
           className="accept button"
           onClick={() => this.makeDecisionForSelected('ACCEPTED', selectedWave)}
-          disabled={!(anySelected && areSelectedAllUnfinalized)}>
-            Accept
+          disabled={!(anySelected && areSelectedAllUnfinalized)}
+        >
+          Accept
         </button>
 
         <button
           className="waitlist button"
           onClick={() => this.makeDecisionForSelected('WAITLISTED', 0)}
-          disabled={!(anySelected && areSelectedAllUnfinalized)}>
-            Waitlist
+          disabled={!(anySelected && areSelectedAllUnfinalized)}
+        >
+          Waitlist
         </button>
 
         <button
           className="finalize button"
           onClick={() => this.finalizeSelected()}
-          disabled={!(anySelected && areSelectedAllUnfinalized && areSelectedAllDecided)}>
-            Finalize
+          disabled={!(anySelected && areSelectedAllUnfinalized && areSelectedAllDecided)}
+        >
+          Finalize
         </button>
 
         <button
           className="unfinalize button"
           onClick={() => this.finalizeSelected(false)}
-          disabled={!(anySelected && areSelectedAllFinalized)}>
+          disabled={!(anySelected && areSelectedAllFinalized)}
+        >
             Unfinalize
+        </button>
+
+        <button
+          className="copy button"
+          onClick={() => this.copyAsCsv()}
+          disabled={!anySelected}
+        >
+          Copy as CSV
         </button>
       </div>
     )

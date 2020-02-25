@@ -234,7 +234,8 @@ export default class Users extends React.Component {
       return <Message>Error fetching data</Message>;
     }
 
-    const { registrations, filters, selectedColumnKeys, columnOptions, selectedUserIds, showStats } = this.state;
+    const { registrations, filters, columnOptions, showStats } = this.state;
+    const { selectedUserIds, selectedColumnKeys, columnKeys } = this.state;
     const filteredRegistrations = filterRegistrations(registrations, filters);
 
     const isAdmin = getRoles().includes('Admin');
@@ -279,6 +280,8 @@ export default class Users extends React.Component {
               selectedUserIds={selectedUserIds}
               onDecision={decisionPromises => this.handleDecision(decisionPromises)}
               unselectUser={userId => this.unselectUser(userId)}
+              columnKeys={columnKeys}
+              unselectAll={() => this.unselectAll()}
             />
           }
           
