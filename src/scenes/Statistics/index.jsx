@@ -4,7 +4,7 @@ import './style.scss';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 import Stats from 'components/Stats';
-import { getStats, getRegistrations, getDecisions, getRsvps } from 'util/api';
+import { getStats, getRegistrations, getDecisions, getRsvps, getEvents, getEventTracker } from 'util/api';
 import { addDecisionAndRsvp, filterRegistrations } from 'util/registrations';
 import { StyledSelect } from 'components/SelectField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,6 +20,9 @@ const applicantGroups = [
     { columnKey: 'isAttending', value: 'true', multiple: false, exact: true, invert: false }
   ]}
 ]
+
+// The event types that we want counts for the number of people that check in
+const countEventTypes = ['MEAL'];
 
 // numbers from 1-10 (the wave numbers)
 Array(10).fill(0).map((_, i) => i + 1).forEach(num => {
@@ -37,6 +40,7 @@ export default class Statistics extends React.Component {
       isLoading: true,
       error: false,
       stats: {},
+      eventCounts: [],
       registrations: [],
       selectedGroup: applicantGroups[0],
       showStats: true, // hack to force rerender
@@ -49,9 +53,26 @@ export default class Statistics extends React.Component {
 
   reload() {
     this.setState({ isLoading: true, error: false });
-    Promise.all([getStats(), getRegistrations(), getDecisions(), getRsvps()])
-      .then(([stats, registrations, decisions, rsvps]) => [stats, addDecisionAndRsvp(registrations, decisions, rsvps)])
-      .then(([stats, registrations]) => this.setState({ stats, registrations, isLoading: false }))
+    Promise.all([getStats(), getEvents(), getRegistrations(), getDecisions(), getRsvps()])
+      .then(([stats, events, ...userData]) => [stats, events, addDecisionAndRsvp(...userData)])
+      .then(([stats, events, registrations]) => {
+        this.setState({ stats, registrations, isLoading: false });
+
+        const eventsToCount = events.filter(event => countEventTypes.includes(event.eventType));
+        const eventIdToNameMap = {}
+        const trackerRequests = eventsToCount.map(event => {
+          eventIdToNameMap[event.id] = event.name;
+          return getEventTracker(event.id);
+        });
+
+        Promise.all(trackerRequests).then(trackers => {
+          const eventCounts = trackers.map(tracker => ({
+            name: eventIdToNameMap[tracker.eventId],
+            count: tracker.users.length,
+          }));
+          this.setState({ eventCounts });
+        });
+      })
       .catch(() => this.setState({ error: true }));
   }
 
@@ -65,7 +86,7 @@ export default class Statistics extends React.Component {
   }
 
   render() {
-    const { stats, registrations, selectedGroup, isLoading, error } = this.state;
+    const { stats, eventCounts, registrations, selectedGroup, isLoading, error } = this.state;
 
     if (isLoading) {
       return <Loading />;
@@ -91,6 +112,15 @@ export default class Statistics extends React.Component {
             <div className="count-box" key={categoryName}>
               <div className="count">{count}</div>
               <div className="category">{categoryName}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="meal-counts">
+          {eventCounts.map(({ name, count }) => (
+            <div className="count-box" key={name}>
+              <div className="count">{count}</div>
+              <div className="category">{name}</div>
             </div>
           ))}
         </div>
