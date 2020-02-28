@@ -76,6 +76,10 @@ export function deleteEvent(eventId) {
   return request('DELETE', `/event/${eventId}/`);
 }
 
+export function getEventTracker(eventId) {
+  return request('GET', `/event/track/event/${eventId}/`);
+}
+
 export function getNotificationTopics() {
   return request('GET', '/notifications/topic/')
     .then(res => res.topics);
