@@ -122,3 +122,8 @@ export function getRsvps() {
   return request('GET', '/rsvp/filter/')
     .then(res => res.rsvps);
 }
+
+export function getCheckins() {
+  return request('GET', '/checkin/list/')
+    .then(res => res.checkedInUsers);
+}

@@ -6,7 +6,7 @@ import { primaryColor } from 'constants.scss';
 import { formatCamelCase } from 'util/registrations';
 
 const statsColumns = [
-  "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
+  "checkedIn","degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
   "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
   "programmingYears", "school", "shirtSize", "status", "wave"
 ];
