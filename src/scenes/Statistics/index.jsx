@@ -61,16 +61,16 @@ export default class Statistics extends React.Component {
       .then(([stats, events, registrations]) => {
         this.setState({ stats, registrations, isLoading: false });
 
-        const eventsToCount = events.filter(event => countEventTypes.includes(event.eventType));
-        const eventIdToNameMap = {}
-        const trackerRequests = eventsToCount.map(event => {
-          eventIdToNameMap[event.id] = event.name;
-          return getEventTracker(event.id);
-        });
+        const eventsToCount = events
+          .filter(event => countEventTypes.includes(event.eventType));
+
+        const trackerRequests = eventsToCount
+          .sort((a, b) => a.startTime - b.startTime)
+          .map(event => getEventTracker(event.id));
 
         Promise.all(trackerRequests).then(trackers => {
           const eventCounts = trackers.map(tracker => ({
-            name: eventIdToNameMap[tracker.eventId],
+            name: eventsToCount.find(event => event.id === tracker.eventId).name,
             count: tracker.users.length,
           }));
           this.setState({ eventCounts });
