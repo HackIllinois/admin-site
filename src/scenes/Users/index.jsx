@@ -9,8 +9,8 @@ import Loading from 'components/Loading';
 import Message from 'components/Message';
 import Stats from 'components/Stats';
 import { StyledSelect } from 'components/SelectField';
-import { getRegistrations, getDecisions, getRoles, getRsvps } from 'util/api';
-import { formatCamelCase, filterRegistrations, getColumnKeys, addDecisionAndRsvp, formatRegistrationValue } from 'util/registrations';
+import { getRegistrations, getDecisions, getRoles, getRsvps, getCheckins } from 'util/api';
+import { formatCamelCase, filterRegistrations, getColumnKeys, addOtherData, formatRegistrationValue } from 'util/registrations';
 import { secondaryColor, secondaryColorLight } from 'constants.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
@@ -41,8 +41,8 @@ export default class Users extends React.Component {
   }
 
   reloadData() {
-    Promise.all([getRegistrations(), getDecisions(), getRsvps()])
-      .then(([registrations, decisions, rsvps]) => addDecisionAndRsvp(registrations, decisions, rsvps))
+    Promise.all([getRegistrations(), getDecisions(), getRsvps(), getCheckins()])
+      .then(([...registrationData]) => addOtherData(...registrationData))
       .then(registrations => {
         if (registrations.length > 0) {
           const columnKeys = getColumnKeys(registrations);
@@ -145,9 +145,9 @@ export default class Users extends React.Component {
   }
 
   updateDecisions() {
-    Promise.all([getDecisions(), getRsvps()]).then(([decisions, rsvps]) => {
+    Promise.all([getDecisions(), getRsvps(), getCheckins()]).then(([decisions, rsvps, checkins]) => {
       this.setState(prevState => (
-        { registrations: addDecisionAndRsvp(prevState.registrations, decisions, rsvps) }
+        { registrations: addOtherData(prevState.registrations, decisions, rsvps, checkins) }
       ));
     });
   }

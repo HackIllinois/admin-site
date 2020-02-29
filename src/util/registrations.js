@@ -4,7 +4,7 @@ export function formatCamelCase(camelCase) {
   return (captialFirstWord + ' ' + remainingWords.join(' ')).trim();
 }
 
-export function addDecisionAndRsvp(registerations, decisions, rsvps) {
+export function addOtherData(registerations, decisions, rsvps, checkins) {
   // create a map ({userId: { ... }]}) to avoid looping through the potentially huge arrays
   const map = {};
   decisions.forEach(decision => {
@@ -18,11 +18,13 @@ export function addDecisionAndRsvp(registerations, decisions, rsvps) {
       map[id] || {},
       { isAttending, dietaryRestrictions, hasDisability, shirtSize }
     );
-  })
+  });
 
   // for each registration, create a new registration object with the decision and rsvp columns added
   return registerations.map(registeration => {
-    return Object.assign({}, registeration, map[registeration.id]);
+    return Object.assign({}, registeration, map[registeration.id], {
+      checkedIn: checkins.includes(registeration.id)
+    });
   });
 }
 
@@ -35,7 +37,7 @@ export function formatRegistrationValue(value) {
 
 // the api returns the registrations with the keys in alphabetical order
 // so we order the keys with certain keys coming first to improve readability of table
-const orderedKeys = ['id', 'status', 'wave', 'finalized', 'isAttending', 'firstName', 'lastName'];
+const orderedKeys = ['id', 'status', 'wave', 'finalized', 'isAttending', 'checkedIn', 'firstName', 'lastName'];
 export function getColumnKeys(registrations) {
   // we add all the keys not present in KEY_ORDER to the end (since we don't care about where they go)
   registrations.forEach(registration => {

@@ -4,21 +4,24 @@ import './style.scss';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 import Stats from 'components/Stats';
-import { getStats, getRegistrations, getDecisions, getRsvps, getEvents, getEventTracker } from 'util/api';
-import { addDecisionAndRsvp, filterRegistrations } from 'util/registrations';
+import { getStats, getRegistrations, getDecisions, getRsvps, getEvents, getEventTracker, getCheckins } from 'util/api';
+import { addOtherData, filterRegistrations } from 'util/registrations';
 import { StyledSelect } from 'components/SelectField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 // The 'value' specifies the filters to apply to select the given group
 const applicantGroups = [
-  { label: 'All Applicants', value: [] },
-  { label: 'Accepted', value: [
-    { columnKey: 'status', value: 'ACCEPTED', multiple: false, exact: true, invert: false }
+  { label: 'Checked In', value: [
+    { columnKey: 'checkedIn', value: 'true', multiple: false, exact: true, invert: false }
   ]},
   { label: 'Attending', value: [
     { columnKey: 'isAttending', value: 'true', multiple: false, exact: true, invert: false }
-  ]}
+  ]},
+  { label: 'Accepted', value: [
+    { columnKey: 'status', value: 'ACCEPTED', multiple: false, exact: true, invert: false }
+  ]},
+  { label: 'All Applicants', value: [] },
 ]
 
 // The event types that we want counts for the number of people that check in
@@ -53,8 +56,8 @@ export default class Statistics extends React.Component {
 
   reload() {
     this.setState({ isLoading: true, error: false });
-    Promise.all([getStats(), getEvents(), getRegistrations(), getDecisions(), getRsvps()])
-      .then(([stats, events, ...userData]) => [stats, events, addDecisionAndRsvp(...userData)])
+    Promise.all([getStats(), getEvents(), getRegistrations(), getDecisions(), getRsvps(), getCheckins()])
+      .then(([stats, events, ...userData]) => [stats, events, addOtherData(...userData)])
       .then(([stats, events, registrations]) => {
         this.setState({ stats, registrations, isLoading: false });
 
