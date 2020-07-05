@@ -7,12 +7,12 @@ export function formatCamelCase(camelCase) {
 export function addOtherData(registerations, decisions, rsvps, checkins) {
   // create a map ({userId: { ... }]}) to avoid looping through the potentially huge arrays
   const map = {};
-  decisions.forEach(decision => {
+  (decisions || []).forEach(decision => {
     const { id, status, wave, finalized } = decision;
     map[id] = {status, wave, finalized};
   });
   
-  rsvps.forEach(rsvp => {
+  (rsvps || []).forEach(rsvp => {
     const { id, isAttending, dietaryRestrictions, hasDisability, shirtSize } = rsvp;
     map[id] = Object.assign(
       map[id] || {},
@@ -21,9 +21,9 @@ export function addOtherData(registerations, decisions, rsvps, checkins) {
   });
 
   // for each registration, create a new registration object with the decision and rsvp columns added
-  return registerations.map(registeration => {
+  return (registerations || []).map(registeration => {
     return Object.assign({}, registeration, map[registeration.id], {
-      checkedIn: checkins.includes(registeration.id)
+      checkedIn: (checkins || []).includes(registeration.id)
     });
   });
 }
