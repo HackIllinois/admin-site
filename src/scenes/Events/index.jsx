@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './style.scss';
-import EventEditPopup from './EventsEditPopup';
+import EventEditPopup from './EventEditPopup';
 import Loading from 'components/Loading';
 import Message from 'components/Message';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -106,8 +106,12 @@ export default class Events extends React.Component {
 
                       <div className="event-details">
                         <div className="description">{event.description}</div>
-                        <div className="locations">
+                        {/* Removing this for now since virtual events don't have locations */}
+                        {/* <div className="locations">
                           {(event.locations || []).map(location => location.description).join(', ')}
+                        </div> */}
+                        <div class="event-type">
+                          {event.eventType} {/* TODO: remove (temporary) */}
                         </div>
                       </div>
                   </div>

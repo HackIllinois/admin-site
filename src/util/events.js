@@ -3,7 +3,7 @@
   {
     date: Date(),
     dayOfWeek: "Friday",
-    date: "February 28",
+    dateString: "February 28",
     events: [ ... ] // all the event objects occuring on this day
   },
   ...

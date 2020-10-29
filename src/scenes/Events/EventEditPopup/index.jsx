@@ -54,8 +54,10 @@ export default class EventEditPopup extends React.Component {
 
   render() {
     return (
-      <div className="event-edit-popup" onClick={() => this.props.onDismiss()}>
-        <div className="popup-container" onClick={e => e.stopPropagation()}>
+      <div className="event-edit-popup">
+        <div className="popup-background" onClick={() => this.props.onDismiss()}/>
+
+        <div className="popup-container">
           <div className="title">{this.isNewEvent() ? 'Add Event' : 'Edit Event'}</div>
           <Formik initialValues={this.state.eventValues} onSubmit={values => this.submit(values)}>
             {() => (

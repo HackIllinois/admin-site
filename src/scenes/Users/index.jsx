@@ -266,7 +266,6 @@ export default class Users extends React.Component {
 
             <FontAwesomeIcon className="refresh-icon" icon={faSync} onClick={() => this.refresh()}/>
           </div>
-          
 
           <UserFilters
             filters={filters}
