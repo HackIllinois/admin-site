@@ -4,28 +4,34 @@ export function formatCamelCase(camelCase) {
   return (captialFirstWord + ' ' + remainingWords.join(' ')).trim();
 }
 
-export function addOtherData(registerations, decisions, rsvps, checkins) {
-  // create a map ({userId: { ... }]}) to avoid looping through the potentially huge arrays
+// combines registration, decision, rsvp, and checkin data into one object
+export function addOtherData(registrations, decisions, rsvps, checkins) {
+  // create a map: { [userId]: { ... } } to avoid looping through the potentially huge arrays later
   const map = {};
-  (decisions || []).forEach(decision => {
-    const { id, status, wave, finalized } = decision;
-    map[id] = {status, wave, finalized};
-  });
+  registrations.forEach(({ id }) => map[id] = {});
   
-  (rsvps || []).forEach(rsvp => {
-    const { id, isAttending, dietaryRestrictions, hasDisability, shirtSize } = rsvp;
-    map[id] = Object.assign(
-      map[id] || {},
-      { isAttending, dietaryRestrictions, hasDisability, shirtSize }
-    );
-  });
-
-  // for each registration, create a new registration object with the decision and rsvp columns added
-  return (registerations || []).map(registeration => {
-    return Object.assign({}, registeration, map[registeration.id], {
-      checkedIn: (checkins || []).includes(registeration.id)
+  if (decisions) {
+    decisions.forEach(decision => {
+      const { id, status, wave, finalized } = decision;
+      map[id] = { ...map[id], status, wave, finalized };
     });
-  });
+  }
+  
+  if (rsvps) {
+    rsvps.forEach(rsvp => {
+      const { id, isAttending, dietaryRestrictions, hasDisability, shirtSize } = rsvp;
+      map[id] = { ...map[id], isAttending, dietaryRestrictions, hasDisability, shirtSize };
+    });
+  }
+
+  if (checkins) {
+    checkins.forEach(userId => {
+      map[userId] = { ...map[userId], checkedIn: true };
+    });
+  }
+
+  // for each registration, create a new registration object with the decision, rsvp, and checkin columns added
+  return (registrations || []).map(registration => ({ ...registration, ...map[registration.id] }));
 }
 
 export function formatRegistrationValue(value) {

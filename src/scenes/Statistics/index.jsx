@@ -12,28 +12,28 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 // The 'value' specifies the filters to apply to select the given group
 const applicantGroups = [
-  { label: 'Checked In', value: [
-    { columnKey: 'checkedIn', value: 'true', multiple: false, exact: true, invert: false }
+  { label: 'All Applicants', value: [] },
+  { label: 'Accepted', value: [
+    { columnKey: 'status', value: 'ACCEPTED', multiple: false, exact: true, invert: false }
   ]},
   { label: 'Attending', value: [
     { columnKey: 'isAttending', value: 'true', multiple: false, exact: true, invert: false }
   ]},
-  { label: 'Accepted', value: [
-    { columnKey: 'status', value: 'ACCEPTED', multiple: false, exact: true, invert: false }
+  { label: 'Checked In', value: [
+    { columnKey: 'checkedIn', value: 'true', multiple: false, exact: true, invert: false }
   ]},
-  { label: 'All Applicants', value: [] },
-]
-
-// The event types that we want counts for the number of people that check in
-const countEventTypes = ['MEAL'];
+];
 
 // numbers from 1-10 (the wave numbers)
 Array(10).fill(0).map((_, i) => i + 1).forEach(num => {
   applicantGroups.push({
     label: `Wave ${num}`,
-    value: [ { columnKey: 'wave', value: String(num), multiple: false, exact: true, invert: false } ]
+    value: [{ columnKey: 'wave', value: String(num), multiple: false, exact: true, invert: false }]
   });
 })
+
+// The event types that we want counts for the number of people that check in
+const countEventTypes = ['MEAL'];
 
 export default class Statistics extends React.Component {
   constructor(props) {

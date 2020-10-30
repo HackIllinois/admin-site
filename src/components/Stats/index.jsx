@@ -5,10 +5,11 @@ import './style.scss';
 import { primaryColor } from 'constants.scss';
 import { formatCamelCase } from 'util/registrations';
 
+// TODO: the following keys are currently hardcoded (may have been for formatting purposes), fix
 const statsColumns = [
-  "checkedIn","degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
+  "checkedIn", "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
   "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
-  "programmingYears", "school", "shirtSize", "status", "wave"
+  "programmingYears", "school", "shirtSize", "status", "wave",
 ];
 
 export default function Stats({ registrations }) {
