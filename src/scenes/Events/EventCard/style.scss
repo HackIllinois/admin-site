@@ -1,0 +1,63 @@
+@import 'constants.scss';
+
+.event-card {
+  border: $primary-color 1.5px solid;
+  border-radius: 7px;
+  margin: 20px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+
+  &.clickable {
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  .add-event-icon {
+    align-self: center;
+    color: $primary-color;
+  }
+  
+  .event-header {
+    display: flex;
+    width: 100%;
+    font-weight: bold;
+    align-items: center;
+
+    .event-name {
+      flex: 1;
+      color: #444444;
+      font-size: 1.2em;
+      margin-right: 5px;
+    }
+
+    .event-time {
+      font-size: .85em;
+      color: $primary-color;
+
+      .day-difference {
+        position: relative;
+        top: -3px;
+        font-size: .8em;
+      }
+    }
+  }
+
+  .event-details {
+    .description {
+      margin-top: 5px;
+      font-size: .9em;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .locations, .event-type {
+      margin-top: 7px;
+      font-size: .85em;
+      color: $secondary-color;
+      font-weight: bold;
+    }
+  }
+}

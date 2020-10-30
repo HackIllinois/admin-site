@@ -5,7 +5,7 @@ import './style.scss';
 import { primaryColor } from 'constants.scss';
 import { formatCamelCase } from 'util/registrations';
 
-// TODO: the following keys are currently hardcoded (may have been for formatting purposes), fix
+// TODO: the following keys are currently hardcoded, fix
 const statsColumns = [
   "checkedIn", "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
   "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
