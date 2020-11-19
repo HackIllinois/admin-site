@@ -9,18 +9,22 @@ import { formatCamelCase } from 'util/registrations';
 const statsColumns = [
   "checkedIn", "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
   "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
-  "programmingYears", "school", "shirtSize", "status", "wave",
+  "programmingYears", "race", "school", "shirtSize", "status", "wave",
 ];
 
 export default function Stats({ registrations }) {
   const charts = statsColumns.map(columnName => {
     const data = new Map();
     registrations.forEach(registration => {
-      const value = registration[columnName];
+      let value = registration[columnName];
+      if (Array.isArray(value)) {
+        value = value.sort().join(', ');
+      }
+
       if (data.has(value)) {
-        data.set(registration[columnName], data.get(registration[columnName]) + 1);
+        data.set(value, data.get(value) + 1);
       } else {
-        data.set(registration[columnName], 1);
+        data.set(value, 1);
       }
     });
 
