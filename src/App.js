@@ -11,6 +11,7 @@ import Users from './scenes/Users';
 import Events from './scenes/Events';
 import Notifications from './scenes/Notifications';
 import Statistics from 'scenes/Statistics';
+import Token from 'scenes/Token';
 
 const routes = [
   { path: '/', name: "Statistics", icon: faCalculator },
@@ -80,6 +81,10 @@ class App extends React.Component {
   
             <PrivateRoute path="/notifications">
               <Notifications/>
+            </PrivateRoute>
+
+            <PrivateRoute path="/token">
+              <Token />
             </PrivateRoute>
           </Switch>
         </BrowserRouter>

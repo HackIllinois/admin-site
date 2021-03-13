@@ -1,0 +1,15 @@
+.token-page {
+  flex: 1;
+  overflow: hidden;
+  word-break: break-all;
+  padding-top: 70px;
+
+  .token-text {
+    margin: auto;
+    width: 90%;
+    border: thin solid gray;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+  }
+}

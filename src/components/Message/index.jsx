@@ -1,10 +1,11 @@
+import clsx from 'clsx';
 import React from 'react';
 import './style.scss';
 
-export default function Message(props) {
+export default function Message({ children, className, ...props}) {
   return (
-    <div className="message">
-      {props.children}
+    <div className={clsx('message', className)}>
+      {children}
     </div>
   );
 }

@@ -10,7 +10,7 @@ import EventCard from './EventCard';
 
 // When adding a new event, most of the field values default to empty strings, but we need
 // to make sure that the start and end times are on the day which the add button was pressed on
-function createBlankEventOnDate(date) {
+function createBlankEventOnDate(date = new Date()) {
   const secondsUntilNoon = 12 * 60 * 60;
   const time = Math.floor(date.getTime() / 1000) + secondsUntilNoon;
   return { startTime: time, endTime: time };
@@ -60,6 +60,18 @@ export default class Events extends React.Component {
             onUpdateEvent={() => this.reloadEvents()}
           />
         }
+
+        {/* If there are no days, we still want to offer the ability to add events for admins */}
+        {days.length === 0 && isAdmin && (
+          <div className="day">
+            <div className="day-of-week">No Events Found</div>
+            <EventCard
+              isAddButton
+              onClick={() => this.setState({ editingEvent: createBlankEventOnDate() })}
+              style={{ minWidth: 200 }}
+            />
+          </div>
+        )}
 
         {days.map(day => (
           <div className="day" key={day.date}>
