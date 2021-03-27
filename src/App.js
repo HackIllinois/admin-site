@@ -67,23 +67,23 @@ class App extends React.Component {
           <Switch>
             <Route path="/auth" component={Auth}></Route>
             
-            <AuthenticatedRoute path="/" exact isPrivate>
+            <AuthenticatedRoute path="/" exact>
               <Statistics/>
             </AuthenticatedRoute>
             
-            <AuthenticatedRoute path="/users" isPrivate>
+            <AuthenticatedRoute path="/users">
               <Users/>
             </AuthenticatedRoute>
   
-            <AuthenticatedRoute path="/events" isPrivate>
+            <AuthenticatedRoute path="/events">
               <Events/>
             </AuthenticatedRoute>
   
-            <AuthenticatedRoute path="/notifications" isPrivate>
+            <AuthenticatedRoute path="/notifications">
               <Notifications/>
             </AuthenticatedRoute>
 
-            <AuthenticatedRoute path="/token">
+            <AuthenticatedRoute path="/token" provider="github">
               <Token />
             </AuthenticatedRoute>
           </Switch>

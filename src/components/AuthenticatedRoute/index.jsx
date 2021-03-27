@@ -2,13 +2,15 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { isAuthenticated, authenticate, getRoles } from 'util/api';
 
-const AuthenticatedRoute = ({ path, isPrivate = false, ...props }) => {
-  if (!isAuthenticated()) {
-    authenticate(path, isPrivate ? 'google' : 'github');
+const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
+  // make sure user is authenticated, and that their authentication provider matches the desired one
+  if (!isAuthenticated() || (!sessionStorage.token.id.startsWith(provider))) {
+    authenticate(path, provider);
     return <div>Loading</div>;
   }
 
-  if (isPrivate) {
+  // indicates that the route is private (only for Staff and Admin)
+  if (provider === 'google') {
     const roles = getRoles();
     if (roles.includes('Staff') || roles.includes('Admin')) {
       return <Route path={path} {...props}/>
@@ -18,6 +20,7 @@ const AuthenticatedRoute = ({ path, isPrivate = false, ...props }) => {
     }
   }
 
+  // otherwise provider is github, indicating that the route is open to all
   return <Route path={path} {...props} />;
 };
 
