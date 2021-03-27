@@ -21,19 +21,21 @@ export function isAuthenticated() {
 }
 
 export function authenticate(to, provider = 'google') {
+  // if we're developing locally, REACT_APP_TOKEN should be set and we can skip the authentication workflow
   if (process.env.REACT_APP_TOKEN) {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
+    window.location.replace(to); // since there's no authentication necessary, we can go directly to `to`
   } else {
-    localStorage.setItem('to', to);
-    to = `${window.location.origin}/auth/`;
-    to = `${API}/auth/${provider}/?redirect_uri=${to}`;
+    // `to` and `provider` are specified as query parameters so that they can be used in the Auth component 
+    const redirectURI = `${window.location.origin}/auth/?to=${to}&provider=${provider}`; // provider is given as an 
+    const authURL = `${API}/auth/${provider}/?redirect_uri=${redirectURI}`;
+    window.location.replace(authURL);
   }
-  window.location.replace(to);
 }
 
-export function getToken(code) {
+export function getToken(code, provider = 'google') {
   const redirectUri = `${window.location.origin}/auth/`;
-  return request('POST', `/auth/code/google/?redirect_uri=${redirectUri}`, { code })
+  return request('POST', `/auth/code/${provider}/?redirect_uri=${redirectUri}`, { code })
     .then(res => res.token);
 }
 
