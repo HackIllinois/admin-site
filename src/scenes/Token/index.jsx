@@ -12,6 +12,7 @@ const selectTextInElement = el => {
 
 const Token = () => (
   <div className="token-page">
+    <h1>Copy Me!</h1>
     <p className="token-text" onClick={(e) => selectTextInElement(e.target)}>
       {sessionStorage.token}
     </p>

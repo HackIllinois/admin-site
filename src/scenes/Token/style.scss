@@ -1,15 +1,20 @@
 .token-page {
   flex: 1;
+  text-align: center;
   overflow: hidden;
-  word-break: break-all;
-  padding-top: 70px;
+
+  h1 {
+    font-weight: 600;
+    margin-top: 65px;
+  }
 
   .token-text {
-    margin: auto;
-    width: 90%;
-    border: thin solid gray;
-    border-radius: 10px;
-    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 8px;
+    width: 50%;
+    word-wrap: break-word;
     cursor: pointer;
   }
 }
