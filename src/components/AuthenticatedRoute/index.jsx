@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { isAuthenticated, authenticate, getRoles } from 'util/api';
+import { isAuthenticated, authenticate, getRoles, getUserId } from 'util/api';
 
 const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
   // make sure user is authenticated, and that their authentication provider matches the desired one
-  if (!isAuthenticated() || (!sessionStorage.token.id.startsWith(provider))) {
+  if (!isAuthenticated() || (!getUserId().startsWith(provider))) {
     authenticate(path, provider);
     return <div>Loading</div>;
   }

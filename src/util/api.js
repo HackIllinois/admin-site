@@ -37,13 +37,22 @@ export function getToken(code) {
     .then(res => res.token);
 }
 
-export function getRoles() {
+export function getTokenData() {
   const token = sessionStorage.getItem('token');
   if (token) {
-    const tokenData = JSON.parse(atob(token.split('.')[1]));
-    return tokenData.roles;
+    return JSON.parse(atob(token.split('.')[1]));
   }
-  return [];
+  return null;
+}
+
+export function getRoles() {
+  const tokenData = getTokenData();
+  return tokenData ? tokenData.roles : [];
+}
+
+export function getUserId() {
+  const tokenData = getTokenData();
+  return tokenData ? tokenData.id : '';
 }
 
 export function getDecisions() {
