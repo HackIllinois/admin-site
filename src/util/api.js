@@ -20,13 +20,13 @@ export function isAuthenticated() {
   return sessionStorage.getItem('token');
 }
 
-export function authenticate(to) {
+export function authenticate(to, provider = 'google') {
   if (process.env.REACT_APP_TOKEN) {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
   } else {
     localStorage.setItem('to', to);
     to = `${window.location.origin}/auth/`;
-    to = `${API}/auth/google/?redirect_uri=${to}`;
+    to = `${API}/auth/${provider}/?redirect_uri=${to}`;
   }
   window.location.replace(to);
 }

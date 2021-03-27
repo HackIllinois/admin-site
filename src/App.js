@@ -5,7 +5,7 @@ import { faUsers, faBell, faCalendar, faBars, faCalculator } from '@fortawesome/
 
 import './App.scss';
 import logo from './assets/logo.svg';
-import PrivateRoute from './components/PrivateRoute';
+import AuthenticatedRoute from 'components/AuthenticatedRoute';
 import Auth from './components/Auth';
 import Users from './scenes/Users';
 import Events from './scenes/Events';
@@ -18,7 +18,7 @@ const routes = [
   { path: '/users', name: "Users", icon: faUsers },
   { path: '/notifications', name: "Notifications", icon: faBell },
   { path: '/events', name: "Events", icon: faCalendar },
-]
+];
 
 class App extends React.Component {
   constructor(props) {
@@ -67,25 +67,25 @@ class App extends React.Component {
           <Switch>
             <Route path="/auth" component={Auth}></Route>
             
-            <PrivateRoute exact path="/">
+            <AuthenticatedRoute path="/" exact isPrivate>
               <Statistics/>
-            </PrivateRoute>
+            </AuthenticatedRoute>
             
-            <PrivateRoute path="/users">
+            <AuthenticatedRoute path="/users" isPrivate>
               <Users/>
-            </PrivateRoute>
+            </AuthenticatedRoute>
   
-            <PrivateRoute path="/events">
+            <AuthenticatedRoute path="/events" isPrivate>
               <Events/>
-            </PrivateRoute>
+            </AuthenticatedRoute>
   
-            <PrivateRoute path="/notifications">
+            <AuthenticatedRoute path="/notifications" isPrivate>
               <Notifications/>
-            </PrivateRoute>
+            </AuthenticatedRoute>
 
-            <PrivateRoute path="/token">
+            <AuthenticatedRoute path="/token">
               <Token />
-            </PrivateRoute>
+            </AuthenticatedRoute>
           </Switch>
         </BrowserRouter>
       </div>
