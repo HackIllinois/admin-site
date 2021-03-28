@@ -27,7 +27,7 @@ export function authenticate(to, provider = 'google') {
     window.location.replace(to); // since there's no authentication necessary, we can go directly to `to`
   } else {
     // `to` and `provider` are specified as query parameters so that they can be used in the Auth component 
-    const redirectURI = `${window.location.origin}/auth/?to=${to}&provider=${provider}`; // provider is given as an 
+    const redirectURI = `${window.location.origin}/auth/?provider=${provider}&to=${to}`;
     const authURL = `${API}/auth/${provider}/?redirect_uri=${redirectURI}`;
     window.location.replace(authURL);
   }
