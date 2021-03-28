@@ -26,10 +26,12 @@ export function authenticate(to, provider = 'google') {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
     window.location.replace(to); // since there's no authentication necessary, we can go directly to `to`
   } else {
-    // `provider` is saved in localStorage so that it can be used in the Auth component later
+    // `to` and `provider` are saved in localStorage so that they can be used in the Auth component later
+    // (note: for github, we can add them to the redirect_uri as query parameters, but google doesn't support that it seems)
+    localStorage.setItem('to', to);
     localStorage.setItem('provider', provider);
 
-    const redirectURI = `${window.location.origin}/auth/?to=${to}`;
+    const redirectURI = `${window.location.origin}/auth/`;
     const authURL = `${API}/auth/${provider}/?redirect_uri=${redirectURI}`;
     window.location.replace(authURL);
   }
