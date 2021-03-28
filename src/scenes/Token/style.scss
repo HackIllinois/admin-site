@@ -9,12 +9,12 @@
   }
 
   .token-text {
-    border: 1px solid black;
+    border: 1px solid #555;
     border-radius: 5px;
     display: inline-block;
-    padding: 8px;
+    padding: 8px 10px;
     width: 50%;
     word-wrap: break-word;
-    cursor: pointer;
+    cursor: default;
   }
 }
