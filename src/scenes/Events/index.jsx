@@ -74,7 +74,7 @@ export default class Events extends React.Component {
         )}
 
         {days.map(day => (
-          <div className="day" key={day.date}>
+          <div className="day" key={day.date.toString()}>
             <div className="day-of-week">{day.dayOfWeek}</div>
             <div className="date">{day.dateString}</div>
             <div className="underline"/>
@@ -85,6 +85,7 @@ export default class Events extends React.Component {
                     event={event}
                     canEdit={isAdmin}
                     onClick={() => this.setState({ editingEvent: event })}
+                    key={event.id}
                   />
                 ))
               }

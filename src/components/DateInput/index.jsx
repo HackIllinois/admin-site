@@ -1,10 +1,10 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-
-import './DateInput.scss';
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function TimeInput({ field, form, ...props }) {
+import './style.scss';
+
+const DateInput = ({ field, form, ...props }) => {
   const date = new Date(Number(field.value) * 1000);
 
   const handleDateSelect = date => {
@@ -23,4 +23,6 @@ export default function TimeInput({ field, form, ...props }) {
         dateFormat="MMM dd, yyyy 'at' h:mm aa"/>
     </div>
   )
-}
+};
+
+export default DateInput;
