@@ -1,8 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faKey } from '@fortawesome/free-solid-svg-icons';
 
+import FormPopup from 'components/FormPopup';
+import EventCodeForm from '../EventCodeForm';
 import './style.scss';
 
 const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
@@ -28,40 +30,50 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
 
   if (isAddButton) {
     return (
-      <div className={clsx('event-card', 'add-button', 'clickable')} onClick={onClick}>
-        <FontAwesomeIcon className="add-event-icon" icon={faPlus} />
+      <div className="event-card-container">
+        <div className={clsx('event-card', 'add-button', 'clickable')} onClick={onClick}>
+          <FontAwesomeIcon className="add-event-icon" icon={faPlus} />
+        </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div
-      className={clsx('event-card', canEdit && 'clickable')}
-      onClick={e => canEdit && onClick(e)}
-    >
-      <div className="event-header">
-        <div className="event-name">{event.name}</div>
-        <div className="event-time">
-          <div className="start">{formatTime(event.startTime)}</div>
-          <div className="end">
-            {formatTime(event.endTime)}
-            <span className="day-difference">{calculateDayDifference(event)}</span>
+    <div className="event-card-container">
+      <div
+        className={clsx('event-card', canEdit && 'clickable')}
+        onClick={e => canEdit && onClick(e)}
+      >
+        <div className="event-header">
+          <div className="event-name">{event.name}</div>
+          <div className="event-time">
+            <div className="start">{formatTime(event.startTime)}</div>
+            <div className="end">
+              {formatTime(event.endTime)}
+              <span className="day-difference">{calculateDayDifference(event)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="event-details">
+          <div className="description" dangerouslySetInnerHTML={{ __html: processDescription(event.description) }} />
+
+          {/* Removing the following for now since virtual events don't have locations */}
+          {/* <div className="locations">
+            {(event.locations || []).map(location => location.description).join(', ')}
+          </div> */}
+
+          <div className="event-type">
+            {event.eventType}
           </div>
         </div>
       </div>
 
-      <div className="event-details">
-        <div className="description" dangerouslySetInnerHTML={{ __html: processDescription(event.description) }} />
-
-        {/* Removing the following for now since virtual events don't have locations */}
-        {/* <div className="locations">
-          {(event.locations || []).map(location => location.description).join(', ')}
-        </div> */}
-
-        <div class="event-type">
-          {event.eventType}
-        </div>
-      </div>
+      <button className="event-code-button">
+        <FormPopup form={EventCodeForm} event={event}>
+          <FontAwesomeIcon icon={faKey} fixedWidth />
+        </FormPopup>
+      </button>
     </div>
   )
 };

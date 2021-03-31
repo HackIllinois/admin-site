@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 
 import { addEvent, updateEvent, deleteEvent } from 'util/api';
 import LocationInput from './LocationInput';
-import DateInput from './DateInput';
+import DateInput from 'components/DateInput';
 import SelectField from 'components/SelectField';
 import './style.scss';
 
@@ -39,6 +39,7 @@ export default class EventEditPopup extends React.Component {
   }
 
   delete() {
+    // TODO: maybe add a confirmation before deleting
     if (this.props.event.id) {
       deleteEvent(this.props.event.id).then(() => {
         this.props.onUpdateEvent();

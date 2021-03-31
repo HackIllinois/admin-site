@@ -142,3 +142,11 @@ export function getCheckins() {
   return request('GET', '/checkin/list/')
     .then(res => res.checkedInUsers);
 }
+
+export function getEventCode(eventId) {
+  return request('GET', `/event/code/${eventId}/`);
+}
+
+export function setEventCode(eventId, code, expiration) {
+  return request('PUT', `/event/code/${eventId}/`, { id: eventId, code, expiration });
+}
