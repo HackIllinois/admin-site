@@ -22,10 +22,11 @@ export default class EventEditPopup extends React.Component {
       locations = [],
       sponsor = '',
       eventType = '',
+      points = 0,
     } = props.event;
 
     this.state = {
-      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType }
+      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points }
     }
   }
 
@@ -76,6 +77,9 @@ export default class EventEditPopup extends React.Component {
                   options={possibleEventTypes.map(eventType => ({ label: eventType, value: eventType }))}
                   placeholder="Type"
                 />
+
+                {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
+                <Field className="form-field" name="points" placeholder="Points" type="number" />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&
