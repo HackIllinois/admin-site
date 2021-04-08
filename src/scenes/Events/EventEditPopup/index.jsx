@@ -7,7 +7,7 @@ import DateInput from 'components/DateInput';
 import SelectField from 'components/SelectField';
 import './style.scss';
 
-const possibleEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'OTHER'];
+const possibleEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'QNA', 'OTHER'];
 
 export default class EventEditPopup extends React.Component {
   constructor(props) {

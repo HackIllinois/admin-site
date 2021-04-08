@@ -50,7 +50,7 @@ export default class Events extends React.Component {
       return <Message>Error fetching data</Message>;
     }
 
-    const isAdmin = getRoles().includes('Admin');
+    const isAdmin = getRoles().includes('Admin'); // TODO: replace every instance of `isAdmin || true` with just `isAdmin` || `true` depending on what we decide
     return (
       <div className="events-page">
         {editingEvent &&
@@ -62,7 +62,7 @@ export default class Events extends React.Component {
         }
 
         {/* If there are no days, we still want to offer the ability to add events for admins */}
-        {days.length === 0 && isAdmin && (
+        {days.length === 0 && (isAdmin || true) && (
           <div className="day">
             <div className="day-of-week">No Events Found</div>
             <EventCard
@@ -83,14 +83,14 @@ export default class Events extends React.Component {
                 day.events.map(event => (
                   <EventCard
                     event={event}
-                    canEdit={isAdmin}
+                    canEdit={(isAdmin || true)}
                     onClick={() => this.setState({ editingEvent: event })}
                     key={event.id}
                   />
                 ))
               }
 
-              {isAdmin &&
+              {(isAdmin || true) &&
                 <EventCard
                   isAddButton
                   onClick={() => this.setState({ editingEvent: createBlankEventOnDate(day.date) })}
