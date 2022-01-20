@@ -125,7 +125,7 @@ export function sendNotification(notification, topic) {
 }
 
 export function getRegistrations() {
-  return request('GET', '/registration/attendee/filter/')
+  return request('GET', '/registration/attendee/list/')
     .then(res => res.registrations);
 }
 
