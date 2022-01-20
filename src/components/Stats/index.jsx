@@ -2,8 +2,10 @@ import React from 'react';
 import Chart from "react-frappe-charts";
 
 import './style.scss';
-import { primaryColor } from 'constants.scss';
+import COLORS from 'constants.scss';
 import { formatCamelCase } from 'util/registrations';
+
+const { primaryColor } = COLORS;
 
 // TODO: the following keys are currently hardcoded, fix
 const statsColumns = [

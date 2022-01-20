@@ -11,13 +11,14 @@ import Stats from 'components/Stats';
 import { StyledSelect } from 'components/SelectField';
 import { getRegistrations, getDecisions, getRoles, getRsvps, getCheckins } from 'util/api';
 import { formatCamelCase, filterRegistrations, getColumnKeys, addOtherData, formatRegistrationValue } from 'util/registrations';
-import { secondaryColor, secondaryColorLight } from 'constants.scss';
+import COLORS from 'constants.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import './style.scss';
 
 const DEFAULT_COLUMN_WIDTH = 150;
 const LONG_COLUMN_WIDTH = 300;
+const { secondaryColor, secondaryColorLight } = COLORS;
 
 export default class Users extends React.Component {
   constructor(props) {
