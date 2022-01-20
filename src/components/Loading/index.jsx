@@ -1,5 +1,5 @@
 import React from 'react';
-import Lottie from 'react-lottie';
+import Lottie from 'lottie-react';
 
 import animationData from 'assets/animations/car.json';
 import './style.scss';
@@ -10,7 +10,7 @@ export default function Loading() {
 
   return (
     <div id="Loading">
-      <Lottie id="car" options={options} style={style} />
+      <Lottie id="car" {...options} style={style} />
       <h1>Loading...</h1>
     </div>
   );
