@@ -2,9 +2,10 @@ import React from 'react';
 import Select from 'react-select';
 import { Field } from 'formik';
 
-import { primaryColor, primaryColorLight } from 'constants.scss';
+import COLORS from 'constants.scss';
 
 const StyledSelect = props => {
+  const { primaryColor, primaryColorLight } = COLORS;
   const { color = primaryColor, colorLight = primaryColorLight } = props;
   const theme = defaultTheme => ({
     ...defaultTheme,
