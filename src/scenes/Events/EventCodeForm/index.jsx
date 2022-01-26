@@ -1,5 +1,6 @@
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, useField } from 'formik';
 import React, { useEffect, useState } from 'react';
+import { QRCode } from 'react-qrcode-logo';
 
 import { getEventCode, setEventCode } from 'util/api';
 import DateInput from 'components/DateInput';
@@ -44,11 +45,28 @@ const EventCodeForm = ({ event, onSubmit }) => {
     return <h4 className="event-code-form">Error fetching code</h4>;
   }
 
+  const EventCodeField = ({ label, ...props }) => {
+    const [field] = useField(props);
+
+    return (
+      <>
+        <label>
+          {label}
+          <input {...field} {...props} />
+        </label>
+        <QRCode 
+          className="qr" 
+          value={ JSON.stringify({ code: field.value }) } 
+        />
+      </>
+    );
+  };
+
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <Form className="event-code-form">
         <h2>Edit Code</h2>
-        <Field name="code" className="form-field" placeholder="Code..." />
+        <EventCodeField name="code" className="form-field" placeholder="Code..." />
         <Field component={DateInput} name="expiration" label="Expiration:"/>
         <button type="submit" className="submit-button" disabled={status === 1}>
           {['Submit', 'Loading...', 'Failed, try again?'][status]}
