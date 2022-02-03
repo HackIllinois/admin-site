@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faBell, faCalendar, faBars, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faBell, faCalendar, faBars, faCalculator, faListOl } from '@fortawesome/free-solid-svg-icons';
 
 import './App.scss';
 import logo from './assets/logo.svg';
@@ -10,6 +10,7 @@ import Auth from './components/Auth';
 import Users from './scenes/Users';
 import Events from './scenes/Events';
 import Notifications from './scenes/Notifications';
+import Points from './scenes/Points';
 import Statistics from 'scenes/Statistics';
 import Token from 'scenes/Token';
 
@@ -18,6 +19,7 @@ const routes = [
   { path: '/users', name: "Users", icon: faUsers },
   { path: '/notifications', name: "Notifications", icon: faBell },
   { path: '/events', name: "Events", icon: faCalendar },
+  { path: '/points', name: "Points", icon: faListOl },
 ];
 
 class App extends React.Component {
@@ -81,6 +83,10 @@ class App extends React.Component {
   
             <AuthenticatedRoute path="/notifications">
               <Notifications/>
+            </AuthenticatedRoute>
+
+            <AuthenticatedRoute path="/points">
+              <Points />
             </AuthenticatedRoute>
 
             <AuthenticatedRoute path="/token" provider="github">

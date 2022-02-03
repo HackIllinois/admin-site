@@ -150,3 +150,8 @@ export function getEventCode(eventId) {
 export function setEventCode(eventId, code, expiration) {
   return request('PUT', `/event/code/${eventId}/`, { id: eventId, code, expiration });
 }
+
+export function updatePoints(id, points) {
+  return request('POST', `/profile/points/award/`, { id, points })
+    .then(res => res.points);
+}

@@ -1,0 +1,57 @@
+@import 'constants.scss';
+
+.points-page {
+  flex: 1;
+  height: 100vh;
+  overflow: auto;
+  padding-top: 20px;
+  box-sizing: border-box;
+  @include mobile {
+    overflow: initial;
+  }
+  @include phone {
+    text-align: center;
+  }
+
+  .form-field {
+    @include form-field;
+  }
+
+  .top {
+    padding: 20px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    
+    @include phone {
+      padding: 20px 0;
+    }
+
+    .tile {
+      border: $primary-color 1.5px solid;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px;
+      box-sizing: border-box;
+
+      .title {
+        font-size: 1.5em;
+        text-align: center;
+        margin: 10px 0;
+        font-weight: bold;
+        color: #444444;
+      }
+
+  
+      .buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+          @include button;
+          float: right;
+          margin: 0 10px;
+        }
+      }
+    }
+  }
+}
