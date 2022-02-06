@@ -25,16 +25,20 @@ export default function Stats({ registrations }) {
 
   const charts = statsColumns.map(columnName => {
     const data = new Map();
-    registrations.forEach(registration => {
-      let value = registration[columnName];
-      if (Array.isArray(value)) {
-        value = value.sort().join(', ');
-      }
-
+    const addValue = value => {
       if (data.has(value)) {
         data.set(value, data.get(value) + 1);
       } else {
         data.set(value, 1);
+      }
+    };
+
+    registrations.forEach(registration => {
+      let value = registration[columnName];
+      if (Array.isArray(value)) {
+        value.forEach(addValue);
+      } else {
+        addValue(value);
       }
     });
 
