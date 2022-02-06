@@ -7,10 +7,18 @@ import { formatCamelCase } from 'util/registrations';
 
 const { primaryColor } = COLORS;
 
+const omittedColumns = new Set([
+  "firstName", "lastName", "email", "resumeFilename", "createdAt", "updatedAt", "github", "id"
+]);
+
 export default function Stats({ registrations }) {
   const statsColumns = Array.from(
     registrations.reduce((columns, registration) => {
-      Object.keys(registration).forEach(key => columns.add(key));
+      Object.keys(registration).forEach(key => {
+        if (!omittedColumns.has(key)) {
+          columns.add(key);
+        }
+      });
       return columns;
     }, new Set())
   );
