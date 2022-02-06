@@ -11,7 +11,7 @@ export default function Stats({ registrations }) {
   const statsColumns = registrations.reduce((columns, registration) => {
     Object.keys(registration).forEach(key => columns.add(key));
     return columns;
-  }, []);
+  }, new Set());
 
   const charts = statsColumns.map(columnName => {
     const data = new Map();
