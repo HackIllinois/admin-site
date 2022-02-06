@@ -7,14 +7,9 @@ import { formatCamelCase } from 'util/registrations';
 
 const { primaryColor } = COLORS;
 
-// TODO: the following keys are currently hardcoded, fix
-const statsColumns = [
-  "checkedIn", "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
-  "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
-  "programmingYears", "race", "school", "shirtSize", "status", "wave",
-];
-
 export default function Stats({ registrations }) {
+  const statsColumns = Object.keys(registrations);
+
   const charts = statsColumns.map(columnName => {
     const data = new Map();
     registrations.forEach(registration => {
