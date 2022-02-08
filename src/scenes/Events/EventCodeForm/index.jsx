@@ -60,7 +60,7 @@ const EventCodeForm = ({ event, onSubmit }) => {
           </label>
           <QRCode 
             className="qr" 
-            value={ JSON.stringify({ code: field.value }) } 
+            value={ field.value } 
           />
         </div>
       </>
