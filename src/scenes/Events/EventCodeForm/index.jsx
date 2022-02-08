@@ -54,10 +54,15 @@ const EventCodeForm = ({ event, onSubmit }) => {
           {label}
           <input {...field} {...props} />
         </label>
-        <QRCode 
-          className="qr" 
-          value={ JSON.stringify({ code: field.value }) } 
-        />
+        <div className="qr-container">
+          <label>
+            Auto-generated QR:
+          </label>
+          <QRCode 
+            className="qr" 
+            value={ JSON.stringify({ code: field.value }) } 
+          />
+        </div>
       </>
     );
   };

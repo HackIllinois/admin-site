@@ -20,4 +20,15 @@
     align-self: flex-end;
     margin-bottom: 10px;
   }
+
+  .qr-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 5px 0;
+
+    label {
+      margin-top: 5px;
+    }
+  }
 }
