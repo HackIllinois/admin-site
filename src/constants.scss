@@ -2,11 +2,14 @@ $primary-color: #505F85;
 $secondary-color: #5E997A;
 $red: #cc0000;
 
+$primary-color-light: lighten($primary-color, 40%);
+$secondary-color-light: lighten($secondary-color, 40%);
+
 :export { // allows you to import these variables from javascript
   primaryColor: $primary-color;
-  primaryColorLight: lighten($primary-color, 40%);
+  primaryColorLight: $primary-color-light;
   secondaryColor: $secondary-color;
-  secondaryColorLight: lighten($secondary-color, 40%);
+  secondaryColorLight: $secondary-color-light;
 }
 
 $tablet-min-width: 768px;
@@ -69,9 +72,20 @@ $desktop-min-width: 1024px;
   font-size: .95em;
   cursor: pointer;
   transition: color .2s, background-color .2s;
+  
+  &:focus {
+    background-color: $primary-color-light;
+  }
 
-  &:hover, &:focus {
+  &:hover {
     background-color: $color;
     color: white;
+  }
+
+  &:disabled {
+    background-color: initial;
+    border-color: hsl(0,0%,70%);
+    color: hsl(0,0%,70%);
+    cursor: not-allowed;
   }
 }
