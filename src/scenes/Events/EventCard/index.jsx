@@ -31,16 +31,16 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
   if (isAddButton) {
     return (
       <div className="event-card-container">
-        <div className={clsx('event-card', 'add-button', 'clickable')} onClick={onClick}>
+        <button className={clsx('event-card', 'add-button', 'clickable')} onClick={onClick}>
           <FontAwesomeIcon className="add-event-icon" icon={faPlus} />
-        </div>
+        </button>
       </div>
     );
   }
 
   return (
     <div className="event-card-container">
-      <div
+      <button
         className={clsx('event-card', canEdit && 'clickable')}
         onClick={e => canEdit && onClick(e)}
       >
@@ -67,13 +67,13 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
             {event.eventType}
           </div>
         </div>
-      </div>
-
-      <button className="event-code-button">
-        <FormPopup form={EventCodeForm} event={event}>
-          <FontAwesomeIcon icon={faKey} fixedWidth />
-        </FormPopup>
       </button>
+
+      <FormPopup form={EventCodeForm} event={event}>
+        <button className="event-code-button">
+          <FontAwesomeIcon icon={faKey} fixedWidth />
+        </button>
+      </FormPopup>
     </div>
   )
 };

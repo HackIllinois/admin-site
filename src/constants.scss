@@ -67,6 +67,7 @@ $desktop-min-width: 1024px;
   padding: 7px 20px;
   border-radius: 5px;
   border: $color 2px solid;
+  font-family: inherit;
   font-weight: bold;
   color: $color;
   font-size: .95em;
@@ -88,4 +89,17 @@ $desktop-min-width: 1024px;
     color: hsl(0,0%,70%);
     cursor: not-allowed;
   }
+}
+
+// Apply on <button> to remove all the button styles and make it look like a div
+@mixin div-button() {
+  display: block;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 1em;
+  text-align: left;
+
+  // calling style should set something for &:hover and &:focus to indicate such
 }
