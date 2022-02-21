@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faBell, faCalendar, faBars, faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faBell, faCalendar, faBars, faCalculator, faSplotch } from '@fortawesome/free-solid-svg-icons';
 
 import './App.scss';
 import logo from './assets/logo.svg';
@@ -12,12 +12,14 @@ import Events from './scenes/Events';
 import Notifications from './scenes/Notifications';
 import Statistics from 'scenes/Statistics';
 import Token from 'scenes/Token';
+import Blobstore from 'scenes/Blobstore';
 
 const routes = [
   { path: '/', name: "Statistics", icon: faCalculator },
   { path: '/users', name: "Users", icon: faUsers },
   { path: '/notifications', name: "Notifications", icon: faBell },
   { path: '/events', name: "Events", icon: faCalendar },
+  { path: '/blobstore', name: "Blobstore", icon: faSplotch },
 ];
 
 class App extends React.Component {
@@ -81,6 +83,10 @@ class App extends React.Component {
   
             <AuthenticatedRoute path="/notifications">
               <Notifications/>
+            </AuthenticatedRoute>
+
+            <AuthenticatedRoute path="/blobstore">
+              <Blobstore />
             </AuthenticatedRoute>
 
             <AuthenticatedRoute path="/token" provider="github">

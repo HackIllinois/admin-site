@@ -12,7 +12,7 @@ function request(method, endpoint, body) {
     if (res.ok) {
       return res.json();
     }
-    throw Error(res);
+    throw res;
   });
 }
 
@@ -149,4 +149,16 @@ export function getEventCode(eventId) {
 
 export function setEventCode(eventId, code, expiration) {
   return request('PUT', `/event/code/${eventId}/`, { id: eventId, code, expiration });
+}
+
+export function getBlob(blobId) {
+  return request('GET', `/upload/blobstore/${blobId}/`);
+}
+
+export function updateBlob(blobId, data) {
+  return request('PUT', `/upload/blobstore/`, { id: blobId, data });
+}
+
+export function createBlob(blobId, data) {
+  return request('POST', `/upload/blobstore/`, { id: blobId, data });
 }
