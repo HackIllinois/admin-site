@@ -29,11 +29,16 @@ const locations = [
     description: 'CIF',
     latitude: 40.112640,
     longitude: -88.228320
+  },
+  {
+    description: 'Illini Union',
+    latitude: 40.109350,
+    longitude: -88.227169
   }
 ];
 
 // const tags = ['DCL', 'KENNEY', 'SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'ECEB1', 'ECEB2', 'ECEB3'];
-const tags = ['SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'CIF'];
+const tags = ['SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'CIF', 'UNION'];
 
 const blankLocation = { description: '', latitude: 0, longitude: 0, tags: [] };
 
