@@ -10,24 +10,30 @@ const locations = [
     latitude: 40.113812,
     longitude: -88.224937
   },
+//   {
+//     description: 'ECEB',
+//     latitude: 40.114937,
+//     longitude: -88.228063
+//   },
+//   {
+//     description: 'DCL',
+//     latitude: 40.113062,
+//     longitude: -88.226563
+//   },
+//   {
+//     description: 'Kenney Gym',
+//     latitude: 40.113062,
+//     longitude: -88.228438
+//   }
   {
-    description: 'ECEB',
-    latitude: 40.114937,
-    longitude: -88.228063
-  },
-  {
-    description: 'DCL',
-    latitude: 40.113062,
-    longitude: -88.226563
-  },
-  {
-    description: 'Kenney Gym',
-    latitude: 40.113062,
-    longitude: -88.228438
+    description: 'CIF',
+    latitude: 40.112640,
+    longitude: -88.228320
   }
 ];
 
-const tags = ['DCL', 'KENNEY', 'SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'ECEB1', 'ECEB2', 'ECEB3'];
+// const tags = ['DCL', 'KENNEY', 'SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'ECEB1', 'ECEB2', 'ECEB3'];
+const tags = ['SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'CIF'];
 
 const blankLocation = { description: '', latitude: 0, longitude: 0, tags: [] };
 
