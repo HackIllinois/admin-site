@@ -62,7 +62,7 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
           <div className="description" dangerouslySetInnerHTML={{ __html: processDescription(event.description) }} />
 
           <div className="locations">
-            {(event.locations || []).map(location => location.description).join(', ')}
+            {(event.locations || []).map(location => location.description).map(x => x.trim()).join(', ')}
           </div>
 
           <div className="event-type">
