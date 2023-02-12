@@ -6,7 +6,7 @@ import LocationInput from './LocationInput';
 import DateInput from 'components/DateInput';
 import SelectField from 'components/SelectField';
 import './style.scss';
-import Checkbox, { FormikCheckbox } from 'components/Checkbox';
+import { FormikCheckbox } from 'components/Checkbox';
 
 const possibleEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'QNA', 'OTHER'];
 
@@ -90,8 +90,8 @@ export default class EventEditPopup extends React.Component {
                 {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
 
-                <Field className="form-field" name="isPrivate" />
-                <Field className="form-field" name="displayOnStaffCheckin" />
+                <Field component={FormikCheckbox} className="form-field" name="isPrivate" />
+                <Field component={FormikCheckbox} className="form-field" name="displayOnStaffCheckin" />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&
