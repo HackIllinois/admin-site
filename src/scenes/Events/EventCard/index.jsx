@@ -61,10 +61,9 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
         <div className="event-details">
           <div className="description" dangerouslySetInnerHTML={{ __html: processDescription(event.description) }} />
 
-          {/* Removing the following for now since virtual events don't have locations */}
-          {/* <div className="locations">
+          <div className="locations">
             {(event.locations || []).map(location => location.description).join(', ')}
-          </div> */}
+          </div>
 
           <div className="event-type">
             {event.eventType}
