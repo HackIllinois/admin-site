@@ -90,8 +90,8 @@ export default class EventEditPopup extends React.Component {
                 {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
 
-                <Field component={FormikCheckbox} className="form-field" name="isPrivate" />
-                <Field component={FormikCheckbox} className="form-field" name="displayOnStaffCheckin" />
+                <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private" />
+                <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckin" label="Display on Staff Check-in" />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&

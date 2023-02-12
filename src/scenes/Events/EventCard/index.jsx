@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faKey, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import FormPopup from 'components/FormPopup';
 import EventCodeForm from '../EventCodeForm';
@@ -45,7 +45,10 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
         onClick={e => canEdit && onClick(e)}
       >
         <div className="event-header">
-          <div className="event-name">{event.name}</div>
+          <div className="event-name">
+            {event.isPrivate && <FontAwesomeIcon className='private-icon' icon={faLock} size="xs" />}
+            {event.name}
+          </div>
           <div className="event-time">
             <div className="start">{formatTime(event.startTime)}</div>
             <div className="end">
