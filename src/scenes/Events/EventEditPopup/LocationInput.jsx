@@ -39,6 +39,7 @@ const locations = [
     description: 'Legends',
     latitude: 40.110436,
     longitude: -88.231146
+  }
 ];
 
 // const tags = ['DCL', 'KENNEY', 'SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'ECEB1', 'ECEB2', 'ECEB3'];
