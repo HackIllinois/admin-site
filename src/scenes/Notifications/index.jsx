@@ -10,7 +10,7 @@ import {
   getNotificationTopics,
   getNotifications,
   sendNotification,
-  getRoles,
+  // getRoles,
 } from 'util/api';
 
 const notificationInitialValues = {
