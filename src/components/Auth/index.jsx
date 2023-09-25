@@ -1,36 +1,28 @@
-import React from 'react';
-import queryString from 'query-string';
-
-import { getToken } from 'util/api';
-import Loading from 'components/Loading';
+import React from "react";
+import queryString from "query-string";
+import Loading from "components/Loading";
 
 export default class Auth extends React.Component {
-  componentDidMount() {
-    const { location } = this.props;
-    const { code } = queryString.parse(location.search);
+    componentDidMount() {
+        const { location } = this.props;
+        const { token } = queryString.parse(location.search);
 
-    // these are set in `authenticate` in util/api
-    const { to, provider } = localStorage;
+        // these are set in `authenticate` in util/api
+        const { to } = localStorage;
 
-    if (code) {
-      getToken(code, provider).then(token => {
-        sessionStorage.setItem('token', token);
+        if (token) {
+            sessionStorage.setItem("token", token);
+            localStorage.removeItem("to");
 
-        localStorage.removeItem('to');
-        localStorage.removeItem('provider');
-
-        if (to) {
-          window.location.replace(to);
-        } else {
-          window.location.replace(window.location.origin);
+            if (to) {
+                window.location.replace(to);
+            } else {
+                window.location.replace(window.location.origin);
+            }
         }
-      });
     }
-  }
 
-  render() {
-    return (
-      <Loading />
-    )
-  }
+    render() {
+        return <Loading />;
+    }
 }

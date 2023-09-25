@@ -19,7 +19,7 @@ const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
   // indicates that the route is private (only for Staff and Admin)
   if (provider === 'google') {
     const roles = getRoles();
-    if (roles.includes('Staff') || roles.includes('Admin')) {
+    if (roles.includes('STAFF') || roles.includes('ADMIN')) {
       return <Route path={path} {...props}/>
     } else {
       window.location.replace('https://hackillinois.org/');
