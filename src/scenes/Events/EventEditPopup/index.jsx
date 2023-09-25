@@ -71,13 +71,16 @@ export default class EventEditPopup extends React.Component {
         <div className="popup-container">
           <div className="title">{this.isNewEvent() ? 'Add Event' : 'Edit Event'}</div>
           <Formik initialValues={this.state.eventValues} onSubmit={values => this.submit(values)}>
-            {() => (
+            {({values}) => (
               <Form className="form">
                 <Field className="form-field" name="name" placeholder="Event Name" autoFocus/>
                 <Field component={DateInput} name="startTime" label="Start:"/>
                 <Field component={DateInput} name="endTime" label="End:"/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
-                <Field component={LocationInput} name="locations"/>
+                <Field disabled="true" component={LocationInput} name="locations"/>
+                <div className='check'>
+                {/* <Field component={FormikCheckbox} name="isAsync" label="Async" value={values.isAsync} onChange={() => {values.isAsync = !values.isAsync; this.forceUpdate()}}/> */}
+                </div>
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
                 <SelectField
                   className="select"
@@ -86,6 +89,7 @@ export default class EventEditPopup extends React.Component {
                   options={possibleEventTypes.map(eventType => ({ label: eventType, value: eventType }))}
                   placeholder="Type"
                 />
+
 
                 {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
