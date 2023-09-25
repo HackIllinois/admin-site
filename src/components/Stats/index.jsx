@@ -7,26 +7,38 @@ import { formatCamelCase } from 'util/registrations';
 
 const { primaryColor } = COLORS;
 
-// TODO: the following keys are currently hardcoded, fix
-const statsColumns = [
-  "checkedIn", "degreePursued", "finalized", "gender", "graduationYear", "hasAttended",
-  "isAttending", "isOSContributor", "major", "needsBus", "programmingAbility",
-  "programmingYears", "race", "school", "shirtSize", "status", "wave",
-];
+const omittedColumns = new Set([
+  "firstName", "lastName", "email", "resumeFilename", "createdAt", "updatedAt", "github", "id"
+]);
 
 export default function Stats({ registrations }) {
+  const statsColumns = Array.from(
+    registrations.reduce((columns, registration) => {
+      Object.keys(registration).forEach(key => {
+        if (!omittedColumns.has(key)) {
+          columns.add(key);
+        }
+      });
+      return columns;
+    }, new Set())
+  );
+
   const charts = statsColumns.map(columnName => {
     const data = new Map();
-    registrations.forEach(registration => {
-      let value = registration[columnName];
-      if (Array.isArray(value)) {
-        value = value.sort().join(', ');
-      }
-
+    const addValue = value => {
       if (data.has(value)) {
         data.set(value, data.get(value) + 1);
       } else {
         data.set(value, 1);
+      }
+    };
+
+    registrations.forEach(registration => {
+      let value = registration[columnName];
+      if (Array.isArray(value)) {
+        value.forEach(addValue);
+      } else {
+        addValue(value);
       }
     });
 

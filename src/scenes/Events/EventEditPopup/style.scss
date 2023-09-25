@@ -45,6 +45,11 @@
         @include form-field;
       }
 
+      .form-margins {
+        display: block;
+        margin: 17px 0;
+      }
+
       .buttons {
         display: flex;
         margin-bottom: 10px;

@@ -1,0 +1,26 @@
+@import 'constants.scss';
+
+.blobstore-page {
+  flex: 1;
+  margin-top: 10vh;
+  padding-right: 25px;
+  box-sizing: border-box;
+
+  .blobstore-buttons {
+    height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+
+    input {
+      @include form-field;
+      width: auto;
+      flex: 1;
+      margin: 0;
+    }
+    
+    button {
+      @include button;
+      margin-left: 10px;
+    }
+  }
+}

@@ -1,10 +1,17 @@
 import React from 'react';
 import copy from 'copy-text-to-clipboard';
 
-
 import './style.scss';
 import { makeDecision, finalizeDecision } from 'util/api';
 import { StyledSelect } from 'components/SelectField';
+
+// Note: Currently, the API doesn't support making decisions for multiple users in one request,
+// so we have to send potentially hundreds of requests to the API at once if a lot of users are
+// selected. And currently, each time the API receives a request, it creates a new MongoDB
+// connnection. So with hundreds of requests, we go over our MongoDB connection limit.
+// As a temporary work-around to this issue, the frontend slows down and sends requests one by one
+// with a delay in between each request so that the API has time to close the previous MongoDB
+// connection before opening a new one. See the waitAndUserAction method below.
 
 const DECISIONS_PER_SECOND = 5;
 const getDelay = index => index * (1000 / DECISIONS_PER_SECOND);

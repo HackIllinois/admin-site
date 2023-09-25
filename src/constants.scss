@@ -2,11 +2,14 @@ $primary-color: #505F85;
 $secondary-color: #5E997A;
 $red: #cc0000;
 
+$primary-color-light: lighten($primary-color, 40%);
+$secondary-color-light: lighten($secondary-color, 40%);
+
 :export { // allows you to import these variables from javascript
   primaryColor: $primary-color;
-  primaryColorLight: lighten($primary-color, 40%);
+  primaryColorLight: $primary-color-light;
   secondaryColor: $secondary-color;
-  secondaryColorLight: lighten($secondary-color, 40%);
+  secondaryColorLight: $secondary-color-light;
 }
 
 $tablet-min-width: 768px;
@@ -64,14 +67,39 @@ $desktop-min-width: 1024px;
   padding: 7px 20px;
   border-radius: 5px;
   border: $color 2px solid;
+  font-family: inherit;
   font-weight: bold;
   color: $color;
   font-size: .95em;
   cursor: pointer;
   transition: color .2s, background-color .2s;
+  
+  &:focus {
+    background-color: $primary-color-light;
+  }
 
-  &:hover, &:focus {
+  &:hover {
     background-color: $color;
     color: white;
   }
+
+  &:disabled {
+    background-color: initial;
+    border-color: hsl(0,0%,70%);
+    color: hsl(0,0%,70%);
+    cursor: not-allowed;
+  }
+}
+
+// Apply on <button> to remove all the button styles and make it look like a div
+@mixin div-button() {
+  display: block;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 1em;
+  text-align: left;
+
+  // calling style should set something for &:hover and &:focus to indicate such
 }

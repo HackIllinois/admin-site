@@ -6,6 +6,7 @@ import LocationInput from './LocationInput';
 import DateInput from 'components/DateInput';
 import SelectField from 'components/SelectField';
 import './style.scss';
+import { FormikCheckbox } from 'components/Checkbox';
 
 const possibleEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'QNA', 'OTHER'];
 
@@ -23,10 +24,12 @@ export default class EventEditPopup extends React.Component {
       sponsor = '',
       eventType = '',
       points = 0,
+      isPrivate = false,
+      displayOnStaffCheckin = false,
     } = props.event;
 
     this.state = {
-      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points }
+      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points, isPrivate, displayOnStaffCheckin }
     }
   }
 
@@ -49,6 +52,12 @@ export default class EventEditPopup extends React.Component {
     }
   }
 
+  handleKeyUp(e) {
+    if (e.key === 'Escape') {
+      this.props.onDismiss();
+    }
+  };
+
   isNewEvent() {
     // if the id property of the event prop does not exist, it means we're creating a new event
     return !this.props.event.id;
@@ -56,7 +65,7 @@ export default class EventEditPopup extends React.Component {
 
   render() {
     return (
-      <div className="event-edit-popup">
+      <div className="event-edit-popup" onKeyUp={e => this.handleKeyUp(e)}>
         <div className="popup-background" onClick={() => this.props.onDismiss()}/>
 
         <div className="popup-container">
@@ -64,7 +73,7 @@ export default class EventEditPopup extends React.Component {
           <Formik initialValues={this.state.eventValues} onSubmit={values => this.submit(values)}>
             {() => (
               <Form className="form">
-                <Field className="form-field" name="name" placeholder="Event Name"/>
+                <Field className="form-field" name="name" placeholder="Event Name" autoFocus/>
                 <Field component={DateInput} name="startTime" label="Start:"/>
                 <Field component={DateInput} name="endTime" label="End:"/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
@@ -80,6 +89,9 @@ export default class EventEditPopup extends React.Component {
 
                 {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
+
+                <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private" />
+                <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckin" label="Display on Staff Check-in" />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&

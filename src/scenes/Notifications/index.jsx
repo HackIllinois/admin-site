@@ -10,7 +10,7 @@ import {
   getNotificationTopics,
   getNotifications,
   sendNotification,
-  getRoles,
+  // getRoles,
 } from 'util/api';
 
 const notificationInitialValues = {
@@ -76,10 +76,10 @@ export default class Notifications extends React.Component {
     }
 
     const topicOptions = notificationTopics.map(topic => ({ label: topic, value: topic }));
-    const isAdmin = getRoles().includes('Admin');
+    // const isAdmin = getRoles().includes('Admin');
     return (
       <div className="notifications-page">
-        {isAdmin &&
+        {/* {isAdmin && */}
           <div className="top">
             <div className="send-notification tile">
               <div className="title">Send Notification</div>
@@ -106,7 +106,7 @@ export default class Notifications extends React.Component {
               </Formik>
             </div>
           </div>
-        }
+        {/* } */}
 
         <div className="heading-container">
           <div className="heading">

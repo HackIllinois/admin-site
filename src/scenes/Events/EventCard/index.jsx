@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faKey, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import FormPopup from 'components/FormPopup';
 import EventCodeForm from '../EventCodeForm';
@@ -31,21 +31,24 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
   if (isAddButton) {
     return (
       <div className="event-card-container">
-        <div className={clsx('event-card', 'add-button', 'clickable')} onClick={onClick}>
+        <button className={clsx('event-card', 'add-button', 'clickable')} onClick={onClick}>
           <FontAwesomeIcon className="add-event-icon" icon={faPlus} />
-        </div>
+        </button>
       </div>
     );
   }
 
   return (
     <div className="event-card-container">
-      <div
+      <button
         className={clsx('event-card', canEdit && 'clickable')}
         onClick={e => canEdit && onClick(e)}
       >
         <div className="event-header">
-          <div className="event-name">{event.name}</div>
+          <div className="event-name">
+            {event.isPrivate && <FontAwesomeIcon className='private-icon' icon={faLock} size="xs" />}
+            {event.name}
+          </div>
           <div className="event-time">
             <div className="start">{formatTime(event.startTime)}</div>
             <div className="end">
@@ -58,22 +61,21 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
         <div className="event-details">
           <div className="description" dangerouslySetInnerHTML={{ __html: processDescription(event.description) }} />
 
-          {/* Removing the following for now since virtual events don't have locations */}
-          {/* <div className="locations">
-            {(event.locations || []).map(location => location.description).join(', ')}
-          </div> */}
+          <div className="locations">
+            {(event.locations || []).map(location => location.description).map(x => x.trim()).join(', ')}
+          </div>
 
           <div className="event-type">
             {event.eventType}
           </div>
         </div>
-      </div>
-
-      <button className="event-code-button">
-        <FormPopup form={EventCodeForm} event={event}>
-          <FontAwesomeIcon icon={faKey} fixedWidth />
-        </FormPopup>
       </button>
+
+      <FormPopup form={EventCodeForm} event={event}>
+        <button className="event-code-button">
+          <FontAwesomeIcon icon={faKey} fixedWidth />
+        </button>
+      </FormPopup>
     </div>
   )
 };

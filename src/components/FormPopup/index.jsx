@@ -63,12 +63,19 @@ const ModalPopup = ({ children }) => {
 
 const FormPopup = ({ form, children, onSubmit, onCancel, overrideShow, ...props }) => {
   const [show, setShow] = useState(false);
+  const popupContent = useRef(null);
 
   useEffect(() => {
     if (overrideShow !== undefined) {
       setShow(overrideShow);
     }
   }, [overrideShow]);
+
+  useEffect(() => {
+    if (show && popupContent.current) {
+      popupContent.current.focus();
+    }
+  }, [show]);
 
   // only set show if overrideShow isn't specified
   const maybeSetShow = value => {
@@ -92,6 +99,12 @@ const FormPopup = ({ form, children, onSubmit, onCancel, overrideShow, ...props 
     maybeSetShow(false);
   };
 
+  const handleKeyUp = e => {
+    if (e.key === 'Escape') {
+      cancel();
+    }
+  };
+
   const CustomForm = form;
   const childrenWithClickListener = children && React.cloneElement(children, { onClick: () => maybeSetShow(true) });
   return (
@@ -100,8 +113,8 @@ const FormPopup = ({ form, children, onSubmit, onCancel, overrideShow, ...props 
 
       {show && (
         <ModalPopup>
-          <div className="form-popup" onClick={cancel}>
-            <div className="popup-content" onClick={e => e.stopPropagation()}>
+          <div className="form-popup" onClick={cancel} onKeyUp={handleKeyUp}>
+            <div className="popup-content" onClick={e => e.stopPropagation()} tabIndex={-1} ref={popupContent}>
               <CustomForm onSubmit={submit} onCancel={cancel} {...props} />
             </div>
           </div>

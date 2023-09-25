@@ -30,12 +30,5 @@
     &.accept {
       margin-right: 20px;
     }
-
-    &:disabled {
-      color: #999999;
-      border-color: #999999;
-      background-color: white;
-      cursor: not-allowed;
-    }
   }
 }

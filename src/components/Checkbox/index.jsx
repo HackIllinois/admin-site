@@ -28,3 +28,10 @@ export default function Checkbox({ value, onChange, label, fast, noHighlight, ..
     </div>
   )
 }
+
+const FormikCheckbox = ({field, form, className, ...props}) => {
+  const updateValue = newValue => form.setFieldValue(field.name, newValue);
+  return <div className={className}><Checkbox value={field.value} onChange={updateValue} {...props} /></div>
+}
+
+export {FormikCheckbox};
