@@ -1,0 +1,48 @@
+name: Admin HackIllinois CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    - run: npm i
+    - run: npm run build
+    - name: 'Upload Build'
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: /build/*
+        retention-days: 5
+    - name: 'Upload Dependecies'
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependencies
+        path: /node_modules/*
+        retention-days: 5
+
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Publish
+      uses: netlify/actions/cli@master
+      with:
+        args: deploy -p --dir=build
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
