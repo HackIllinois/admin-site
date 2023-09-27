@@ -10,12 +10,7 @@ function request(method, endpoint, body) {
     body: JSON.stringify(body),
   }).then(res => {
     if (res.ok) {
-      // Temporary workaround to stop error from being thrown on delete event
-      if (method === 'DELETE' && endpoint.startsWith('/event/')) {
-        return res.text();
-      } else {
         return res.json();
-      }
     }
     throw res;
   });
