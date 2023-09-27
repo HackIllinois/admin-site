@@ -25,11 +25,12 @@ export default class EventEditPopup extends React.Component {
       eventType = '',
       points = 0,
       isPrivate = false,
-      displayOnStaffCheckin = false,
+      displayOnStaffCheckIn = false,
+      isAsync = false
     } = props.event;
 
     this.state = {
-      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points, isPrivate, displayOnStaffCheckin }
+      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points, isPrivate, displayOnStaffCheckIn, isAsync }
     }
   }
 
@@ -71,16 +72,13 @@ export default class EventEditPopup extends React.Component {
         <div className="popup-container">
           <div className="title">{this.isNewEvent() ? 'Add Event' : 'Edit Event'}</div>
           <Formik initialValues={this.state.eventValues} onSubmit={values => this.submit(values)}>
-            {({values}) => (
+            {() => (
               <Form className="form">
                 <Field className="form-field" name="name" placeholder="Event Name" autoFocus/>
                 <Field component={DateInput} name="startTime" label="Start:"/>
                 <Field component={DateInput} name="endTime" label="End:"/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
                 <Field disabled="true" component={LocationInput} name="locations"/>
-                <div className='check'>
-                {/* <Field component={FormikCheckbox} name="isAsync" label="Async" value={values.isAsync} onChange={() => {values.isAsync = !values.isAsync; this.forceUpdate()}}/> */}
-                </div>
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
                 <SelectField
                   className="select"
@@ -95,7 +93,7 @@ export default class EventEditPopup extends React.Component {
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
 
                 <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private" />
-                <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckin" label="Display on Staff Check-in" />
+                <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckIn" label="Display on Staff Check-in" />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&
