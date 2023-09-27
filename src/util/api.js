@@ -1,4 +1,4 @@
-const API = 'https://api.hackillinois.org';
+const API = 'https://adonix.hackillinois.org';
 
 function request(method, endpoint, body) {
   return fetch(API + endpoint, {
@@ -10,7 +10,12 @@ function request(method, endpoint, body) {
     body: JSON.stringify(body),
   }).then(res => {
     if (res.ok) {
-      return res.json();
+      // Temporary workaround to stop error from being thrown on delete event
+      if (method === 'DELETE' && endpoint.startsWith('/event/')) {
+        return res.text();
+      } else {
+        return res.json();
+      }
     }
     throw res;
   });
@@ -26,21 +31,14 @@ export function authenticate(to, provider = 'google') {
     sessionStorage.setItem('token', process.env.REACT_APP_TOKEN);
     window.location.replace(to); // since there's no authentication necessary, we can go directly to `to`
   } else {
-    // `to` and `provider` are saved in localStorage so that they can be used in the Auth component later
+    // `to` is saved in localStorage so that it can be used in the Auth component later
     // (note: for github, we can add them to the redirect_uri as query parameters, but google doesn't support that it seems)
     localStorage.setItem('to', to);
-    localStorage.setItem('provider', provider);
 
-    const redirectURI = `${window.location.origin}/auth/`;
-    const authURL = `${API}/auth/${provider}/?redirect_uri=${redirectURI}`;
+    // const redirectURI = `${window.location.origin}/auth/`;
+    const authURL = `${API}/auth/login/${provider}?device=admin`;
     window.location.replace(authURL);
   }
-}
-
-export function getToken(code, provider = 'google') {
-  const redirectUri = `${window.location.origin}/auth/`;
-  return request('POST', `/auth/code/${provider}/?redirect_uri=${redirectUri}`, { code })
-    .then(res => res.token);
 }
 
 export function getTokenData() {
