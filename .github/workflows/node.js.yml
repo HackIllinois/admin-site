@@ -24,13 +24,13 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build
-        path: /build/
+        path: build/
         retention-days: 5
     - name: 'Upload Dependecies'
       uses: actions/upload-artifact@v3
       with:
         name: dependencies
-        path: /node_modules/
+        path: node_modules/
         retention-days: 5
 
   publish:
