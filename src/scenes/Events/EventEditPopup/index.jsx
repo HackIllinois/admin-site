@@ -26,11 +26,12 @@ export default class EventEditPopup extends React.Component {
       points = 0,
       isPrivate = false,
       displayOnStaffCheckIn = false,
-      isAsync = false
+      isAsync = false,
+      isStaff = props.staffEvent
     } = props.event;
 
     this.state = {
-      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points, isPrivate, displayOnStaffCheckIn, isAsync }
+      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff }
     }
   }
 

@@ -72,6 +72,11 @@ export function getEvents() {
     .then(res => res.events);
 }
 
+export function getStaffEvents() {
+  return request('GET', '/event/staff/')
+    .then(res => res.events);
+}
+
 export function updateEvent(event) {
   return request('PUT', '/event/', event);
 }
@@ -136,12 +141,12 @@ export function getCheckins() {
     .then(res => res.checkedInUsers);
 }
 
-export function getEventCode(eventId) {
-  return request('GET', `/event/code/${eventId}/`);
+export function getEventCodeExpiration(eventId) {
+  return request('GET', `/event/expiration/${eventId}/`);
 }
 
-export function setEventCode(eventId, code, expiration) {
-  return request('PUT', `/event/code/${eventId}/`, { id: eventId, code, expiration });
+export function setEventCodeExpiration(eventId, exp) {
+  return request('PUT', `/event/expiration/`, { id: eventId, exp });
 }
 
 export function getBlob(blobId) {
