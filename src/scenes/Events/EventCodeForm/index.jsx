@@ -2,7 +2,7 @@ import { Field, Form, Formik, useField } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { QRCode } from 'react-qrcode-logo';
 
-import { getEventCode, setEventCode } from 'util/api';
+import { getEventCodeExpiration, setEventCodeExpiration } from 'util/api';
 import DateInput from 'components/DateInput';
 import './style.scss';
 
@@ -19,17 +19,17 @@ const EventCodeForm = ({ event, onSubmit }) => {
     setIsLoading(true);
     setInitialValues(null);
     if (event) {
-      getEventCode(event.id)
-        .then(({ id, code, expiration }) => setInitialValues({ id, code, expiration }))
+      getEventCodeExpiration(event.id)
+        .then(({ id, exp }) => setInitialValues({ id, exp }))
         .catch(err => console.log('Failed to get event code, error: ', err))
         .finally(() => setIsLoading(false));
     }
   }, [event]);
 
   const handleSubmit = (values) => {
-    const { id, code, expiration } = values;
+    const { id, exp } = values;
     setStatus(1); // loading
-    setEventCode(id, code, expiration)
+    setEventCodeExpiration(id, exp)
       .then(() => onSubmit(values)) // this should close the form, so no need to change status
       .catch(err => {
         console.log('Failed to set event code, error: ', err);
@@ -71,8 +71,8 @@ const EventCodeForm = ({ event, onSubmit }) => {
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <Form className="event-code-form">
         <h2>Edit Code</h2>
-        <EventCodeField name="code" className="form-field" placeholder="Code..." />
-        <Field component={DateInput} name="expiration" label="Expiration:"/>
+        <EventCodeField name="id" className="form-field" placeholder="QR..." />
+        <Field component={DateInput} name="exp" label="Expiration:"/>
         <button type="submit" className="submit-button" disabled={status === 1}>
           {['Submit', 'Loading...', 'Failed, try again?'][status]}
         </button>
