@@ -84,7 +84,7 @@ export default class Events extends React.Component {
                             );
                         }}
                     >
-                        Atendee Schedule
+                        Attendee Schedule
                     </div>
                 </div>
                 <div className="events-page">
