@@ -80,7 +80,9 @@ export default class EventEditPopup extends React.Component {
                 <Field component={DateInput} name="endTime" label="End:"/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
                 <Field disabled="true" component={LocationInput} name="locations"/>
+                {!this.props.staffEvent && (
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
+                )}
                 <SelectField
                   className="select"
                   name="eventType"
@@ -91,10 +93,12 @@ export default class EventEditPopup extends React.Component {
 
 
                 {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
+                {!this.props.staffEvent && (<>
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
 
                 <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private" />
                 <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckIn" label="Display on Staff Check-in" />
+                </>)}
 
                 <div className="buttons">
                   { !this.isNewEvent() &&
