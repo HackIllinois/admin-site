@@ -8,7 +8,8 @@ import SelectField from 'components/SelectField';
 import './style.scss';
 import { FormikCheckbox } from 'components/Checkbox';
 
-const possibleEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'QNA', 'OTHER'];
+const publicEventTypes = ['MEAL', 'MINIEVENT', 'SPEAKER', 'WORKSHOP', 'QNA', 'OTHER'];
+const staffEventTypes = ['MEETING', 'STAFFSHIFT', 'OTHER'];
 
 export default class EventEditPopup extends React.Component {
   constructor(props) {
@@ -20,18 +21,19 @@ export default class EventEditPopup extends React.Component {
       endTime = '',
       name = '',
       description = '',
+      staffEventType = '',
+      publicEventType = '',
       locations = [],
       sponsor = '',
-      eventType = '',
       points = 0,
       isPrivate = false,
       displayOnStaffCheckIn = false,
       isAsync = false,
       isStaff = props.staffEvent
     } = props.event;
-
+    
     this.state = {
-      eventValues: { startTime, endTime, name, description, locations, sponsor, eventType, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff }
+      eventValues: { startTime, endTime, name, description, staffEventType, publicEventType, locations, sponsor, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff }
     }
   }
 
@@ -46,8 +48,8 @@ export default class EventEditPopup extends React.Component {
 
   delete() {
     // TODO: maybe add a confirmation before deleting
-    if (this.props.event.id) {
-      deleteEvent(this.props.event.id).then(() => {
+    if (this.props.event.eventId) {
+      deleteEvent(this.props.event.eventId).then(() => {
         this.props.onUpdateEvent();
         this.props.onDismiss();
       });
@@ -62,7 +64,7 @@ export default class EventEditPopup extends React.Component {
 
   isNewEvent() {
     // if the id property of the event prop does not exist, it means we're creating a new event
-    return !this.props.event.id;
+    return !this.props.event.eventId;
   }
 
   render() {
@@ -80,25 +82,38 @@ export default class EventEditPopup extends React.Component {
                 <Field component={DateInput} name="endTime" label="End:"/>
                 <Field className="form-field" name="description" as="textarea" rows="5" placeholder="Description"/>
                 <Field disabled="true" component={LocationInput} name="locations"/>
+                
                 {!this.props.staffEvent && (
                 <Field className="form-field" name="sponsor" placeholder="Sponsor"/>
                 )}
-                <SelectField
-                  className="select"
-                  name="eventType"
-                  menuPlacement="top"
-                  options={possibleEventTypes.map(eventType => ({ label: eventType, value: eventType }))}
-                  placeholder="Type"
-                />
 
+                {this.props.staffEvent && (
+                  <SelectField
+                    className="select"
+                    name="eventType"
+                    menuPlacement="top"
+                    options={staffEventTypes.map(staffEventType => ({ label: staffEventType, value: staffEventType }))}
+                    placeholder="Type"
+                  />
+                )}
 
                 {/* TODO: Add label indicating that the following field is for Points (placeholder never shows up because default value is 0) */}
                 {!this.props.staffEvent && (<>
+                  <SelectField
+                    className="select"
+                    name="eventType"
+                    menuPlacement="top"
+                    options={publicEventTypes.map(publicEventType => ({ label: publicEventType, value: publicEventType }))}
+                    placeholder="Type"
+                  />
+
                 <Field className="form-field" name="points" placeholder="Points" type="number" />
 
-                <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private" />
+                <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private Event" />
                 <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckIn" label="Display on Staff Check-in" />
                 </>)}
+
+                <Field className="form-margins" component={FormikCheckbox} name="isAsync" label="Async Event" />
 
                 <div className="buttons">
                   { !this.isNewEvent() &&

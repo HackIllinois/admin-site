@@ -19,11 +19,11 @@ const EventCodeForm = ({ event, onSubmit }) => {
         setIsLoading(true);
         setInitialValues(null);
         if (event) {
-            getEventCodeExpiration(event.id)
-                .then(({ id, exp }) => {
-                    if (!id || !exp)
+            getEventCodeExpiration(event.eventId)
+                .then(({ _id, isStaff, exp }) => {
+                    if (!_id || !isStaff || !exp)
                         throw new Error("Expiration does not exist!");
-                    setInitialValues({ id, exp });
+                    setInitialValues({ _id, isStaff, exp });
                 })
                 .catch((err) =>
                     console.log("Failed to get event code, error: ", err)
@@ -33,9 +33,9 @@ const EventCodeForm = ({ event, onSubmit }) => {
     }, [event]);
 
     const handleSubmit = (values) => {
-        const { id, exp } = values;
+        const { _id, isStaff, exp } = values;
         setStatus(1); // loading
-        setEventCodeExpiration(id, exp)
+        setEventCodeExpiration(_id, isStaff, exp)
             .then(() => onSubmit(values)) // this should close the form, so no need to change status
             .catch((err) => {
                 console.log("Failed to set event code, error: ", err);
@@ -73,7 +73,7 @@ const EventCodeForm = ({ event, onSubmit }) => {
             <Form className="event-code-form">
                 <h2>Edit Code</h2>
                 <EventCodeField
-                    name="id"
+                    name="eventId"
                     className="form-field"
                     placeholder="QR..."
                 />

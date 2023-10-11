@@ -4,7 +4,8 @@ function request(method, endpoint, body) {
   return fetch(API + endpoint, {
     method,
     headers: {
-      Authorization: sessionStorage.getItem('token'),
+      // Authorization: sessionStorage.getItem('token'),
+      Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imdvb2dsZTEwNTc4MzU2NTc2NDU2NjIxOTE5NiIsImVtYWlsIjoibGFzeWEubmV0aUBoYWNraWxsaW5vaXMub3JnIiwicHJvdmlkZXIiOiJnb29nbGUiLCJyb2xlcyI6WyJVU0VSIiwiU1RBRkYiLCJBRE1JTiJdLCJleHAiOjE2OTcyMzUyNzUuODg3LCJpYXQiOjE2OTcwNjI0NzV9.YGEBr00jnpHvThz1Xw28VT5r5uyG4iTEmXJRJZXrvFY",
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
@@ -142,11 +143,11 @@ export function getCheckins() {
 }
 
 export function getEventCodeExpiration(eventId) {
-  return request('GET', `/event/expiration/${eventId}/`);
+  return request('GET', `/event/metadata/${eventId}/`);
 }
 
-export function setEventCodeExpiration(eventId, exp) {
-  return request('PUT', `/event/expiration/`, { id: eventId, exp });
+export function setEventCodeExpiration(eventId, isStaff, exp) {
+  return request('PUT', `/event/metadata/`, { eventId, isStaff, exp });
 }
 
 export function getBlob(blobId) {
