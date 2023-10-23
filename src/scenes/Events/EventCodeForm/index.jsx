@@ -20,10 +20,10 @@ const EventCodeForm = ({ event, onSubmit }) => {
         setInitialValues(null);
         if (event) {
             getEventCodeExpiration(event.eventId)
-                .then(({ _id, isStaff, exp }) => {
-                    if (!_id || !isStaff || !exp)
+                .then(({ eventId, isStaff, exp }) => {
+                    if (!eventId || typeof isStaff === "undefined" || !exp) 
                         throw new Error("Expiration does not exist!");
-                    setInitialValues({ _id, isStaff, exp });
+                    setInitialValues({ eventId, isStaff, exp });
                 })
                 .catch((err) =>
                     console.log("Failed to get event code, error: ", err)
@@ -33,9 +33,9 @@ const EventCodeForm = ({ event, onSubmit }) => {
     }, [event]);
 
     const handleSubmit = (values) => {
-        const { _id, isStaff, exp } = values;
+        const { eventId, isStaff, exp } = values;
         setStatus(1); // loading
-        setEventCodeExpiration(_id, isStaff, exp)
+        setEventCodeExpiration(eventId, isStaff, exp)
             .then(() => onSubmit(values)) // this should close the form, so no need to change status
             .catch((err) => {
                 console.log("Failed to set event code, error: ", err);

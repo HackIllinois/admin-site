@@ -130,7 +130,7 @@ export default class Events extends React.Component {
                                                 editingEvent: event,
                                             })
                                         }
-                                        key={event.id}
+                                        key={event.eventId}
                                     />
                                 ))}
 

@@ -4,13 +4,14 @@ function request(method, endpoint, body) {
   return fetch(API + endpoint, {
     method,
     headers: {
-      // Authorization: sessionStorage.getItem('token'),
-      Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imdvb2dsZTEwNTc4MzU2NTc2NDU2NjIxOTE5NiIsImVtYWlsIjoibGFzeWEubmV0aUBoYWNraWxsaW5vaXMub3JnIiwicHJvdmlkZXIiOiJnb29nbGUiLCJyb2xlcyI6WyJVU0VSIiwiU1RBRkYiLCJBRE1JTiJdLCJleHAiOjE2OTcyMzUyNzUuODg3LCJpYXQiOjE2OTcwNjI0NzV9.YGEBr00jnpHvThz1Xw28VT5r5uyG4iTEmXJRJZXrvFY",
+      Authorization: sessionStorage.getItem('token'),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
   }).then(res => {
-    if (res.ok) {
+    if (res.status === 204) {
+      return {};
+    } else if (res.ok) {
         return res.json();
     }
     throw res;
