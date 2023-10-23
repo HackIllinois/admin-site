@@ -5,6 +5,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+    types:
+      - closed
 
 jobs:
   build:
@@ -29,7 +31,6 @@ jobs:
 
   publish:
     needs: build
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
