@@ -9,7 +9,9 @@ function request(method, endpoint, body) {
     },
     body: JSON.stringify(body),
   }).then(res => {
-    if (res.ok) {
+    if (res.status === 204) {
+      return {};
+    } else if (res.ok) {
         return res.json();
     }
     throw res;
@@ -69,6 +71,11 @@ export function finalizeDecision(id, finalized = true) {
 
 export function getEvents() {
   return request('GET', '/event/')
+    .then(res => res.events);
+}
+
+export function getStaffEvents() {
+  return request('GET', '/event/staff/')
     .then(res => res.events);
 }
 
@@ -136,12 +143,12 @@ export function getCheckins() {
     .then(res => res.checkedInUsers);
 }
 
-export function getEventCode(eventId) {
-  return request('GET', `/event/code/${eventId}/`);
+export function getEventCodeExpiration(eventId) {
+  return request('GET', `/event/metadata/${eventId}/`);
 }
 
-export function setEventCode(eventId, code, expiration) {
-  return request('PUT', `/event/code/${eventId}/`, { id: eventId, code, expiration });
+export function setEventCodeExpiration(eventId, isStaff, exp) {
+  return request('PUT', `/event/metadata/`, { eventId, isStaff, exp });
 }
 
 export function getBlob(blobId) {
