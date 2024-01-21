@@ -1,25 +1,29 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faBell, faCalendar, faBars, faCalculator, faSplotch } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faCalendar, faBars, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons'; // faUsers, faCalculator, faSplotch
 
 import './App.scss';
 import logo from './assets/logo.svg';
 import AuthenticatedRoute from 'components/AuthenticatedRoute';
 import Auth from './components/Auth';
-import Users from './scenes/Users';
+// import Users from './scenes/Users';
 import Events from './scenes/Events';
 import Notifications from './scenes/Notifications';
-import Statistics from 'scenes/Statistics';
+// import Statistics from 'scenes/Statistics';
 import Token from 'scenes/Token';
-import Blobstore from 'scenes/Blobstore';
+import Shop from 'scenes/Shop';
+import Admissions from 'scenes/Admissions';
+// import Blobstore from 'scenes/Blobstore';
 
 const routes = [
-  { path: '/', name: "Statistics", icon: faCalculator },
-  { path: '/users', name: "Users", icon: faUsers },
+  // { path: '/', name: "Statistics", icon: faCalculator },
+  // { path: '/users', name: "Users", icon: faUsers },
   { path: '/notifications', name: "Notifications", icon: faBell },
   { path: '/events', name: "Events", icon: faCalendar },
-  { path: '/blobstore', name: "Blobstore", icon: faSplotch },
+  { path: '/shop', name: "Shop", icon: faShoppingCart },
+  { path: '/admissions', name: "Admissions", icon: faUsers }
+  // { path: '/blobstore', name: "Blobstore", icon: faSplotch },
 ];
 
 class App extends React.Component {
@@ -69,13 +73,13 @@ class App extends React.Component {
           <Switch>
             <Route path="/auth" component={Auth}></Route>
             
-            <AuthenticatedRoute path="/" exact>
+            {/* <AuthenticatedRoute path="/" exact>
               <Statistics/>
             </AuthenticatedRoute>
-            
-            <AuthenticatedRoute path="/users">
+             */}
+            {/* <AuthenticatedRoute path="/users">
               <Users/>
-            </AuthenticatedRoute>
+            </AuthenticatedRoute> */}
   
             <AuthenticatedRoute path="/events">
               <Events/>
@@ -85,9 +89,18 @@ class App extends React.Component {
               <Notifications/>
             </AuthenticatedRoute>
 
-            <AuthenticatedRoute path="/blobstore">
-              <Blobstore />
+            <AuthenticatedRoute path="/shop">
+              <Shop/>
             </AuthenticatedRoute>
+
+            <AuthenticatedRoute path="/admissions">
+              <Admissions/>
+            </AuthenticatedRoute>
+
+
+            {/* <AuthenticatedRoute path="/blobstore">
+              <Blobstore/>
+            </AuthenticatedRoute> */}
 
             <AuthenticatedRoute path="/token" provider="github">
               <Token />
