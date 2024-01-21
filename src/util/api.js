@@ -162,3 +162,19 @@ export function updateBlob(blobId, data) {
 export function createBlob(blobId, data) {
   return request('POST', `/upload/blobstore/`, { id: blobId, data });
 }
+
+export function getShop() {
+  return request('GET', `/shop`);
+}
+
+export function getShopQRs(itemId) {
+  return request('GET', `/shop/item/qr/${itemId}`)
+}
+
+export function createShopItem(setName, setPrice, setIsRaffle, setQuantity, setImageUrl) {
+  return request('POST', `/shop/item`, {name: setName, price: setPrice, isRaffle: setIsRaffle, quantity: setQuantity, imageUrl: setImageUrl});
+}
+
+export function updateShopItem(itemId, setName, setPrice, setIsRaffle, setImageUrl) {
+  return request('PUT', `/shop/item/${itemId}`, {name: setName, price: setPrice, isRaffle: setIsRaffle, imageUrl: setImageUrl});
+}
