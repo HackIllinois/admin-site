@@ -134,8 +134,7 @@ export function getStats() {
 }
 
 export function getRsvps() {
-  return request('GET', '/rsvp/filter/')
-    .then(res => res.rsvps);
+  return request('GET', '/admission/rsvp/');
 }
 
 export function getCheckins() {
