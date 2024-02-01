@@ -61,8 +61,8 @@ export function getDecisions() {
     .then(res => res.decisions);
 }
 
-export function makeDecision(id, status, wave) {
-  return request('POST', '/decision/', { id, status, wave });
+export function makeDecision(decisions) {
+  return request('PUT', '/admission/update', decisions);
 }
 
 export function finalizeDecision(id, finalized = true) {
@@ -124,9 +124,8 @@ export function sendNotification(notification, topic) {
   return request('POST', `/notifications/topic/${topic}/`, notification);
 }
 
-export function getRegistrations() {
-  return request('GET', '/registration/attendee/list/')
-    .then(res => res.registrations);
+export function getRegistration(id) {
+  return request('GET', `/registration/userid/${id}`);
 }
 
 export function getStats() {

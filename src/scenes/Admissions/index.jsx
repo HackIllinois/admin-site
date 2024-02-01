@@ -1,33 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.scss";
-import EditIcon from "@mui/icons-material/Edit";
+import _ from "lodash";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
-import {
-    GridRowModes,
-    DataGrid,
-    GridActionsCellItem,
-    GridRowEditStopReasons,
-} from "@mui/x-data-grid";
-import { getRsvps } from "util/api";
+import { Modal, Button } from "@mui/material";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { getRegistration, getRsvps, makeDecision } from "util/api";
 
 const Admissions = () => {
-    const [rows, setRows] = React.useState([]);
-    const [rowModesModel, setRowModesModel] = React.useState({});
+    const [rows, setRows] = useState([]);
+    const [originalRows, setOriginalRows] = useState([]);
+    const [changedRows, setChangedRows] = useState([]);
+    const [cellModesModel, setCellModesModel] = useState({});
+    const [open, setOpen] = useState(false);
+    const [openRegistration, setOpenRegistration] = useState(false);
+    const [registration, setRegistration] = useState({});
+    const [clear, setClear] = useState(false);
 
     useEffect(() => {
         getRsvps()
             .then((initialRows) => convertFromAPI(initialRows))
             .then((rowsToSet) => {
                 setRows(rowsToSet);
+                setOriginalRows(rowsToSet);
             });
     }, []);
 
     const convertFromAPI = (rsvps) => {
         const rowsToSet = rsvps.map((rsvp) => {
             return {
-                id: rsvp._id,
+                id: rsvp.userId,
                 userId: rsvp.userId,
                 status: rsvp.admittedPro ? "ACCEPTED_PRO" : rsvp.status,
                 reimbursementValue: rsvp.reimbursementValue,
@@ -37,51 +38,67 @@ const Admissions = () => {
         return rowsToSet;
     };
 
-    const handleRowEditStop = (params, event) => {
-        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            event.defaultMuiPrevented = true;
+    const convertToAPI = (rows) => {
+        const rsvpsToSet = rows.map((row) => {
+            return {
+                userId: row.userId,
+                admittedPro: row.status === "ACCEPTED_PRO",
+                status: row.status,
+                reimbursementValue: row.reimbursementValue,
+                response: row.response,
+                emailSent: false,
+            };
+        });
+        return rsvpsToSet;
+    };
+
+    const submitDecisions = () => {
+        if (changedRows.length === 0) {
+            alert("No changes to submit.");
+            return;
         }
-    };
-
-    const handleEditClick = (id) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.Edit },
-        });
-    };
-
-    const handleSaveClick = (id) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.View },
-        });
-        console.log(rows.find((row) => row.id === id));
+        const rsvpUpdates = convertToAPI(changedRows);
+        makeDecision(rsvpUpdates)
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                if (error.status === 424) {
+                    alert(
+                        "Status updated successfully, but there was an error sending email! Please try again or talk to Web/API"
+                    );
+                    window.location.reload();
+                } else {
+                    alert(
+                        "Error submitting decisions. Please refresh and try again."
+                    );
+                }
+            });
+            setOpen(false);
     };
 
     const handleViewApplicationClick = (id) => () => {
-        console.log("View Application: " + id);
-    };
-
-    const handleCancelClick = (id) => () => {
-        setRowModesModel({
-            ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        getRegistration(id).then((registration) => {
+            setRegistration(registration);
+            setOpenRegistration(true);
         });
-
-        const editedRow = rows.find((row) => row.id === id);
-        if (editedRow.isNew) {
-            setRows(rows.filter((row) => row.id !== id));
-        }
     };
 
     const processRowUpdate = (newRow) => {
-        const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
-    };
-
-    const handleRowModesModelChange = (newRowModesModel) => {
-        setRowModesModel(newRowModesModel);
+        setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
+        if (
+            _.isEqual(
+                originalRows.find((row) => row.id === newRow.id),
+                newRow
+            )
+        ) {
+            setChangedRows(changedRows.filter((row) => row.id !== newRow.id));
+        } else {
+            if (!changedRows.find((row) => row.id === newRow.id)) {
+                setChangedRows([...changedRows, newRow]);
+            }
+        }
+        return newRow;
     };
 
     const columns = [
@@ -90,7 +107,7 @@ const Admissions = () => {
             field: "reimbursementValue",
             headerName: "Reimbursement Value",
             type: "number",
-            width: 200,
+            width: 220,
             align: "left",
             headerAlign: "left",
             editable: true,
@@ -104,8 +121,8 @@ const Admissions = () => {
             valueOptions: [
                 "TBD",
                 "WAITLISTED",
+                "REJECTED",
                 "ACCEPTED",
-                "DECLINED",
                 "ACCEPTED_PRO",
             ],
         },
@@ -118,41 +135,11 @@ const Admissions = () => {
         {
             field: "actions",
             type: "actions",
-            headerName: "Actions",
-            width: 100,
+            headerName: "View Application",
+            width: 150,
             cellClassName: "actions",
             getActions: ({ id }) => {
-                const isInEditMode =
-                    rowModesModel[id]?.mode === GridRowModes.Edit;
-
-                if (isInEditMode) {
-                    return [
-                        <GridActionsCellItem
-                            icon={<SaveIcon />}
-                            label="Save"
-                            sx={{
-                                color: "primary.main",
-                            }}
-                            onClick={handleSaveClick(id)}
-                        />,
-                        <GridActionsCellItem
-                            icon={<CancelIcon />}
-                            label="Cancel"
-                            className="textPrimary"
-                            onClick={handleCancelClick(id)}
-                            color="inherit"
-                        />,
-                    ];
-                }
-
                 return [
-                    <GridActionsCellItem
-                        icon={<EditIcon />}
-                        label="Edit"
-                        className="textPrimary"
-                        onClick={handleEditClick(id)}
-                        color="inherit"
-                    />,
                     <GridActionsCellItem
                         icon={<VisibilityIcon />}
                         label="View Application"
@@ -168,17 +155,118 @@ const Admissions = () => {
         <div className="admissions">
             <h1>Admissions</h1>
             <DataGrid
+                loading={rows.length === 0}
                 rows={rows}
                 columns={columns}
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
+                cellModesModel={cellModesModel}
+                onCellModesModelChange={setCellModesModel}
                 processRowUpdate={processRowUpdate}
                 slotProps={{
-                    toolbar: { setRows, setRowModesModel },
+                    toolbar: { setRows, setCellModesModel },
                 }}
             />
+
+            <div className="submitButton">
+                <Button
+                    onClick={() => setClear(true)}
+                    variant="contained"
+                    sx={{ margin: "auto" }}
+                    color="error"
+                >
+                    Discard Changes
+                </Button>
+                <Button
+                    onClick={() => setOpen(true)}
+                    variant="contained"
+                    sx={{ margin: "auto" }}
+                >
+                    Save Changes
+                </Button>
+            </div>
+
+            <>
+                <Modal
+                    open={clear}
+                    onClose={() => setClear(false)}
+                    aria-labelledby="modal-modal-title2"
+                    aria-describedby="modal-modal-description2"
+                >
+                    <div className="modal">
+                        <h2>Are you sure you want to discard your changes?</h2>
+                        <p>You will not be able to recover your changes.</p>
+                        <div className="buttons">
+                            <Button
+                                onClick={() => setClear(false)}
+                                variant="contained"
+                                color="error"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={() => window.location.reload()}
+                                variant="contained"
+                            >
+                                Clear
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+            </>
+
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <div className="modal">
+                    <h2>Are you sure you want to submit decisions?</h2>
+                    <p>
+                        Applicants will be emaild with status update upon
+                        submit.
+                    </p>
+                    <div className="buttons">
+                        <Button
+                            onClick={() => setOpen(false)}
+                            variant="contained"
+                            color="error"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => submitDecisions()}
+                            variant="contained"
+                            color="success"
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal
+                open={openRegistration}
+                onClose={() => setOpenRegistration(false)}
+                aria-labelledby="modal-modal-title3"
+                aria-describedby="modal-modal-description3"
+            >
+                <div className="modal2">
+                    {Object.keys(registration).map((key) => (
+                        <p key={key}>
+                            {key}: {registration[key].toString()}
+                        </p>
+                    ))}
+                    <div className="buttons">
+                        <Button
+                            onClick={() => setOpenRegistration(false)}
+                            variant="contained"
+                            color="error"
+                        >
+                            Close
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

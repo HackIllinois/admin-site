@@ -25,10 +25,10 @@ import Admissions from "scenes/Admissions";
 const routes = [
     // { path: '/', name: "Statistics", icon: faCalculator },
     // { path: '/users', name: "Users", icon: faUsers },
-    { path: "/notifications", name: "Notifications", icon: faBell },
+    { path: "/", name: "Admissions", icon: faUsers },
+    // { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
-    { path: "/admissions", name: "Admissions", icon: faUsers },
     // { path: '/blobstore', name: "Blobstore", icon: faSplotch },
 ];
 
@@ -127,9 +127,9 @@ class App extends React.Component {
                         />
 
                         <Route
-                            path="/admissions"
+                            path="/"
                             element={
-                                <AuthenticatedRoute path="/admissions">
+                                <AuthenticatedRoute path="/">
                                     <Admissions />
                                 </AuthenticatedRoute>
                             }
