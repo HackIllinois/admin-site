@@ -2,25 +2,23 @@ import React from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    // faBell,
     faCalendar,
     faBars,
     faShoppingCart,
     faUsers,
-} from "@fortawesome/free-solid-svg-icons"; // faUsers, faCalculator, faSplotch
+} from "@fortawesome/free-solid-svg-icons"; // faUsers, faCalculator, faSplotch, faBell,
 
 import "./App.scss";
 import logo from "./assets/logo.svg";
 import AuthenticatedRoute from "components/AuthenticatedRoute";
 import Auth from "./components/Auth";
-// import Users from './scenes/Users';
 import Events from "./scenes/Events";
 import Notifications from "./scenes/Notifications";
-// import Statistics from 'scenes/Statistics';
 import Token from "scenes/Token";
 import Shop from "scenes/Shop";
 import Admissions from "scenes/Admissions";
-// import Blobstore from 'scenes/Blobstore';
+// import Users from './scenes/Users';
+// import Statistics from 'scenes/Statistics';
 
 const routes = [
     // { path: '/', name: "Statistics", icon: faCalculator },
@@ -29,7 +27,6 @@ const routes = [
     // { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
-    // { path: '/blobstore', name: "Blobstore", icon: faSplotch },
 ];
 
 class App extends React.Component {
@@ -92,7 +89,7 @@ class App extends React.Component {
                     </div>
 
                     <Routes>
-                        <Route path="/auth" component={Auth}></Route>
+                        <Route path="/auth" element={Auth}></Route>
 
                         {/* <AuthenticatedRoute path="/" exact>
               <Statistics/>
