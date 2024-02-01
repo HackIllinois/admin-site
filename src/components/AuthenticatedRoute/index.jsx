@@ -1,5 +1,4 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 import { isAuthenticated, authenticate, getRoles, getUserId } from 'util/api';
 
 // TODO: make distinction between google auth and github auth clearer
@@ -20,7 +19,7 @@ const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
   if (provider === 'google') {
     const roles = getRoles();
     if (roles.includes('STAFF') || roles.includes('ADMIN')) {
-      return <Route path={path} {...props}/>
+      return <React.Fragment {...props}/>
     } else {
       window.location.replace('https://hackillinois.org/');
       return;
@@ -28,7 +27,7 @@ const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
   }
 
   // otherwise provider is github, indicating that the route is open to all
-  return <Route path={path} {...props} />;
+  return <React.Fragment {...props} />;
 };
 
 export default AuthenticatedRoute;
