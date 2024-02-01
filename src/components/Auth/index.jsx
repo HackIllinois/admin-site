@@ -4,8 +4,7 @@ import Loading from "components/Loading";
 
 export default class Auth extends React.Component {
     componentDidMount() {
-        const { location } = this.props;
-        const { token } = queryString.parse(location.search);
+        const { token } = queryString.parse(window.location.search);
 
         // these are set in `authenticate` in util/api
         const { to } = localStorage;

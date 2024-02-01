@@ -89,7 +89,7 @@ class App extends React.Component {
                     </div>
 
                     <Routes>
-                        <Route path="/auth" element={Auth}></Route>
+                        <Route path="/auth" element={<Auth />}></Route>
 
                         {/* <AuthenticatedRoute path="/" exact>
               <Statistics/>
