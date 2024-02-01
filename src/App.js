@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faBell,
+    // faBell,
     faCalendar,
     faBars,
     faShoppingCart,
