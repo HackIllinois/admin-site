@@ -44,7 +44,7 @@ const Admissions = () => {
             return {
                 userId: row.userId,
                 admittedPro: row.status === "ACCEPTED_PRO",
-                status: row.status,
+                status: row.status === "ACCEPTED_PRO" ? "ACCEPTED" : row.status,
                 reimbursementValue: row.reimbursementValue,
                 response: row.response,
                 emailSent: false,
