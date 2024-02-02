@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import _ from "lodash";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Modal, Button } from "@mui/material";
+import { Modal, Button, Snackbar, Alert } from "@mui/material";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { getRegistration, getRsvps, makeDecision } from "util/api";
 
@@ -15,6 +15,7 @@ const Admissions = () => {
     const [openRegistration, setOpenRegistration] = useState(false);
     const [registration, setRegistration] = useState({});
     const [clear, setClear] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     useEffect(() => {
         getRsvps()
@@ -52,6 +53,12 @@ const Admissions = () => {
         return rsvpsToSet;
     };
 
+    const clearChanges = () => {
+        setRows(originalRows);
+        setChangedRows([]);
+        setClear(false);
+    };
+
     const submitDecisions = () => {
         if (changedRows.length === 0) {
             alert("No changes to submit.");
@@ -60,7 +67,9 @@ const Admissions = () => {
         const rsvpUpdates = convertToAPI(changedRows);
         makeDecision(rsvpUpdates)
             .then(() => {
-                window.location.reload();
+                setChangedRows([]);
+                setOriginalRows(rows);
+                setOpenSnackbar(true);
             })
             .catch((error) => {
                 if (error.status === 424) {
@@ -74,7 +83,7 @@ const Admissions = () => {
                     );
                 }
             });
-            setOpen(false);
+        setOpen(false);
     };
 
     const handleViewApplicationClick = (id) => () => {
@@ -167,6 +176,22 @@ const Admissions = () => {
             />
 
             <div className="submitButton">
+                <Snackbar
+                    open={openSnackbar}
+                    onClose={() => setOpenSnackbar(false)}
+                    autoHideDuration={5000}
+                >
+                    <Alert
+                        onClose={() => setOpenSnackbar(false)}
+                        severity="success"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Decisions Successfully Submitted!
+                    </Alert>
+                </Snackbar>
+
+
                 <Button
                     onClick={() => setClear(true)}
                     variant="contained"
@@ -184,34 +209,32 @@ const Admissions = () => {
                 </Button>
             </div>
 
-            <>
-                <Modal
-                    open={clear}
-                    onClose={() => setClear(false)}
-                    aria-labelledby="modal-modal-title2"
-                    aria-describedby="modal-modal-description2"
-                >
-                    <div className="modal">
-                        <h2>Are you sure you want to discard your changes?</h2>
-                        <p>You will not be able to recover your changes.</p>
-                        <div className="buttons">
-                            <Button
-                                onClick={() => setClear(false)}
-                                variant="contained"
-                                color="error"
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={() => window.location.reload()}
-                                variant="contained"
-                            >
-                                Clear
-                            </Button>
-                        </div>
+            <Modal
+                open={clear}
+                onClose={() => setClear(false)}
+                aria-labelledby="modal-modal-title2"
+                aria-describedby="modal-modal-description2"
+            >
+                <div className="modal">
+                    <h2>Are you sure you want to discard your changes?</h2>
+                    <p>You will not be able to recover your changes.</p>
+                    <div className="buttons">
+                        <Button
+                            onClick={() => setClear(false)}
+                            variant="contained"
+                            color="error"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => clearChanges()}
+                            variant="contained"
+                        >
+                            Clear
+                        </Button>
                     </div>
-                </Modal>
-            </>
+                </div>
+            </Modal>
 
             <Modal
                 open={open}
