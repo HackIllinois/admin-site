@@ -71,7 +71,7 @@ export function finalizeDecision(id, finalized = true) {
 
 export function getEvents() {
   return request('GET', '/event/')
-    .then(res => res.events);
+    .then(res => res.events).then((events) => events.filter((event) => !event.isStaff));
 }
 
 export function getStaffEvents() {
