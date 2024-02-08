@@ -31,11 +31,12 @@ export default class EventEditPopup extends React.Component {
       displayOnStaffCheckIn = false,
       isAsync = false,
       isStaff = props.staffEvent,
-      mapImageUrl = ''
+      mapImageUrl = '',
+      isPro
     } = props.event;
     
     this.state = {
-      eventValues: { startTime, endTime, name, description, staffEventType, publicEventType, eventType, locations, sponsor, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff, mapImageUrl }
+      eventValues: { startTime, endTime, name, description, staffEventType, publicEventType, eventType, locations, sponsor, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff, mapImageUrl, isPro }
     }
   }
 
@@ -115,6 +116,7 @@ export default class EventEditPopup extends React.Component {
                 <Field className="form-field" name="mapImageUrl" placeholder="Map Image URL" />
                 <Field className="form-margins" component={FormikCheckbox} name="isPrivate" label="Private Event" />
                 <Field className="form-margins" component={FormikCheckbox} name="displayOnStaffCheckIn" label="Display on Staff Check-in" />
+                <Field className="form-margins" component={FormikCheckbox} name="isPro" label="Pro Event" />
                 </>)}
 
                 <Field className="form-margins" component={FormikCheckbox} name="isAsync" label="Async Event" />
