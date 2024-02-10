@@ -124,6 +124,7 @@ export default class Events extends React.Component {
                                 {day.events.map((event) => (
                                     <EventCard
                                         event={event}
+                                        reloadEvents={() => this.reloadEvents()}
                                         canEdit={isAdmin}
                                         onClick={() =>
                                             this.setState({
@@ -137,6 +138,7 @@ export default class Events extends React.Component {
                                 {(isAdmin) && (
                                     <EventCard
                                         isAddButton
+                                        reloadEvents={() => this.reloadEvents()}
                                         onClick={() =>
                                             this.setState({
                                                 editingEvent:

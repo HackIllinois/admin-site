@@ -1,54 +1,54 @@
 import { Field, Form, Formik, useField } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { QRCode } from "react-qrcode-logo";
 
-import { getEventCodeExpiration, setEventCodeExpiration } from "util/api";
+import { updateEvent } from "util/api";
 import DateInput from "components/DateInput";
 import "./style.scss";
 
 const EventCodeForm = ({ event, onSubmit }) => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [initialValues, setInitialValues] = useState(null);
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [initialValues, setInitialValues] = useState(null);
 
     // 0 - user hasn't clicked submit yet
     // 1 - user clicked submit and request is being sent (i.e. loading)
     // 2 - request failed
     const [status, setStatus] = useState(0);
 
-    useEffect(() => {
-        setIsLoading(true);
-        setInitialValues(null);
-        if (event) {
-            getEventCodeExpiration(event.eventId)
-                .then(({ eventId, isStaff, exp }) => {
-                    if (!eventId || typeof isStaff === "undefined" || !exp) 
-                        throw new Error("Expiration does not exist!");
-                    setInitialValues({ eventId, isStaff, exp });
-                })
-                .catch((err) =>
-                    console.log("Failed to get event code, error: ", err)
-                )
-                .finally(() => setIsLoading(false));
-        }
-    }, [event]);
+    // useEffect(() => {
+    //     setIsLoading(true);
+    //     setInitialValues(null);
+    //     if (event) {
+    //         getEventCodeExpiration(event.eventId)
+    //             .then(({ eventId, isStaff, exp }) => {
+    //                 if (!eventId || typeof isStaff === "undefined" || !exp) 
+    //                     throw new Error("Expiration does not exist!");
+    //                 setInitialValues({ eventId, isStaff, exp });
+    //             })
+    //             .catch((err) =>
+    //                 console.log("Failed to get event code, error: ", err)
+    //             )
+    //             .finally(() => setIsLoading(false));
+    //     }
+    // }, [event]);
 
-    const handleSubmit = (values) => {
-        const { eventId, isStaff, exp } = values;
+    const handleSubmit = (event) => {
         setStatus(1); // loading
-        setEventCodeExpiration(eventId, isStaff, exp)
-            .then(() => onSubmit(values)) // this should close the form, so no need to change status
+        console.log("event: ", event);
+        updateEvent(event)
+            .then(() => onSubmit(event)) // this should close the form, so no need to change status
             .catch((err) => {
                 console.log("Failed to set event code, error: ", err);
                 setStatus(2); // failed
             });
     };
 
-    if (isLoading) {
-        return <h4 className="event-code-form">Loading...</h4>;
-    }
+    // if (isLoading) {
+    //     return <h4 className="event-code-form">Loading...</h4>;
+    // }
 
-    if (!initialValues) {
-        return <h4 className="event-code-form">Error fetching code</h4>;
+    if (!event.exp) {
+        return <h4 className="event-code-form">Expiration date does not exist!</h4>;
     }
 
     const EventCodeField = ({ label, ...props }) => {
@@ -69,7 +69,7 @@ const EventCodeForm = ({ event, onSubmit }) => {
     };
 
     return (
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik initialValues={event} onSubmit={handleSubmit}>
             <Form className="event-code-form">
                 <h2>Edit Code</h2>
                 <EventCodeField

@@ -32,11 +32,12 @@ export default class EventEditPopup extends React.Component {
       isAsync = false,
       isStaff = props.staffEvent,
       mapImageUrl = '',
-      isPro
+      isPro = false,
+      exp = ''
     } = props.event;
     
     this.state = {
-      eventValues: { startTime, endTime, name, description, staffEventType, publicEventType, eventType, locations, sponsor, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff, mapImageUrl, isPro }
+      eventValues: { startTime, endTime, name, description, staffEventType, publicEventType, eventType, locations, sponsor, points, isPrivate, displayOnStaffCheckIn, isAsync, isStaff, mapImageUrl, isPro, exp }
     }
   }
 
@@ -44,6 +45,7 @@ export default class EventEditPopup extends React.Component {
     const newEvent = Object.assign({}, this.props.event, values);
     newEvent.publicEventType = newEvent.eventType;
     newEvent.staffEventType = newEvent.eventType;
+    newEvent.exp = newEvent.endTime + 1800;
     const addOrUpdateEvent = this.isNewEvent() ? addEvent : updateEvent;
     addOrUpdateEvent(newEvent).then(() => {
       this.props.onUpdateEvent();

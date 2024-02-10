@@ -7,7 +7,7 @@ import FormPopup from 'components/FormPopup';
 import EventCodeForm from '../EventCodeForm';
 import './style.scss';
 
-const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
+const EventCard = ({ event, canEdit, onClick, isAddButton, reloadEvents }) => {
   const urlRegex = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*))/g;
   const processDescription = description => description.replace(urlRegex, '<a href="$&" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer">$1</a>');
 
@@ -71,7 +71,7 @@ const EventCard = ({ event, canEdit, onClick, isAddButton }) => {
         </div>
       </button>
 
-      <FormPopup form={EventCodeForm} event={event}>
+      <FormPopup form={EventCodeForm} onSubmit={reloadEvents} event={event}>
         <button className="event-code-button">
           <FontAwesomeIcon icon={faKey} fixedWidth />
         </button>
