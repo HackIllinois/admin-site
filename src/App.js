@@ -6,6 +6,8 @@ import {
     faBars,
     faShoppingCart,
     faUsers,
+    faBell,
+    faKey
 } from "@fortawesome/free-solid-svg-icons"; // faUsers, faCalculator, faSplotch, faBell,
 
 import "./App.scss";
@@ -24,9 +26,10 @@ const routes = [
     // { path: '/', name: "Statistics", icon: faCalculator },
     // { path: '/users', name: "Users", icon: faUsers },
     { path: "/", name: "Admissions", icon: faUsers },
-    // { path: "/notifications", name: "Notifications", icon: faBell },
+    { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
+    { path: "/token", name: "Token", icon: faKey },
 ];
 
 class App extends React.Component {
@@ -137,7 +140,6 @@ class App extends React.Component {
                             element={
                                 <AuthenticatedRoute
                                     path="/token"
-                                    provider="github"
                                 >
                                     <Token />
                                 </AuthenticatedRoute>

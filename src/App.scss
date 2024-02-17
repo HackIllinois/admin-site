@@ -14,6 +14,7 @@
     color: $secondary-color;
     padding: 6px;
     -webkit-tap-highlight-color: transparent;
+    z-index: 20;
     
     .highlight {
       width: 100%;
