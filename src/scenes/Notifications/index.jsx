@@ -130,10 +130,10 @@ export default class Notifications extends React.Component {
             return <Loading />;
         }
 
-        const isAdmin = getRoles().includes("ADMIN");
+        const isStaff = getRoles().includes("STAFF"); // DOWNGRADE FOR THE EVENT SO HELP DESK CAN SEND NOTIFICATIONS
         return (
             <div className="notifications-page">
-                {isAdmin && (
+                {isStaff && (
                     <div className="top">
                         <div className="send-notification tile">
                             <div className="title">Send Notification</div>
