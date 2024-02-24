@@ -60,6 +60,7 @@ export default class Notifications extends React.Component {
 
         this.state = {
             isLoading: true,
+            sendProcessing: false,
             notifications: [],
             events: [],
             staffEvents: [],
@@ -98,6 +99,17 @@ export default class Notifications extends React.Component {
         this.setState({ isLoading: true });
         getNotifications()
             .then((notifications) => {
+                notifications.forEach((notification) => {
+                    let sentCount = 0;
+                    let failedCount = 0;
+                    notification.batches.forEach((batch) => {
+                        sentCount += batch.sent.length
+                        failedCount += batch.failed.length
+                    })
+                    notification.sentCount = sentCount
+                    notification.failedCount = failedCount
+                })
+
                 this.setState({
                     notifications: notifications.reverse(),
                 });
@@ -115,7 +127,14 @@ export default class Notifications extends React.Component {
             notification.topic === "StaffShift" && (notificationToSend.staffShift = notification.staffShift);
             notification.topic === "FoodWave" && (notificationToSend.foodWave = notification.foodWave);
 
+            this.setState({
+                sendProcessing: true,
+            })
+
             sendNotification(notificationToSend).then(() => {
+                this.setState({
+                    sendProcessing: false,
+                })
                 this.updateNotifications();
                 formik.resetForm();
             });
@@ -203,7 +222,7 @@ export default class Notifications extends React.Component {
                                         />
 
                                         <div className="buttons">
-                                            <button type="submit">
+                                            <button disabled={this.state.sendProcessing} type="submit">
                                                 <FontAwesomeIcon
                                                     icon={faPaperPlane}
                                                 />{" "}
@@ -239,7 +258,7 @@ export default class Notifications extends React.Component {
                             <div className="title">{notification.title}</div>
                             <div className="body">{notification.body}</div>
                             <div className="time">
-                                Recipient Count: {notification.recipientCount}
+                                Sent: {notification.sentCount}<br />Failed: {notification.failedCount}
                             </div>
                             {/* <div className="time">{ formatDate(notification.time) }</div> */}
                         </div>
