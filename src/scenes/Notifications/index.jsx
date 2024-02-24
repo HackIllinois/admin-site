@@ -12,6 +12,7 @@ import {
     getRoles,
     getEvents,
     getStaffEvents,
+    sendNotificationAll,
 } from "util/api";
 
 const notificationInitialValues = {
@@ -21,7 +22,7 @@ const notificationInitialValues = {
     role: "",
     foodWaves: "",
     eventId: "",
-    staffShift: ""
+    staffShift: "",
 };
 
 const topicOptions = [
@@ -109,17 +110,33 @@ export default class Notifications extends React.Component {
 
     submit(notification, formik) {
         if (notification.title && notification.topic) {
-            let notificationToSend = { title: notification.title, body: notification.body };
-            notification.topic === "Role" && (notificationToSend.role = notification.role);
-            notification.topic === "Event" && (notificationToSend.eventId = notification.eventId);
-            notification.topic === "StaffShift" && (notificationToSend.staffShift = notification.staffShift);
-            notification.topic === "FoodWave" && (notificationToSend.foodWave = notification.foodWave);
+            let notificationToSend = {
+                title: notification.title,
+                body: notification.body,
+            };
+            notification.topic === "Role" &&
+                (notificationToSend.role = notification.role);
+            notification.topic === "Event" &&
+                (notificationToSend.eventId = notification.eventId);
+            notification.topic === "StaffShift" &&
+                (notificationToSend.staffShift = notification.staffShift);
+            notification.topic === "FoodWave" &&
+                (notificationToSend.foodWave = notification.foodWave);
 
-            sendNotification(notificationToSend).then(() => {
-                this.updateNotifications();
-                formik.resetForm();
-            });
-            
+            if (
+                notification.topic === "Role" &&
+                notification.role === "ATTENDEE"
+            ) {
+                sendNotificationAll(notificationToSend).then(() => {
+                    this.updateNotifications();
+                    formik.resetForm();
+                });
+            } else {
+                sendNotification(notificationToSend).then(() => {
+                    this.updateNotifications();
+                    formik.resetForm();
+                });
+            }
         }
     }
 
@@ -176,7 +193,8 @@ export default class Notifications extends React.Component {
                                             />
                                         )}
 
-                                        {props.values.topic === "StaffShift" && (
+                                        {props.values.topic ===
+                                            "StaffShift" && (
                                             <SelectField
                                                 name="staffShift"
                                                 className="select"

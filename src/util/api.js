@@ -128,6 +128,17 @@ export function sendNotification(notification) {
   return request('POST', `/notification/send/`, notification);
 }
 
+export function sendNotificationAll(notification) {
+  delete notification.role;
+  notification.foodWave = 0;
+  let not2 = {...notification};
+  not2.foodWave = 1;
+  return Promise.all([
+    request('POST', `/notification/send/`, notification),
+    request('POST', `/notification/send/`, not2)
+  ]);
+};
+
 export function getRegistration(id) {
   return request('GET', `/registration/userid/${id}`);
 }
