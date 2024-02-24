@@ -130,9 +130,9 @@ export function sendNotification(notification) {
 
 export function sendNotificationAll(notification) {
   delete notification.role;
-  notification.foodWave = 0;
+  notification.foodWave = 1;
   let not2 = {...notification};
-  not2.foodWave = 1;
+  not2.foodWave = 2;
   return Promise.all([
     request('POST', `/notification/send/`, notification),
     request('POST', `/notification/send/`, not2)
