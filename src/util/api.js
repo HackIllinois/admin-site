@@ -152,7 +152,7 @@ export function getStats() {
 }
 
 export function getRsvps() {
-  return request('GET', '/admission/rsvp/');
+  return request('GET', '/admission/rsvp/staff/');
 }
 
 export function getCheckins() {
