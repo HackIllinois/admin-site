@@ -125,21 +125,8 @@ export function getNotifications() {
 }
 
 export async function sendNotification(notification) {
-  const batchResponse = await request(
-    'POST', '/notification/batch', notification
-  );
-
-  const batches = batchResponse.batches;
-
-  await Promise.all(
-    batches.map((batchId) =>
-      request('POST',
-        '/notification/send',
-        {
-          batchId,
-        }
-      )
-    )
+  return await request(
+    'POST', '/notification/send/', notification
   );
 }
 

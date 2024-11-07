@@ -29,6 +29,7 @@ const topicOptions = [
     { label: "Event", value: "Event" },
     { label: "Staff Shift", value: "StaffShift" },
     { label: "Food Wave", value: "FoodWave" },
+    { label: "Users", value: "UserIds" },
 ];
 
 const roles = [
@@ -126,6 +127,7 @@ export default class Notifications extends React.Component {
             notification.topic === "Event" && (notificationToSend.eventId = notification.eventId);
             notification.topic === "StaffShift" && (notificationToSend.staffShift = notification.staffShift);
             notification.topic === "FoodWave" && (notificationToSend.foodWave = notification.foodWave);
+            notification.topic === "UserIds" && (notificationToSend.userIds = notification.userIds.split(",").map(s => s.trim()));
 
             this.setState({
                 sendProcessing: true,
@@ -210,6 +212,14 @@ export default class Notifications extends React.Component {
                                                 className="select"
                                                 placeholder="Select Food Wave"
                                                 options={foodWaves}
+                                            />
+                                        )}
+
+                                        {props.values.topic === "UserIds" && (
+                                            <Field
+                                                name="userIds"
+                                                className="form-field"
+                                                placeholder="Enter User Ids (comma separated)"
                                             />
                                         )}
 
