@@ -108,18 +108,6 @@ export function removeNotificationTopic(topic) {
   return request('DELETE', `/notifications/topic/${topic}/`);
 }
 
-// export function getNotifications(topicIds) {
-//   // using Promise.all to send web request for each topic so that they are sent simultaneously
-//   const promises = topicIds.map(topicId => 
-//     request('GET', `/notifications/topic/${topicId}/`)
-//       .then(res => res.notifications || [])
-//   );
-
-//   return Promise.all(promises).then(notificationsById =>
-//     notificationsById.reduce((allNotifications, notifications) => allNotifications.concat(notifications), [])
-//   );
-// }
-
 export function getNotifications() {
   return request('GET', '/notification/');
 }
@@ -145,14 +133,6 @@ export function getRsvps() {
 export function getCheckins() {
   return request('GET', '/checkin/list/')
     .then(res => res.checkedInUsers);
-}
-
-export function getEventCodeExpiration(eventId) {
-  return request('GET', `/event/metadata/${eventId}/`);
-}
-
-export function setEventCodeExpiration(eventId, isStaff, exp) {
-  return request('PUT', `/event/metadata/`, { eventId, isStaff, exp });
 }
 
 export function getBlob(blobId) {

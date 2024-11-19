@@ -15,23 +15,6 @@ const EventCodeForm = ({ event, onSubmit }) => {
     // 2 - request failed
     const [status, setStatus] = useState(0);
 
-    // useEffect(() => {
-    //     setIsLoading(true);
-    //     setInitialValues(null);
-    //     if (event) {
-    //         getEventCodeExpiration(event.eventId)
-    //             .then(({ eventId, isStaff, exp }) => {
-    //                 if (!eventId || typeof isStaff === "undefined" || !exp) 
-    //                     throw new Error("Expiration does not exist!");
-    //                 setInitialValues({ eventId, isStaff, exp });
-    //             })
-    //             .catch((err) =>
-    //                 console.log("Failed to get event code, error: ", err)
-    //             )
-    //             .finally(() => setIsLoading(false));
-    //     }
-    // }, [event]);
-
     const handleSubmit = (event) => {
         setStatus(1); // loading
         console.log("event: ", event);
