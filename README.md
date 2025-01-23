@@ -2,14 +2,19 @@
 
 HackIllinois' admin site
 
-# Deploying
+# Setup
 
-Since this is a private repo, we use manual deployment to netlify.
+Install dependencies with:
+```sh
+npm install
+```
 
-**Note: Make sure you build without the .env locally, or the token will be included in the build.**
-You can verify you haven't made this mistake by ensuring the app prompts a login on start.
+# Developing
 
-To do so:
-1. Run `npm build`
-2. Copy the `netlify.toml` into the `build/` folder (`cp netlify.toml build/`)
-3. Upload the `build/` folder to netlify
+To run locally, run:
+```sh
+npm run dev
+```
+
+Any changes pushed to `main` will be build by netlify to https://admin.hackillinois.org/
+
