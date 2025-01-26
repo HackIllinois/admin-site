@@ -2,7 +2,6 @@ import React from 'react';
 
 import './LocationInput.scss';
 import Checkbox from 'components/Checkbox';
-import { StyledSelect } from 'components/SelectField';
 
 const locations = [
   {
@@ -42,10 +41,7 @@ const locations = [
   }
 ];
 
-// const tags = ['DCL', 'KENNEY', 'SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'ECEB1', 'ECEB2', 'ECEB3'];
-const tags = ['SIEBEL0', 'SIEBEL1', 'SIEBEL2', 'CIF', 'UNION', 'LEGENDS'];
-
-const blankLocation = { description: '', latitude: 0, longitude: 0, tags: [] };
+const blankLocation = { description: '', latitude: 0, longitude: 0 };
 
 export default function LocationCheckbox({ field, form }) {
   // Note: The description of a selectedLocation may include additional details ("DCL Basement and 1st floor")
@@ -54,16 +50,14 @@ export default function LocationCheckbox({ field, form }) {
   const selectedLocations = field.value || [];
 
   const addLocation = (location, otherInfo = {}) => {
-    // otherInfo may be only updating a single field (e.g. tags) so we set the current
+    // otherInfo may be only updating a single field (e.g. description) so we set the current
     // values of the other fields as the defaults
     const {
       details = getDetails(location),
-      tags = getTags(location)
     } = otherInfo;
 
     const newLocation = Object.assign({}, location);
     newLocation.description += ` ${details}`;
-    newLocation.tags = tags;
 
     // First remove any existing selectedLocations corresponding to this location (for editing details)
     form.setFieldValue(field.name, selectedLocations
@@ -93,8 +87,6 @@ export default function LocationCheckbox({ field, form }) {
     return selectedDescription.replace(location.description, '').trimStart();
   }
 
-  const getTags = location => findSelectedLocation(location.description).tags;
-
   return (
     <div className="location-input">
       {
@@ -112,21 +104,6 @@ export default function LocationCheckbox({ field, form }) {
               value={getDetails(location)}
               disabled={!isSelected(location)}
               onChange={e => addLocation(location, { details: e.target.value })}
-            />
-
-            <StyledSelect
-              className="tags-select"
-              placeholder="Tags"
-              value={getTags(location).map(tag => ({ value: tag, label: tag }))}
-              options={tags.map(tag => ({ value: tag, label: tag }))}
-              onChange={selected => addLocation(location, { tags: (selected || []).map(x => x.value) })}
-              isDisabled={!isSelected(location)}
-              menuPlacement="top"
-              isMulti={true}
-              controlShouldRenderValue={false}
-              hideSelectedOptions={false}
-              closeMenuOnSelect={false}
-              isClearable={false}
             />
           </div>
         ))

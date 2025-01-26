@@ -1,4 +1,4 @@
-@import 'constants.scss';
+@import "constants.scss";
 
 .location-input {
   margin: 0 5px;
@@ -11,12 +11,6 @@
       @include form-field;
       flex: 2;
       margin: 0 10px 0 15px;
-      
-    }
-
-    .tags-select {
-      min-width: 100px;
-      flex: 1;
     }
   }
 }
