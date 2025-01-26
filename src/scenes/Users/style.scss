@@ -1,135 +1,137 @@
 @import 'constants.scss';
 
 .users-page {
-  --table-options-height: 110px;
-  flex: 1;
-  height: 100vh;
-  overflow: auto;
-  
-  &.admin {
-    --table-options-height: 170px;
-    .table-container .row .element.checkbox {
-      display: inline-block;
-    }
-  }
-
-  .table-options {
-    height: var(--table-options-height);
-    padding: 10px;
-    box-sizing: border-box;
-
-    .top-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-
-      .column-select {
-        flex: 1;
-  
-        @include mobile { 
-          margin-left: 50px;
-        }
-      }
-
-      .stats-button {
-        border: 1.5px solid $secondary-color;
-        color: $secondary-color;
-        border-radius: 25px;
-        padding: 5px 10px;
-        margin-left: 15px;
-        font-size: 0.9em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color .2s, color .2s;
-
-        &:hover {
-          background-color: $secondary-color;
-          color: white;
-        }
-      }
-
-      .refresh-icon {
-        padding: 10px;
-        margin-left: 5px;
-        cursor: pointer;
-        color: $primary-color;
-      }
-    }
-  }
-
-  .table-container {
-    height: calc(100vh - var(--table-options-height));
-
-    .row {
-      box-shadow: 0px -1px 0px #dddddd inset;
-      white-space: nowrap;
-      width: fit-content;
-      width: -moz-fit-content;
-      height: 50px;
-      display: table-cell;
-      vertical-align: middle;
-  
-      &.header {
-        font-weight: bold;
-        color: #444444;
-        background-color: white;
-      }
-
-      &.selected {
-        background-color: #eeeeee;
-      }
-  
-      .element {
-        margin: 0 10px;
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-top: 4px;
-
-        &.row-number {
-          width: 38px;
-          font-size: 0.85em;
-          margin-bottom: 2px;
-          font-weight: 600;
-          text-align: center;
-          color: #444444;
-        }
-
-        &.checkbox {
-          width: 25px;
-          justify-content: center;
-          display: none;
-        }
-      }
-
-      .separator {
-        position: absolute;
-        bottom: 0;
-        height: 1px;
-        width: 100%;
-        background-color: #dddddd;
-      }
-    }
-  }
-
-  .stats-popup {
-    background-color: rgba(0, 0, 0, 0.4);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
+    --table-options-height: 110px;
+    flex: 1;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+    overflow: auto;
 
-    .stats-content {
-      background-color: white;
-      width: 90vw;
-      height: 90vh;
-      border-radius: 10px;
-      overflow: auto;
+    &.admin {
+        --table-options-height: 170px;
+        .table-container .row .element.checkbox {
+            display: inline-block;
+        }
     }
-  }
+
+    .table-options {
+        height: var(--table-options-height);
+        padding: 10px;
+        box-sizing: border-box;
+
+        .top-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+
+            .column-select {
+                flex: 1;
+
+                @include mobile {
+                    margin-left: 50px;
+                }
+            }
+
+            .stats-button {
+                border: 1.5px solid $secondary-color;
+                color: $secondary-color;
+                border-radius: 25px;
+                padding: 5px 10px;
+                margin-left: 15px;
+                font-size: 0.9em;
+                font-weight: 600;
+                cursor: pointer;
+                transition:
+                    background-color 0.2s,
+                    color 0.2s;
+
+                &:hover {
+                    background-color: $secondary-color;
+                    color: white;
+                }
+            }
+
+            .refresh-icon {
+                padding: 10px;
+                margin-left: 5px;
+                cursor: pointer;
+                color: $primary-color;
+            }
+        }
+    }
+
+    .table-container {
+        height: calc(100vh - var(--table-options-height));
+
+        .row {
+            box-shadow: 0px -1px 0px #dddddd inset;
+            white-space: nowrap;
+            width: fit-content;
+            width: -moz-fit-content;
+            height: 50px;
+            display: table-cell;
+            vertical-align: middle;
+
+            &.header {
+                font-weight: bold;
+                color: #444444;
+                background-color: white;
+            }
+
+            &.selected {
+                background-color: #eeeeee;
+            }
+
+            .element {
+                margin: 0 10px;
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-top: 4px;
+
+                &.row-number {
+                    width: 38px;
+                    font-size: 0.85em;
+                    margin-bottom: 2px;
+                    font-weight: 600;
+                    text-align: center;
+                    color: #444444;
+                }
+
+                &.checkbox {
+                    width: 25px;
+                    justify-content: center;
+                    display: none;
+                }
+            }
+
+            .separator {
+                position: absolute;
+                bottom: 0;
+                height: 1px;
+                width: 100%;
+                background-color: #dddddd;
+            }
+        }
+    }
+
+    .stats-popup {
+        background-color: rgba(0, 0, 0, 0.4);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+
+        .stats-content {
+            background-color: white;
+            width: 90vw;
+            height: 90vh;
+            border-radius: 10px;
+            overflow: auto;
+        }
+    }
 }

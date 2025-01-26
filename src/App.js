@@ -1,47 +1,47 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from 'react'
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faCalendar,
     faBars,
     faShoppingCart,
     faUsers,
     faBell,
-    faKey
-} from "@fortawesome/free-solid-svg-icons"; // faUsers, faCalculator, faSplotch, faBell,
+    faKey,
+} from '@fortawesome/free-solid-svg-icons' // faUsers, faCalculator, faSplotch, faBell,
 
-import "./App.scss";
-import logo from "./assets/logo.svg";
-import AuthenticatedRoute from "components/AuthenticatedRoute";
-import Auth from "./components/Auth";
-import Events from "./scenes/Events";
-import Notifications from "./scenes/Notifications";
-import Token from "scenes/Token";
-import Shop from "scenes/Shop";
-import Admissions from "scenes/Admissions";
+import './App.scss'
+import logo from './assets/logo.svg'
+import AuthenticatedRoute from 'components/AuthenticatedRoute'
+import Auth from './components/Auth'
+import Events from './scenes/Events'
+import Notifications from './scenes/Notifications'
+import Token from 'scenes/Token'
+import Shop from 'scenes/Shop'
+import Admissions from 'scenes/Admissions'
 // import Users from './scenes/Users';
 // import Statistics from 'scenes/Statistics';
 
 const routes = [
     // { path: '/', name: "Statistics", icon: faCalculator },
     // { path: '/users', name: "Users", icon: faUsers },
-    { path: "/", name: "Admissions", icon: faUsers },
-    { path: "/notifications", name: "Notifications", icon: faBell },
-    { path: "/events", name: "Events", icon: faCalendar },
-    { path: "/shop", name: "Shop", icon: faShoppingCart },
-    { path: "/token", name: "Token", icon: faKey },
-];
+    { path: '/', name: 'Admissions', icon: faUsers },
+    { path: '/notifications', name: 'Notifications', icon: faBell },
+    { path: '/events', name: 'Events', icon: faCalendar },
+    { path: '/shop', name: 'Shop', icon: faShoppingCart },
+    { path: '/token', name: 'Token', icon: faKey },
+]
 
 class App extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             menuOpen: false,
-        };
+        }
     }
 
     render() {
-        const { menuOpen } = this.state;
+        const { menuOpen } = this.state
         return (
             <div className="App">
                 <BrowserRouter className="router">
@@ -55,15 +55,15 @@ class App extends React.Component {
 
                     <div
                         className={
-                            "menu-background" + (menuOpen ? " open" : "")
+                            'menu-background' + (menuOpen ? ' open' : '')
                         }
                         onClick={() => this.setState({ menuOpen: false })}
                     />
 
                     <div
                         className={
-                            "navigation-menu-container" +
-                            (menuOpen ? " open" : "")
+                            'navigation-menu-container' +
+                            (menuOpen ? ' open' : '')
                         }
                     >
                         <div className="navigation-menu">
@@ -73,7 +73,11 @@ class App extends React.Component {
                             {routes.map((route) => (
                                 <NavLink
                                     to={route.path}
-                                    className={({isActive}) => isActive ? "navigation-link active" : "navigation-link"}
+                                    className={({ isActive }) =>
+                                        isActive
+                                            ? 'navigation-link active'
+                                            : 'navigation-link'
+                                    }
                                     onClick={() =>
                                         this.setState({ menuOpen: false })
                                     }
@@ -138,9 +142,7 @@ class App extends React.Component {
                         <Route
                             path="/token"
                             element={
-                                <AuthenticatedRoute
-                                    path="/token"
-                                >
+                                <AuthenticatedRoute path="/token">
                                     <Token />
                                 </AuthenticatedRoute>
                             }
@@ -148,8 +150,8 @@ class App extends React.Component {
                     </Routes>
                 </BrowserRouter>
             </div>
-        );
+        )
     }
 }
 
-export default App;
+export default App

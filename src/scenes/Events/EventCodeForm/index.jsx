@@ -1,10 +1,10 @@
-import { Field, Form, Formik, useField } from "formik";
-import React, { useState } from "react";
-import { QRCode } from "react-qrcode-logo";
+import { Field, Form, Formik, useField } from 'formik'
+import React, { useState } from 'react'
+import { QRCode } from 'react-qrcode-logo'
 
-import { updateEvent } from "util/api";
-import DateInput from "components/DateInput";
-import "./style.scss";
+import { updateEvent } from 'util/api'
+import DateInput from 'components/DateInput'
+import './style.scss'
 
 const EventCodeForm = ({ event, onSubmit }) => {
     // const [isLoading, setIsLoading] = useState(false);
@@ -13,29 +13,31 @@ const EventCodeForm = ({ event, onSubmit }) => {
     // 0 - user hasn't clicked submit yet
     // 1 - user clicked submit and request is being sent (i.e. loading)
     // 2 - request failed
-    const [status, setStatus] = useState(0);
+    const [status, setStatus] = useState(0)
 
     const handleSubmit = (event) => {
-        setStatus(1); // loading
-        console.log("event: ", event);
+        setStatus(1) // loading
+        console.log('event: ', event)
         updateEvent(event)
             .then(() => onSubmit(event)) // this should close the form, so no need to change status
             .catch((err) => {
-                console.log("Failed to set event code, error: ", err);
-                setStatus(2); // failed
-            });
-    };
+                console.log('Failed to set event code, error: ', err)
+                setStatus(2) // failed
+            })
+    }
 
     // if (isLoading) {
     //     return <h4 className="event-code-form">Loading...</h4>;
     // }
 
     if (!event.exp) {
-        return <h4 className="event-code-form">Expiration date does not exist!</h4>;
+        return (
+            <h4 className="event-code-form">Expiration date does not exist!</h4>
+        )
     }
 
     const EventCodeField = ({ label, ...props }) => {
-        const [field] = useField(props);
+        const [field] = useField(props)
 
         return (
             <>
@@ -48,8 +50,8 @@ const EventCodeForm = ({ event, onSubmit }) => {
                     <QRCode className="qr" value={field.value} />
                 </div>
             </>
-        );
-    };
+        )
+    }
 
     return (
         <Formik initialValues={event} onSubmit={handleSubmit}>
@@ -66,11 +68,11 @@ const EventCodeForm = ({ event, onSubmit }) => {
                     className="submit-button"
                     disabled={status === 1}
                 >
-                    {["Submit", "Loading...", "Failed, try again?"][status]}
+                    {['Submit', 'Loading...', 'Failed, try again?'][status]}
                 </button>
             </Form>
         </Formik>
-    );
-};
+    )
+}
 
-export default EventCodeForm;
+export default EventCodeForm

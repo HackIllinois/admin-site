@@ -1,87 +1,87 @@
-import React from "react";
+import React from 'react'
 
-import "./style.scss";
-import EventEditPopup from "./EventEditPopup";
-import Loading from "components/Loading";
-import Message from "components/Message";
-import { getEvents, getStaffEvents, getRoles } from "util/api";
-import { sortEventsIntoDays } from "util/events";
-import EventCard from "./EventCard";
+import './style.scss'
+import EventEditPopup from './EventEditPopup'
+import Loading from 'components/Loading'
+import Message from 'components/Message'
+import { getEvents, getStaffEvents, getRoles } from 'util/api'
+import { sortEventsIntoDays } from 'util/events'
+import EventCard from './EventCard'
 
 // When adding a new event, most of the field values default to empty strings, but we need
 // to make sure that the start and end times are on the day which the add button was pressed on
 function createBlankEventOnDate(date = new Date()) {
-    const secondsUntilNoon = 12 * 60 * 60;
-    const time = Math.floor(date.getTime() / 1000) + secondsUntilNoon;
-    return { startTime: time, endTime: time };
+    const secondsUntilNoon = 12 * 60 * 60
+    const time = Math.floor(date.getTime() / 1000) + secondsUntilNoon
+    return { startTime: time, endTime: time }
 }
 
 export default class Events extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             isLoading: true,
             error: false,
             days: [],
             editingEvent: null,
             staffView: false,
-        };
+        }
     }
 
     componentDidMount() {
-        this.reloadEvents();
+        this.reloadEvents()
     }
 
     reloadEvents() {
-        const eventFunction = this.state.staffView ? getStaffEvents : getEvents;
+        const eventFunction = this.state.staffView ? getStaffEvents : getEvents
         eventFunction()
             .then((events) => {
                 this.setState({
                     days: sortEventsIntoDays(events),
                     isLoading: false,
-                });
+                })
             })
             .catch(() => {
-                this.setState({ error: true, isLoading: false });
-            });
+                this.setState({ error: true, isLoading: false })
+            })
     }
 
     render() {
-        const { days, editingEvent, isLoading, error } = this.state;
+        const { days, editingEvent, isLoading, error } = this.state
 
         if (isLoading) {
-            return <Loading />;
+            return <Loading />
         }
 
         if (error) {
-            return <Message>Error fetching data</Message>;
+            return <Message>Error fetching data</Message>
         }
 
-        const isAdmin = getRoles().includes("ADMIN"); // TODO: replace every instance of `isAdmin || true` with just `isAdmin` || `true` depending on what we decide
+        const isAdmin = getRoles().includes('ADMIN') // TODO: replace every instance of `isAdmin || true` with just `isAdmin` || `true` depending on what we decide
         return (
             <div className="container">
                 <div className="titles">
                     <div
-                        className={this.state.staffView ? "active" : ""}
+                        className={this.state.staffView ? 'active' : ''}
                         onClick={() => {
                             this.setState(
                                 { staffView: true, isLoading: true },
-                                () => this.reloadEvents()
-                            );
+                                () => this.reloadEvents(),
+                            )
                         }}
                     >
                         Staff Schedule
                     </div>
                     <div
-                        className={!this.state.staffView ? "active" : ""}
+                        className={!this.state.staffView ? 'active' : ''}
                         onClick={() => {
                             this.setState(
                                 {
                                     staffView: false,
                                     isLoading: true,
                                 },
-                                () => this.reloadEvents()
-                            );
+                                () => this.reloadEvents(),
+                            )
                         }}
                     >
                         Attendee Schedule
@@ -100,7 +100,7 @@ export default class Events extends React.Component {
                     )}
 
                     {/* If there are no days, we still want to offer the ability to add events for admins */}
-                    {days.length === 0 && (isAdmin) && (
+                    {days.length === 0 && isAdmin && (
                         <div className="day">
                             <div className="day-of-week">No Events Found</div>
                             <EventCard
@@ -135,7 +135,7 @@ export default class Events extends React.Component {
                                     />
                                 ))}
 
-                                {(isAdmin) && (
+                                {isAdmin && (
                                     <EventCard
                                         isAddButton
                                         reloadEvents={() => this.reloadEvents()}
@@ -143,7 +143,7 @@ export default class Events extends React.Component {
                                             this.setState({
                                                 editingEvent:
                                                     createBlankEventOnDate(
-                                                        day.date
+                                                        day.date,
                                                     ),
                                             })
                                         }
@@ -154,6 +154,6 @@ export default class Events extends React.Component {
                     ))}
                 </div>
             </div>
-        );
+        )
     }
 }

@@ -1,49 +1,49 @@
-import React from "react";
-import { Formik, Form, Field } from "formik";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faSync } from "@fortawesome/free-solid-svg-icons";
+import React from 'react'
+import { Formik, Form, Field } from 'formik'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperPlane, faSync } from '@fortawesome/free-solid-svg-icons'
 
-import "./style.scss";
-import SelectField from "components/SelectField";
-import Loading from "components/Loading";
+import './style.scss'
+import SelectField from 'components/SelectField'
+import Loading from 'components/Loading'
 import {
     getNotifications,
     sendNotification,
     getRoles,
     getEvents,
     getStaffEvents,
-} from "util/api";
+} from 'util/api'
 
 const notificationInitialValues = {
-    title: "",
-    body: "",
-    topic: "",
-    role: "",
-    foodWaves: "",
-    eventId: "",
-    staffShift: ""
-};
+    title: '',
+    body: '',
+    topic: '',
+    role: '',
+    foodWaves: '',
+    eventId: '',
+    staffShift: '',
+}
 
 const topicOptions = [
-    { label: "Role", value: "Role" },
-    { label: "Event", value: "Event" },
-    { label: "Staff Shift", value: "StaffShift" },
-    { label: "Food Wave", value: "FoodWave" },
-    { label: "Users", value: "UserIds" },
-];
+    { label: 'Role', value: 'Role' },
+    { label: 'Event', value: 'Event' },
+    { label: 'Staff Shift', value: 'StaffShift' },
+    { label: 'Food Wave', value: 'FoodWave' },
+    { label: 'Users', value: 'UserIds' },
+]
 
 const roles = [
-    { label: "Admin", value: "ADMIN" },
-    { label: "Staff", value: "STAFF" },
-    { label: "Mentor", value: "MENTOR" },
-    { label: "Attendee", value: "ATTENDEE" },
-    { label: "User (Everyone)", value: "USER" },
-];
+    { label: 'Admin', value: 'ADMIN' },
+    { label: 'Staff', value: 'STAFF' },
+    { label: 'Mentor', value: 'MENTOR' },
+    { label: 'Attendee', value: 'ATTENDEE' },
+    { label: 'User (Everyone)', value: 'USER' },
+]
 
 const foodWaves = [
-    { label: "1", value: 1 },
-    { label: "2", value: 2 },
-];
+    { label: '1', value: 1 },
+    { label: '2', value: 2 },
+]
 
 // function formatDate(seconds) {
 //   return new Date(seconds * 1000).toLocaleDateString('en-US', {
@@ -57,7 +57,7 @@ const foodWaves = [
 
 export default class Notifications extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
 
         this.state = {
             isLoading: true,
@@ -65,44 +65,44 @@ export default class Notifications extends React.Component {
             notifications: [],
             events: [],
             staffEvents: [],
-        };
+        }
     }
 
     componentDidMount() {
-        this.updateEvents();
-        this.updateNotifications();
+        this.updateEvents()
+        this.updateNotifications()
     }
 
     updateEvents() {
         getEvents().then((events) => {
             this.setState({
                 events: events.map((event) => {
-                    return { label: event.name, value: event.eventId };
+                    return { label: event.name, value: event.eventId }
                 }),
-            });
-        });
+            })
+        })
 
         getStaffEvents().then((staffEvents) => {
             this.setState({
                 staffEvents: staffEvents
-                    .filter((e) => e.eventType === "STAFFSHIFT")
+                    .filter((e) => e.eventType === 'STAFFSHIFT')
                     .map((staffEvent) => {
                         return {
                             label: staffEvent.name,
                             value: staffEvent.eventId,
-                        };
+                        }
                     }),
-            });
-        });
+            })
+        })
     }
 
     updateNotifications() {
-        this.setState({ isLoading: true });
+        this.setState({ isLoading: true })
         getNotifications()
             .then((notifications) => {
                 notifications.forEach((notification) => {
-                    let sentCount = 0;
-                    let failedCount = 0;
+                    let sentCount = 0
+                    let failedCount = 0
                     notification.batches.forEach((batch) => {
                         sentCount += batch.sent.length
                         failedCount += batch.failed.length
@@ -113,21 +113,31 @@ export default class Notifications extends React.Component {
 
                 this.setState({
                     notifications: notifications.reverse(),
-                });
+                })
             })
             .finally(() => {
-                this.setState({ isLoading: false });
-            });
+                this.setState({ isLoading: false })
+            })
     }
 
     submit(notification, formik) {
         if (notification.title && notification.topic) {
-            let notificationToSend = { title: notification.title, body: notification.body };
-            notification.topic === "Role" && (notificationToSend.role = notification.role);
-            notification.topic === "Event" && (notificationToSend.eventId = notification.eventId);
-            notification.topic === "StaffShift" && (notificationToSend.staffShift = notification.staffShift);
-            notification.topic === "FoodWave" && (notificationToSend.foodWave = notification.foodWave);
-            notification.topic === "UserIds" && (notificationToSend.userIds = notification.userIds.split(",").map(s => s.trim()));
+            let notificationToSend = {
+                title: notification.title,
+                body: notification.body,
+            }
+            notification.topic === 'Role' &&
+                (notificationToSend.role = notification.role)
+            notification.topic === 'Event' &&
+                (notificationToSend.eventId = notification.eventId)
+            notification.topic === 'StaffShift' &&
+                (notificationToSend.staffShift = notification.staffShift)
+            notification.topic === 'FoodWave' &&
+                (notificationToSend.foodWave = notification.foodWave)
+            notification.topic === 'UserIds' &&
+                (notificationToSend.userIds = notification.userIds
+                    .split(',')
+                    .map((s) => s.trim()))
 
             this.setState({
                 sendProcessing: true,
@@ -137,21 +147,20 @@ export default class Notifications extends React.Component {
                 this.setState({
                     sendProcessing: false,
                 })
-                this.updateNotifications();
-                formik.resetForm();
-            });
-            
+                this.updateNotifications()
+                formik.resetForm()
+            })
         }
     }
 
     render() {
-        const { notifications, isLoading } = this.state;
+        const { notifications, isLoading } = this.state
 
         if (isLoading) {
-            return <Loading />;
+            return <Loading />
         }
 
-        const isAdmin = getRoles().includes("ADMIN"); // REVERT BACK TO ADMIN ONLY
+        const isAdmin = getRoles().includes('ADMIN') // REVERT BACK TO ADMIN ONLY
         return (
             <div className="notifications-page">
                 {isAdmin && (
@@ -179,7 +188,7 @@ export default class Notifications extends React.Component {
                                             options={topicOptions}
                                         />
 
-                                        {props.values.topic === "Role" && (
+                                        {props.values.topic === 'Role' && (
                                             <SelectField
                                                 name="role"
                                                 className="select"
@@ -188,7 +197,7 @@ export default class Notifications extends React.Component {
                                             />
                                         )}
 
-                                        {props.values.topic === "Event" && (
+                                        {props.values.topic === 'Event' && (
                                             <SelectField
                                                 name="eventId"
                                                 className="select"
@@ -197,7 +206,8 @@ export default class Notifications extends React.Component {
                                             />
                                         )}
 
-                                        {props.values.topic === "StaffShift" && (
+                                        {props.values.topic ===
+                                            'StaffShift' && (
                                             <SelectField
                                                 name="staffShift"
                                                 className="select"
@@ -206,7 +216,7 @@ export default class Notifications extends React.Component {
                                             />
                                         )}
 
-                                        {props.values.topic === "FoodWave" && (
+                                        {props.values.topic === 'FoodWave' && (
                                             <SelectField
                                                 name="foodWave"
                                                 className="select"
@@ -215,7 +225,7 @@ export default class Notifications extends React.Component {
                                             />
                                         )}
 
-                                        {props.values.topic === "UserIds" && (
+                                        {props.values.topic === 'UserIds' && (
                                             <Field
                                                 name="userIds"
                                                 className="form-field"
@@ -232,10 +242,15 @@ export default class Notifications extends React.Component {
                                         />
 
                                         <div className="buttons">
-                                            <button disabled={this.state.sendProcessing} type="submit">
+                                            <button
+                                                disabled={
+                                                    this.state.sendProcessing
+                                                }
+                                                type="submit"
+                                            >
                                                 <FontAwesomeIcon
                                                     icon={faPaperPlane}
-                                                />{" "}
+                                                />{' '}
                                                 &nbsp;Send
                                             </button>
                                         </div>
@@ -268,13 +283,15 @@ export default class Notifications extends React.Component {
                             <div className="title">{notification.title}</div>
                             <div className="body">{notification.body}</div>
                             <div className="time">
-                                Sent: {notification.sentCount}<br />Failed: {notification.failedCount}
+                                Sent: {notification.sentCount}
+                                <br />
+                                Failed: {notification.failedCount}
                             </div>
                             {/* <div className="time">{ formatDate(notification.time) }</div> */}
                         </div>
                     ))}
                 </div>
             </div>
-        );
+        )
     }
 }

@@ -1,17 +1,17 @@
-import React from 'react';
-import Lottie from 'lottie-react';
+import React from 'react'
+import Lottie from 'lottie-react'
 
-import animationData from 'assets/animations/car.json';
-import './style.scss';
+import animationData from 'assets/animations/car.json'
+import './style.scss'
 
 export default function Loading() {
-  const options = { animationData, autoplay: true, loop: true };
-  const style = { marginRight: '15%', width: '80%', height: '80%' };
+    const options = { animationData, autoplay: true, loop: true }
+    const style = { marginRight: '15%', width: '80%', height: '80%' }
 
-  return (
-    <div id="Loading">
-      <Lottie id="car" {...options} style={style} />
-      <h1>Loading...</h1>
-    </div>
-  );
+    return (
+        <div id="Loading">
+            <Lottie id="car" {...options} style={style} />
+            <h1>Loading...</h1>
+        </div>
+    )
 }

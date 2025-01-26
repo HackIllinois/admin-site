@@ -1,35 +1,35 @@
 @import 'constants.scss';
 
 .event-code-form {
-  padding: 5px 25px;
-  display: flex;
-  flex-direction: column;
-
-  h2 {
-    color: #333;
-    font-weight: 600;
-  }
-
-  .form-field {
-    @include form-field;
-    margin: 0;
-  }
-
-  .submit-button {
-    @include button;
-    align-self: flex-end;
-    margin-bottom: 10px;
-  }
-
-  .qr-container {
+    padding: 5px 25px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin: 5px 0;
 
-    label {
-      margin-top: 5px;
+    h2 {
+        color: #333;
+        font-weight: 600;
     }
-  }
+
+    .form-field {
+        @include form-field;
+        margin: 0;
+    }
+
+    .submit-button {
+        @include button;
+        align-self: flex-end;
+        margin-bottom: 10px;
+    }
+
+    .qr-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        margin: 5px 0;
+
+        label {
+            margin-top: 5px;
+        }
+    }
 }
