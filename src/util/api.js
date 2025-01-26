@@ -1,45 +1,51 @@
 const API = 'https://adonix.hackillinois.org'
 
-function request(method, endpoint, body) {
-    return fetch(API + endpoint, {
+async function request(method, endpoint, body) {
+    const result = await fetch(API + endpoint, {
         method,
         headers: {
-            Authorization: sessionStorage.getItem('token'),
+            Authorization: localStorage.getItem('token'),
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
-    }).then((res) => {
-        if (res.status === 204) {
-            return {}
-        } else if (res.ok) {
-            return res.json()
-        }
-        throw res
     })
+
+    if (result.ok) {
+        if (result.status === 204) {
+            return {}
+        }
+        return await result.json()
+    }
+
+    const error = await result.json()
+
+    if (
+        error.error === 'TokenInvalid' ||
+        error.error === 'TokenExpired' ||
+        error.error === 'NoToken'
+    ) {
+        authenticate(window.location.href)
+    }
+
+    alert(error.message)
+    throw new Error(error.message)
 }
 
 export function isAuthenticated() {
-    return sessionStorage.getItem('token')
+    return localStorage.getItem('token')
 }
 
 export function authenticate(to, provider = 'google') {
-    // if we're developing locally, REACT_APP_TOKEN should be set and we can skip the authentication workflow
-    if (process.env.REACT_APP_TOKEN) {
-        sessionStorage.setItem('token', process.env.REACT_APP_TOKEN)
-        window.location.replace(to) // since there's no authentication necessary, we can go directly to `to`
-    } else {
-        // `to` is saved in localStorage so that it can be used in the Auth component later
-        // (note: for github, we can add them to the redirect_uri as query parameters, but google doesn't support that it seems)
-        localStorage.setItem('to', to)
+    // `to` is saved in localStorage so that it can be used in the Auth component later
+    localStorage.setItem('to', to)
 
-        // const redirectURI = `${window.location.origin}/auth/`;
-        const authURL = `${API}/auth/login/${provider}?device=admin`
-        window.location.replace(authURL)
-    }
+    const redirectURI = `${window.location.origin}/auth/`
+    const authURL = `${API}/auth/login/${provider}?redirect=${redirectURI}`
+    window.location.replace(authURL)
 }
 
 export function getTokenData() {
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     if (token) {
         return JSON.parse(atob(token.split('.')[1]))
     }

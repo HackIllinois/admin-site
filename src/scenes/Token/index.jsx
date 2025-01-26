@@ -17,7 +17,7 @@ const Token = () => (
             className="token-text"
             onClick={(e) => selectTextInElement(e.target)}
         >
-            {sessionStorage.token}
+            {localStorage.token}
         </p>
     </div>
 )

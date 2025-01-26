@@ -10,7 +10,7 @@ export default class Auth extends React.Component {
         const { to } = localStorage
 
         if (token) {
-            sessionStorage.setItem('token', token)
+            localStorage.setItem('token', token)
             localStorage.removeItem('to')
 
             if (to) {

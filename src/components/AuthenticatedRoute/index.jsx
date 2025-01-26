@@ -4,10 +4,8 @@ import { isAuthenticated, authenticate, getRoles, getUserId } from 'util/api'
 // TODO: make distinction between google auth and github auth clearer
 
 // checks if the user's token matches the desired provider
-// (also passes if REACT_APP_TOKEN is set because that indicates local development,
-// so there's only one token and we don't get to choose which provider we want)
 const isDesiredAuthentication = (provider) =>
-    getUserId().startsWith(provider) || !!process.env.REACT_APP_TOKEN
+    getUserId().startsWith(provider)
 
 const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
     // make sure user is authenticated, and that their authentication provider matches the desired one
