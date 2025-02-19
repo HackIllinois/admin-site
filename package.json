@@ -1,60 +1,37 @@
 {
-    "name": "hackillinois-admin-portal",
+    "name": "admin-site",
     "version": "0.1.0",
     "private": true,
-    "dependencies": {
-        "@emotion/react": "^11.11.3",
-        "@emotion/styled": "^11.11.0",
-        "@fortawesome/fontawesome-svg-core": "^6.5.1",
-        "@fortawesome/free-solid-svg-icons": "^6.5.1",
-        "@fortawesome/react-fontawesome": "^0.2.0",
-        "@mui/icons-material": "^5.15.7",
-        "@mui/material": "^5.15.7",
-        "@mui/styled-engine-sc": "^6.0.0-alpha.14",
-        "@mui/x-data-grid": "^6.19.2",
-        "clsx": "^2.1.0",
-        "copy-text-to-clipboard": "^3.2.0",
-        "dotenv": "^16.4.1",
-        "formik": "^2.4.5",
-        "lodash": "^4.17.21",
-        "lottie-react": "^2.4.0",
-        "node-sass": "^9.0.0",
-        "prettier": "^3.4.2",
-        "query-string": "^8.1.0",
-        "react": "^18.2.0",
-        "react-datepicker": "^5.0.0",
-        "react-dom": "^18.2.0",
-        "react-frappe-charts": "^4.1.0",
-        "react-json-editor-ajrm": "^2.5.14",
-        "react-qrcode-logo": "^2.9.0",
-        "react-router-dom": "^6.21.3",
-        "react-scripts": "^5.0.1",
-        "react-select": "^5.8.0",
-        "react-virtualized-auto-sizer": "^1.0.21",
-        "react-window": "^1.8.10",
-        "styled-components": "^6.1.8"
-    },
     "scripts": {
-        "format:check": "prettier --check .",
-        "format": "prettier --write .",
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "dev": "next dev --turbopack",
+        "build": "next build",
+        "start": "next start",
+        "format:check": "prettier --check '**/*.{ts,js,cjs,json}'",
+        "format": "prettier --write '**/*.{ts,js,cjs,json}'",
+        "lint": "next lint"
     },
-    "eslintConfig": {
-        "extends": "react-app"
+    "dependencies": {
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@mui/icons-material": "^6.4.4",
+        "@mui/material": "^6.4.4",
+        "@mui/x-data-grid": "^7.26.0",
+        "next": "15.1.7",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
     },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "@eslint/js": "^9.20.0",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "@types/sass": "^1.43.1",
+        "eslint": "^9.20.1",
+        "eslint-config-next": "15.1.7",
+        "prettier": "^3.5.1",
+        "sass": "^1.85.0",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.24.0"
     }
 }
