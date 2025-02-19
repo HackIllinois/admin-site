@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import './style.scss'
-import _ from 'lodash'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Modal, Button, Snackbar, Alert } from '@mui/material'
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid'
-import { getRegistration, getRsvps, makeDecision } from 'util/api'
+import { getRegistration, getRsvps, makeDecision } from '@/util/api'
 
 const Admissions = () => {
     const [rows, setRows] = useState([])
