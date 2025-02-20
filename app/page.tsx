@@ -1,4 +1,6 @@
-import React from 'react'
+"use client"
+import { AuthService, Roles } from "@/generated"
+import React, { useEffect, useState } from "react"
 // import {
 //     faCalendar,
 //     faBars,
@@ -24,7 +26,13 @@ import React from 'react'
 
 // One day we'll have home... till then next.config redirects from here, so we need an empty placeholder
 export default function Home() {
-    return <></>
+    const [roles, setRoles] = useState<Roles | null>(null)
+    useEffect(() => {
+        AuthService.getAuthRoles().then((roles) => {
+            setRoles(roles.data || null)
+        })
+    }, [])
+    return <p>{JSON.stringify(roles, null, 4)}</p>
 }
 
 // class App extends React.Component {
@@ -148,5 +156,5 @@ export default function Home() {
 //         )
 //     }
 // }
-// 
+//
 // export default App

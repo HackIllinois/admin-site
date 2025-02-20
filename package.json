@@ -8,11 +8,13 @@
         "start": "next start",
         "format:check": "prettier --check '**/*.{ts,js,cjs,json}'",
         "format": "prettier --write '**/*.{ts,js,cjs,json}'",
-        "lint": "next lint"
+        "lint": "next lint",
+        "update-adonix": "openapi-ts"
     },
     "dependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
+        "@hey-api/client-fetch": "^0.8.1",
         "@mui/icons-material": "^6.4.4",
         "@mui/material": "^6.4.4",
         "@mui/x-data-grid": "^7.26.0",
@@ -23,6 +25,7 @@
     "devDependencies": {
         "@eslint/eslintrc": "^3",
         "@eslint/js": "^9.20.0",
+        "@hey-api/openapi-ts": "^0.64.5",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
