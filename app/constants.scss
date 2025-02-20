@@ -5,12 +5,12 @@ $red: #cc0000;
 $primary-color-light: lighten($primary-color, 40%);
 $secondary-color-light: lighten($secondary-color, 40%);
 
-:export {
+:root {
     // allows you to import these variables from javascript
-    primaryColor: $primary-color;
-    primaryColorLight: $primary-color-light;
-    secondaryColor: $secondary-color;
-    secondaryColorLight: $secondary-color-light;
+    --primarycolor: $primary-color;
+    --primarycolorlight: $primary-color-light;
+    --secondarycolor: $secondary-color;
+    --secondarycolorlight: $secondary-color-light;
 }
 
 $tablet-min-width: 768px;
@@ -39,7 +39,7 @@ $desktop-min-width: 1024px;
     display: block;
     margin: 17px 0;
     font-size: 1em;
-    font-family: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
     outline: none;
     border: hsl(0, 0%, 80%) 1px solid;
     transition:

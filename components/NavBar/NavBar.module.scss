@@ -1,0 +1,140 @@
+@import "../../app/constants.scss";
+
+// Fix font awesome scaling issue by manually importing css
+@import "../../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
+
+.button {
+    display: none;
+    position: absolute;
+    top: 4px;
+    left: 9px;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: $secondary-color;
+    padding: 6px;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 20;
+
+    .highlight {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        position: absolute;
+        border-radius: 100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        top: 0;
+        left: 0;
+    }
+
+    &:hover,
+    &:active {
+        .highlight {
+            opacity: 0.15;
+        }
+    }
+}
+
+.background {
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+    opacity: 0;
+    transition:
+        opacity 0.2s,
+        z-index 0.2s;
+}
+
+.container {
+    --navigation-menu-width: 300px;
+    width: var(--navigation-menu-width);
+
+    .logo {
+        text-align: center;
+        padding: 20px 0;
+        border-bottom: 2px solid white;
+
+        img {
+            width: 60%;
+        }
+    }
+
+    .menu {
+        background-color: $primary-color;
+        height: 80vh;
+        margin: 10vh 25px;
+        border-radius: 10px;
+        padding-top: 5px;
+        box-sizing: border-box;
+        box-shadow:
+            0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+            0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+
+        .link {
+            display: flex;
+            align-content: stretch;
+            padding: 12px 12px;
+            margin: 13px 8px;
+            font-size: 1.25em;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 100px;
+            outline: none;
+            overflow: hidden;
+
+            &:hover,
+            &:focus {
+                background-color: rgba(255, 255, 255, 0.15);
+            }
+
+            &.active {
+                background-color: $secondary-color;
+            }
+        }
+    }
+
+    @include phone {
+        --navigation-menu-width: 80vw;
+    }
+}
+
+@include mobile {
+    .button {
+        display: block;
+    }
+
+    .background.open {
+        opacity: 0.3;
+        z-index: 50;
+    }
+
+    .container {
+        position: fixed;
+        z-index: 51;
+        left: 0;
+        top: 0;
+        transform: translateX(calc(-1 * var(--navigation-menu-width)));
+        transition: transform 0.2s;
+        @include phone {
+            transition: transform 0.3s;
+        }
+
+        &.open {
+            transform: translateX(0);
+        }
+
+        .menu {
+            margin: 0;
+            height: 100vh;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+}
