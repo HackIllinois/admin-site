@@ -26,13 +26,7 @@ import React, { useEffect, useState } from "react"
 
 // One day we'll have home... till then next.config redirects from here, so we need an empty placeholder
 export default function Home() {
-    const [roles, setRoles] = useState<Roles | null>(null)
-    useEffect(() => {
-        AuthService.getAuthRoles().then((roles) => {
-            setRoles(roles.data || null)
-        })
-    }, [])
-    return <p>{JSON.stringify(roles, null, 4)}</p>
+    return <></>
 }
 
 // class App extends React.Component {
