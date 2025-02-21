@@ -62,6 +62,25 @@ export type CreateEventRequest = {
 
 export type Degree = "Associates' Degree" | "Bachelors' Degree " | "Masters' Degree" | 'PhD' | 'Graduated' | 'Other' | 'N/A' | '';
 
+export type Event = {
+    eventId: EventId;
+    isStaff: boolean;
+    name: string;
+    description: string;
+    startTime: number;
+    endTime: number;
+    exp?: number;
+    eventType: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
+    locations: Array<Location>;
+    isAsync: boolean;
+    mapImageUrl?: string;
+    sponsor?: string;
+    points: number;
+    isPrivate: boolean;
+    displayOnStaffCheckIn?: boolean;
+    isPro: boolean;
+};
+
 export type EventFollowers = {
     eventId: EventId;
     followers: Array<UserId>;
@@ -70,7 +89,7 @@ export type EventFollowers = {
 export type EventId = string;
 
 export type Events = {
-    events: Array<PublicEvent>;
+    events: Array<Event>;
 };
 
 export type Gender = 'Male' | 'Female' | 'Non-Binary' | 'Other' | 'Prefer Not To Answer' | '';
@@ -131,6 +150,16 @@ export type NewsletterSubscription = {
 
 export type NewsletterSubscriptions = Array<NewsletterSubscription>;
 
+export type NotificationMessage = {
+    sender: UserId;
+    title: string;
+    body: string;
+    sent: Array<UserId>;
+    failed: Array<UserId>;
+};
+
+export type NotificationMessages = Array<NotificationMessage>;
+
 export type NotificationSend = {
     sent: Array<UserId>;
     failed: Array<UserId>;
@@ -146,14 +175,6 @@ export type NotificationSendRequest = {
     foodWave?: number;
     userIds?: Array<UserId>;
 };
-
-export type Notifications = Array<{
-    sender: UserId;
-    title: string;
-    body: string;
-    sent: Array<UserId>;
-    failed: Array<UserId>;
-}>;
 
 export type Order = {
     userId: UserId;
@@ -201,25 +222,6 @@ export type ProfileLeaderboardQueryLimit = number;
  * The provider to use for authentication. Attendees use GitHub and staff use Google.
  */
 export type Provider = 'github' | 'google';
-
-export type PublicEvent = {
-    eventId: EventId;
-    isStaff: boolean;
-    name: string;
-    description: string;
-    startTime: number;
-    endTime: number;
-    exp?: number;
-    eventType: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
-    locations: Array<Location>;
-    isAsync: boolean;
-    mapImageUrl?: string;
-    sponsor?: string;
-    points: number;
-    isPrivate: boolean;
-    displayOnStaffCheckIn?: boolean;
-    isPro: boolean;
-};
 
 /**
  * A user's QR code
@@ -831,7 +833,7 @@ export type PostEventResponses = {
     /**
      * The new event
      */
-    200: PublicEvent;
+    200: Event;
 };
 
 export type PostEventResponse = PostEventResponses[keyof PostEventResponses];
@@ -859,7 +861,7 @@ export type PutEventResponses = {
     /**
      * The updated event
      */
-    200: PublicEvent;
+    200: Event;
 };
 
 export type PutEventResponse = PutEventResponses[keyof PutEventResponses];
@@ -980,7 +982,7 @@ export type GetEventByIdResponses = {
     /**
      * The event
      */
-    200: PublicEvent;
+    200: Event;
 };
 
 export type GetEventByIdResponse = GetEventByIdResponses[keyof GetEventByIdResponses];
@@ -1198,7 +1200,7 @@ export type GetNotificationResponses = {
     /**
      * All the notifications
      */
-    200: Notifications;
+    200: NotificationMessages;
 };
 
 export type GetNotificationResponse = GetNotificationResponses[keyof GetNotificationResponses];

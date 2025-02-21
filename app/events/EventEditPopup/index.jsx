@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik'
 import { addEvent, updateEvent, deleteEvent } from 'util/api'
 import LocationInput from './LocationInput'
 import DateInput from 'components/DateInput'
-import SelectField from 'components/SelectField'
+import SelectField from 'components/SelectField/SelectField'
 import './style.scss'
 import { FormikCheckbox } from 'components/Checkbox'
 

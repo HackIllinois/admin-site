@@ -3,7 +3,7 @@ import copy from 'copy-text-to-clipboard'
 
 import './style.scss'
 import { makeDecision, finalizeDecision } from 'util/api'
-import { StyledSelect } from 'components/SelectField'
+import { StyledSelect } from 'components/SelectField/SelectField'
 
 // Note: Currently, the API doesn't support making decisions for multiple users in one request,
 // so we have to send potentially hundreds of requests to the API at once if a lot of users are

@@ -1,4 +1,4 @@
-@import "../../app/constants.scss";
+@use "../../app/constants.scss" as *;
 
 // Fix font awesome scaling issue by manually importing css
 @import "../../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
@@ -52,6 +52,7 @@
 .container {
     --navigation-menu-width: 300px;
     width: var(--navigation-menu-width);
+    flex-shrink: 0;
 
     .logo {
         text-align: center;
@@ -67,6 +68,7 @@
         background-color: $primary-color;
         height: 80vh;
         margin: 10vh 25px;
+        margin-right: 0;
         border-radius: 10px;
         padding-top: 5px;
         box-sizing: border-box;

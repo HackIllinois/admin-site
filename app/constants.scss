@@ -1,16 +1,17 @@
+@use "sass:color";
 $primary-color: #505f85;
 $secondary-color: #5e997a;
 $red: #cc0000;
 
-$primary-color-light: lighten($primary-color, 40%);
-$secondary-color-light: lighten($secondary-color, 40%);
+$primary-color-light: color.adjust($primary-color, $lightness: 40%);
+$secondary-color-light: color.adjust($secondary-color, $lightness: 40%);
 
 :root {
     // allows you to import these variables from javascript
-    --primarycolor: $primary-color;
-    --primarycolorlight: $primary-color-light;
-    --secondarycolor: $secondary-color;
-    --secondarycolorlight: $secondary-color-light;
+    --primarycolor: #{$primary-color};
+    --primarycolorlight: #{$primary-color-light};
+    --secondarycolor: #{$secondary-color};
+    --secondarycolorlight: #{$secondary-color-light};
 }
 
 $tablet-min-width: 768px;
@@ -40,22 +41,18 @@ $desktop-min-width: 1024px;
     margin: 17px 0;
     font-size: 1em;
     font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
-    outline: none;
-    border: hsl(0, 0%, 80%) 1px solid;
-    transition:
-        border-color 0.1s,
-        border-width 0.1s,
-        padding 0.1s;
+    box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
+    transition: box-shadow 0.2s;
     box-sizing: border-box;
     border-radius: 5px;
-    padding: 7px;
+    padding: 10px;
     width: 100%;
     resize: none;
+    outline: none;
+    border: none;
 
     &:focus {
-        border-color: $primary-color;
-        border-width: 2px;
-        padding: 6px;
+        box-shadow: 0 0 0 2px $primary-color;
     }
 
     &:disabled {

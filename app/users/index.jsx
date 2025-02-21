@@ -8,7 +8,7 @@ import DecisionButtons from './DecisionButtons'
 import Loading from 'components/Loading'
 import Message from 'components/Message'
 import Stats from 'components/Stats'
-import { StyledSelect } from 'components/SelectField'
+import { StyledSelect } from 'components/SelectField/SelectField'
 import {
     getRegistrations,
     getDecisions,

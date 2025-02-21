@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Checkbox from 'components/Checkbox'
-import { StyledSelect } from 'components/SelectField'
+import { StyledSelect } from 'components/SelectField/SelectField'
 
 export default class AddFilterPopup extends React.Component {
     constructor(props) {

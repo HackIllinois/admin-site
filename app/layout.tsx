@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <html lang="en">
             <body className={styles.body}>
                 <NavBar />
-                {children}
+                <main>{children}</main>
             </body>
         </html>
     )

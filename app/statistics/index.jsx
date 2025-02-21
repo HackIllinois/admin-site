@@ -14,7 +14,7 @@ import {
     getCheckins,
 } from 'util/api'
 import { addOtherData, filterRegistrations } from 'util/registrations'
-import { StyledSelect } from 'components/SelectField'
+import { StyledSelect } from 'components/SelectField/SelectField'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 

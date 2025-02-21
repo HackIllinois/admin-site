@@ -6,4 +6,12 @@
     font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    max-width: 100%;
+
+    main {
+        min-width: 0; // Allows content to shrink down
+        flex: 1; // Makes content fill remaining space
+        padding: 30px;
+    }
 }
