@@ -17,5 +17,3 @@ To run locally, run:
 ```sh
 npm run dev
 ```
-
-Any changes pushed to `main` will be build by netlify to https://admin.hackillinois.org/

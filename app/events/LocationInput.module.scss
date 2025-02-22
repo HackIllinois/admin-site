@@ -1,0 +1,15 @@
+@use "../constants.scss" as *;
+
+.main {
+    display: flex;
+
+    .select {
+        width: 33%;
+        margin-right: 15px;
+    }
+
+    .form-field {
+        @include form-field;
+        margin: 0;
+    }
+}

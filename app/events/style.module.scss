@@ -1,0 +1,110 @@
+@use "../constants.scss" as *;
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 100vw;
+
+    @include mobile {
+        overflow: initial;
+    }
+
+    @include phone {
+        display: block;
+    }
+
+    .titles {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        width: fit-content;
+        margin: auto;
+        justify-content: space-around;
+        max-width: 100vw;
+
+        > div {
+            box-sizing: border-box;
+            text-align: center;
+            font-size: large;
+            position: relative;
+            padding: 2rem 2rem 1rem;
+            width: fit-content;
+            margin: auto;
+            &::before {
+                position: absolute;
+                bottom: 0.25rem;
+                left: calc(10%);
+                width: 80%;
+                border-radius: 5px;
+                height: 5px;
+                content: "";
+                background-color: $primary-color;
+                opacity: 0;
+                transition: opacity 0.25s;
+            }
+            &:hover {
+                cursor: pointer;
+                &::before {
+                    opacity: 0.5;
+                }
+            }
+
+            &.active {
+                &::before {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.events-page {
+    flex: 1;
+    display: flex;
+    height: 100vh;
+    overflow: auto;
+    flex-wrap: wrap;
+    @include mobile {
+        overflow: initial;
+    }
+
+    @include phone {
+        display: block;
+    }
+
+    .day {
+        flex: 1;
+        margin-top: 40px;
+        min-width: 350px;
+
+        .events {
+            margin: auto;
+            max-width: 95vw;
+        }
+
+        .day-of-week {
+            font-size: 1.65em;
+            text-align: center;
+            font-weight: bold;
+            color: #444444;
+        }
+
+        .date {
+            text-align: center;
+            font-weight: bold;
+            color: #777777;
+            margin-top: 2px;
+            font-size: 0.9em;
+        }
+
+        .underline {
+            height: 5px;
+            background-color: $secondary-color;
+            width: 70%;
+            margin: 3px auto;
+            border-radius: 10px;
+        }
+    }
+}

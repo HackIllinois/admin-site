@@ -1,0 +1,109 @@
+@use "sass:color";
+$primary-color: #505f85;
+$secondary-color: #5e997a;
+$red: #cc0000;
+$success: #00cc00;
+
+$primary-color-light: color.adjust($primary-color, $lightness: 40%);
+$secondary-color-light: color.adjust($secondary-color, $lightness: 40%);
+
+.root {
+    // allows you to import these variables from javascript
+    --primarycolor: #{$primary-color};
+    --primarycolorlight: #{$primary-color-light};
+    --secondarycolor: #{$secondary-color};
+    --secondarycolorlight: #{$secondary-color-light};
+}
+
+$tablet-min-width: 768px;
+$desktop-min-width: 1024px;
+
+// Mobile includes both tablets and phones
+@mixin mobile {
+    @media (max-width: #{$desktop-min-width - .1px}) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: #{$tablet-min-width}) and (max-width: #{$desktop-min-width - .1px}) {
+        @content;
+    }
+}
+
+@mixin phone {
+    @media (max-width: #{$tablet-min-width - .1px}) {
+        @content;
+    }
+}
+
+@mixin form-field {
+    display: block;
+    margin: 17px 0;
+    font-size: 1em;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
+    transition: box-shadow 0.2s;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    resize: none;
+    outline: none;
+    border: none;
+
+    &:focus {
+        box-shadow: 0 0 0 2px $primary-color;
+    }
+
+    &:disabled {
+        background-color: hsl(0, 0%, 95%);
+        border-color: hsl(0, 0%, 90%);
+    }
+}
+
+@mixin button($color: $primary-color) {
+    background: none;
+    outline: none;
+    border: none;
+    padding: 7px 20px;
+    border-radius: 5px;
+    border: $color 2px solid;
+    font-family: inherit;
+    font-weight: bold;
+    color: $color;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition:
+        color 0.2s,
+        background-color 0.2s;
+
+    &:focus {
+        background-color: $primary-color-light;
+    }
+
+    &:hover {
+        background-color: $color;
+        color: white;
+    }
+
+    &:disabled {
+        background-color: initial;
+        border-color: hsl(0, 0%, 70%);
+        color: hsl(0, 0%, 70%);
+        cursor: not-allowed;
+    }
+}
+
+// Apply on <button> to remove all the button styles and make it look like a div
+@mixin div-button() {
+    display: block;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 1em;
+    text-align: left;
+
+    // calling style should set something for &:hover and &:focus to indicate such
+}

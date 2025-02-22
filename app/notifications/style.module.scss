@@ -1,0 +1,149 @@
+@use "../constants.scss" as *;
+
+.page {
+    flex: 1;
+    height: 100vh;
+    overflow: auto;
+    @include mobile {
+        overflow: initial;
+    }
+    @include phone {
+        text-align: center;
+    }
+
+    .form-field {
+        @include form-field;
+    }
+
+    .top {
+        display: flex;
+        flex-wrap: wrap;
+
+        .select {
+            margin: 17px 0;
+        }
+
+        .tile {
+            border: $primary-color 1.5px solid;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+
+            &.send-notification {
+                flex: 2;
+                min-width: 300px;
+            }
+
+            .title {
+                font-size: 1.5em;
+                text-align: center;
+                margin: 10px 0;
+                font-weight: bold;
+                color: #444444;
+            }
+
+            .form-container {
+                display: flex;
+
+                .form-section {
+                    flex: 1;
+                    margin: 10px;
+                }
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: flex-end;
+
+                &.centered {
+                    justify-content: center;
+                }
+
+                button {
+                    @include button;
+                    float: right;
+                    margin: 0 10px;
+                }
+            }
+        }
+    }
+
+    .heading-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .heading {
+            display: inline-block;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #444444;
+
+            .underline {
+                height: 5px;
+                background-color: $secondary-color;
+                width: 100%;
+                margin: 3px auto;
+                border-radius: 10px;
+            }
+        }
+
+        .refresh {
+            font-size: 1.25em;
+            color: $primary-color;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+    }
+
+    .notifications {
+        flex-wrap: wrap;
+        padding-top: 10px;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+
+        @include tablet {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @include phone {
+            grid-template-columns: 1fr;
+            text-align: initial;
+        }
+
+        .notification {
+            border: $primary-color 1.5px solid;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 8px;
+            box-sizing: border-box;
+
+            .topic {
+                font-size: 0.85em;
+                color: $secondary-color;
+                font-weight: bold;
+            }
+
+            .title {
+                font-size: 1.2em;
+                margin: 7px 0;
+                font-weight: bold;
+                color: #444444;
+            }
+
+            .body {
+                font-size: 0.9em;
+            }
+
+            .sent {
+                text-align: right;
+                font-size: 0.8em;
+                color: $secondary-color;
+                font-weight: bold;
+                margin-top: 5px;
+            }
+        }
+    }
+}
