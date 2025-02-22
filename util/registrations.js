@@ -1,7 +1,7 @@
 export function formatCamelCase(camelCase) {
     const [firstWord, ...remainingWords] = camelCase.split(/(?=[A-Z])/)
     const captialFirstWord = firstWord[0].toUpperCase() + firstWord.slice(1)
-    return (captialFirstWord + ' ' + remainingWords.join(' ')).trim()
+    return (captialFirstWord + " " + remainingWords.join(" ")).trim()
 }
 
 // combines registration, decision, rsvp, and checkin data into one object
@@ -50,7 +50,7 @@ export function addOtherData(registrations, decisions, rsvps, checkins) {
 }
 
 export function formatRegistrationValue(value) {
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
         return JSON.stringify(value, null, 2)
     }
     return String(value)
@@ -59,14 +59,14 @@ export function formatRegistrationValue(value) {
 // the api returns the registrations with the keys in alphabetical order
 // so we order the keys with certain keys coming first to improve readability of table
 const orderedKeys = [
-    'id',
-    'status',
-    'wave',
-    'finalized',
-    'isAttending',
-    'checkedIn',
-    'firstName',
-    'lastName',
+    "id",
+    "status",
+    "wave",
+    "finalized",
+    "isAttending",
+    "checkedIn",
+    "firstName",
+    "lastName",
 ]
 export function getColumnKeys(registrations) {
     // we add all the keys not present in KEY_ORDER to the end (since we don't care about where they go)
@@ -90,7 +90,7 @@ export function filterRegistrations(registrations, filters) {
             const invertIfNecessary = (condition) =>
                 invert ? !condition : condition
             const columnValue = String(registration[columnKey]).toLowerCase()
-            const filterValues = (multiple ? value.split(',') : [value]).map(
+            const filterValues = (multiple ? value.split(",") : [value]).map(
                 (val) => val.trim().toLowerCase(),
             ) // trimming to support ", " separator instead of just ","
 
