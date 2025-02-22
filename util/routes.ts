@@ -9,12 +9,10 @@ import { usePathname } from "next/navigation"
 
 export const routes = [
     // { path: '/', name: "Statistics", icon: faCalculator },
-    // { path: '/users', name: "Users", icon: faUsers },
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
-    { path: "/shop", name: "Shop", icon: faShoppingCart },
-    { path: "/token", name: "Token", icon: faKey },
+    // { path: "/shop", name: "Shop", icon: faShoppingCart },
 ]
 
 export function getRouteOpen() {
