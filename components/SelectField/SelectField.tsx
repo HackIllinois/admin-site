@@ -1,12 +1,17 @@
 import React from "react"
-import Select, { Props as SelectProps, ThemeConfig } from "react-select"
+import Select, {
+    MultiValue,
+    Props as SelectProps,
+    SingleValue,
+    ThemeConfig,
+} from "react-select"
 import { Field, FieldProps, useField } from "formik"
 
 import { getColors } from "@/app/constants"
 
-type StyledSelectProps = SelectProps<{ label: string; value: string | number }>
+type StyledSelectProps<T> = SelectProps<{ label: string; value: T }>
 
-export const StyledSelect = (props: StyledSelectProps) => {
+export function StyledSelect<T>(props: SelectProps<T>) {
     const { primaryColor, primaryColorLight } = getColors()
     const theme: ThemeConfig = (defaultTheme) => ({
         ...defaultTheme,
@@ -21,9 +26,9 @@ export const StyledSelect = (props: StyledSelectProps) => {
     return <Select theme={theme} {...props} />
 }
 
-type SelectFieldProps = StyledSelectProps & { name: string }
+type SelectFieldProps<T> = StyledSelectProps<T> & { name: string }
 
-const SelectField: React.FC<SelectFieldProps> = ({ name, ...props }) => {
+function SelectField<T>({ name, ...props }: SelectFieldProps<T>) {
     const [field, meta, helpers] = useField(name)
 
     return (

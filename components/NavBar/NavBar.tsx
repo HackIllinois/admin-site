@@ -16,17 +16,8 @@ import styles from "./NavBar.module.scss"
 
 // Fix font awesome scaling issue by manually importing css
 import { config } from "@fortawesome/fontawesome-svg-core"
+import { routes } from "@/util/routes"
 config.autoAddCss = false
-
-const routes = [
-    // { path: '/', name: "Statistics", icon: faCalculator },
-    // { path: '/users', name: "Users", icon: faUsers },
-    { path: "/admissions", name: "Admissions", icon: faUsers },
-    { path: "/notifications", name: "Notifications", icon: faBell },
-    { path: "/events", name: "Events", icon: faCalendar },
-    { path: "/shop", name: "Shop", icon: faShoppingCart },
-    { path: "/token", name: "Token", icon: faKey },
-]
 
 export default function NavBar() {
     const path = usePathname()

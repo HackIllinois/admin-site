@@ -1,4 +1,4 @@
-@import 'constants.scss';
+@use "app/constants.scss" as *;
 
 .date-input {
     margin: 15px 0;

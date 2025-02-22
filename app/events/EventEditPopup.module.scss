@@ -1,4 +1,4 @@
-@import 'constants.scss';
+@use "../constants.scss" as *;
 
 .event-edit-popup {
     position: fixed;
@@ -26,6 +26,7 @@
         border: $primary-color 2px solid;
         padding: 10px 20px;
         border-radius: 10px;
+        width: 75%;
         max-width: 600px;
         max-height: 80%;
         overflow: auto;
@@ -54,6 +55,14 @@
                 margin: 10px 0;
             }
 
+            .expires {
+                display: flex;
+                > div:nth-child(2) {
+                    flex: 1;
+                    margin: auto 0;
+                }
+            }
+
             .buttons {
                 display: flex;
                 margin-bottom: 10px;
@@ -63,7 +72,7 @@
                     flex: 1;
                 }
 
-                .button {
+                button {
                     @include button;
                     margin: 0 10px;
 

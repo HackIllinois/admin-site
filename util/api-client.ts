@@ -1,6 +1,7 @@
-import { Provider } from "@/generated"
+import { AuthService, Provider, Role } from "@/generated"
 import { client } from "@/generated/client.gen"
 import { RequestResult } from "@hey-api/client-fetch"
+import { useEffect, useState } from "react"
 
 export function setupClient() {
     client.interceptors.request.use((req) => {
@@ -39,13 +40,32 @@ export function authenticate(provider: Provider = "google") {
     window.location.replace(authURL)
 }
 
-export function handleError<
-    TData,
-    TError extends { error: string; message: string },
->(result: Awaited<RequestResult<TData, TError, false>>): TData {
+export function useRoles() {
+    const [roles, setRoles] = useState<Role[]>([])
+
+    useEffect(() => {
+        AuthService.getAuthRoles().then((result) => {
+            if (result.error) {
+                setRoles([])
+            } else {
+                setRoles(result.data!.roles)
+            }
+        })
+    }, [])
+
+    return roles
+}
+
+export function handleError<TData, TError>(
+    result: Awaited<RequestResult<TData, TError, false>>,
+): TData {
     if (result.error) {
-        alert(result.error.message)
-        throw new Error(result.error.message)
+        let message = `${result.error}`
+        if (typeof result.error == "object" && "message" in result.error) {
+            message = `${result.error.message}`
+        }
+        alert(message)
+        throw new Error(message)
     }
 
     return result.data!

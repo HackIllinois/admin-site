@@ -1,4 +1,4 @@
-@import 'constants.scss';
+@use "../constants.scss" as *;
 
 .container {
     flex: 1;
@@ -32,19 +32,28 @@
             padding: 2rem 2rem 1rem;
             width: fit-content;
             margin: auto;
-
-            &:hover,
-            &.active {
+            &::before {
+                position: absolute;
+                bottom: 0.25rem;
+                left: calc(10%);
+                width: 80%;
+                border-radius: 5px;
+                height: 5px;
+                content: "";
+                background-color: $primary-color;
+                opacity: 0;
+                transition: opacity 0.25s;
+            }
+            &:hover {
                 cursor: pointer;
                 &::before {
-                    position: absolute;
-                    bottom: 0.25rem;
-                    left: calc(10%);
-                    border-radius: 5px;
-                    width: 80%;
-                    content: '';
-                    background-color: $primary-color;
-                    height: 5px;
+                    opacity: 0.5;
+                }
+            }
+
+            &.active {
+                &::before {
+                    opacity: 1;
                 }
             }
         }

@@ -25,7 +25,9 @@
         "lottie-react": "^2.4.1",
         "next": "15.1.7",
         "react": "^19.0.0",
+        "react-datepicker": "^8.1.0",
         "react-dom": "^19.0.0",
+        "react-qrcode-logo": "^3.0.0",
         "react-select": "^5.10.0"
     },
     "devDependencies": {

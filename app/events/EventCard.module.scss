@@ -1,10 +1,10 @@
-@import 'constants.scss';
+@use "../constants.scss" as *;
 
-.event-card-container {
+.container {
     position: relative;
     margin: 20px;
 
-    .event-card {
+    .card {
         @include div-button;
         width: 100%;
         border: $primary-color 1.5px solid;
@@ -21,30 +21,30 @@
             }
         }
 
-        .add-event-icon {
+        .add {
             align-self: center;
             color: $primary-color;
         }
 
-        .event-header {
+        .header {
             display: flex;
             width: 100%;
             font-weight: bold;
             align-items: center;
 
-            .event-name {
+            .name {
                 flex: 1;
                 color: #444444;
                 font-size: 1.2em;
                 margin-right: 5px;
 
-                .private-icon {
+                .private {
                     margin-bottom: 1px;
                     margin-right: 5px;
                 }
             }
 
-            .event-time {
+            .time {
                 font-size: 0.85em;
                 color: $primary-color;
 
@@ -56,7 +56,7 @@
             }
         }
 
-        .event-details {
+        .details {
             .description {
                 margin-top: 5px;
                 font-size: 0.9em;
@@ -65,7 +65,7 @@
             }
 
             .locations,
-            .event-type {
+            .type {
                 margin-top: 7px;
                 font-size: 0.85em;
                 color: $secondary-color;
@@ -74,7 +74,7 @@
         }
     }
 
-    .event-code-button {
+    .code-button {
         @include div-button;
 
         cursor: pointer;

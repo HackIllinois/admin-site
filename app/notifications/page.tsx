@@ -16,6 +16,7 @@ import {
 } from "@/generated"
 
 import styles from "./style.module.scss"
+import { useRoles } from "@/util/api-client"
 
 interface NotificationSendFormOptions {
     title: string
@@ -47,7 +48,7 @@ const topicOptions = [
     { label: "Users", value: "UserIds" },
 ]
 
-const roles = [
+const roleOptions = [
     { label: "Admin", value: "ADMIN" },
     { label: "Staff", value: "STAFF" },
     { label: "Mentor", value: "MENTOR" },
@@ -55,7 +56,7 @@ const roles = [
     { label: "User (Everyone)", value: "USER" },
 ]
 
-const foodWaves = [
+const foodWaveOptions = [
     { label: "1", value: 1 },
     { label: "2", value: 2 },
 ]
@@ -73,10 +74,11 @@ const foodWaves = [
 export default function Notifications() {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [sendProcessing, setSendProcessing] = useState<boolean>(false)
-    const [isAdmin, setIsAdmin] = useState(false)
     const [notifications, setNotifications] = useState<NotificationMessage[]>(
         [],
     )
+
+    const roles = useRoles()
     const [eventOptions, setEventOptions] = useState<
         { label: string; value: string }[]
     >([])
@@ -121,12 +123,6 @@ export default function Notifications() {
     useEffect(() => {
         refresh()
     }, [refresh])
-
-    useEffect(() => {
-        AuthService.getAuthRoles().then((result) => {
-            setIsAdmin(result.data!.roles.includes("ADMIN"))
-        })
-    }, [])
 
     const submit = (
         values: NotificationSendFormOptions,
@@ -178,6 +174,8 @@ export default function Notifications() {
         return <Loading />
     }
 
+    const isAdmin = roles.includes("ADMIN")
+
     return (
         <div className={styles.page}>
             {isAdmin && (
@@ -210,7 +208,7 @@ export default function Notifications() {
                                             name="role"
                                             className={styles.select}
                                             placeholder="Select Role"
-                                            options={roles}
+                                            options={roleOptions}
                                         />
                                     )}
 
@@ -237,7 +235,7 @@ export default function Notifications() {
                                             name="foodWave"
                                             className={styles.select}
                                             placeholder="Select Food Wave"
-                                            options={foodWaves}
+                                            options={foodWaveOptions}
                                         />
                                     )}
 

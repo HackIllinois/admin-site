@@ -1,4 +1,4 @@
-@import 'constants.scss';
+@use "app/constants.scss" as *;
 
 .checkbox-container {
     display: flex;

@@ -1,0 +1,49 @@
+@use "../constants.scss" as *;
+
+.container {
+    padding: 5px 25px;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+        color: #333;
+        font-weight: 600;
+    }
+
+    .form-field {
+        @include form-field;
+        margin: 0;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        button {
+            @include button;
+            margin: 0 5px;
+        }
+        transition:
+            border-color 0.25s,
+            color 0.25s;
+
+        .success {
+            border-color: $success;
+            color: $success;
+
+            &:hover,
+            &:focus {
+                background-color: $success;
+                color: white;
+            }
+        }
+    }
+
+    .code {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        margin: 5px auto;
+        width: 15vw;
+    }
+}
