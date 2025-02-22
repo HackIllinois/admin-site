@@ -3,6 +3,7 @@ import React, { useEffect } from "react"
 import styles from "./layout.module.scss"
 import { authenticate, isAuthenticated, setupClient } from "@/util/api-client"
 import NavBar from "@/components/NavBar/NavBar"
+import { getRouteOpen } from "@/util/routes"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -13,8 +14,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             authenticate()
         }
     }, [])
+
+    const routeOpen = getRouteOpen()
+
     return (
         <html lang="en">
+            <link rel="icon" href="./favicon.png" sizes="any" />
+            <title>{(routeOpen ? `${routeOpen} - ` : "") + "Admin Site"}</title>
             <body className={styles.body}>
                 <NavBar />
                 <main>{children}</main>
