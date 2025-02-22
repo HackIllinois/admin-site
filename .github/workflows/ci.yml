@@ -1,12 +1,10 @@
-name: Admin HackIllinois CI
+name: CI
 
 on:
     push:
-        branches: ['main']
+        branches: ["main"]
     pull_request:
-        branches: ['main']
-        types:
-            - closed
+        branches: ["main"]
 
 jobs:
     build:
@@ -14,34 +12,34 @@ jobs:
 
         steps:
             - uses: actions/checkout@v3
-            - name: Use Node.js 18
+            - name: Use Node.js 22
               uses: actions/setup-node@v3
               with:
-                  node-version: 18.x
-                  cache: 'npm'
+                  node-version: 22.x
+                  cache: "npm"
             - run: npm i
             - run: npm run build
-            - name: 'Upload Build'
-              uses: actions/upload-artifact@v3
-              with:
-                  name: build
-                  path: build/
-                  retention-days: 5
-
-    publish:
-        needs: build
+    lint:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@master
-
-            - name: Download all workflow run artifacts
-              uses: actions/download-artifact@v3
-
-            - name: Publish
-              uses: netlify/actions/cli@master
+            - uses: actions/checkout@v3
+            - name: Use Node.js 22
+              uses: actions/setup-node@v3
               with:
-                  args: deploy -p --dir=build
-              env:
-                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  node-version: 22.x
+                  cache: "npm"
+            - run: npm i
+            - run: npm run lint
+    format:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js 22
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 22.x
+                  cache: "npm"
+            - run: npm i
+            - run: npm run format:check
