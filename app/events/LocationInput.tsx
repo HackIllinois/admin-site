@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 
 import { useField } from "formik"
 import { StyledSelect } from "@/components/SelectField/SelectField"
@@ -69,7 +69,7 @@ function createLocationFromBuildingAndArea(
 }
 
 export default function LocationInput({ name }: { name: string }) {
-    const [field, meta, helpers] = useField<Location[]>(name)
+    const [field, , helpers] = useField<Location[]>(name)
     const building =
         field.value.length > 0 ? findBuildingForLocation(field.value[0]) : null
     const area = building ? findAreaForLocation(field.value[0], building) : ""
@@ -109,13 +109,14 @@ export default function LocationInput({ name }: { name: string }) {
                 placeholder="Room or area..."
                 value={area}
                 onChange={(event) => {
-                    building &&
+                    if (building) {
                         helpers.setValue([
                             createLocationFromBuildingAndArea(
                                 building,
                                 event.target.value,
                             ),
                         ])
+                    }
                 }}
             />
         </div>

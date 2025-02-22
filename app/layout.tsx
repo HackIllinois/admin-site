@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect } from "react"
+import "./constants.scss"
 import styles from "./layout.module.scss"
 import { authenticate, isAuthenticated, setupClient } from "@/util/api-client"
 import NavBar from "@/components/NavBar/NavBar"
@@ -18,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const routeOpen = getRouteOpen()
 
     return (
-        <html lang="en">
+        <html lang="en" className="root">
             <link rel="icon" href="./favicon.png" sizes="any" />
             <title>{(routeOpen ? `${routeOpen} - ` : "") + "Admin Site"}</title>
             <body className={styles.body}>

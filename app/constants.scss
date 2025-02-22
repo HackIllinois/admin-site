@@ -7,7 +7,7 @@ $success: #00cc00;
 $primary-color-light: color.adjust($primary-color, $lightness: 40%);
 $secondary-color-light: color.adjust($secondary-color, $lightness: 40%);
 
-:root {
+.root {
     // allows you to import these variables from javascript
     --primarycolor: #{$primary-color};
     --primarycolorlight: #{$primary-color-light};

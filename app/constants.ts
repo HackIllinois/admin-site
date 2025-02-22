@@ -1,3 +1,5 @@
+import "./constants.scss"
+
 function getCSSVariable(variableName: string) {
     return getComputedStyle(document.documentElement).getPropertyValue(
         variableName,
@@ -5,6 +7,7 @@ function getCSSVariable(variableName: string) {
 }
 
 export function getColors() {
+    console.log(getCSSVariable("--primarycolor"))
     return {
         primaryColor: getCSSVariable("--primarycolor"),
         primaryColorLight: getCSSVariable("--primarycolorlight"),

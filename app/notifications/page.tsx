@@ -7,7 +7,6 @@ import { faPaperPlane, faSync } from "@fortawesome/free-solid-svg-icons"
 import SelectField from "@/components/SelectField/SelectField"
 import Loading from "@/components/Loading"
 import {
-    AuthService,
     EventService,
     NotificationMessage,
     NotificationService,

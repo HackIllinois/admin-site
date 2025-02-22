@@ -6,7 +6,7 @@ import SelectField from "@/components/SelectField/SelectField"
 import Checkbox, { FormikCheckbox } from "@/components/Checkbox"
 
 import styles from "./EventEditPopup.module.scss"
-import { CreateEventRequest, Event, EventId, Location } from "@/generated"
+import { CreateEventRequest, EventId } from "@/generated"
 import LocationInput from "./LocationInput"
 
 const publicEventTypes = [

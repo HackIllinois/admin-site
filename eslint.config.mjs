@@ -20,7 +20,8 @@ const config = [
             "@typescript-eslint/no-unused-vars": [
                 "error",
                 {
-                    vars: "after-used",
+                    vars: "all",
+                    args: "after-used",
                 },
             ],
         },

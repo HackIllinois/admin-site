@@ -32,7 +32,7 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
                         setCopySuccess(true)
                         setTimeout(() => setCopySuccess(false), 1000)
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         alert("Failed to copy QR code.")
                     })
             }

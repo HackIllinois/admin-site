@@ -1,11 +1,4 @@
-import {
-    faBars,
-    faBell,
-    faCalendar,
-    faKey,
-    faShoppingCart,
-    faUsers,
-} from "@fortawesome/free-solid-svg-icons"
+import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState } from "react"
 import logo from "@/public/logo.svg"
@@ -18,6 +11,7 @@ import styles from "./NavBar.module.scss"
 import { config } from "@fortawesome/fontawesome-svg-core"
 import { routes } from "@/util/routes"
 config.autoAddCss = false
+import "../../node_modules/@fortawesome/fontawesome-svg-core/styles.css"
 
 export default function NavBar() {
     const path = usePathname()

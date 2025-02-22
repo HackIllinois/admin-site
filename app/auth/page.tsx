@@ -1,10 +1,9 @@
 "use client"
-import { AuthService } from "@/generated"
 import { useRoles } from "@/util/api-client"
 import { useSearchParams } from "next/navigation"
-import { useEffect } from "react"
+import { Suspense, useEffect } from "react"
 
-export default function Auth() {
+function AuthComponent() {
     const searchParams = useSearchParams()
     const roles = useRoles()
 
@@ -23,4 +22,12 @@ export default function Auth() {
         window.location.replace(to)
     })
     return <p>Authenticating...</p>
+}
+
+export default function Auth() {
+    return (
+        <Suspense>
+            <AuthComponent />
+        </Suspense>
+    )
 }

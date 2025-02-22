@@ -13,7 +13,7 @@ interface EventsForDay {
     date: Date
     events: Event[]
 }
-export function sortEventsIntoDays(events: Event[]): EventsForDay[] {
+function sortEventsIntoDays(events: Event[]): EventsForDay[] {
     const eventsByDayTimestamp = new Map<number, Event[]>()
 
     events.forEach((event) => {

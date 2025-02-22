@@ -1,8 +1,5 @@
 @use "../../app/constants.scss" as *;
 
-// Fix font awesome scaling issue by manually importing css
-@import "../../node_modules/@fortawesome/fontawesome-svg-core/styles.css";
-
 .button {
     display: none;
     position: absolute;

@@ -1,11 +1,6 @@
 import React from "react"
-import Select, {
-    MultiValue,
-    Props as SelectProps,
-    SingleValue,
-    ThemeConfig,
-} from "react-select"
-import { Field, FieldProps, useField } from "formik"
+import Select, { Props as SelectProps, ThemeConfig } from "react-select"
+import { useField } from "formik"
 
 import { getColors } from "@/app/constants"
 
@@ -29,7 +24,7 @@ export function StyledSelect<T>(props: SelectProps<T>) {
 type SelectFieldProps<T> = StyledSelectProps<T> & { name: string }
 
 function SelectField<T>({ name, ...props }: SelectFieldProps<T>) {
-    const [field, meta, helpers] = useField(name)
+    const [field, , helpers] = useField(name)
 
     return (
         <StyledSelect
