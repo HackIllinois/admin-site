@@ -3,10 +3,16 @@ import Select, { Props as SelectProps, ThemeConfig } from "react-select"
 import { useField } from "formik"
 
 import { getColors } from "@/app/constants"
+import CreatableSelect from "react-select/creatable"
 
-type StyledSelectProps<T> = SelectProps<{ label: string; value: T }>
+type StyledSelectProps<T> = SelectProps<{ label: string; value: T }> & {
+    creatable?: boolean
+}
 
-export function StyledSelect<T>(props: SelectProps<T>) {
+export function StyledSelect<T>({
+    creatable = false,
+    ...props
+}: StyledSelectProps<T>) {
     const { primaryColor, primaryColorLight } = getColors()
     const theme: ThemeConfig = (defaultTheme) => ({
         ...defaultTheme,
@@ -18,7 +24,9 @@ export function StyledSelect<T>(props: SelectProps<T>) {
         },
     })
 
-    return <Select theme={theme} {...props} />
+    const Component = creatable ? CreatableSelect : Select
+
+    return <Component theme={theme} {...props} />
 }
 
 type SelectFieldProps<T> = StyledSelectProps<T> & { name: string }

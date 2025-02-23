@@ -8,6 +8,7 @@ import Checkbox, { FormikCheckbox } from "@/components/Checkbox"
 import styles from "./EventEditPopup.module.scss"
 import { CreateEventRequest, EventId } from "@/generated"
 import LocationInput from "./LocationInput"
+import { getMetadataSuffix, useMetadata } from "@/util/metadata"
 
 const publicEventTypes = [
     "MEAL",
@@ -19,10 +20,14 @@ const publicEventTypes = [
 ]
 const staffEventTypes = ["MEETING", "STAFFSHIFT", "OTHER"]
 
-type EventEditForm = Omit<CreateEventRequest, "eventType"> & {
+type EventEditForm = Omit<CreateEventRequest, "eventType" | "mapImageUrl"> & {
     eventType: {
         label: CreateEventRequest["eventType"]
         value: CreateEventRequest["eventType"]
+    } | null
+    mapImageUrl: {
+        label: string
+        value: string
     } | null
 }
 
@@ -56,7 +61,6 @@ export default function EventEditPopup({
         endTime: time,
         name: "",
         description: "",
-        // eventType: "",
         locations: [],
         sponsor: "",
         points: 0,
@@ -64,13 +68,18 @@ export default function EventEditPopup({
         displayOnStaffCheckIn: false,
         isAsync: false,
         isStaff: staffView,
-        mapImageUrl: "",
         isPro: false,
         ...initialEvent,
         eventType: initialEvent.eventType
             ? {
                   label: initialEvent.eventType,
                   value: initialEvent.eventType,
+              }
+            : null,
+        mapImageUrl: initialEvent.mapImageUrl
+            ? {
+                  label: getMetadataSuffix(initialEvent.mapImageUrl),
+                  value: initialEvent.mapImageUrl,
               }
             : null,
     }
@@ -84,10 +93,19 @@ export default function EventEditPopup({
         const newEvent: CreateEventRequest = {
             ...values,
             eventType: values.eventType.value,
+            mapImageUrl: values.mapImageUrl
+                ? values.mapImageUrl.value
+                : undefined,
             exp: expires ? values.exp : 0,
         }
         onUpdateEvent(editingEventId, newEvent)
     }
+
+    const mapUrls = useMetadata("maps")
+    const mapUrlOptions = mapUrls.map(({ path, url }) => ({
+        label: path,
+        value: url,
+    }))
 
     return (
         <div className={styles["event-edit-popup"]}>
@@ -181,17 +199,19 @@ export default function EventEditPopup({
                                         )}
                                         placeholder="Type"
                                     />
-
                                     <Field
                                         className={styles["form-field"]}
                                         name="points"
                                         placeholder="Points"
                                         type="number"
                                     />
-                                    <Field
-                                        className={styles["form-field"]}
+                                    <SelectField
+                                        className={styles.select}
                                         name="mapImageUrl"
+                                        menuPlacement="top"
+                                        options={mapUrlOptions}
                                         placeholder="Map Image URL"
+                                        creatable
                                     />
                                     <Field
                                         className={styles["form-margins"]}
