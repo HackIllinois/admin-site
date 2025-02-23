@@ -1,0 +1,56 @@
+@use "../constants.scss" as *;
+
+.container {
+    @include div-button;
+
+    $margin: 10px;
+
+    border: $primary-color 1.5px solid;
+    border-radius: 7px;
+    margin: $margin;
+    padding: 15px;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    flex-basis: 0%;
+    flex-grow: 1;
+    min-width: fit-content;
+    max-width: max-content;
+
+    &.clickable {
+        cursor: pointer;
+        &:hover,
+        &:focus {
+            background-color: #f0f0f0;
+        }
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #444444;
+        margin-bottom: 10px;
+    }
+
+    .details {
+        .price {
+            color: $secondary-color;
+            font-weight: bold;
+        }
+
+        .quantity {
+            margin-top: 5px;
+        }
+    }
+
+    .add {
+        margin: auto auto;
+        height: 100%;
+        width: auto;
+    }
+
+    &:has(.add) {
+        flex-basis: 100%;
+        max-width: none;
+    }
+}

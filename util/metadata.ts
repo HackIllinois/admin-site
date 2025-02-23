@@ -2,8 +2,10 @@ import { useEffect, useState } from "react"
 
 const CONTENT_API_ENDPOINT =
     "https://api.github.com/repos/HackIllinois/adonix-metadata/contents"
-const RAW_CONTENT_PREFIX =
-    "https://raw.githubusercontent.com/HackIllinois/adonix-metadata/refs/heads/main/"
+const RAW_CONTENT_PREFIXES = [
+    "https://raw.githubusercontent.com/HackIllinois/adonix-metadata/refs/heads/main/",
+    "https://github.com/HackIllinois/adonix-metadata/blob/main/",
+]
 
 export interface MetadataItem {
     path: string
@@ -22,7 +24,7 @@ async function getMetadata(path: string): Promise<MetadataItem[]> {
     const raw = (await result.json()) as { name: string; path: string }[]
     const metadata = raw.map(({ path }) => ({
         path,
-        url: `${RAW_CONTENT_PREFIX}${path}`,
+        url: `${RAW_CONTENT_PREFIXES[0]}${path}`,
     }))
 
     sessionStorage.setItem(
@@ -52,8 +54,10 @@ export function useMetadata(path = "") {
 
 // Gets the suffix of a metadata url by removing adonix prefix
 export function getMetadataSuffix(url: string) {
-    if (url.startsWith(RAW_CONTENT_PREFIX)) {
-        return url.substring(RAW_CONTENT_PREFIX.length)
+    for (const prefix of RAW_CONTENT_PREFIXES) {
+        if (url.startsWith(prefix)) {
+            return url.substring(prefix.length)
+        }
     }
     return url
 }

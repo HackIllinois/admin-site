@@ -12,7 +12,7 @@ export const routes = [
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
-    // { path: "/shop", name: "Shop", icon: faShoppingCart },
+    { path: "/shop", name: "Shop", icon: faShoppingCart },
 ]
 
 export function getRouteOpen() {

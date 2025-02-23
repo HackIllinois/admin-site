@@ -1,0 +1,53 @@
+@use "../constants.scss" as *;
+
+.container {
+    .titles {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        width: fit-content;
+        margin: auto;
+        justify-content: space-around;
+        max-width: 100vw;
+
+        > div {
+            box-sizing: border-box;
+            text-align: center;
+            font-size: large;
+            position: relative;
+            padding: 2rem 2rem 1rem;
+            width: fit-content;
+            margin: auto;
+            &::before {
+                position: absolute;
+                bottom: 0.25rem;
+                left: calc(10%);
+                width: 80%;
+                border-radius: 5px;
+                height: 5px;
+                content: "";
+                background-color: $primary-color;
+                opacity: 0;
+                transition: opacity 0.25s;
+            }
+            &:hover {
+                cursor: pointer;
+                &::before {
+                    opacity: 0.5;
+                }
+            }
+
+            &.active {
+                &::before {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    .items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+}
