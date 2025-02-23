@@ -20,6 +20,7 @@ function handleAuthErrors(error: unknown): boolean {
     return false
 }
 
+// Setups up the hey api client by adding interceptors to handle auth & errors
 export function setupClient() {
     client.interceptors.request.use((req) => {
         req.headers.set("Authorization", localStorage.getItem("token") || "")
@@ -42,6 +43,7 @@ export function isAuthenticated() {
     return localStorage.getItem("token")
 }
 
+// Redirects to authentication url
 export function authenticate(provider: Provider = "google") {
     // `to` is saved in localStorage so that it can be used in the Auth component later
     localStorage.setItem("to", window.location.href)
@@ -51,6 +53,7 @@ export function authenticate(provider: Provider = "google") {
     window.location.replace(authURL)
 }
 
+// Handles errors with alert dialog, returns data if no error
 export function handleError<TData, TError>(
     result: Awaited<RequestResult<TData, TError, false>>,
 ): TData {
@@ -72,6 +75,8 @@ export function handleError<TData, TError>(
     return result.data!
 }
 
+// Gets the roles of the currently authenticated user
+// Should use useRoles over this - use getRoles only when token has just changed
 export function getRoles() {
     return AuthService.getAuthRoles().then((result) => {
         if (result.error) {
@@ -93,6 +98,7 @@ export function getRoles() {
     })
 }
 
+// Hook to fetch roles
 export function useRoles() {
     const [roles, setRoles] = useState<Role[]>([])
 
