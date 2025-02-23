@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+export const METADATA_REPO = "https://github.com/HackIllinois/adonix-metadata"
 const CONTENT_API_ENDPOINT =
     "https://api.github.com/repos/HackIllinois/adonix-metadata/contents"
 const RAW_CONTENT_PREFIXES = [

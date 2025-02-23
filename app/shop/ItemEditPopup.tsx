@@ -1,10 +1,11 @@
 import { ShopItemCreateRequest, ShopItemId } from "@/generated"
-import { getMetadataSuffix, useMetadata } from "@/util/metadata"
+import { getMetadataSuffix, METADATA_REPO, useMetadata } from "@/util/metadata"
 
 import styles from "./ItemEditPopup.module.scss"
 import { Field, Form, Formik } from "formik"
 import { FormikCheckbox } from "@/components/Checkbox"
 import SelectField from "@/components/SelectField/SelectField"
+import Link from "next/link"
 
 type ItemEditForm = Omit<ShopItemCreateRequest, "imageURL"> & {
     imageURL: {
@@ -44,7 +45,6 @@ export default function ItemEditPopup({
               }
             : null,
     }
-    console.log(initialItem.imageURL, initialValues.imageURL)
 
     const submit = (values: ItemEditForm) => {
         if (!values.imageURL) {
@@ -109,6 +109,13 @@ export default function ItemEditPopup({
                                 placeholder="Image URL"
                                 creatable
                             />
+                            <small>
+                                Images are pulled from{" "}
+                                <Link href={METADATA_REPO} target="_blank">
+                                    adonix-metadata
+                                </Link>{" "}
+                                - please contact systems to add more
+                            </small>
 
                             <div className={styles.buttons}>
                                 {editingItemId && (

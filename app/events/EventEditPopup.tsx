@@ -8,7 +8,8 @@ import Checkbox, { FormikCheckbox } from "@/components/Checkbox"
 import styles from "./EventEditPopup.module.scss"
 import { CreateEventRequest, EventId } from "@/generated"
 import LocationInput from "./LocationInput"
-import { getMetadataSuffix, useMetadata } from "@/util/metadata"
+import { getMetadataSuffix, METADATA_REPO, useMetadata } from "@/util/metadata"
+import Link from "next/link"
 
 const publicEventTypes = [
     "MEAL",
@@ -213,6 +214,16 @@ export default function EventEditPopup({
                                         placeholder="Map Image URL"
                                         creatable
                                     />
+                                    <small>
+                                        Images are pulled from{" "}
+                                        <Link
+                                            href={METADATA_REPO}
+                                            target="_blank"
+                                        >
+                                            adonix-metadata
+                                        </Link>{" "}
+                                        - please contact systems to add more
+                                    </small>
                                     <Field
                                         className={styles["form-margins"]}
                                         component={FormikCheckbox}
