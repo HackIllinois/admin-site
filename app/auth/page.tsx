@@ -1,5 +1,5 @@
 "use client"
-import { getRoles, useRoles } from "@/util/api-client"
+import { getRoles } from "@/util/api-client"
 import { useSearchParams } from "next/navigation"
 import { Suspense, useEffect } from "react"
 
