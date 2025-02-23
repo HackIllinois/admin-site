@@ -5,7 +5,9 @@ import { useField } from "formik"
 import { getColors } from "@/app/constants"
 import CreatableSelect from "react-select/creatable"
 
-type StyledSelectProps<T> = SelectProps<{ label: string; value: T }> & {
+export type Option<T> = { label: string; value: T }
+
+type StyledSelectProps<T> = SelectProps<Option<T>> & {
     creatable?: boolean
 }
 

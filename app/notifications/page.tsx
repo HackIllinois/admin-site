@@ -16,26 +16,27 @@ import {
 
 import styles from "./style.module.scss"
 import { handleError, useRoles } from "@/util/api-client"
+import type { Option } from "@/components/SelectField/SelectField"
 
 interface NotificationSendFormOptions {
     title: string
     body: string
-    topic: string
-    role: string
-    foodWave: string
+    topic: Option<string> | null
+    role: Option<string> | null
+    foodWave: Option<string> | null
     eventId: string
-    staffShift: string
+    staffShift: Option<string> | null
     userIds: string
 }
 
 const notificationInitialValues: NotificationSendFormOptions = {
     title: "",
     body: "",
-    topic: "",
-    role: "",
-    foodWave: "",
+    topic: null,
+    role: null,
+    foodWave: null,
     eventId: "",
-    staffShift: "",
+    staffShift: null,
     userIds: "",
 }
 
@@ -136,24 +137,31 @@ export default function Notifications() {
                 title: values.title,
                 body: values.body,
             }
-            switch (values.topic) {
+            switch (values.topic.value) {
                 case "Role": {
-                    notification.role = values.role as Role
+                    if (!values.role) return alert("Role is required")
+                    notification.role = values.role.value as Role
                     break
                 }
                 case "Event": {
+                    if (!values.eventId) return alert("Event Id is required")
                     notification.eventId = values.eventId
                     break
                 }
                 case "StaffShift": {
-                    notification.staffShift = values.staffShift
+                    if (!values.staffShift)
+                        return alert("Staff Shift is required")
+                    notification.staffShift = values.staffShift.value
                     break
                 }
                 case "FoodWave": {
-                    notification.foodWave = parseInt(values.foodWave)
+                    if (values.foodWave === null)
+                        return alert("Food wave is required")
+                    notification.foodWave = parseInt(values.foodWave.value)
                     break
                 }
                 case "UserIds": {
+                    if (!values.userIds) return alert("User Ids is required")
                     notification.userIds = values.userIds
                         .split(",")
                         .map((s) => s.trim())
@@ -191,7 +199,7 @@ export default function Notifications() {
                             initialValues={notificationInitialValues}
                             onSubmit={submit}
                         >
-                            {(props) => (
+                            {({ values: { topic } }) => (
                                 <Form>
                                     <Field
                                         className={styles["form-field"]}
@@ -206,7 +214,7 @@ export default function Notifications() {
                                         options={topicOptions}
                                     />
 
-                                    {props.values.topic === "Role" && (
+                                    {topic?.value === "Role" && (
                                         <SelectField
                                             name="role"
                                             className={styles.select}
@@ -215,7 +223,7 @@ export default function Notifications() {
                                         />
                                     )}
 
-                                    {props.values.topic === "Event" && (
+                                    {topic?.value === "Event" && (
                                         <SelectField
                                             name="eventId"
                                             className={styles.select}
@@ -224,7 +232,7 @@ export default function Notifications() {
                                         />
                                     )}
 
-                                    {props.values.topic === "StaffShift" && (
+                                    {topic?.value === "StaffShift" && (
                                         <SelectField
                                             name="staffShift"
                                             className={styles.select}
@@ -233,7 +241,7 @@ export default function Notifications() {
                                         />
                                     )}
 
-                                    {props.values.topic === "FoodWave" && (
+                                    {topic?.value === "FoodWave" && (
                                         <SelectField
                                             name="foodWave"
                                             className={styles.select}
@@ -242,7 +250,7 @@ export default function Notifications() {
                                         />
                                     )}
 
-                                    {props.values.topic === "UserIds" && (
+                                    {topic?.value === "UserIds" && (
                                         <Field
                                             name="userIds"
                                             className={styles["form-field"]}
