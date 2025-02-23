@@ -15,7 +15,7 @@ import {
 } from "@/generated"
 
 import styles from "./style.module.scss"
-import { useRoles } from "@/util/api-client"
+import { handleError, useRoles } from "@/util/api-client"
 
 interface NotificationSendFormOptions {
     title: string
@@ -86,29 +86,33 @@ export default function Notifications() {
     >([])
 
     const updateNotifications = () =>
-        NotificationService.getNotification().then((response) =>
-            setNotifications(response.data!.reverse()),
-        )
+        NotificationService.getNotification()
+            .then(handleError)
+            .then((response) => setNotifications(response.reverse()))
 
     const updateEventOptions = () =>
-        EventService.getEvent().then((response) =>
-            setEventOptions(
-                response.data!.events.map((event) => ({
-                    label: event.name,
-                    value: event.eventId,
-                })),
-            ),
-        )
+        EventService.getEvent()
+            .then(handleError)
+            .then((response) =>
+                setEventOptions(
+                    response.events.map((event) => ({
+                        label: event.name,
+                        value: event.eventId,
+                    })),
+                ),
+            )
 
     const updateStaffEventOptions = () =>
-        EventService.getEventStaff().then((response) =>
-            setStaffEventOptions(
-                response.data!.events.map((event) => ({
-                    label: event.name,
-                    value: event.eventId,
-                })),
-            ),
-        )
+        EventService.getEventStaff()
+            .then(handleError)
+            .then((response) =>
+                setStaffEventOptions(
+                    response.events.map((event) => ({
+                        label: event.name,
+                        value: event.eventId,
+                    })),
+                ),
+            )
 
     const refresh = useCallback(() => {
         setIsLoading(true)

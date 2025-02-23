@@ -7,7 +7,6 @@ function getCSSVariable(variableName: string) {
 }
 
 export function getColors() {
-    console.log(getCSSVariable("--primarycolor"))
     return {
         primaryColor: getCSSVariable("--primarycolor"),
         primaryColorLight: getCSSVariable("--primarycolorlight"),

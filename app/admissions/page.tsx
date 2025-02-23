@@ -30,7 +30,8 @@ export default function Admissions() {
 
     useEffect(() => {
         AdmissionService.getAdmissionRsvpStaff()
-            .then((initialRows) => convertFromAPI(initialRows.data!))
+            .then(handleError)
+            .then((initialRows) => convertFromAPI(initialRows))
             .then(setRows)
     }, [])
 
