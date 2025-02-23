@@ -6,6 +6,7 @@ import { Field, Form, Formik } from "formik"
 import { FormikCheckbox } from "@/components/Checkbox"
 import SelectField from "@/components/SelectField/SelectField"
 import Link from "next/link"
+import { useRef } from "react"
 
 type ItemEditForm = Omit<ShopItemCreateRequest, "imageURL"> & {
     imageURL: {
@@ -32,6 +33,7 @@ export default function ItemEditPopup({
     onDeleteItem,
     onUpdateItem,
 }: ItemEditProps) {
+    const popupContainerRef = useRef<HTMLDivElement>(null)
     const initialValues: ItemEditForm = {
         name: "",
         price: 0,
@@ -68,7 +70,7 @@ export default function ItemEditPopup({
         <div className={styles["item-edit-popup"]}>
             <div className={styles["popup-background"]} onClick={onDismiss} />
 
-            <div className={styles["popup-container"]}>
+            <div className={styles["popup-container"]} ref={popupContainerRef}>
                 <div className={styles.title}>
                     {editingItemId ? "Edit Item" : "Add Item"}
                 </div>
@@ -108,6 +110,8 @@ export default function ItemEditPopup({
                                 options={showUrlOptions}
                                 placeholder="Image URL"
                                 creatable
+                                // Set target so it doesn't get cropped by div
+                                menuPortalTarget={popupContainerRef.current}
                             />
                             <small>
                                 Images are pulled from{" "}
