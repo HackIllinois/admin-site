@@ -60,7 +60,15 @@ export type CreateEventRequest = {
     isPro: boolean;
 };
 
+export type CreateSponsorRequest = {
+    email: SponsorEmail;
+};
+
 export type Degree = "Associates' Degree" | "Bachelors' Degree " | "Masters' Degree" | 'PhD' | 'Graduated' | 'Other' | 'N/A' | '';
+
+export type DeleteSponsorRequest = {
+    userId: UserId;
+};
 
 export type Event = {
     eventId: EventId;
@@ -221,7 +229,7 @@ export type ProfileLeaderboardQueryLimit = number;
 /**
  * The provider to use for authentication. Attendees use GitHub and staff use Google.
  */
-export type Provider = 'github' | 'google';
+export type Provider = 'github' | 'google' | 'sponsor';
 
 /**
  * A user's QR code
@@ -295,6 +303,22 @@ export type RegistrationStatus = {
     alive: boolean;
 };
 
+export type ResumeBookEntry = {
+    userId?: string;
+    legalName?: string;
+    emailAddress: string;
+    degree: string;
+    major: string;
+    minor?: string;
+    gradYear: number;
+};
+
+export type ResumeBookFilter = {
+    graduations?: Array<string>;
+    majors?: Array<string>;
+    degrees?: Array<string>;
+};
+
 export type Role = 'ADMIN' | 'STAFF' | 'MENTOR' | 'APPLICANT' | 'ATTENDEE' | 'USER' | 'SPONSOR' | 'BLOBSTORE' | 'PRO';
 
 export type Roles = {
@@ -334,7 +358,7 @@ export type ScanEventRequest = {
 };
 
 export type Shifts = {
-    shifts: Array<unknown>;
+    shifts: Array<Event>;
 };
 
 export type ShopItem = {
@@ -365,6 +389,22 @@ export type ShopItemUpdateRequest = {
 };
 
 export type ShopItems = Array<ShopItem>;
+
+export type Sponsor = {
+    userId: UserId;
+    email: SponsorEmail;
+};
+
+export type SponsorEmail = string;
+
+export type SponsorLogin = {
+    token: Jwt;
+};
+
+export type SponsorLoginRequest = {
+    email: SponsorEmail;
+    code: string;
+};
 
 export type SubscribeRequest = {
     listName: NewsletterId;
@@ -628,7 +668,7 @@ export type GetAuthLoginByProviderErrors = {
      */
     400: {
         error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://runes.hackillinois.org/#/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--hackillinois\\.netlify\\.app\\/auth\\/$/`';
+        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://runes.hackillinois.org/#/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
     };
 };
 
@@ -760,6 +800,54 @@ export type PutAuthRolesByIdByRoleResponses = {
 
 export type PutAuthRolesByIdByRoleResponse = PutAuthRolesByIdByRoleResponses[keyof PutAuthRolesByIdByRoleResponses];
 
+export type PostAuthSponsorLoginData = {
+    body?: SponsorLoginRequest;
+    path?: never;
+    query?: never;
+    url: '/auth/sponsor/login/';
+};
+
+export type PostAuthSponsorLoginErrors = {
+    /**
+     * The email or code sent was invalid
+     */
+    403: {
+        error: 'BadCode';
+        message: 'The code entered was invalid';
+    };
+};
+
+export type PostAuthSponsorLoginError = PostAuthSponsorLoginErrors[keyof PostAuthSponsorLoginErrors];
+
+export type PostAuthSponsorLoginResponses = {
+    /**
+     * Successfully logged in, returns the auth token for future requests
+     */
+    200: SponsorLogin;
+};
+
+export type PostAuthSponsorLoginResponse = PostAuthSponsorLoginResponses[keyof PostAuthSponsorLoginResponses];
+
+export type PostAuthSponsorVerifyData = {
+    body?: never;
+    path?: never;
+    query: {
+        email: SponsorEmail;
+    };
+    url: '/auth/sponsor/verify/';
+};
+
+export type PostAuthSponsorVerifyResponses = {
+    /**
+     * Sent a code if the email provided was valid
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostAuthSponsorVerifyResponse = PostAuthSponsorVerifyResponses[keyof PostAuthSponsorVerifyResponses];
+
 export type GetAuthTokenRefreshData = {
     body?: never;
     path?: never;
@@ -793,7 +881,7 @@ export type GetAuthByProviderCallbackErrors = {
      */
     400: {
         error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://runes.hackillinois.org/#/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--hackillinois\\.netlify\\.app\\/auth\\/$/`';
+        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://runes.hackillinois.org/#/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
     };
     /**
      * Authorization failed
@@ -2070,6 +2158,115 @@ export type PutShopItemByIdResponses = {
 
 export type PutShopItemByIdResponse = PutShopItemByIdResponses[keyof PutShopItemByIdResponses];
 
+export type DeleteSponsorData = {
+    body?: DeleteSponsorRequest;
+    path?: never;
+    query?: never;
+    url: '/sponsor/';
+};
+
+export type DeleteSponsorErrors = {
+    /**
+     * Sponsor not found
+     */
+    404: {
+        error: 'Failed to find the sponsor';
+        message: 'NotFound';
+    };
+};
+
+export type DeleteSponsorError = DeleteSponsorErrors[keyof DeleteSponsorErrors];
+
+export type DeleteSponsorResponses = {
+    /**
+     * Successfully deleted
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteSponsorResponse = DeleteSponsorResponses[keyof DeleteSponsorResponses];
+
+export type GetSponsorData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/sponsor/';
+};
+
+export type GetSponsorResponses = {
+    /**
+     * All sponsors
+     */
+    200: Array<Sponsor>;
+};
+
+export type GetSponsorResponse = GetSponsorResponses[keyof GetSponsorResponses];
+
+export type PostSponsorData = {
+    body?: CreateSponsorRequest;
+    path?: never;
+    query?: never;
+    url: '/sponsor/';
+};
+
+export type PostSponsorResponses = {
+    /**
+     * The newly created sponsor
+     */
+    200: Sponsor;
+};
+
+export type PostSponsorResponse = PostSponsorResponses[keyof PostSponsorResponses];
+
+export type PostSponsorResumebookFilterPagecountData = {
+    body?: ResumeBookFilter;
+    path?: never;
+    query?: never;
+    url: '/sponsor/resumebook/filter/pagecount';
+};
+
+export type PostSponsorResumebookFilterPagecountResponses = {
+    /**
+     * Total number of pages based on ENTRIES_PER_PAGE.
+     */
+    200: {
+        pageCount: number;
+    };
+};
+
+export type PostSponsorResumebookFilterPagecountResponse = PostSponsorResumebookFilterPagecountResponses[keyof PostSponsorResumebookFilterPagecountResponses];
+
+export type PostSponsorResumebookFilterByPageData = {
+    body?: ResumeBookFilter;
+    path?: {
+        page?: number | null;
+    };
+    query?: never;
+    url: '/sponsor/resumebook/filter/{page}';
+};
+
+export type PostSponsorResumebookFilterByPageErrors = {
+    /**
+     * Invalid page number or filter criteria.
+     */
+    400: {
+        error: string;
+    };
+};
+
+export type PostSponsorResumebookFilterByPageError = PostSponsorResumebookFilterByPageErrors[keyof PostSponsorResumebookFilterByPageErrors];
+
+export type PostSponsorResumebookFilterByPageResponses = {
+    /**
+     * The list of admitted applicants for the specified page.
+     */
+    200: Array<ResumeBookEntry>;
+};
+
+export type PostSponsorResumebookFilterByPageResponse = PostSponsorResumebookFilterByPageResponses[keyof PostSponsorResumebookFilterByPageResponses];
+
 export type PostStaffAttendanceData = {
     body?: {
         eventId: EventId;
@@ -2228,7 +2425,7 @@ export type PostStaffShiftError = PostStaffShiftErrors[keyof PostStaffShiftError
 
 export type PostStaffShiftResponses = {
     /**
-     * The shifts
+     * Successfully set
      */
     200: {
         success: true;

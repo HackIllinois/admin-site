@@ -1,7 +1,7 @@
 import {
     faBell,
     faCalendar,
-    faKey,
+    faMedal,
     faShoppingCart,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons"
@@ -13,6 +13,7 @@ export const routes = [
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
+    { path: "/sponsors", name: "Sponsors", icon: faMedal },
 ]
 
 export function getRouteOpen() {
