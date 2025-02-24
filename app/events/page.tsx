@@ -8,6 +8,8 @@ import { CreateEventRequest, Event, EventId, EventService } from "@/generated"
 import { handleError, useRoles } from "@/util/api-client"
 
 import styles from "./style.module.scss"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSync } from "@fortawesome/free-solid-svg-icons"
 
 interface EventsForDay {
     date: Date
@@ -121,6 +123,11 @@ export default function Events() {
                 >
                     Attendee Schedule
                 </div>
+                <FontAwesomeIcon
+                    className={styles.refresh}
+                    icon={faSync}
+                    onClick={fetchEvents}
+                />
             </div>
             <div className={styles["events-page"]}>
                 {editingEvent && (

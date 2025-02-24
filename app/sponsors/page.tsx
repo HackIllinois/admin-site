@@ -4,7 +4,7 @@ import Loading from "@/components/Loading"
 import Unauthorized from "@/components/Unauthorized/Unauthorized"
 import { Sponsor, SponsorService } from "@/generated"
 import { handleError, useRoles } from "@/util/api-client"
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faSync, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 
@@ -41,24 +41,28 @@ function SponsorAddCard({ onAdd }: SponsorAddCardProps) {
 }
 
 export default function Sponsors() {
+    const [loading, setLoading] = useState(true)
     const roles = useRoles()
-    const [sponsors, setSponsors] = useState<Sponsor[] | null>(null)
+    const [sponsors, setSponsors] = useState<Sponsor[]>([])
 
     const isAdmin = roles.includes("ADMIN")
 
-    const refresh = async () =>
+    const refresh = async () => {
+        setLoading(true)
         await SponsorService.getSponsor()
             .then(handleError)
             .then((sponsors) => {
                 setSponsors(sponsors)
+                setLoading(false)
             })
+    }
 
     useEffect(() => {
         if (!isAdmin) return
         refresh()
     }, [isAdmin])
 
-    if (roles.length === 0 || sponsors === null) {
+    if (roles.length === 0 || loading) {
         return <Loading />
     }
 
@@ -80,7 +84,14 @@ export default function Sponsors() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.title}>Sponsors</div>
+            <div className={styles.header}>
+                <div>Sponsors</div>
+                <FontAwesomeIcon
+                    className={styles.refresh}
+                    icon={faSync}
+                    onClick={refresh}
+                />
+            </div>
             <div className={styles.sponsors}>
                 {sponsors.map((sponsor) => (
                     <SponsorCard

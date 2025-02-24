@@ -13,6 +13,8 @@ import ItemCard, { ItemAddCard } from "./ItemCard"
 import styles from "./style.module.scss"
 import Loading from "@/components/Loading"
 import ItemEditPopup from "./ItemEditPopup"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSync } from "@fortawesome/free-solid-svg-icons"
 
 export default function Shop() {
     const [loading, setLoading] = useState(true)
@@ -82,6 +84,11 @@ export default function Shop() {
                 >
                     Purchases
                 </div>
+                <FontAwesomeIcon
+                    className={styles.refresh}
+                    icon={faSync}
+                    onClick={refresh}
+                />
             </div>
             <div className={styles.items}>
                 {editingItem && (
