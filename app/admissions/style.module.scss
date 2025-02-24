@@ -22,6 +22,15 @@
     }
 }
 
+.refresh {
+    cursor: pointer;
+    padding: 5px 10px;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
 .modal {
     overflow: scroll;
     position: absolute;

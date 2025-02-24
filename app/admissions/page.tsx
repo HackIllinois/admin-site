@@ -1,8 +1,15 @@
 "use client"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import { Modal, Button } from "@mui/material"
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid"
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridColDef,
+    GridToolbarColumnsButton,
+    GridToolbarContainer,
+    GridToolbarFilterButton,
+} from "@mui/x-data-grid"
 import {
     AdmissionDecision,
     AdmissionService,
@@ -12,6 +19,9 @@ import {
 } from "@/generated"
 import { handleError } from "@/util/api-client"
 import styles from "./style.module.scss"
+import { faSync } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import Loading from "@/components/Loading"
 
 interface Row {
     id: string
@@ -21,19 +31,50 @@ interface Row {
     response: string
 }
 
+function GridToolbar({ refresh }: { refresh: () => void }) {
+    return (
+        <GridToolbarContainer>
+            <GridToolbarColumnsButton
+                slotProps={{
+                    button: {
+                        color: "inherit",
+                    },
+                }}
+            />
+            <GridToolbarFilterButton
+                slotProps={{
+                    button: {
+                        color: "inherit",
+                    },
+                }}
+            />
+            <div className={styles.refresh} onClick={refresh}>
+                <FontAwesomeIcon icon={faSync} />
+            </div>
+        </GridToolbarContainer>
+    )
+}
+
 export default function Admissions() {
+    const [loading, setLoading] = useState(true)
     const [rows, setRows] = useState<Row[]>([])
     const [cellModesModel, setCellModesModel] = useState({})
     const [openRegistration, setOpenRegistration] = useState(false)
     const [registration, setRegistration] =
         useState<RegistrationApplication | null>(null)
 
-    useEffect(() => {
-        AdmissionService.getAdmissionRsvpStaff()
+    const refresh = useCallback(async () => {
+        setLoading(true)
+        const rows = await AdmissionService.getAdmissionRsvpStaff()
             .then(handleError)
             .then((initialRows) => convertFromAPI(initialRows))
-            .then(setRows)
+        setRows(rows)
+        setLoading(false)
     }, [])
+
+    useEffect(() => {
+        refresh()
+    }, [refresh])
 
     const convertFromAPI = (rsvps: AdmissionDecision[]) => {
         const rowsToSet = rsvps.map((rsvp) => {
@@ -111,15 +152,21 @@ export default function Admissions() {
         },
     ]
 
+    if (loading) {
+        return <Loading />
+    }
+
     return (
         <div className={styles.admissions}>
             <h1>Admissions</h1>
             <DataGrid
-                loading={rows.length === 0}
                 rows={rows}
                 columns={columns}
                 cellModesModel={cellModesModel}
                 onCellModesModelChange={setCellModesModel}
+                slots={{
+                    toolbar: () => <GridToolbar refresh={refresh} />,
+                }}
             />
 
             <Modal
