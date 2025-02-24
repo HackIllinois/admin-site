@@ -57,15 +57,19 @@ export default function Events() {
 
     const fetchEvents = useCallback(async () => {
         setIsLoading(true)
-        const events = await EventService.getEvent()
-            .then(handleError)
-            .then((result) => result.events)
-        setAttendeeEventsByDays(
-            sortEventsIntoDays(events.filter((event) => !event.isStaff)),
-        )
-        setStaffEventsByDays(
-            sortEventsIntoDays(events.filter((event) => event.isStaff)),
-        )
+        const [events, staffEvents] = await Promise.all([
+            EventService.getEvent()
+                .then(handleError)
+                .then((result) =>
+                    // Required because /event returns all non-staff-shift events
+                    result.events.filter((event) => !event.isStaff),
+                ),
+            EventService.getEventStaff()
+                .then(handleError)
+                .then((result) => result.events),
+        ])
+        setAttendeeEventsByDays(sortEventsIntoDays(events))
+        setStaffEventsByDays(sortEventsIntoDays(staffEvents))
         setIsLoading(false)
     }, [])
 
