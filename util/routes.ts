@@ -3,6 +3,7 @@ import {
     faCalendar,
     faMedal,
     faShoppingCart,
+    faUser,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons"
 import { usePathname } from "next/navigation"
@@ -14,6 +15,7 @@ export const routes = [
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
     { path: "/sponsors", name: "Sponsors", icon: faMedal },
+    { path: "/account", name: "Account", icon: faUser },
 ]
 
 export function getRouteOpen() {

@@ -40,6 +40,10 @@ export function setupClient() {
 }
 
 export function isAuthenticated() {
+    return !!getAuthToken()
+}
+
+export function getAuthToken() {
     return localStorage.getItem("token")
 }
 

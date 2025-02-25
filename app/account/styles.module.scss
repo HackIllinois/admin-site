@@ -1,0 +1,112 @@
+@use "../constants.scss" as *;
+
+.container {
+    width: max-content;
+    .title {
+        h2 {
+            padding: 1rem 0;
+            margin: 0 auto;
+            font-size: 2em;
+            width: fit-content;
+        }
+    }
+
+    .account {
+        border: $primary-color 1.5px solid;
+        border-radius: 7px;
+        margin-top: 8px;
+        padding: 15px;
+        display: flex;
+        box-sizing: border-box;
+        flex-direction: column;
+        font-size: 1.2em;
+
+        & > div {
+            display: flex;
+            flex-direction: row;
+
+            margin: 2px 0;
+
+            .label {
+                color: $primary-color;
+                font-weight: bold;
+                svg {
+                    margin-right: 5px;
+                }
+                margin-right: 5px;
+            }
+        }
+
+        .name {
+        }
+        .user-id {
+        }
+        .email {
+        }
+        .roles {
+            display: flex;
+            flex-wrap: wrap;
+
+            .label {
+                flex-basis: 100%;
+            }
+
+            .role {
+                --color: #{$primary-color};
+                font-weight: bold;
+                font-size: 0.75em;
+                border: var(--color) 1.5px solid;
+                border-radius: 2em;
+                margin: 3px;
+                padding: 5px;
+                color: var(--color);
+            }
+
+            .ADMIN {
+                --color: #{$red};
+            }
+
+            .STAFF {
+                --color: #d96d0f;
+            }
+
+            .ATTENDEE {
+                --color: #0f9500;
+            }
+        }
+
+        .actions {
+            margin-top: 10px;
+
+            :nth-child(1) {
+                margin-left: 0;
+            }
+            button {
+                @include button;
+                margin: 0 10px;
+
+                &.success {
+                    border-color: $success;
+                    color: $success;
+
+                    &:hover,
+                    &:focus {
+                        background-color: $success;
+                        color: white;
+                    }
+                }
+
+                &.log-out {
+                    border-color: $red;
+                    color: $red;
+
+                    &:hover,
+                    &:focus {
+                        background-color: $red;
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}
