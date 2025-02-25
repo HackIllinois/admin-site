@@ -1,8 +1,8 @@
 "use client"
 import Loading from "@/components/Loading"
-import { Role, UserInfo, UserService } from "@/generated"
+import { UserInfo, UserService } from "@/generated"
 import { getAuthToken, handleError, useRoles } from "@/util/api-client"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 import styles from "./styles.module.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
