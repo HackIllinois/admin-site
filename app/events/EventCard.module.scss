@@ -64,12 +64,20 @@
                 overflow: hidden;
             }
 
-            .locations,
+            .location,
             .type {
-                margin-top: 7px;
                 font-size: 0.85em;
-                color: $secondary-color;
                 font-weight: bold;
+            }
+
+            .location {
+                color: $primary-color;
+                margin-top: 7px;
+                margin-bottom: 3px;
+            }
+
+            .type {
+                color: $secondary-color;
             }
         }
     }
