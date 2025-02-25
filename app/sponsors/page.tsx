@@ -62,12 +62,16 @@ export default function Sponsors() {
         refresh()
     }, [isAdmin])
 
-    if (roles.length === 0 || loading) {
+    if (roles.length === 0) {
         return <Loading />
     }
 
     if (!isAdmin) {
         return <Unauthorized />
+    }
+
+    if (loading) {
+        return <Loading />
     }
 
     async function createSponsor() {
