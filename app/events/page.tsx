@@ -180,6 +180,15 @@ export default function Events() {
                                         setEditingDay(day.date)
                                         setEditingEvent(event)
                                     }}
+                                    onDuplicate={() => {
+                                        setEditingDay(day.date)
+                                        setEditingEvent({
+                                            ...event,
+                                            name: `${event.name} (Copy)`,
+                                            eventId: undefined,
+                                            _id: undefined, // Required to not break API
+                                        } as Partial<Event>)
+                                    }}
                                     key={event.eventId}
                                 />
                             ))}

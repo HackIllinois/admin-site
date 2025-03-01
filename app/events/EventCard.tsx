@@ -1,7 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
 import clsx from "clsx"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus, faKey, faLock } from "@fortawesome/free-solid-svg-icons"
+import {
+    faPlus,
+    faKey,
+    faLock,
+    faClone,
+} from "@fortawesome/free-solid-svg-icons"
 
 import FormPopup from "@/components/FormPopup"
 import EventCodeForm from "./EventCodeForm"
@@ -13,9 +18,17 @@ interface EventCardProps {
     event: Event
     canEdit: boolean
     onClick: (event: Event) => void
+    onDuplicate: () => void
 }
 
-export default function EventCard({ event, canEdit, onClick }: EventCardProps) {
+export default function EventCard({
+    event,
+    canEdit,
+    onClick,
+    onDuplicate,
+}: EventCardProps) {
+    const [showCodeForm, setShowCodeForm] = useState(false)
+
     const formatTime = (seconds: number) =>
         new Date(seconds * 1000).toLocaleTimeString("en-US", {
             hour: "numeric",
@@ -90,17 +103,22 @@ export default function EventCard({ event, canEdit, onClick }: EventCardProps) {
                 </div>
             </button>
 
-            <FormPopup
-                form={EventCodeForm}
-                onSubmit={() => {}}
-                onCancel={() => {}}
-                overrideShow={undefined}
-                event={event}
-            >
-                <button className={styles["code-button"]}>
+            <div className={styles.buttons}>
+                <button onClick={onDuplicate}>
+                    <FontAwesomeIcon icon={faClone} fixedWidth />
+                </button>
+                <button onClick={() => setShowCodeForm(true)}>
                     <FontAwesomeIcon icon={faKey} fixedWidth />
                 </button>
-            </FormPopup>
+            </div>
+
+            <FormPopup
+                form={EventCodeForm}
+                onSubmit={() => setShowCodeForm(false)}
+                onCancel={() => setShowCodeForm(false)}
+                overrideShow={showCodeForm}
+                event={event}
+            ></FormPopup>
         </div>
     )
 }

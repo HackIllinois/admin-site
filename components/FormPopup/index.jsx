@@ -63,7 +63,7 @@ const ModalPopup = ({ children }) => {
 
 const FormPopup = ({
     form,
-    children,
+    children = undefined,
     onSubmit,
     onCancel,
     overrideShow,

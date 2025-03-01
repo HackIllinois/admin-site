@@ -3,13 +3,14 @@
 .container {
     position: relative;
     margin: 20px;
+    $padding: 15px;
 
     .card {
         @include div-button;
         width: 100%;
         border: $primary-color 1.5px solid;
         border-radius: 7px;
-        padding: 15px;
+        padding: $padding;
         display: flex;
         flex-direction: column;
 
@@ -87,29 +88,34 @@
         }
     }
 
-    .code-button {
-        @include div-button;
-
-        cursor: pointer;
+    .buttons {
         position: absolute;
-        bottom: 6px;
-        right: 6px;
+        bottom: $padding / 2;
+        right: $padding / 2;
+        display: flex;
 
-        font-size: 1.2em;
-        color: $secondary-color;
-        background-color: white;
+        button {
+            position: static;
+            @include div-button;
 
-        padding: 4px;
-        border: 1px solid $primary-color;
-        border-radius: 50px;
-        transition:
-            border-width 0.1s,
-            box-shadow 0.1s;
+            cursor: pointer;
 
-        &:hover,
-        &:focus {
-            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-            border-width: 2px;
+            font-size: 1.2em;
+            color: $secondary-color;
+            background-color: white;
+            margin-left: 6px;
+
+            padding: 6px;
+            border: 1px solid $primary-color;
+            border-radius: 50px;
+            transition:
+                border-width 0.1s,
+                box-shadow 0.1s;
+
+            &:hover,
+            &:focus {
+                box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+            }
         }
     }
 }
