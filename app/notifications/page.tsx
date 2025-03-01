@@ -24,7 +24,7 @@ interface NotificationSendFormOptions {
     topic: Option<string> | null
     role: Option<string> | null
     foodWave: Option<string> | null
-    eventId: string
+    eventId: Option<string> | null
     staffShift: Option<string> | null
     userIds: string
 }
@@ -35,7 +35,7 @@ const notificationInitialValues: NotificationSendFormOptions = {
     topic: null,
     role: null,
     foodWave: null,
-    eventId: "",
+    eventId: null,
     staffShift: null,
     userIds: "",
 }
@@ -145,7 +145,7 @@ export default function Notifications() {
                 }
                 case "Event": {
                     if (!values.eventId) return alert("Event Id is required")
-                    notification.eventId = values.eventId
+                    notification.eventId = values.eventId.value
                     break
                 }
                 case "StaffShift": {
@@ -173,11 +173,13 @@ export default function Notifications() {
 
             NotificationService.postNotificationSend({
                 body: notification,
-            }).then(async () => {
-                setSendProcessing(false)
-                await refresh()
-                formik.resetForm()
             })
+                .then(handleError)
+                .then(async () => {
+                    setSendProcessing(false)
+                    await refresh()
+                    formik.resetForm()
+                })
         }
     }
 
