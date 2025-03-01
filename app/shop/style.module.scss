@@ -1,6 +1,7 @@
 @use "../constants.scss" as *;
 
 .container {
+    height: 100%;
     .titles {
         position: relative;
         display: flex;

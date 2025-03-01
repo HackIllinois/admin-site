@@ -13,5 +13,7 @@
         min-width: 0; // Allows content to shrink down
         flex: 1; // Makes content fill remaining space
         padding: 30px;
+        max-height: 100vh;
+        box-sizing: border-box;
     }
 }
