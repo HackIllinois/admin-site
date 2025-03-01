@@ -71,12 +71,20 @@ export default function EventCard({ event, canEdit, onClick }: EventCardProps) {
                         {event.description}
                     </div>
 
-                    <div className={styles.location}>
-                        {(event.locations || [])
-                            .map((location) => location.description)
-                            .map((x) => x.trim())
-                            .join(", ")}
-                    </div>
+                    {event.locations.length > 0 && (
+                        <div className={styles.location}>
+                            {(event.locations || [])
+                                .map((location) => location.description)
+                                .map((x) => x.trim())
+                                .join(", ")}
+                        </div>
+                    )}
+
+                    {event.points > 0 && (
+                        <div className={styles.points}>
+                            {event.points} Points
+                        </div>
+                    )}
 
                     <div className={styles.type}>{event.eventType}</div>
                 </div>

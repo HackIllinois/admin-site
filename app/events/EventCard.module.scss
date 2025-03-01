@@ -62,18 +62,23 @@
                 font-size: 0.9em;
                 text-overflow: ellipsis;
                 overflow: hidden;
+                margin-bottom: 7px;
             }
 
             .location,
+            .points,
             .type {
                 font-size: 0.85em;
                 font-weight: bold;
+                margin: 3px 0;
             }
 
             .location {
                 color: $primary-color;
-                margin-top: 7px;
-                margin-bottom: 3px;
+            }
+
+            .points {
+                color: $red;
             }
 
             .type {
