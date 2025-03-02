@@ -64,6 +64,13 @@ export type CreateSponsorRequest = {
     email: SponsorEmail;
 };
 
+export type DecisionStatistic = {
+    accepted: number;
+    rejected: number;
+    waitlisted: number;
+    tbd: number;
+};
+
 export type Degree = "Associates' Degree" | "Bachelors' Degree " | "Masters' Degree" | 'PhD' | 'Graduated' | 'Other' | 'N/A' | '';
 
 export type DeleteSponsorRequest = {
@@ -95,6 +102,11 @@ export type EventFollowers = {
 };
 
 export type EventId = string;
+
+export type EventStatistic = {
+    eventId: EventId;
+    attendees: number;
+};
 
 export type Events = {
     events: Array<Event>;
@@ -216,8 +228,9 @@ export type ProfileLeaderboardEntries = {
 };
 
 export type ProfileLeaderboardEntry = {
-    points: number;
     displayName: string;
+    points: number;
+    avatarUrl: string;
 };
 
 /**
@@ -240,6 +253,12 @@ export type QrInfo = {
      * QR code URI for the user
      */
     qrInfo: string;
+};
+
+export type RsvpStatistic = {
+    accepted: number;
+    declined: number;
+    pending: number;
 };
 
 export type Race = 'American Indian or Alaska Native' | 'Arab or Middle Eastern' | 'Black or African American' | 'East Asian' | 'Hispanic or Latino' | 'Native Hawaiian or Pacific Islander' | 'South East Asian' | 'South Asian' | 'White' | 'Other' | 'Prefer Not To Answer';
@@ -304,19 +323,29 @@ export type RegistrationStatus = {
 };
 
 export type ResumeBookEntry = {
-    userId?: string;
-    legalName?: string;
-    emailAddress: string;
-    degree: string;
+    userId: UserId;
+    emailAddress: string | '';
+    legalName: string;
+    location: string;
+    university: string;
+    degree: Degree;
     major: string;
     minor?: string;
     gradYear: number;
 };
 
 export type ResumeBookFilter = {
-    graduations?: Array<string>;
+    graduations?: Array<number | null>;
     majors?: Array<string>;
     degrees?: Array<string>;
+};
+
+export type ResumeDownloadUrl = {
+    url: string;
+};
+
+export type ResumeUploadUrl = ResumeDownloadUrl & {
+    fields?: unknown;
 };
 
 export type Role = 'ADMIN' | 'STAFF' | 'MENTOR' | 'APPLICANT' | 'ATTENDEE' | 'USER' | 'SPONSOR' | 'BLOBSTORE' | 'PRO';
@@ -324,11 +353,6 @@ export type Role = 'ADMIN' | 'STAFF' | 'MENTOR' | 'APPLICANT' | 'ATTENDEE' | 'US
 export type Roles = {
     id: UserId;
     roles: Array<Role>;
-};
-
-export type S3UploadUrl = {
-    url: string;
-    fields?: unknown;
 };
 
 export type ScanAttendee = {
@@ -380,6 +404,11 @@ export type ShopItemCreateRequest = {
 
 export type ShopItemId = string;
 
+export type ShopItemStatistic = {
+    itemId: ShopItemId;
+    purchased: number;
+};
+
 export type ShopItemUpdateRequest = {
     name?: string;
     price?: number;
@@ -405,6 +434,22 @@ export type SponsorLoginRequest = {
     email: SponsorEmail;
     code: string;
 };
+
+export type StatisticLog = {
+    timestamp: number;
+    events: Array<EventStatistic>;
+    decision: DecisionStatistic;
+    rsvp: RsvpStatistic;
+    shopItems: Array<ShopItemStatistic>;
+};
+
+/**
+ * The number of items to return.
+ * Must be [1, 25], inclusive.
+ */
+export type StatisticLogFilterLimitSchema = number;
+
+export type StatisticLogs = Array<StatisticLog>;
 
 export type SubscribeRequest = {
     listName: NewsletterId;
@@ -668,7 +713,7 @@ export type GetAuthLoginByProviderErrors = {
      */
     400: {
         error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://runes.hackillinois.org/#/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
+        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://vault.hackillinois.org/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
     };
 };
 
@@ -881,7 +926,7 @@ export type GetAuthByProviderCallbackErrors = {
      */
     400: {
         error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://runes.hackillinois.org/#/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
+        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://vault.hackillinois.org/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
     };
     /**
      * Authorization failed
@@ -1813,59 +1858,55 @@ export type GetRegistrationUseridByIdResponses = {
 
 export type GetRegistrationUseridByIdResponse = GetRegistrationUseridByIdResponses[keyof GetRegistrationUseridByIdResponses];
 
-export type GetS3DownloadData = {
+export type GetResumeDownloadData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/s3/download/';
+    url: '/resume/download/';
 };
 
-export type GetS3DownloadResponses = {
+export type GetResumeDownloadResponses = {
     /**
      * The download url
      */
-    200: {
-        url: string;
-    };
+    200: ResumeDownloadUrl;
 };
 
-export type GetS3DownloadResponse = GetS3DownloadResponses[keyof GetS3DownloadResponses];
+export type GetResumeDownloadResponse = GetResumeDownloadResponses[keyof GetResumeDownloadResponses];
 
-export type GetS3DownloadByIdData = {
+export type GetResumeDownloadByIdData = {
     body?: never;
     path: {
         id: UserId;
     };
     query?: never;
-    url: '/s3/download/{id}';
+    url: '/resume/download/{id}';
 };
 
-export type GetS3DownloadByIdResponses = {
+export type GetResumeDownloadByIdResponses = {
     /**
      * The download url
      */
-    200: {
-        url: string;
-    };
+    200: ResumeDownloadUrl;
 };
 
-export type GetS3DownloadByIdResponse = GetS3DownloadByIdResponses[keyof GetS3DownloadByIdResponses];
+export type GetResumeDownloadByIdResponse = GetResumeDownloadByIdResponses[keyof GetResumeDownloadByIdResponses];
 
-export type GetS3UploadData = {
+export type GetResumeUploadData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/s3/upload/';
+    url: '/resume/upload/';
 };
 
-export type GetS3UploadResponses = {
+export type GetResumeUploadResponses = {
     /**
      * The upload url
      */
-    200: S3UploadUrl;
+    200: ResumeUploadUrl;
 };
 
-export type GetS3UploadResponse = GetS3UploadResponses[keyof GetS3UploadResponses];
+export type GetResumeUploadResponse = GetResumeUploadResponses[keyof GetResumeUploadResponses];
 
 export type GetShopData = {
     body?: never;
@@ -2158,6 +2199,38 @@ export type PutShopItemByIdResponses = {
 
 export type PutShopItemByIdResponse = PutShopItemByIdResponses[keyof PutShopItemByIdResponses];
 
+export type GetShopRaffleByIdData = {
+    body?: never;
+    path: {
+        id: ShopItemId;
+    };
+    query?: never;
+    url: '/shop/raffle/{id}/';
+};
+
+export type GetShopRaffleByIdErrors = {
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Shop item not found!';
+    };
+};
+
+export type GetShopRaffleByIdError = GetShopRaffleByIdErrors[keyof GetShopRaffleByIdErrors];
+
+export type GetShopRaffleByIdResponses = {
+    /**
+     * The raffle winner
+     */
+    200: {
+        userId: UserId;
+    };
+};
+
+export type GetShopRaffleByIdResponse = GetShopRaffleByIdResponses[keyof GetShopRaffleByIdResponses];
+
 export type DeleteSponsorData = {
     body?: DeleteSponsorRequest;
     path?: never;
@@ -2220,52 +2293,41 @@ export type PostSponsorResponses = {
 
 export type PostSponsorResponse = PostSponsorResponses[keyof PostSponsorResponses];
 
-export type PostSponsorResumebookFilterPagecountData = {
+export type PostSponsorResumebookPagecountData = {
     body?: ResumeBookFilter;
     path?: never;
     query?: never;
-    url: '/sponsor/resumebook/filter/pagecount';
+    url: '/sponsor/resumebook/pagecount';
 };
 
-export type PostSponsorResumebookFilterPagecountResponses = {
+export type PostSponsorResumebookPagecountResponses = {
     /**
-     * Total number of pages based on ENTRIES_PER_PAGE.
+     * Total number of pages based on ENTRIES_PER_PAGE
      */
     200: {
         pageCount: number;
     };
 };
 
-export type PostSponsorResumebookFilterPagecountResponse = PostSponsorResumebookFilterPagecountResponses[keyof PostSponsorResumebookFilterPagecountResponses];
+export type PostSponsorResumebookPagecountResponse = PostSponsorResumebookPagecountResponses[keyof PostSponsorResumebookPagecountResponses];
 
-export type PostSponsorResumebookFilterByPageData = {
+export type PostSponsorResumebookByPageData = {
     body?: ResumeBookFilter;
-    path?: {
-        page?: number | null;
+    path: {
+        page: number;
     };
     query?: never;
-    url: '/sponsor/resumebook/filter/{page}';
+    url: '/sponsor/resumebook/{page}/';
 };
 
-export type PostSponsorResumebookFilterByPageErrors = {
+export type PostSponsorResumebookByPageResponses = {
     /**
-     * Invalid page number or filter criteria.
-     */
-    400: {
-        error: string;
-    };
-};
-
-export type PostSponsorResumebookFilterByPageError = PostSponsorResumebookFilterByPageErrors[keyof PostSponsorResumebookFilterByPageErrors];
-
-export type PostSponsorResumebookFilterByPageResponses = {
-    /**
-     * The list of admitted applicants for the specified page.
+     * The list of admitted applicants for the specified page
      */
     200: Array<ResumeBookEntry>;
 };
 
-export type PostSponsorResumebookFilterByPageResponse = PostSponsorResumebookFilterByPageResponses[keyof PostSponsorResumebookFilterByPageResponses];
+export type PostSponsorResumebookByPageResponse = PostSponsorResumebookByPageResponses[keyof PostSponsorResumebookByPageResponses];
 
 export type PostStaffAttendanceData = {
     body?: {
@@ -2433,6 +2495,26 @@ export type PostStaffShiftResponses = {
 };
 
 export type PostStaffShiftResponse = PostStaffShiftResponses[keyof PostStaffShiftResponses];
+
+export type GetStatisticData = {
+    body?: never;
+    path?: never;
+    query?: {
+        before?: number | null;
+        after?: number | null;
+        limit?: StatisticLogFilterLimitSchema;
+    };
+    url: '/statistic/';
+};
+
+export type GetStatisticResponses = {
+    /**
+     * The logs
+     */
+    200: StatisticLogs;
+};
+
+export type GetStatisticResponse = GetStatisticResponses[keyof GetStatisticResponses];
 
 export type GetUserData = {
     body?: never;

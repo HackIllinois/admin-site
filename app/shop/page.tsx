@@ -59,6 +59,13 @@ export default function Shop() {
         await refresh()
     }
 
+    const raffleItem = async (itemId: ShopItemId) => {
+        const result = await ShopService.getShopRaffleById({
+            path: { id: itemId },
+        }).then(handleError)
+        alert(`The winner is: ${result.userId}`)
+    }
+
     useEffect(() => {
         refresh()
     }, [])
@@ -108,6 +115,7 @@ export default function Shop() {
                             item={item}
                             editable={isAdmin}
                             onClick={() => isAdmin && setEditingItem(item)}
+                            onRaffle={() => isAdmin && raffleItem(item.itemId)}
                         />
                     ))}
                 {isAdmin && (

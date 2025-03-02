@@ -1,56 +1,94 @@
 @use "../constants.scss" as *;
 
 .container {
-    @include div-button;
-
+    position: relative;
     $margin: 10px;
-
-    border: $primary-color 1.5px solid;
-    border-radius: 7px;
+    $padding: 15px;
     margin: $margin;
-    padding: 15px;
-    display: flex;
-    box-sizing: border-box;
-    flex-direction: column;
     flex-basis: 0%;
     flex-grow: 1;
     min-width: fit-content;
     max-width: max-content;
 
-    &.clickable {
-        cursor: pointer;
-        &:hover,
-        &:focus {
-            background-color: #f0f0f0;
-        }
-    }
+    .card {
+        @include div-button;
 
-    .title {
-        font-weight: bold;
-        font-size: 1.2em;
-        color: #444444;
-        margin-bottom: 10px;
-    }
+        border: $primary-color 1.5px solid;
+        border-radius: 7px;
+        padding: $padding;
 
-    .details {
-        .price {
-            color: $secondary-color;
-            font-weight: bold;
-        }
-
-        .quantity {
-            margin-top: 5px;
-        }
-    }
-
-    .add {
-        margin: auto auto;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        width: 100%;
         height: 100%;
-        width: auto;
+
+        &.clickable {
+            cursor: pointer;
+            &:hover,
+            &:focus {
+                background-color: #f0f0f0;
+            }
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #444444;
+            margin-bottom: 10px;
+        }
+
+        .details {
+            .price {
+                color: $secondary-color;
+                font-weight: bold;
+            }
+
+            .quantity {
+                margin-top: 5px;
+            }
+        }
+
+        .add {
+            margin: auto auto;
+            height: 100%;
+            width: auto;
+        }
     }
 
     &:has(.add) {
         flex-basis: 100%;
         max-width: none;
+    }
+
+    .buttons {
+        position: absolute;
+        bottom: $padding / 2;
+        right: $padding / 2;
+        display: flex;
+
+        button {
+            position: static;
+            @include div-button;
+
+            cursor: pointer;
+
+            font-size: 1.2em;
+            color: $secondary-color;
+            background-color: white;
+            margin-left: 6px;
+
+            padding: 6px;
+            border: 1px solid $primary-color;
+            border-radius: 50px;
+            transition:
+                border-width 0.1s,
+                box-shadow 0.1s;
+
+            &:hover,
+            &:focus {
+                box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+            }
+        }
     }
 }
