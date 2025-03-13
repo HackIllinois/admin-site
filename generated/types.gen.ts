@@ -96,6 +96,11 @@ export type Event = {
     isPro: boolean;
 };
 
+export type EventAttendees = {
+    eventId: EventId;
+    attendees: Array<UserId>;
+};
+
 export type EventFollowers = {
     eventId: EventId;
     followers: Array<UserId>;
@@ -448,6 +453,10 @@ export type StatisticLog = {
  * Must be [1, 25], inclusive.
  */
 export type StatisticLogFilterLimitSchema = number;
+
+export type StatisticLoggingStatus = {
+    enabled: boolean;
+};
 
 export type StatisticLogs = Array<StatisticLog>;
 
@@ -998,6 +1007,36 @@ export type PutEventResponses = {
 };
 
 export type PutEventResponse = PutEventResponses[keyof PutEventResponses];
+
+export type GetEventAttendeesByIdData = {
+    body?: never;
+    path: {
+        id: EventId;
+    };
+    query?: never;
+    url: '/event/attendees/{id}/';
+};
+
+export type GetEventAttendeesByIdErrors = {
+    /**
+     * Couldn't find the event specified
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Could not find event';
+    };
+};
+
+export type GetEventAttendeesByIdError = GetEventAttendeesByIdErrors[keyof GetEventAttendeesByIdErrors];
+
+export type GetEventAttendeesByIdResponses = {
+    /**
+     * The attendees
+     */
+    200: EventAttendees;
+};
+
+export type GetEventAttendeesByIdResponse = GetEventAttendeesByIdResponses[keyof GetEventAttendeesByIdResponses];
 
 export type GetEventFollowersByIdData = {
     body?: never;
@@ -2516,6 +2555,42 @@ export type GetStatisticResponses = {
 
 export type GetStatisticResponse = GetStatisticResponses[keyof GetStatisticResponses];
 
+export type GetStatisticLoggingData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/statistic/logging/';
+};
+
+export type GetStatisticLoggingResponses = {
+    /**
+     * Current logging status
+     */
+    200: StatisticLoggingStatus;
+};
+
+export type GetStatisticLoggingResponse = GetStatisticLoggingResponses[keyof GetStatisticLoggingResponses];
+
+export type PostStatisticLoggingByStatusData = {
+    body?: never;
+    path: {
+        status: 'enable' | 'disable';
+    };
+    query?: never;
+    url: '/statistic/logging/{status}/';
+};
+
+export type PostStatisticLoggingByStatusResponses = {
+    /**
+     * Updated logging status
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostStatisticLoggingByStatusResponse = PostStatisticLoggingByStatusResponses[keyof PostStatisticLoggingByStatusResponses];
+
 export type GetUserData = {
     body?: never;
     path?: never;
@@ -2747,6 +2822,29 @@ export type GetVersionAndroidResponses = {
 
 export type GetVersionAndroidResponse = GetVersionAndroidResponses[keyof GetVersionAndroidResponses];
 
+export type PostVersionAndroidByVersionData = {
+    body?: never;
+    path: {
+        /**
+         * The version
+         */
+        version: string;
+    };
+    query?: never;
+    url: '/version/android/{version}/';
+};
+
+export type PostVersionAndroidByVersionResponses = {
+    /**
+     * Successfully set
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostVersionAndroidByVersionResponse = PostVersionAndroidByVersionResponses[keyof PostVersionAndroidByVersionResponses];
+
 export type GetVersionIosData = {
     body?: never;
     path?: never;
@@ -2762,6 +2860,29 @@ export type GetVersionIosResponses = {
 };
 
 export type GetVersionIosResponse = GetVersionIosResponses[keyof GetVersionIosResponses];
+
+export type PostVersionIosByVersionData = {
+    body?: never;
+    path: {
+        /**
+         * The version
+         */
+        version: string;
+    };
+    query?: never;
+    url: '/version/ios/{version}/';
+};
+
+export type PostVersionIosByVersionResponses = {
+    /**
+     * Successfully set
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostVersionIosByVersionResponse = PostVersionIosByVersionResponses[keyof PostVersionIosByVersionResponses];
 
 export type ClientOptions = {
     baseUrl: 'https://adonix.hackillinois.org' | (string & {});

@@ -1,0 +1,62 @@
+@use "../constants.scss" as *;
+
+.container {
+    .header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        margin: 0 auto;
+
+        div {
+            font-size: 2em;
+            font-weight: bold;
+            padding: 15px 0;
+        }
+
+        .refresh {
+            cursor: pointer;
+            position: absolute;
+            right: -1rem;
+            transform: translateX(100%);
+        }
+    }
+
+    .versions {
+        display: flex;
+        flex-wrap: wrap;
+
+        border: $primary-color 1.5px solid;
+        border-radius: 7px;
+        margin: 10px;
+        padding: 15px;
+
+        .version {
+            display: flex;
+            flex-direction: row;
+            flex-basis: 100%;
+            flex-grow: 1;
+
+            .name {
+                font-weight: bold;
+                color: $primary-color;
+                margin-right: 10px;
+            }
+
+            .value {
+                margin-right: 5px;
+            }
+
+            .edit {
+                align-self: flex-end;
+                cursor: pointer;
+
+                &.disabled {
+                    cursor: not-allowed;
+                    opacity: 0.25;
+                }
+            }
+        }
+    }
+}

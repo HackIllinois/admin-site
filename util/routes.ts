@@ -1,6 +1,7 @@
 import {
     faBell,
     faCalendar,
+    faCodeBranch,
     faMedal,
     faShoppingCart,
     faUser,
@@ -15,6 +16,7 @@ export const routes = [
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
     { path: "/sponsors", name: "Sponsors", icon: faMedal },
+    { path: "/version", name: "Version", icon: faCodeBranch },
     { path: "/account", name: "Account", icon: faUser },
 ]
 
