@@ -51,7 +51,7 @@ export default function NavBar() {
                             key={route.name}
                             prefetch={false}
                         >
-                            <FontAwesomeIcon icon={route.icon} />
+                            <FontAwesomeIcon className={styles.icon} icon={route.icon} />
                             <span>&nbsp; {route.name}</span>
                         </Link>
                     ))}

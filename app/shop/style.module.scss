@@ -55,9 +55,9 @@
         }
     }
     .items {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        align-items: stretch;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 0;
+        padding: 1rem;
     }
 }

@@ -307,9 +307,11 @@ export default function Notifications() {
                         </div>
                         <div className={styles.title}>{notification.title}</div>
                         <div className={styles.body}>{notification.body}</div>
+                        <div className={styles.spacer}></div>
                         <div className={styles.sent}>
                             Sent: {notification.sent.length}
-                            <br />
+                        </div>
+                        <div className={styles.failed}>
                             Failed: {notification.failed.length}
                         </div>
                     </div>

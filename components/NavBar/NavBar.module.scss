@@ -53,8 +53,9 @@
 
     .logo {
         text-align: center;
-        padding: 20px 0;
+        padding: 10px 0;
         border-bottom: 2px solid white;
+        margin-bottom: 30px;
 
         img {
             width: 60%;
@@ -78,16 +79,21 @@
             display: flex;
             align-content: stretch;
             padding: 12px 12px;
-            margin: 13px 8px;
-            font-size: 1.25em;
+            margin: 8px 8px;
+            font-size: 1.2em;
             font-weight: bold;
             letter-spacing: 0.5px;
             color: white;
             text-decoration: none;
-            border-radius: 100px;
+            border-radius: 5px;
             outline: none;
             overflow: hidden;
             transition: background-color 0.25s;
+
+            .icon {
+                width: 20px;
+                margin-top: 1px;
+            }
 
             &:hover,
             &:focus {
@@ -95,7 +101,7 @@
             }
 
             &.active {
-                background-color: $secondary-color;
+                background-color: rgba(255, 255, 255, 0.3);
             }
         }
     }
