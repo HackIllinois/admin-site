@@ -1,7 +1,7 @@
 "use client"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import VisibilityIcon from "@mui/icons-material/Visibility"
-import { Modal, Button } from "@mui/material"
+import { Modal, Button, Backdrop, Fade, IconButton } from "@mui/material"
 import {
     DataGrid,
     GridActionsCellItem,
@@ -22,6 +22,7 @@ import styles from "./style.module.scss"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Loading from "@/components/Loading"
+import { Close } from "@mui/icons-material"
 
 interface Row {
     id: string
@@ -31,9 +32,40 @@ interface Row {
     response: string
 }
 
+
+const FIELDS: Record<string, string> = {
+    _id: 'ID',
+    userId: 'User ID',
+    hasSubmitted: 'Has Submitted',
+    preferredName: 'Preferred Name',
+    legalName: 'Legal Name',
+    emailAddress: 'Email Address',
+    gender: 'Gender',
+    race: 'Race / Ethnicity',
+    requestedTravelReimbursement: 'Requested Travel Reimbursement',
+    location: 'Location',
+    degree: 'Degree',
+    major: 'Major',
+    minor: 'Minor',
+    university: 'University',
+    gradYear: 'Graduation Year',
+    hackInterest: 'Hack Interest',
+    hackOutreach: 'Hack Outreach',
+    dietaryRestrictions: 'Dietary Restrictions',
+    hackEssay1: 'Hack Essay 1',
+    hackEssay2: 'Hack Essay 2',
+    optionalEssay: 'Optional Essay',
+    proEssay: 'Pro Essay',
+    considerForGeneral: 'Consider for General Tracks'
+};
+
+
+
 function GridToolbar({ refresh }: { refresh: () => void }) {
     return (
-        <GridToolbarContainer>
+        <GridToolbarContainer
+            sx={{fontFamily: 'Montserrat'}}
+        >
             <GridToolbarColumnsButton
                 slotProps={{
                     button: {
@@ -96,6 +128,7 @@ export default function Admissions() {
         RegistrationService.getRegistrationUseridById({ path: { id } })
             .then(handleError)
             .then((registration) => {
+                console.log('registration', registration);
                 setRegistration(registration)
                 setOpenRegistration(true)
             })
@@ -152,6 +185,35 @@ export default function Admissions() {
         },
     ]
 
+    const applicantInfo = [
+        ['_id',
+        'userId',
+        'hasSubmitted'],
+        ['preferredName',
+        'legalName',
+        'emailAddress'],
+        ['gender',
+        'race'],
+        ['requestedTravelReimbursement',
+        'location'],
+        ['degree',
+        'major',
+        'minor'],
+        ['university',
+        'gradYear'],
+        ['hackInterest',
+        'hackOutreach',
+        'dietaryRestrictions'],
+    ];
+
+    const essayFields = [
+        'hackEssay1',
+        'hackEssay2',
+        'optionalEssay',
+        'proEssay',
+        'considerForGeneral'
+    ];
+
     if (loading) {
         return <Loading />
     }
@@ -164,6 +226,7 @@ export default function Admissions() {
                 columns={columns}
                 cellModesModel={cellModesModel}
                 onCellModesModelChange={setCellModesModel}
+                sx={{fontFamily: 'Montserrat'}}
                 slots={{
                     toolbar: () => <GridToolbar refresh={refresh} />,
                 }}
@@ -174,25 +237,98 @@ export default function Admissions() {
                 onClose={() => setOpenRegistration(false)}
                 aria-labelledby="modal-modal-title3"
                 aria-describedby="modal-modal-description3"
+
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                backdrop: {
+                    timeout: 500,
+                },
+                }}
             >
-                <div className={styles.modal}>
-                    {registration &&
-                        Object.entries(registration).map(([key, value]) => (
-                            <p key={key}>
-                                {key}: {value}
-                            </p>
-                        ))}
-                    <div className="buttons">
-                        <Button
-                            onClick={() => setOpenRegistration(false)}
-                            variant="contained"
-                            color="error"
-                        >
-                            Close
-                        </Button>
+                <Fade in={openRegistration}>
+                    <div className={styles.modal}>
+                        {registration && (
+                            <>
+                            <div className={styles.modalHeader}>
+                                <h2>Registration Details</h2>
+                                
+                                <IconButton
+                                aria-label="close"
+                                onClick={() => setOpenRegistration(false)}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                                >
+                                    <Close />
+                                </IconButton>
+                            </div>
+                            <div className={styles.registrationDetails}>
+                                <div className={styles.applicantInfo}>
+                                    {applicantInfo.map((fieldGroup: string[]) => (
+                                        <div className={styles.fieldGroup} key={fieldGroup.join('-')}>
+                                            {fieldGroup.map((field: string) => (
+                                                <AdmissionModalField
+                                                    key={field}
+                                                    field={field as keyof RegistrationApplication}
+                                                    value={registration[field as keyof RegistrationApplication] ?? null}
+                                                />
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                                
+                                <h3>Essays</h3>
+                                {essayFields.map((field) => (
+                                    <AdmissionModalField
+                                        key={field}
+                                        field={field as keyof RegistrationApplication}
+                                        value={registration[field as keyof RegistrationApplication] ?? null}
+                                    />
+                                ))}
+                            </div>
+                            </>
+                        )}
                     </div>
-                </div>
+                </Fade>
             </Modal>
+        </div>
+    )
+}
+
+type AdmissionModalFieldProps = {
+    field: keyof RegistrationApplication,
+    value: RegistrationApplication[keyof RegistrationApplication] | null,
+}
+
+function AdmissionModalField({
+    field,
+    value
+}: AdmissionModalFieldProps) {
+    const displayedValue = useMemo(() => {
+        if (!value) {
+            return 'N/A';
+        }
+        if (typeof value === 'boolean') {
+            return value ? "Yes" : "No";
+        }
+        if (typeof value === 'object' && value !== null) {
+            return value.length > 0 ? value.join(', ') : 'N/A'; // Assuming value is an array or object
+        }
+        return value;
+    }, [field, value]);
+
+    return (
+        <div key={field} className={styles.field}>
+            <p className={styles.fieldName}>
+                {FIELDS[field] ?? field}
+            </p>
+            <p className={styles.fieldValue}>
+                {displayedValue ?? "-"}
+            </p>
         </div>
     )
 }
