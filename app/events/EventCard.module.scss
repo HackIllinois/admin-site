@@ -8,7 +8,7 @@
     .card {
         @include div-button;
         width: 100%;
-        border: $primary-color 1.5px solid;
+        border: #ccc 1.5px solid;
         border-radius: 7px;
         padding: $padding;
         display: flex;
@@ -28,10 +28,14 @@
         }
 
         .header {
-            display: flex;
             width: 100%;
             font-weight: bold;
-            align-items: center;
+            .tags {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                margin-top: 2px;
+            }
 
             .name {
                 flex: 1;
@@ -46,8 +50,12 @@
             }
 
             .time {
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 font-size: 0.85em;
                 color: $primary-color;
+                padding-top: 2px;
 
                 .day-difference {
                     position: relative;
@@ -55,16 +63,7 @@
                     font-size: 0.8em;
                 }
             }
-        }
 
-        .details {
-            .description {
-                margin-top: 5px;
-                font-size: 0.9em;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                margin-bottom: 7px;
-            }
 
             .location,
             .points,
@@ -75,15 +74,35 @@
             }
 
             .location {
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 color: $primary-color;
             }
 
             .points {
-                color: $red;
+                background-color: rgb(197, 103, 63);
+                padding: 5px;
+                border-radius: 8px;
+                color: white;
             }
 
             .type {
-                color: $secondary-color;
+                width: fit-content;
+                color: white;
+                background-color: $secondary-color;
+                padding: 5px;
+                border-radius: 8px;
+            }
+        }
+
+        .details {
+            .description {
+                margin-top: 5px;
+                font-size: 0.9em;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                margin-bottom: 20px;
             }
         }
     }

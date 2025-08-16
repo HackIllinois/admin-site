@@ -168,6 +168,7 @@ export default function Events() {
                             {day.date.toLocaleDateString("en-US", {
                                 month: "long",
                                 day: "numeric",
+                                year: "numeric",
                             })}
                         </div>
                         <div className={styles.underline} />

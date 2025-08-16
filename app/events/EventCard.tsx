@@ -13,6 +13,8 @@ import EventCodeForm from "./EventCodeForm"
 import { Event } from "@/generated"
 
 import styles from "./EventCard.module.scss"
+import { Icon } from "@mui/material"
+import { AccessTime, Place } from "@mui/icons-material"
 
 interface EventCardProps {
     event: Event
@@ -67,25 +69,39 @@ export default function EventCard({
                             />
                         )}
                         {event.name}
+                    </div>  
+                    <div className={styles.tags}>
+                        <div className={styles.type}>{event.eventType}</div>
+                        {event.points > 0 && (
+                            <div className={styles.points}>
+                                {event.points} Points
+                            </div>
+                        )}
                     </div>
                     <div className={styles.time}>
+                        <AccessTime
+                            className={styles.icon}
+                            fontSize="small"
+                        />
                         <div>{formatTime(event.startTime)}</div>
-                        <div>
-                            {formatTime(event.endTime)}
-                            <span className="day-difference">
-                                {calculateDayDifference(event)}
-                            </span>
-                        </div>
+                        {event.endTime !== event.startTime ? (
+                            <>
+                                {" to "}
+                                <div>
+                                    {formatTime(event.endTime)}
+                                    <span className="day-difference">
+                                        {calculateDayDifference(event)}
+                                    </span>
+                                </div>
+                            </>
+                        ) : <></>}
                     </div>
-                </div>
-
-                <div className={styles.details}>
-                    <div className={styles.description}>
-                        {event.description}
-                    </div>
-
                     {event.locations.length > 0 && (
                         <div className={styles.location}>
+                            <Place
+                                className={styles.icon}
+                                fontSize="small"
+                            />
                             {(event.locations || [])
                                 .map((location) => location.description)
                                 .map((x) => x.trim())
@@ -93,13 +109,12 @@ export default function EventCard({
                         </div>
                     )}
 
-                    {event.points > 0 && (
-                        <div className={styles.points}>
-                            {event.points} Points
-                        </div>
-                    )}
+                </div>
 
-                    <div className={styles.type}>{event.eventType}</div>
+                <div className={styles.details}>
+                    <div className={styles.description}>
+                        {event.description}
+                    </div>
                 </div>
             </button>
 
