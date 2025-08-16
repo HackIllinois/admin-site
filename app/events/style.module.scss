@@ -73,6 +73,7 @@
     flex: 1;
     display: flex;
     height: 100vh;
+    gap: 20px;
     overflow: auto;
     flex-wrap: wrap;
     @include mobile {
@@ -87,25 +88,37 @@
         flex: 1;
         margin-top: 40px;
         min-width: 350px;
+        padding: 15px 0;
+        border-radius: 10px;
+        background-color: #fcfcfc;
+        border: 1px solid #eee;
+        height: fit-content;
 
         .events {
             margin: auto;
             max-width: 95vw;
         }
 
+        .dateHeader {
+            display: flex;
+            align-items: center;
+            margin: 0 20px;
+            gap: 10px;
+        }
+
         .day-of-week {
             font-size: 1.65em;
-            text-align: center;
+            text-align: left;
             font-weight: bold;
             color: #444444;
         }
 
         .date {
-            text-align: center;
-            font-weight: bold;
+            text-align: left;
             color: #777777;
+            font-weight: 600;
             margin-top: 2px;
-            font-size: 0.9em;
+            font-size: 1.25em;
         }
 
         .underline {

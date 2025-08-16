@@ -159,19 +159,20 @@ export default function Events() {
 
                 {eventsByDays.map((day) => (
                     <div className={styles.day} key={day.date.toString()}>
-                        <div className={styles["day-of-week"]}>
-                            {day.date.toLocaleDateString("en-US", {
-                                weekday: "long",
-                            })}
+                        <div className={styles.dateHeader}>
+                            <div className={styles["day-of-week"]}>
+                                {day.date.toLocaleDateString("en-US", {
+                                    weekday: "long",
+                                })}
+                            </div>
+                            <div className={styles.date}>
+                                {day.date.toLocaleDateString("en-US", {
+                                    month: "long",
+                                    day: "numeric",
+                                    year: "numeric",
+                                })}
+                            </div>
                         </div>
-                        <div className={styles.date}>
-                            {day.date.toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                            })}
-                        </div>
-                        <div className={styles.underline} />
                         <div className={styles.events}>
                             {day.events.map((event) => (
                                 <EventCard

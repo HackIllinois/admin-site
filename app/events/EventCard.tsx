@@ -78,36 +78,38 @@ export default function EventCard({
                             </div>
                         )}
                     </div>
-                    <div className={styles.time}>
-                        <AccessTime
-                            className={styles.icon}
-                            fontSize="small"
-                        />
-                        <div>{formatTime(event.startTime)}</div>
-                        {event.endTime !== event.startTime ? (
-                            <>
-                                {" to "}
-                                <div>
-                                    {formatTime(event.endTime)}
-                                    <span className="day-difference">
-                                        {calculateDayDifference(event)}
-                                    </span>
-                                </div>
-                            </>
-                        ) : <></>}
-                    </div>
-                    {event.locations.length > 0 && (
-                        <div className={styles.location}>
-                            <Place
+                    <div className={styles.timeAndLocation}>
+                        <div className={styles.time}>
+                            <AccessTime
                                 className={styles.icon}
                                 fontSize="small"
                             />
-                            {(event.locations || [])
-                                .map((location) => location.description)
-                                .map((x) => x.trim())
-                                .join(", ")}
+                            <div>{formatTime(event.startTime)}</div>
+                            {event.endTime !== event.startTime ? (
+                                <>
+                                    {" to "}
+                                    <div>
+                                        {formatTime(event.endTime)}
+                                        <span className="day-difference">
+                                            {calculateDayDifference(event)}
+                                        </span>
+                                    </div>
+                                </>
+                            ) : <></>}
                         </div>
-                    )}
+                        {event.locations.length > 0 && (
+                            <div className={styles.location}>
+                                <Place
+                                    className={styles.icon}
+                                    fontSize="small"
+                                />
+                                {(event.locations || [])
+                                    .map((location) => location.description)
+                                    .map((x) => x.trim())
+                                    .join(", ")}
+                            </div>
+                        )}
+                    </div>
 
                 </div>
 
