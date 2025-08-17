@@ -18,6 +18,7 @@
     .buttons {
         display: flex;
         justify-content: center;
+        margin-bottom: 15px;
         button {
             @include button;
             margin: 0 5px;
@@ -44,6 +45,5 @@
         align-items: center;
         justify-content: space-between;
         margin: 5px auto;
-        width: 15vw;
     }
 }

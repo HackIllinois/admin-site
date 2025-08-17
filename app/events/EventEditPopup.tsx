@@ -296,9 +296,11 @@ export default function EventEditPopup({
                             )}
                         </Formik>
                     </>
-                ) : (
-                    <EventAttendances />
-                )}
+                ) : editingEventId ? (
+                    <EventAttendances 
+                        eventId={editingEventId}
+                    />
+                ) : <></>}
             </div>
         </div>
     )

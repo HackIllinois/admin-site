@@ -151,10 +151,6 @@ export default function Events() {
                 </Box>
             </div>
             <div>
-
-                
-                
-
             </div>
             <div className={styles["events-page"]}>
                 {editingEvent && (

@@ -1,20 +1,19 @@
-import React, { useState } from "react"
-import clsx from "clsx"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-    faPlus,
-    faKey,
-    faLock,
     faClone,
+    faLock,
+    faPlus
 } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import clsx from "clsx"
+import { useState } from "react"
 
 import FormPopup from "@/components/FormPopup"
-import EventCodeForm from "./EventCodeForm"
 import { Event } from "@/generated"
+import EventCodeForm from "./EventCodeForm"
 
-import styles from "./EventCard.module.scss"
-import { Icon } from "@mui/material"
+import { faQrcode } from "@fortawesome/free-solid-svg-icons/faQrcode"
 import { AccessTime, Place } from "@mui/icons-material"
+import styles from "./EventCard.module.scss"
 
 interface EventCardProps {
     event: Event
@@ -125,7 +124,7 @@ export default function EventCard({
                     <FontAwesomeIcon icon={faClone} fixedWidth />
                 </button>
                 <button onClick={() => setShowCodeForm(true)}>
-                    <FontAwesomeIcon icon={faKey} fixedWidth />
+                    <FontAwesomeIcon icon={faQrcode} fixedWidth />
                 </button>
             </div>
 

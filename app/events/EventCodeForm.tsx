@@ -57,7 +57,10 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
                 onChange={(event) => setCode(event.target.value)}
             />
             <div className={styles.code}>
-                <QRCode ref={qrCodeRef} value={code} />
+                <QRCode ref={qrCodeRef} value={code} style={{
+                    width: '300px',
+                    height: '300px',
+                }} />
             </div>
             <div className={styles.buttons}>
                 <button
