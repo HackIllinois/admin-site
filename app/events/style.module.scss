@@ -19,52 +19,14 @@
         position: relative;
         display: flex;
         flex-direction: row;
-        width: fit-content;
-        margin: auto;
-        justify-content: space-around;
-        max-width: 100vw;
+        justify-content: space-between;
+        align-items: center;
         font-size: large;
         padding-top: 1rem;
+        font-family: Montserrat;
 
-        > div {
-            box-sizing: border-box;
-            text-align: center;
-            position: relative;
-            padding: 1rem 2rem;
-            width: fit-content;
-            margin: auto;
-            &::before {
-                position: absolute;
-                bottom: 0.25rem;
-                left: calc(10%);
-                width: 80%;
-                border-radius: 5px;
-                height: 5px;
-                content: "";
-                background-color: $primary-color;
-                opacity: 0;
-                transition: opacity 0.25s;
-            }
-            &:hover {
-                cursor: pointer;
-                &::before {
-                    opacity: 0.5;
-                }
-            }
-
-            &.active {
-                &::before {
-                    opacity: 1;
-                }
-            }
-        }
-
-        .refresh {
-            margin: 1rem 0;
-            position: absolute;
-            right: -2rem;
-            transform: translateX(100%);
-            cursor: pointer;
+        .tab {
+            font-family: Montserrat;
         }
     }
 }
@@ -86,7 +48,7 @@
 
     .day {
         flex: 1;
-        margin-top: 40px;
+        margin-top: 20px;
         min-width: 350px;
         padding: 15px 0;
         border-radius: 10px;

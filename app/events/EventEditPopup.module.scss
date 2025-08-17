@@ -41,6 +41,10 @@
             margin-top: 10px;
         }
 
+        .tab {
+            font-family: Montserrat;
+        }
+
         .form {
             .form-field {
                 @include form-field;
