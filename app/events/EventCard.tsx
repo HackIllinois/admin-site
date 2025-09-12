@@ -13,7 +13,6 @@ import EventCodeForm from "./EventCodeForm"
 import { Event } from "@/generated"
 
 import styles from "./EventCard.module.scss"
-import { Icon } from "@mui/material"
 import { AccessTime, Place } from "@mui/icons-material"
 
 interface EventCardProps {
