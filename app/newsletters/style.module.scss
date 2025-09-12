@@ -1,0 +1,49 @@
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    
+    h1 {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin: 0;
+    }
+}
+
+.refresh {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    
+    &:hover {
+        background-color: var(--light-gray);
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--gray);
+    font-size: 1.1rem;
+    padding: 2rem;
+    background-color: var(--light-gray);
+    border-radius: 8px;
+    border: 2px dashed var(--gray);
+}
