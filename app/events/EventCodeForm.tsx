@@ -5,6 +5,7 @@ import { QRCode } from "react-qrcode-logo"
 import { Event } from "@/generated"
 
 import styles from "./EventCodeForm.module.scss"
+import { BASENAME } from "@/util/basename"
 
 interface EventCodeFormProps {
   event: Event
@@ -19,7 +20,7 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
   const qrCodeRef = useRef<QRCode>(null)
 
   const displayedValue = isWeb
-    ? `http://localhost:3000/events/${event.eventId}/checkin`
+    ? `${BASENAME}/events/${event.eventId}/checkin`
     : code
 
   function copyToClipboard() {
