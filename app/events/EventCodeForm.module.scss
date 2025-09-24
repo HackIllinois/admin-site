@@ -47,3 +47,27 @@
         margin: 5px auto;
     }
 }
+
+
+
+.toggleRow {
+  width: 100%;
+  display: flex;
+  margin-bottom: 1rem;
+
+  button {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: "Montserrat";
+
+    &:hover {
+      background: #155a9c;
+    }
+  }
+}

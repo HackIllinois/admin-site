@@ -1,13 +1,12 @@
 import {
     faBell,
     faCalendar,
-    faCheck,
     faCodeBranch,
     faMedal,
     faShoppingCart,
     faUser,
     faUserCheck,
-    faUsers,
+    faUsers
 } from "@fortawesome/free-solid-svg-icons"
 import { usePathname } from "next/navigation"
 
@@ -23,7 +22,7 @@ export const routes = [
     { path: "/account", name: "Account", icon: faUser },
 ]
 
-export function getRouteOpen() {
+export function useRouteOpen() {
     const pathname = usePathname()
 
     for (const route of routes) {
