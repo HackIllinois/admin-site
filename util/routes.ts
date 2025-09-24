@@ -7,7 +7,7 @@ import {
     faShoppingCart,
     faUser,
     faUserCheck,
-    faUsers
+    faUsers,
 } from "@fortawesome/free-solid-svg-icons"
 import { usePathname } from "next/navigation"
 
