@@ -40,7 +40,7 @@ const CheckinPage: React.FC = () => {
         localStorage.setItem('checkedInEvent', eventId);      
         setError(true);
       }
-    } catch (err) {
+    } catch {
       localStorage.setItem('checkedInEvent', eventId);      
       setError(true);
     } finally {
