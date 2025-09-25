@@ -1,4 +1,4 @@
-const DEVELOPMENT = true
+const DEVELOPMENT = false
 
 export const BASENAME = DEVELOPMENT
     ? "http://localhost:3000"
