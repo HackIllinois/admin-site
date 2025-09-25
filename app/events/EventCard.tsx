@@ -1,19 +1,19 @@
-import React, { useState } from "react"
-import clsx from "clsx"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-    faPlus,
-    faKey,
-    faLock,
     faClone,
+    faLock,
+    faPlus
 } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import clsx from "clsx"
+import { useState } from "react"
 
 import FormPopup from "@/components/FormPopup"
-import EventCodeForm from "./EventCodeForm"
 import { Event } from "@/generated"
+import EventCodeForm from "./EventCodeForm"
 
-import styles from "./EventCard.module.scss"
+import { faQrcode } from "@fortawesome/free-solid-svg-icons/faQrcode"
 import { AccessTime, Place } from "@mui/icons-material"
+import styles from "./EventCard.module.scss"
 
 interface EventCardProps {
     event: Event
@@ -77,36 +77,38 @@ export default function EventCard({
                             </div>
                         )}
                     </div>
-                    <div className={styles.time}>
-                        <AccessTime
-                            className={styles.icon}
-                            fontSize="small"
-                        />
-                        <div>{formatTime(event.startTime)}</div>
-                        {event.endTime !== event.startTime ? (
-                            <>
-                                {" to "}
-                                <div>
-                                    {formatTime(event.endTime)}
-                                    <span className="day-difference">
-                                        {calculateDayDifference(event)}
-                                    </span>
-                                </div>
-                            </>
-                        ) : <></>}
-                    </div>
-                    {event.locations.length > 0 && (
-                        <div className={styles.location}>
-                            <Place
+                    <div className={styles.timeAndLocation}>
+                        <div className={styles.time}>
+                            <AccessTime
                                 className={styles.icon}
                                 fontSize="small"
                             />
-                            {(event.locations || [])
-                                .map((location) => location.description)
-                                .map((x) => x.trim())
-                                .join(", ")}
+                            <div>{formatTime(event.startTime)}</div>
+                            {event.endTime !== event.startTime ? (
+                                <>
+                                    {" to "}
+                                    <div>
+                                        {formatTime(event.endTime)}
+                                        <span className="day-difference">
+                                            {calculateDayDifference(event)}
+                                        </span>
+                                    </div>
+                                </>
+                            ) : <></>}
                         </div>
-                    )}
+                        {event.locations.length > 0 && (
+                            <div className={styles.location}>
+                                <Place
+                                    className={styles.icon}
+                                    fontSize="small"
+                                />
+                                {(event.locations || [])
+                                    .map((location) => location.description)
+                                    .map((x) => x.trim())
+                                    .join(", ")}
+                            </div>
+                        )}
+                    </div>
 
                 </div>
 
@@ -122,7 +124,7 @@ export default function EventCard({
                     <FontAwesomeIcon icon={faClone} fixedWidth />
                 </button>
                 <button onClick={() => setShowCodeForm(true)}>
-                    <FontAwesomeIcon icon={faKey} fixedWidth />
+                    <FontAwesomeIcon icon={faQrcode} fixedWidth />
                 </button>
             </div>
 

@@ -9,16 +9,18 @@
         @include div-button;
         width: 100%;
         border: #ccc 1.5px solid;
+        background-color: #f3f3f3;
         border-radius: 7px;
         padding: $padding;
         display: flex;
         flex-direction: column;
+        transition: all 0.2s;
 
         &.clickable {
             cursor: pointer;
             &:hover,
             &:focus {
-                background-color: #f0f0f0;
+                background-color: #d9d9d9;
             }
         }
 
@@ -34,7 +36,7 @@
                 display: flex;
                 align-items: center;
                 gap: 5px;
-                margin-top: 2px;
+                margin-top: 5px;
             }
 
             .name {
@@ -47,6 +49,13 @@
                     margin-bottom: 1px;
                     margin-right: 5px;
                 }
+            }
+
+            .timeAndLocation {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 2px 0;
             }
 
             .time {
@@ -98,7 +107,7 @@
 
         .details {
             .description {
-                margin-top: 5px;
+                margin-top: 10px;
                 font-size: 0.9em;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -121,11 +130,10 @@
 
             font-size: 1.2em;
             color: $secondary-color;
-            background-color: white;
+            background-color: rgb(218, 218, 218);
             margin-left: 6px;
 
             padding: 6px;
-            border: 1px solid $primary-color;
             border-radius: 50px;
             transition:
                 border-width 0.1s,

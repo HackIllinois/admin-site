@@ -1,5 +1,6 @@
 "use client"
 import { getRoles } from "@/util/api-client"
+import { BASENAME } from "@/util/basename"
 import { useSearchParams } from "next/navigation"
 import { Suspense, useEffect } from "react"
 
@@ -8,7 +9,8 @@ function AuthComponent() {
 
     useEffect(() => {
         const to = localStorage.getItem("to") || window.location.origin
-        localStorage.removeItem("to")
+        const checkedInEvent = localStorage.getItem('checkedInEvent');
+
         localStorage.setItem("token", searchParams.get("token") || "")
 
         getRoles().then((roles) => {
@@ -19,8 +21,15 @@ function AuthComponent() {
                 return
             }
 
-            // Otherwise, redirect back since we successfully authenticated
-            window.location.replace(to)
+            if (checkedInEvent) {
+                window.location.replace(`${BASENAME}/events/${checkedInEvent}/checkin`);
+                localStorage.removeItem("to")
+                localStorage.removeItem('checkedInEvent');
+            } else {
+                // Otherwise, redirect back since we successfully authenticated
+                window.location.replace(to)
+                localStorage.removeItem("to")
+            }
         })
     })
     return <p>Authenticating...</p>
