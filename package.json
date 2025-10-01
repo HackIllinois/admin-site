@@ -24,7 +24,7 @@
         "dayjs": "^1.11.13",
         "formik": "^2.4.6",
         "lottie-react": "^2.4.1",
-        "next": "15.1.7",
+        "next": "^15.1.7",
         "react": "^19.0.0",
         "react-datepicker": "^8.1.0",
         "react-dom": "^19.0.0",
