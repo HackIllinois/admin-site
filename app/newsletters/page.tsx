@@ -19,7 +19,7 @@ export default function Newsletters() {
         setIsLoading(true)
         try {
             const result = await NewsletterService.getNewsletter()
-            const data = handleError(result)
+            const data = await handleError(result)
             setNewsletters(data)
         } catch (error) {
             console.error("Failed to fetch newsletters:", error)

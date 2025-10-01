@@ -4,7 +4,7 @@ import { RequestResult } from "@hey-api/client-fetch"
 import { useEffect, useState } from "react"
 
 // If the error provided is an authentication error, authenticate
-function handleAuthErrors(error: unknown): boolean {
+async function handleAuthErrors(error: unknown): Promise<boolean> {
     if (
         error &&
         typeof error === "object" &&
@@ -12,7 +12,7 @@ function handleAuthErrors(error: unknown): boolean {
         typeof error.error === "string"
     ) {
         if (["TokenInvalid", "TokenExpired", "NoToken"].includes(error.error)) {
-            authenticate()
+            await authenticate()
             return true
         }
     }
@@ -23,7 +23,6 @@ function handleAuthErrors(error: unknown): boolean {
 // Setups up the hey api client by adding interceptors to handle auth & errors
 export function setupClient() {
     client.interceptors.request.use((req) => {
-        req.headers.set("Authorization", localStorage.getItem("token") || "")
         req.headers.set("Content-Type", "application/json")
 
         return req
@@ -39,30 +38,32 @@ export function setupClient() {
     })
 }
 
-export function isAuthenticated() {
-    return !!getAuthToken()
-}
-
-export function getAuthToken() {
-    return localStorage.getItem("token")
-}
-
 // Redirects to authentication url
-export function authenticate(provider: Provider = "google") {
-    // `to` is saved in localStorage so that it can be used in the Auth component later
-    localStorage.setItem("to", window.location.href)
+export async function authenticate(provider: Provider = "google") {
+    const { data, error } = await AuthService.getAuthByProvider({
+        path: { provider },
+        query: { redirect: window.location.toString() },
+    })
 
-    const redirectURI = `${window.location.origin}/auth/`
-    const authURL = `${client.getConfig().baseUrl}/auth/login/${provider}?redirect=${redirectURI}`
-    window.location.replace(authURL)
+    if (error) {
+        let message = `${error}`
+        if (typeof error == "object" && "message" in error) {
+            message = `${error.message}`
+        }
+
+        alert(message)
+        return
+    }
+
+    window.location.replace(data.url)
 }
 
 // Handles errors with alert dialog, returns data if no error
-export function handleError<TData, TError>(
+export async function handleError<TData, TError>(
     result: Awaited<RequestResult<TData, TError, false>>,
-): TData {
+): Promise<TData> {
     if (result.error) {
-        const authError = handleAuthErrors(result.error)
+        const authError = await handleAuthErrors(result.error)
 
         let message = `${result.error}`
         if (typeof result.error == "object" && "message" in result.error) {

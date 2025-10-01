@@ -1,7 +1,7 @@
 "use client"
 import Loading from "@/components/Loading"
-import { UserInfo, UserService } from "@/generated"
-import { getAuthToken, handleError, useRoles } from "@/util/api-client"
+import { AuthService, UserInfo, UserService } from "@/generated"
+import { handleError, useRoles } from "@/util/api-client"
 import { useEffect, useState } from "react"
 
 import styles from "./styles.module.scss"
@@ -18,7 +18,9 @@ export default function Account() {
     const [user, setUser] = useState<UserInfo | null>(null)
     const roles = useRoles()
 
-    const [copySuccess, setCopySuccess] = useState(false)
+    const logOut = () => {
+        AuthService.postAuthLogout().then(() => window.location.reload())
+    }
 
     useEffect(() => {
         UserService.getUser()
@@ -28,16 +30,6 @@ export default function Account() {
 
     if (!user || roles.length === 0) {
         return <Loading />
-    }
-
-    function copyTokenToClipboard() {
-        navigator.clipboard
-            .writeText(getAuthToken()!)
-            .then(() => {
-                setCopySuccess(true)
-                setTimeout(() => setCopySuccess(false), 1000)
-            })
-            .catch(() => alert("Failed to copy"))
     }
 
     return (
@@ -82,18 +74,9 @@ export default function Account() {
                     ))}
                 </div>
                 <div className={styles.actions}>
-                    <button
-                        className={copySuccess ? styles.success : ""}
-                        onClick={copyTokenToClipboard}
-                    >
-                        <FontAwesomeIcon icon={faKey} /> Copy Token
+                    <button className={styles["log-out"]} onClick={logOut}>
+                        <FontAwesomeIcon icon={faArrowRightToBracket} /> Log Out
                     </button>
-                    <a href="/auth/log-out">
-                        <button className={styles["log-out"]}>
-                            <FontAwesomeIcon icon={faArrowRightToBracket} /> Log
-                            Out
-                        </button>
-                    </a>
                 </div>
             </div>
         </div>

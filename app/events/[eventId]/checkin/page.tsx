@@ -7,7 +7,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import React, { useEffect, useState } from 'react';
 import styles from './style.module.scss';
-import { StaffService } from '@/generated';
+import { AuthService, StaffService } from '@/generated';
 import { useParams } from 'next/navigation';
 
 const CheckinPage: React.FC = () => {
@@ -26,6 +26,10 @@ const CheckinPage: React.FC = () => {
     setError(false);
   };
 
+  const handleLogout = () => {
+    AuthService.postAuthLogout().then(() => window.location.reload())
+  };
+
   // Performs the check-in
   const handleCheckinUser = async () => {
     setLoading(true);
@@ -35,13 +39,10 @@ const CheckinPage: React.FC = () => {
       });
       if (response.data?.success) {
         setSuccess(true);
-        localStorage.removeItem('checkedInEvent');
       } else {
-        localStorage.setItem('checkedInEvent', eventId);      
         setError(true);
       }
     } catch {
-      localStorage.setItem('checkedInEvent', eventId);      
       setError(true);
     } finally {
       setLoading(false);
@@ -77,8 +78,18 @@ const CheckinPage: React.FC = () => {
             ? 'Just a second…'
             : success
             ? 'You can leave this page.'
-            : 'Please refresh or try again.'}
+            : 'Please log out and try again.'}
         </h3>
+
+      {error && 
+        <button 
+          className={styles.logoutButton} 
+          onClick={handleLogout}
+          type="button"
+        >
+          Log out
+        </button>
+      } 
       </div>
 
       {/* LOADING / SUCCESS / ERROR TOASTS */}
