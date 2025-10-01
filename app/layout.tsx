@@ -1,6 +1,6 @@
 "use client"
 import NavBar from "@/components/NavBar/NavBar"
-import { authenticate, isAuthenticated, setupClient } from "@/util/api-client"
+import { setupClient } from "@/util/api-client"
 import { useRouteOpen } from "@/util/routes"
 import { usePathname } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -15,11 +15,6 @@ const PAGES_TO_HIDE_NAVBAR: RegExp[] = [
 export default function Layout({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         setupClient()
-
-        // Since admin site is staff only, every page should check authentication
-        if (!isAuthenticated()) {
-            authenticate()
-        }
     }, [])
 
     const routeOpen = useRouteOpen()
