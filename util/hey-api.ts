@@ -1,6 +1,6 @@
-import type { CreateClientConfig } from '../generated/client.gen.ts';
+import type { CreateClientConfig } from "../generated/client.gen.ts"
 
 export const createClientConfig: CreateClientConfig = (config) => ({
-  ...config,
-  credentials: "include",
-});
+    ...config,
+    credentials: "include",
+})
