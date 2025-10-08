@@ -10,6 +10,15 @@ import { handleError, useRoles } from "@/util/api-client"
 import styles from "./style.module.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
+import { Box, Button, IconButton, Tab, Tabs } from "@mui/material"
+import { Add } from "@mui/icons-material"
+
+import dayjs from 'dayjs';
+import utc   from 'dayjs/plugin/utc';
+import tz    from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(tz);
 
 interface EventsForDay {
     date: Date
@@ -108,26 +117,40 @@ export default function Events() {
     const isAdmin = roles.includes("ADMIN")
     const eventsByDays = staffView ? staffEventsByDays : attendeeEventsByDays
 
+    const tabIndex = staffView ? 0 : 1
+
     return (
         <div className={styles.container}>
             <div className={styles.titles}>
-                <div
-                    className={staffView ? styles.active : ""}
-                    onClick={() => setStaffView(true)}
-                >
-                    Staff Schedule
-                </div>
-                <div
-                    className={!staffView ? styles.active : ""}
-                    onClick={() => setStaffView(false)}
-                >
-                    Attendee Schedule
-                </div>
-                <FontAwesomeIcon
-                    className={styles.refresh}
-                    icon={faSync}
-                    onClick={fetchEvents}
-                />
+                <Tabs value={tabIndex} onChange={(_, idx) => setStaffView(idx === 0)}>
+                    <Tab label="Staff Schedule" className={styles.tab} />
+                    <Tab label="Attendee Schedule" className={styles.tab} />
+                </Tabs>
+                <Box>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<Add />}
+                        sx={{ fontFamily: "Montserrat", marginRight: 1 }}
+                        onClick={() => {
+                            const local = dayjs()
+                                .startOf('day')      // sets hour/min/sec/ms → 0
+                                .toDate();
+                            setEditingDay(local);
+                            setEditingEvent({})
+                        }}
+                        >
+                        Add Event
+                        </Button>
+                    <IconButton
+                        onClick={fetchEvents}
+                        aria-label="Refresh events"
+                        >
+                        <FontAwesomeIcon icon={faSync} />
+                    </IconButton>
+                </Box>
+            </div>
+            <div>
             </div>
             <div className={styles["events-page"]}>
                 {editingEvent && (
@@ -159,18 +182,20 @@ export default function Events() {
 
                 {eventsByDays.map((day) => (
                     <div className={styles.day} key={day.date.toString()}>
-                        <div className={styles["day-of-week"]}>
-                            {day.date.toLocaleDateString("en-US", {
-                                weekday: "long",
-                            })}
+                        <div className={styles.dateHeader}>
+                            <div className={styles["day-of-week"]}>
+                                {day.date.toLocaleDateString("en-US", {
+                                    weekday: "long",
+                                })}
+                            </div>
+                            <div className={styles.date}>
+                                {day.date.toLocaleDateString("en-US", {
+                                    month: "long",
+                                    day: "numeric",
+                                    year: "numeric",
+                                })}
+                            </div>
                         </div>
-                        <div className={styles.date}>
-                            {day.date.toLocaleDateString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                            })}
-                        </div>
-                        <div className={styles.underline} />
                         <div className={styles.events}>
                             {day.events.map((event) => (
                                 <EventCard

@@ -8,17 +8,19 @@
     .card {
         @include div-button;
         width: 100%;
-        border: $primary-color 1.5px solid;
+        border: #ccc 1.5px solid;
+        background-color: #f3f3f3;
         border-radius: 7px;
         padding: $padding;
         display: flex;
         flex-direction: column;
+        transition: all 0.2s;
 
         &.clickable {
             cursor: pointer;
             &:hover,
             &:focus {
-                background-color: #f0f0f0;
+                background-color: #d9d9d9;
             }
         }
 
@@ -28,10 +30,14 @@
         }
 
         .header {
-            display: flex;
             width: 100%;
             font-weight: bold;
-            align-items: center;
+            .tags {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                margin-top: 5px;
+            }
 
             .name {
                 flex: 1;
@@ -45,9 +51,20 @@
                 }
             }
 
+            .timeAndLocation {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 2px 0;
+            }
+
             .time {
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 font-size: 0.85em;
                 color: $primary-color;
+                padding-top: 2px;
 
                 .day-difference {
                     position: relative;
@@ -55,16 +72,7 @@
                     font-size: 0.8em;
                 }
             }
-        }
 
-        .details {
-            .description {
-                margin-top: 5px;
-                font-size: 0.9em;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                margin-bottom: 7px;
-            }
 
             .location,
             .points,
@@ -75,15 +83,35 @@
             }
 
             .location {
+                display: flex;
+                align-items: center;
+                gap: 5px;
                 color: $primary-color;
             }
 
             .points {
-                color: $red;
+                background-color: rgb(197, 103, 63);
+                padding: 5px;
+                border-radius: 8px;
+                color: white;
             }
 
             .type {
-                color: $secondary-color;
+                width: fit-content;
+                color: white;
+                background-color: $secondary-color;
+                padding: 5px;
+                border-radius: 8px;
+            }
+        }
+
+        .details {
+            .description {
+                margin-top: 10px;
+                font-size: 0.9em;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                margin-bottom: 20px;
             }
         }
     }
@@ -102,11 +130,10 @@
 
             font-size: 1.2em;
             color: $secondary-color;
-            background-color: white;
+            background-color: rgb(218, 218, 218);
             margin-left: 6px;
 
             padding: 6px;
-            border: 1px solid $primary-color;
             border-radius: 50px;
             transition:
                 border-width 0.1s,

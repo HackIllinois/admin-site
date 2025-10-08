@@ -123,8 +123,6 @@ export type HackInterest = 'Attending technical workshops' | 'Submitting a proje
 
 export type HackOutreach = 'Instagram' | 'Twitter/X' | 'TikTok' | 'Discord' | 'Facebook' | 'LinkedIn' | 'Reddit' | 'Word of Mouth' | 'CS Department Email' | 'Posters/Flyers on Campus' | 'Slack' | 'HackIllinois Newsletter' | 'OTHER';
 
-export type Jwt = string;
-
 export type ListRoles = {
     userIds: Array<UserId>;
 };
@@ -268,11 +266,10 @@ export type RsvpStatistic = {
 
 export type Race = 'American Indian or Alaska Native' | 'Arab or Middle Eastern' | 'Black or African American' | 'East Asian' | 'Hispanic or Latino' | 'Native Hawaiian or Pacific Islander' | 'South East Asian' | 'South Asian' | 'White' | 'Other' | 'Prefer Not To Answer';
 
+/**
+ * Must be a valid HTTPS URL (or HTTP for localhost)
+ */
 export type RedirectUrl = string;
-
-export type RefreshToken = {
-    token: Jwt;
-};
 
 export type RegisterDeviceToken = {
     deviceToken: string;
@@ -430,10 +427,6 @@ export type Sponsor = {
 };
 
 export type SponsorEmail = string;
-
-export type SponsorLogin = {
-    token: Jwt;
-};
 
 export type SponsorLoginRequest = {
     email: SponsorEmail;
@@ -684,49 +677,23 @@ export type PutAdmissionUpdateResponses = {
 
 export type PutAdmissionUpdateResponse = PutAdmissionUpdateResponses[keyof PutAdmissionUpdateResponses];
 
-export type GetAuthDevData = {
+export type PostAuthLogoutData = {
     body?: never;
     path?: never;
-    query: {
-        token: Jwt;
-    };
-    url: '/auth/dev/';
+    query?: never;
+    url: '/auth/logout/';
 };
 
-export type GetAuthDevResponses = {
+export type PostAuthLogoutResponses = {
     /**
-     * The authentication JWT
+     * Successfully logged out
      */
     200: {
-        Authorization: Jwt;
+        success: true;
     };
 };
 
-export type GetAuthDevResponse = GetAuthDevResponses[keyof GetAuthDevResponses];
-
-export type GetAuthLoginByProviderData = {
-    body?: never;
-    path: {
-        provider: Provider;
-    };
-    query?: {
-        device?: 'admin' | 'dev' | 'web' | 'ios' | 'android' | 'challenge' | 'puzzle';
-        redirect?: string;
-    };
-    url: '/auth/login/{provider}/';
-};
-
-export type GetAuthLoginByProviderErrors = {
-    /**
-     * The redirect url requested is invalid
-     */
-    400: {
-        error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://vault.hackillinois.org/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
-    };
-};
-
-export type GetAuthLoginByProviderError = GetAuthLoginByProviderErrors[keyof GetAuthLoginByProviderErrors];
+export type PostAuthLogoutResponse = PostAuthLogoutResponses[keyof PostAuthLogoutResponses];
 
 export type GetAuthRolesData = {
     body?: never;
@@ -877,7 +844,9 @@ export type PostAuthSponsorLoginResponses = {
     /**
      * Successfully logged in, returns the auth token for future requests
      */
-    200: SponsorLogin;
+    200: {
+        success: true;
+    };
 };
 
 export type PostAuthSponsorLoginResponse = PostAuthSponsorLoginResponses[keyof PostAuthSponsorLoginResponses];
@@ -902,21 +871,39 @@ export type PostAuthSponsorVerifyResponses = {
 
 export type PostAuthSponsorVerifyResponse = PostAuthSponsorVerifyResponses[keyof PostAuthSponsorVerifyResponses];
 
-export type GetAuthTokenRefreshData = {
+export type GetAuthByProviderData = {
     body?: never;
-    path?: never;
-    query?: never;
-    url: '/auth/token/refresh/';
+    path: {
+        provider: Provider;
+    };
+    query: {
+        redirect: RedirectUrl;
+    };
+    url: '/auth/{provider}/';
 };
 
-export type GetAuthTokenRefreshResponses = {
+export type GetAuthByProviderErrors = {
     /**
-     * The new refreshed token
+     * The redirect url requested is invalid
      */
-    200: RefreshToken;
+    400: {
+        error: 'BadRedirectUrl';
+        message: 'The redirect url provided is invalid';
+    };
 };
 
-export type GetAuthTokenRefreshResponse = GetAuthTokenRefreshResponses[keyof GetAuthTokenRefreshResponses];
+export type GetAuthByProviderError = GetAuthByProviderErrors[keyof GetAuthByProviderErrors];
+
+export type GetAuthByProviderResponses = {
+    /**
+     * OAuth URL to redirect to
+     */
+    200: {
+        url: string;
+    };
+};
+
+export type GetAuthByProviderResponse = GetAuthByProviderResponses[keyof GetAuthByProviderResponses];
 
 export type GetAuthByProviderCallbackData = {
     body?: never;
@@ -935,7 +922,7 @@ export type GetAuthByProviderCallbackErrors = {
      */
     400: {
         error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid, please provide one of the following: `https://admin.hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `https://hackillinois.org/auth/`, `https://adonix.hackillinois.org/auth/dev/`, `hackillinois://login/`, `hackillinois://login/`, `https://vault.hackillinois.org/auth/`, `/^http:\\/\\/localhost:\\d+\\/auth\\/$/`, `/^https:\\/\\/[a-z0-9-]+--(hackillinois|hackillinois-admin)\\.netlify\\.app\\/auth\\/$/`';
+        message: 'The redirect url provided is invalid';
     };
     /**
      * Authorization failed

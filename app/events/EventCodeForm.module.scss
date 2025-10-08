@@ -18,6 +18,7 @@
     .buttons {
         display: flex;
         justify-content: center;
+        margin-bottom: 15px;
         button {
             @include button;
             margin: 0 5px;
@@ -44,6 +45,29 @@
         align-items: center;
         justify-content: space-between;
         margin: 5px auto;
-        width: 15vw;
     }
+}
+
+
+
+.toggleRow {
+  width: 100%;
+  display: flex;
+  margin-bottom: 1rem;
+
+  button {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: "Montserrat";
+
+    &:hover {
+      background: #155a9c;
+    }
+  }
 }

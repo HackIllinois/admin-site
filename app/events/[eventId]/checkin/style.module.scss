@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fafafa;
+}
+
+.icon {
+  color: #4caf50;
+}
+
+.errorIcon {
+  color: #f44336;
+}
+
+
+.message {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.submessage {
+  font-size: 1.25rem;
+  color: #666;
+  font-weight: 500;
+  margin-top: '0.5rem';
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;           // space between icon / h1 / h3
+  margin-bottom: 1.5rem; // space before snackbars
+}
+.logoutButton {
+  padding: 0.75rem 1.5rem;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 1rem;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+
+  &:active {
+    background-color: #b71c1c;
+  }
+}
