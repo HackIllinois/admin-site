@@ -905,6 +905,36 @@ export type PostAuthSponsorVerifyResponses = {
 
 export type PostAuthSponsorVerifyResponse = PostAuthSponsorVerifyResponses[keyof PostAuthSponsorVerifyResponses];
 
+export type GetAuthTokenData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auth/token/';
+};
+
+export type GetAuthTokenErrors = {
+    /**
+     * No valid authentication cookie found
+     */
+    401: {
+        error: 'AuthenticationFailed';
+        message: 'Failed to authenticate (did the login session expire?) - please try again';
+    };
+};
+
+export type GetAuthTokenError = GetAuthTokenErrors[keyof GetAuthTokenErrors];
+
+export type GetAuthTokenResponses = {
+    /**
+     * JWT token
+     */
+    200: {
+        jwt: string;
+    };
+};
+
+export type GetAuthTokenResponse = GetAuthTokenResponses[keyof GetAuthTokenResponses];
+
 export type GetAuthByProviderCallbackData = {
     body?: never;
     path: {
