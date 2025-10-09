@@ -677,6 +677,40 @@ export type PutAdmissionUpdateResponses = {
 
 export type PutAdmissionUpdateResponse = PutAdmissionUpdateResponses[keyof PutAdmissionUpdateResponses];
 
+export type GetAuthLoginByProviderData = {
+    body?: never;
+    path: {
+        provider: Provider;
+    };
+    query: {
+        redirect: RedirectUrl;
+    };
+    url: '/auth/login/{provider}/';
+};
+
+export type GetAuthLoginByProviderErrors = {
+    /**
+     * The redirect url requested is invalid
+     */
+    400: {
+        error: 'BadRedirectUrl';
+        message: 'The redirect url provided is invalid';
+    };
+};
+
+export type GetAuthLoginByProviderError = GetAuthLoginByProviderErrors[keyof GetAuthLoginByProviderErrors];
+
+export type GetAuthLoginByProviderResponses = {
+    /**
+     * Successful redirect to authentication provider
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type GetAuthLoginByProviderResponse = GetAuthLoginByProviderResponses[keyof GetAuthLoginByProviderResponses];
+
 export type PostAuthLogoutData = {
     body?: never;
     path?: never;
@@ -870,40 +904,6 @@ export type PostAuthSponsorVerifyResponses = {
 };
 
 export type PostAuthSponsorVerifyResponse = PostAuthSponsorVerifyResponses[keyof PostAuthSponsorVerifyResponses];
-
-export type GetAuthByProviderData = {
-    body?: never;
-    path: {
-        provider: Provider;
-    };
-    query: {
-        redirect: RedirectUrl;
-    };
-    url: '/auth/{provider}/';
-};
-
-export type GetAuthByProviderErrors = {
-    /**
-     * The redirect url requested is invalid
-     */
-    400: {
-        error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid';
-    };
-};
-
-export type GetAuthByProviderError = GetAuthByProviderErrors[keyof GetAuthByProviderErrors];
-
-export type GetAuthByProviderResponses = {
-    /**
-     * OAuth URL to redirect to
-     */
-    200: {
-        url: string;
-    };
-};
-
-export type GetAuthByProviderResponse = GetAuthByProviderResponses[keyof GetAuthByProviderResponses];
 
 export type GetAuthByProviderCallbackData = {
     body?: never;
