@@ -4,7 +4,7 @@ import { RequestResult } from "@hey-api/client-fetch"
 import { useEffect, useState } from "react"
 
 // If the error provided is an authentication error, authenticate
-async function handleAuthErrors(error: unknown): Promise<boolean> {
+function handleAuthErrors(error: unknown): boolean {
     if (
         error &&
         typeof error === "object" &&
@@ -12,7 +12,7 @@ async function handleAuthErrors(error: unknown): Promise<boolean> {
         typeof error.error === "string"
     ) {
         if (["TokenInvalid", "TokenExpired", "NoToken"].includes(error.error)) {
-            await authenticate()
+            authenticate()
             return true
         }
     }
@@ -39,31 +39,18 @@ export function setupClient() {
 }
 
 // Redirects to authentication url
-export async function authenticate(provider: Provider = "google") {
-    const { data, error } = await AuthService.getAuthByProvider({
-        path: { provider },
-        query: { redirect: window.location.toString() },
-    })
-
-    if (error) {
-        let message = `${error}`
-        if (typeof error == "object" && "message" in error) {
-            message = `${error.message}`
-        }
-
-        alert(message)
-        return
-    }
-
-    window.location.replace(data.url)
+export function authenticate(provider: Provider = "google") {
+    const redirectURI = window.location.origin.toString()
+    const authURL = `${client.getConfig().baseUrl}/auth/login/${provider}?redirect=${redirectURI}`
+    window.location.replace(authURL)
 }
 
 // Handles errors with alert dialog, returns data if no error
-export async function handleError<TData, TError>(
+export function handleError<TData, TError>(
     result: Awaited<RequestResult<TData, TError, false>>,
-): Promise<TData> {
+): TData {
     if (result.error) {
-        const authError = await handleAuthErrors(result.error)
+        const authError = handleAuthErrors(result.error)
 
         let message = `${result.error}`
         if (typeof result.error == "object" && "message" in result.error) {
