@@ -20,6 +20,7 @@ export const routes = [
     { path: "/shop", name: "Shop", icon: faShoppingCart },
     { path: "/sponsors", name: "Sponsors", icon: faMedal },
     { path: "/attendances", name: "Attendances", icon: faUserCheck },
+    { path: "/users", name: "Users", icon: faUsers },
     { path: "/version", name: "Version", icon: faCodeBranch },
     { path: "/account", name: "Account", icon: faUser },
 ]
