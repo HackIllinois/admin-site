@@ -18,6 +18,7 @@ export default function Account() {
     const [user, setUser] = useState<UserInfo | null>(null)
     const roles = useRoles()
 
+    const [copySuccess, setCopySuccess] = useState(false)
     const logOut = () => {
         AuthService.postAuthLogout().then(() => window.location.reload())
     }
@@ -30,6 +31,20 @@ export default function Account() {
 
     if (!user || roles.length === 0) {
         return <Loading />
+    }
+
+    function copyTokenToClipboard() {
+        AuthService.getAuthToken()
+            .then(handleError)
+            .then(({ jwt }) => {
+                navigator.clipboard
+                    .writeText(jwt)
+                    .then(() => {
+                        setCopySuccess(true)
+                        setTimeout(() => setCopySuccess(false), 1000)
+                    })
+                    .catch(() => alert("Failed to copy"))
+            })
     }
 
     return (
@@ -74,6 +89,12 @@ export default function Account() {
                     ))}
                 </div>
                 <div className={styles.actions}>
+                    <button
+                        className={copySuccess ? styles.success : ""}
+                        onClick={copyTokenToClipboard}
+                    >
+                        <FontAwesomeIcon icon={faKey} /> Copy Token
+                    </button>
                     <button className={styles["log-out"]} onClick={logOut}>
                         <FontAwesomeIcon icon={faArrowRightToBracket} /> Log Out
                     </button>

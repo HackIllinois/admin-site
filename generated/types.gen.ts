@@ -677,6 +677,40 @@ export type PutAdmissionUpdateResponses = {
 
 export type PutAdmissionUpdateResponse = PutAdmissionUpdateResponses[keyof PutAdmissionUpdateResponses];
 
+export type GetAuthLoginByProviderData = {
+    body?: never;
+    path: {
+        provider: Provider;
+    };
+    query: {
+        redirect: RedirectUrl;
+    };
+    url: '/auth/login/{provider}/';
+};
+
+export type GetAuthLoginByProviderErrors = {
+    /**
+     * The redirect url requested is invalid
+     */
+    400: {
+        error: 'BadRedirectUrl';
+        message: 'The redirect url provided is invalid';
+    };
+};
+
+export type GetAuthLoginByProviderError = GetAuthLoginByProviderErrors[keyof GetAuthLoginByProviderErrors];
+
+export type GetAuthLoginByProviderResponses = {
+    /**
+     * Successful redirect to authentication provider
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type GetAuthLoginByProviderResponse = GetAuthLoginByProviderResponses[keyof GetAuthLoginByProviderResponses];
+
 export type PostAuthLogoutData = {
     body?: never;
     path?: never;
@@ -871,39 +905,35 @@ export type PostAuthSponsorVerifyResponses = {
 
 export type PostAuthSponsorVerifyResponse = PostAuthSponsorVerifyResponses[keyof PostAuthSponsorVerifyResponses];
 
-export type GetAuthByProviderData = {
+export type GetAuthTokenData = {
     body?: never;
-    path: {
-        provider: Provider;
-    };
-    query: {
-        redirect: RedirectUrl;
-    };
-    url: '/auth/{provider}/';
+    path?: never;
+    query?: never;
+    url: '/auth/token/';
 };
 
-export type GetAuthByProviderErrors = {
+export type GetAuthTokenErrors = {
     /**
-     * The redirect url requested is invalid
+     * No valid authentication cookie found
      */
-    400: {
-        error: 'BadRedirectUrl';
-        message: 'The redirect url provided is invalid';
+    401: {
+        error: 'AuthenticationFailed';
+        message: 'Failed to authenticate (did the login session expire?) - please try again';
     };
 };
 
-export type GetAuthByProviderError = GetAuthByProviderErrors[keyof GetAuthByProviderErrors];
+export type GetAuthTokenError = GetAuthTokenErrors[keyof GetAuthTokenErrors];
 
-export type GetAuthByProviderResponses = {
+export type GetAuthTokenResponses = {
     /**
-     * OAuth URL to redirect to
+     * JWT token
      */
     200: {
-        url: string;
+        jwt: string;
     };
 };
 
-export type GetAuthByProviderResponse = GetAuthByProviderResponses[keyof GetAuthByProviderResponses];
+export type GetAuthTokenResponse = GetAuthTokenResponses[keyof GetAuthTokenResponses];
 
 export type GetAuthByProviderCallbackData = {
     body?: never;
