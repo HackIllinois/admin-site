@@ -35,11 +35,6 @@
     flex-basis: 100%;
     flex-grow: 1;
 
-    border: $primary-color 1.5px solid;
-    border-radius: 7px;
-    margin: 10px;
-    padding: 15px;
-
     .email {
         align-self: flex-end;
         flex-grow: 1;
@@ -52,17 +47,14 @@
     }
 
     .add {
+        margin: 20px;
+        padding: 15px;
         display: flex;
+        flex-direction: row;
+        flex-basis: 100%;
         flex-grow: 1;
         align-items: center;
         justify-content: center;
-    }
-
-    &:has(.add) {
-        cursor: pointer;
-        &:hover,
-        &:focus {
-            background-color: #f0f0f0;
-        }
+        @include button;
     }
 }

@@ -53,7 +53,6 @@
 
     .logo {
         text-align: center;
-        padding: 10px 0;
         border-bottom: 2px solid white;
         margin-bottom: 30px;
 
@@ -64,11 +63,12 @@
 
     .menu {
         background-color: $primary-color;
-        height: 80vh;
-        margin: 10vh 25px;
+        height: inherit;
+        margin: 5vh 25px;
         margin-right: 0;
         border-radius: 10px;
         padding-top: 5px;
+        padding-bottom: 5px;
         box-sizing: border-box;
         box-shadow:
             0px 2px 4px -1px rgba(0, 0, 0, 0.2),

@@ -64,7 +64,7 @@ const FIELDS: Record<string, string> = {
 function GridToolbar({ refresh }: { refresh: () => void }) {
     return (
         <GridToolbarContainer
-            sx={{fontFamily: 'Montserrat'}}
+            sx={{fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif'}}
         >
             <GridToolbarColumnsButton
                 slotProps={{
@@ -226,7 +226,7 @@ export default function Admissions() {
                 columns={columns}
                 cellModesModel={cellModesModel}
                 onCellModesModelChange={setCellModesModel}
-                sx={{fontFamily: 'Montserrat'}}
+                sx={{fontFamily: 'Arial'}}
                 slots={{
                     toolbar: () => <GridToolbar refresh={refresh} />,
                 }}

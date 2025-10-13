@@ -15,6 +15,7 @@ import Loading from "@/components/Loading"
 import ItemEditPopup from "./ItemEditPopup"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
+import { Box, Button, IconButton, Tab, Tabs } from "@mui/material"
 
 export default function Shop() {
     const [loading, setLoading] = useState(true)
@@ -75,28 +76,25 @@ export default function Shop() {
     }
 
     const isAdmin = roles.includes("ADMIN")
+    const tabIndex = raffleView ? 0 : 1
 
     return (
         <div className={styles.container}>
-            <div className={styles.titles}>
-                <div
-                    className={raffleView ? styles.active : ""}
-                    onClick={() => setRaffleView(true)}
-                >
-                    Raffle
-                </div>
-                <div
-                    className={!raffleView ? styles.active : ""}
-                    onClick={() => setRaffleView(false)}
-                >
-                    Purchases
-                </div>
+
+            <div className={styles["heading-container"]}>
+
+                <Tabs value={tabIndex} onChange={(_, idx) => setRaffleView(idx === 0)}>
+                    <Tab label="Raffle" className={styles.tab} />
+                    <Tab label="Purchases" className={styles.tab} />
+                </Tabs>
+
                 <FontAwesomeIcon
                     className={styles.refresh}
                     icon={faSync}
                     onClick={refresh}
                 />
             </div>
+
             <div className={styles.items}>
                 {editingItem && (
                     <ItemEditPopup
