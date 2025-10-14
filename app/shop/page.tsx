@@ -15,7 +15,7 @@ import Loading from "@/components/Loading"
 import ItemEditPopup from "./ItemEditPopup"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
-import { Box, Button, IconButton, Tab, Tabs } from "@mui/material"
+import { Tab, Tabs } from "@mui/material"
 
 export default function Shop() {
     const [loading, setLoading] = useState(true)

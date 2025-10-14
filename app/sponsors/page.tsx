@@ -4,7 +4,7 @@ import Loading from "@/components/Loading"
 import Unauthorized from "@/components/Unauthorized/Unauthorized"
 import { Sponsor, SponsorService } from "@/generated"
 import { handleError, useRoles } from "@/util/api-client"
-import { faPlus, faSync, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,10 +14,7 @@ import styles from "./styles.module.scss"
 import {
     DataGrid,
     GridActionsCellItem,
-    GridColDef,
-    GridToolbarColumnsButton,
-    GridToolbarContainer,
-    GridToolbarFilterButton,
+    GridColDef
 } from "@mui/x-data-grid"
 
 interface SponsorAddCardProps {
@@ -40,7 +37,6 @@ export default function Sponsors() {
     const [loading, setLoading] = useState(true)
     const roles = useRoles()
     const [sponsors, setSponsors] = useState<Sponsor[]>([])
-    const [cellModesModel, setCellModesModel] = useState({})
 
     const isAdmin = roles.includes("ADMIN")
 
@@ -51,7 +47,6 @@ export default function Sponsors() {
             .then((sponsors) => {
                 setSponsors(sponsors)
                 setLoading(false)
-                console.log(sponsors)
             })
     }
 
