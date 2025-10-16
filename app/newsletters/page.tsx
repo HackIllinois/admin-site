@@ -58,22 +58,27 @@ export default function Newsletters() {
                     <div className={styles.empty}>No newsletters found</div>
                 ) : (
 
-            <List sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper', display:"flex", flexDirection: 'column', gap: 1 }}>
+                    <List sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper', display:"flex", flexDirection: 'column', gap: 1 }}>
                         {newsletters.map((newsletter) => (
-                                <ListItem key={newsletter.newsletterId} sx={{border: 1, borderColor: 'divider', borderRadius: 1}}
+                                <ListItem key={newsletter.newsletterId} 
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 1, fontFamily: 'Montserrat'}}
                                     secondaryAction={
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 3}}>
-                                        <Box sx={{display: { xs: 'none', sm: 'flex' } ,  alignItems: "center" }}>
-                                            {newsletter.subscribers.length} Subscribers &nbsp;
-                                            <PeopleIcon />
-                                        </Box>
-                                        <IconButton edge="end" onClick={() => setSelectedNewsletter(newsletter)}>
-                                            <MoreVertIcon />
-                                        </IconButton>
+                                            <Box sx={{display: { xs: 'none', sm: 'flex' } ,  alignItems: "center" }}>
+                                                {newsletter.subscribers.length} Subscribers &nbsp;
+                                                <PeopleIcon />
+                                            </Box>
+                                            <IconButton edge="end" onClick={() => setSelectedNewsletter(newsletter)}>
+                                                <MoreVertIcon />
+                                            </IconButton>
                                         </Box>
                                     }
                                 >
-                                <ListItemText primary={newsletter.newsletterId} />
+                                    <ListItemText primary={newsletter.newsletterId} slotProps={{
+                                        primary: {
+                                            fontFamily: "Montserrat"
+                                        }
+                                    }}/>
                                 </ListItem>
                         ))}
                 </List>

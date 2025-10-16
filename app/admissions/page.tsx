@@ -226,7 +226,7 @@ export default function Admissions() {
                 columns={columns}
                 cellModesModel={cellModesModel}
                 onCellModesModelChange={setCellModesModel}
-                sx={{fontFamily: 'Arial'}}
+                sx={{fontFamily: 'Montserrat'}}
                 slots={{
                     toolbar: () => <GridToolbar refresh={refresh} />,
                 }}
