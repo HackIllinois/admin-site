@@ -160,7 +160,7 @@ export default function EventEditPopup({
                                     <div className={styles.expires}>
                                         <Checkbox
                                             fast={false}
-                                            label={"Expires"}
+                                            label={"Expiration Date"}
                                             value={expires}
                                             noHighlight={false}
                                             onChange={(enabled: boolean) => {
@@ -290,7 +290,7 @@ export default function EventEditPopup({
                                         <button type="button" onClick={onDismiss}>
                                             Cancel
                                         </button>
-                                        <button type="submit">Save</button>
+                                        <button type="submit">Create</button>
                                     </div>
                                 </Form>
                             )}

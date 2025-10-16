@@ -4,27 +4,18 @@ import Loading from "@/components/Loading"
 import Unauthorized from "@/components/Unauthorized/Unauthorized"
 import { Sponsor, SponsorService } from "@/generated"
 import { handleError, useRoles } from "@/util/api-client"
-import { faPlus, faSync, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import styles from "./styles.module.scss"
 
-interface SponsorCardProps {
-    sponsor: Sponsor
-    onDelete: () => void
-}
-
-function SponsorCard({ sponsor, onDelete }: SponsorCardProps) {
-    return (
-        <div className={styles.card}>
-            <div className={styles.email}>{sponsor.email}</div>
-            <div className={styles.delete} onClick={onDelete}>
-                <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-            </div>
-        </div>
-    )
-}
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridColDef
+} from "@mui/x-data-grid"
 
 interface SponsorAddCardProps {
     onAdd: () => void
@@ -32,13 +23,15 @@ interface SponsorAddCardProps {
 
 function SponsorAddCard({ onAdd }: SponsorAddCardProps) {
     return (
-        <div className={styles.card} onClick={onAdd}>
-            <div className={styles.add}>
-                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+        <div className={styles.card}>
+            <div className={styles.add} onClick={onAdd}>
+                <FontAwesomeIcon icon={faPlus}/>
+                &nbsp; Add Sponsor 
             </div>
         </div>
     )
 }
+
 
 export default function Sponsors() {
     const [loading, setLoading] = useState(true)
@@ -86,6 +79,31 @@ export default function Sponsors() {
         await SponsorService.deleteSponsor({ body: { userId } })
     }
 
+     const columns: GridColDef[] = [
+         { field: "email", headerName: "Email", width: 300, editable: false },
+        { field: "userId", headerName: "User ID", width: 300, editable: false },
+             {
+            field: "actions",
+            type: "actions",
+            width: 150,
+            cellClassName: "actions",
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        key={id}
+                        icon={<DeleteIcon />}
+                        label="View Application"
+                        onClick={async () => {
+                            await deleteSponsor(id as string)
+                            await refresh()
+                        }}
+                        color="inherit"
+                    />,
+                ]
+            },
+        },
+     ]
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -96,17 +114,16 @@ export default function Sponsors() {
                     onClick={refresh}
                 />
             </div>
-            <div className={styles.sponsors}>
-                {sponsors.map((sponsor) => (
-                    <SponsorCard
-                        key={sponsor.userId}
-                        sponsor={sponsor}
-                        onDelete={async () => {
-                            await deleteSponsor(sponsor.userId)
-                            await refresh()
-                        }}
+            
+            <div className={styles.sponsors} >
+
+                        <DataGrid
+                        rows={sponsors}
+                        columns={columns}
+                        getRowId={(row) => row.userId}
+                        sx={{fontFamily: 'Arial'}}
                     />
-                ))}
+                    
                 <SponsorAddCard
                     onAdd={async () => {
                         await createSponsor()

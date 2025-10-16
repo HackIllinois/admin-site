@@ -13,7 +13,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 
 type EventAttendancesProps = {
   eventId: string
@@ -23,7 +23,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
   const [attendances, setAttendances] = useState<UserInfo[]>([])
   const [loading, setLoading] = useState(false)
 
-  const handleLoadEventAttendances = async () => {
+  const handleLoadEventAttendances = useCallback(async () => {
     setLoading(true)
     try {
       const eventAttendees = await EventService.getEventAttendeesById({
@@ -49,11 +49,11 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [eventId]);
 
   useEffect(() => {
     handleLoadEventAttendances()
-  }, [eventId])
+  }, [handleLoadEventAttendances])
 
   if (loading) {
     return (
@@ -78,16 +78,16 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
       <Table aria-label="Event Attendance">
         <TableHead>
             <TableRow>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}>Email</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}></TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Name</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Email</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}></TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
             {attendances.map((user) => (
                 <TableRow key={user.userId}>
-                <TableCell sx={{ fontFamily: 'Montserrat' }}>{user.name}</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat' }}>{user.email}</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif' }}>{user.name}</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif' }}>{user.email}</TableCell>
                 <TableCell>
                     <IconButton
                     size="small"

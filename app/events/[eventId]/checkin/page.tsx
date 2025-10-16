@@ -5,7 +5,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './style.module.scss';
 import { AuthService, StaffService } from '@/generated';
 import { useParams } from 'next/navigation';
@@ -31,7 +31,7 @@ const CheckinPage: React.FC = () => {
   };
 
   // Performs the check-in
-  const handleCheckinUser = async () => {
+  const handleCheckinUser = useCallback(async () => {
     setLoading(true);
     try {
       const response = await StaffService.postStaffAttendance({
@@ -47,12 +47,12 @@ const CheckinPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [eventId]);
 
   // Kick off check-in on mount
   useEffect(() => {
     handleCheckinUser();
-  }, []);
+  }, [handleCheckinUser]);
 
   return (
     <div className={styles.container}>
