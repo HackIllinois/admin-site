@@ -1,7 +1,7 @@
 "use client"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import VisibilityIcon from "@mui/icons-material/Visibility"
-import { Modal, Button, Backdrop, Fade, IconButton } from "@mui/material"
+import { Modal, Backdrop, Fade, IconButton } from "@mui/material"
 import {
     DataGrid,
     GridActionsCellItem,
@@ -319,7 +319,7 @@ function AdmissionModalField({
             return value.length > 0 ? value.join(', ') : 'N/A'; // Assuming value is an array or object
         }
         return value;
-    }, [field, value]);
+    }, [value]);
 
     return (
         <div key={field} className={styles.field}>

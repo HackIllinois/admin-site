@@ -66,8 +66,8 @@
 
     .buttons {
         position: absolute;
-        bottom: $padding / 2;
-        right: $padding / 2;
+        bottom: calc($padding / 2);
+        right: calc($padding / 2);
         display: flex;
 
         button {
