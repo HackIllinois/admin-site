@@ -40,7 +40,7 @@ export function setupClient() {
 
 // Redirects to authentication url
 export function authenticate(provider: Provider = "google") {
-    const redirectURI = window.location.origin.toString()
+    const redirectURI = window.location.toString()
     const authURL = `${client.getConfig().baseUrl}/auth/login/${provider}?redirect=${redirectURI}`
     window.location.replace(authURL)
 }
