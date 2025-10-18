@@ -12,7 +12,7 @@
     }
 
     .account {
-        border: $primary-color 1.5px solid;
+        border: #ccc 1.5px solid;
         border-radius: 7px;
         margin-top: 8px;
         padding: 15px;
@@ -37,11 +37,11 @@
             }
         }
 
-        .name {
-        }
-        .user-id {
-        }
-        .email {
+        .dataItem {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 10px;
+
         }
         .roles {
             display: flex;
@@ -49,6 +49,7 @@
 
             .label {
                 flex-basis: 100%;
+                margin-bottom: 3px;
             }
 
             .role {
@@ -58,7 +59,7 @@
                 border: var(--color) 1.5px solid;
                 border-radius: 2em;
                 margin: 3px;
-                padding: 5px;
+                padding: 5px 10px;
                 color: var(--color);
             }
 
