@@ -16,7 +16,7 @@ interface EventCodeFormProps {
 export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
   const [code, setCode] = useState(event.eventId)
   const [copySuccess, setCopySuccess] = useState(false)
-  const [isWeb, setIsWeb] = useState(false)
+  const [isWeb, setIsWeb] = useState(true)
   const qrCodeRef = useRef<QRCode>(null)
 
   const displayedValue = isWeb
@@ -47,7 +47,6 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
 
   function download() {
     if (!qrCodeRef.current) return
-    // pass the displayedValue as filename for clarity
     qrCodeRef.current.download(
       "png",
       `${event.name} ${isWeb ? "Web" : "Mobile"} QR Code.png`
@@ -67,7 +66,6 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
         </button>
       </div>
 
-      {/* only allow editing when in mobile mode */}
       <input
         className={styles["form-field"]}
         type="text"
@@ -75,6 +73,10 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
         value={displayedValue}
         onChange={(e) => setCode(e.target.value)}
       />
+
+      <p style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '8px' }}>
+        {isWeb ? "Web QR Code" : "Mobile QR Code"}
+      </p>
 
       <div className={styles.code}>
         <QRCode

@@ -1,27 +1,27 @@
-import React, { FC } from 'react';
-import { Box, Tooltip } from '@mui/material';
+import React, { FC } from 'react'
+import { Box, Tooltip } from '@mui/material'
 
 export interface StaffStatistics {
-  ABSENT: number;
-  PRESENT: number;
-  EXCUSED: number;
-  TOTAL: number;
+  ABSENT: number
+  PRESENT: number
+  EXCUSED: number
+  TOTAL: number
 }
 
 export interface AttendanceBarProps {
-  statistics: StaffStatistics;
+  statistics: StaffStatistics
 }
 
 const AttendanceBar: FC<AttendanceBarProps> = ({ statistics }) => {
-  const { ABSENT: absent, PRESENT: present, EXCUSED: excused, TOTAL: total } = statistics;
-  const minPercent = 10;
+  const { ABSENT: absent, PRESENT: present, EXCUSED: excused, TOTAL: total } = statistics
+  const minPercent = 10
 
   const presentPercent =
-    present === 0 ? 0 : Math.max((present / total) * 100 || 0, minPercent);
+    present === 0 ? 0 : Math.max((present / total) * 100 || 0, minPercent)
   const absentPercent =
-    absent === 0 ? 0 : Math.max((absent / total) * 100 || 0, minPercent);
+    absent === 0 ? 0 : Math.max((absent / total) * 100 || 0, minPercent)
   const excusedPercent =
-    excused === 0 ? 0 : Math.max((excused / total) * 100 || 0, minPercent);
+    excused === 0 ? 0 : Math.max((excused / total) * 100 || 0, minPercent)
 
   return (
     <Box
@@ -65,7 +65,7 @@ const AttendanceBar: FC<AttendanceBarProps> = ({ statistics }) => {
         />
       </Tooltip>
     </Box>
-  );
-};
+  )
+}
 
-export default AttendanceBar;
+export default AttendanceBar
