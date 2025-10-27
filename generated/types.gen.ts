@@ -57,6 +57,7 @@ export type CreateEventRequest = {
     points: number;
     isPrivate: boolean;
     displayOnStaffCheckIn?: boolean;
+    isMandatory?: boolean;
     isPro: boolean;
 };
 
@@ -93,12 +94,19 @@ export type Event = {
     points: number;
     isPrivate: boolean;
     displayOnStaffCheckIn?: boolean;
+    isMandatory?: boolean;
     isPro: boolean;
 };
 
 export type EventAttendees = {
     eventId: EventId;
     attendees: Array<UserId>;
+    excusedAttendees: Array<UserId>;
+};
+
+export type EventAttendeesInfo = {
+    eventId: EventId;
+    attendeesInfo: Array<UserInfo>;
 };
 
 export type EventFollowers = {
@@ -125,6 +133,10 @@ export type HackOutreach = 'Instagram' | 'Twitter/X' | 'TikTok' | 'Discord' | 'F
 
 export type ListRoles = {
     userIds: Array<UserId>;
+};
+
+export type ListRolesInfo = {
+    userInfo: Array<UserInfo>;
 };
 
 export type Location = {
@@ -473,6 +485,7 @@ export type UpdateEventRequest = {
     points?: number;
     isPrivate?: boolean;
     displayOnStaffCheckIn?: boolean;
+    isMandatory?: boolean;
     isPro?: boolean;
     eventId: EventId;
 };
@@ -744,6 +757,24 @@ export type GetAuthRolesResponses = {
 };
 
 export type GetAuthRolesResponse = GetAuthRolesResponses[keyof GetAuthRolesResponses];
+
+export type GetAuthRolesListInfoByRoleData = {
+    body?: never;
+    path: {
+        role: Role;
+    };
+    query?: never;
+    url: '/auth/roles/list-info/{role}/';
+};
+
+export type GetAuthRolesListInfoByRoleResponses = {
+    /**
+     * User info of all users that have the specified role
+     */
+    200: ListRolesInfo;
+};
+
+export type GetAuthRolesListInfoByRoleResponse = GetAuthRolesListInfoByRoleResponses[keyof GetAuthRolesListInfoByRoleResponses];
 
 export type GetAuthRolesListByRoleData = {
     body?: never;
@@ -1025,6 +1056,36 @@ export type PutEventResponses = {
 
 export type PutEventResponse = PutEventResponses[keyof PutEventResponses];
 
+export type GetEventAttendeesInfoByIdData = {
+    body?: never;
+    path: {
+        id: EventId;
+    };
+    query?: never;
+    url: '/event/attendees-info/{id}/';
+};
+
+export type GetEventAttendeesInfoByIdErrors = {
+    /**
+     * Couldn't find the event specified
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Could not find event';
+    };
+};
+
+export type GetEventAttendeesInfoByIdError = GetEventAttendeesInfoByIdErrors[keyof GetEventAttendeesInfoByIdErrors];
+
+export type GetEventAttendeesInfoByIdResponses = {
+    /**
+     * The attendees' info
+     */
+    200: EventAttendeesInfo;
+};
+
+export type GetEventAttendeesInfoByIdResponse = GetEventAttendeesInfoByIdResponses[keyof GetEventAttendeesInfoByIdResponses];
+
 export type GetEventAttendeesByIdData = {
     body?: never;
     path: {
@@ -1084,6 +1145,40 @@ export type GetEventFollowersByIdResponses = {
 };
 
 export type GetEventFollowersByIdResponse = GetEventFollowersByIdResponses[keyof GetEventFollowersByIdResponses];
+
+export type PostEventMarkExcusedByIdData = {
+    body?: {
+        userId: string;
+    };
+    path: {
+        id: EventId;
+    };
+    query?: never;
+    url: '/event/mark-excused/{id}/';
+};
+
+export type PostEventMarkExcusedByIdErrors = {
+    /**
+     * Couldn't find the event specified
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Could not find event';
+    };
+};
+
+export type PostEventMarkExcusedByIdError = PostEventMarkExcusedByIdErrors[keyof PostEventMarkExcusedByIdErrors];
+
+export type PostEventMarkExcusedByIdResponses = {
+    /**
+     * Successfully marked user as excused
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostEventMarkExcusedByIdResponse = PostEventMarkExcusedByIdResponses[keyof PostEventMarkExcusedByIdResponses];
 
 export type GetEventStaffData = {
     body?: never;

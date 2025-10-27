@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  Tooltip,
 } from '@mui/material'
 import React from 'react'
 
@@ -57,12 +58,23 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   }
 
   const formatMonth = (monthStr: string) => {
-    const date = new Date(monthStr + '-01')
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    const [year, month] = monthStr.split('-')
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    return `${monthNames[parseInt(month) - 1]} ${year}`
+  }
+
+  const formatFullDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
   }
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         <Box>
           <Typography variant="h6">{name} - Attendance</Typography>
@@ -83,11 +95,19 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             No attendance records found.
           </Typography>
         ) : (
-          <Box sx={{ bgcolor: 'white', p: 3, borderRadius: 2 }}>
+          <Box 
+            sx={{ 
+              bgcolor: 'white', 
+              p: 3, 
+              borderRadius: 1,
+              border: '1px solid #000',
+              display: 'inline-block',
+            }}
+          >
             <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
               <Box sx={{ width: 120 }}></Box>
               {months.map((month) => (
-                <Box key={month} sx={{ flex: 1, textAlign: 'center' }}>
+                <Box key={month} sx={{ minWidth: 180, textAlign: 'center' }}>
                   <Typography variant="subtitle1" fontWeight="bold">
                     {formatMonth(month)}
                   </Typography>
@@ -110,31 +130,52 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
                 <Box
                   key={month}
                   sx={{
-                    flex: 1,
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, 50px)',
+                    minWidth: 180,
+                    display: 'flex',
                     gap: 1,
+                    flexWrap: 'wrap',
                   }}
                 >
                   {groupedByMonth[month]?.map((record, idx) => (
-                    <Box
+                    <Tooltip
                       key={idx}
-                      sx={{
-                        width: 50,
-                        height: 50,
-                        bgcolor: getStatusColor(record.status),
-                        borderRadius: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        fontSize: '0.75rem',
-                      }}
-                      title={`${record.eventName || record.date} - ${record.status}`}
+                      title={
+                        <Box>
+                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            {formatFullDate(record.date)}
+                          </Typography>
+                          <Typography variant="body2">
+                            {record.eventName || 'Staff Meeting'}
+                          </Typography>
+                          <Typography variant="body2">
+                            Status: {record.status}
+                          </Typography>
+                        </Box>
+                      }
+                      arrow
+                      placement="top"
                     >
-                      {new Date(record.date).getDate()}
-                    </Box>
+                      <Box
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          bgcolor: getStatusColor(record.status),
+                          borderRadius: 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontWeight: 'bold',
+                          fontSize: '0.75rem',
+                          cursor: 'pointer',
+                          '&:hover': {
+                            opacity: 0.8,
+                          },
+                        }}
+                      >
+                        {new Date(record.date).getDate()}
+                      </Box>
+                    </Tooltip>
                   ))}
                 </Box>
               ))}

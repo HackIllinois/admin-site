@@ -68,6 +68,12 @@ export default function AttendanceView() {
         })
 
         const attendanceData = await Promise.all(attendancePromises)
+        
+        // Sort alphabetically by name
+        attendanceData.sort((a, b) => 
+          a.user.name.localeCompare(b.user.name)
+        )
+        
         setAttendances(attendanceData)
 
         const uniqueTeams = Array.from(
@@ -145,8 +151,8 @@ export default function AttendanceView() {
           </ToggleButtonGroup>
         </Box>
 
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} sx={{ maxHeight: 'calc(100vh - 250px)' }}>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell>
