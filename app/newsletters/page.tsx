@@ -60,8 +60,8 @@ export default function Newsletters() {
 
                     <List sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper', display:"flex", flexDirection: 'column', gap: 1 }}>
                         {newsletters.map((newsletter) => (
-                                <ListItem key={newsletter.newsletterId} 
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 1, fontFamily: 'Montserrat'}}
+                                <ListItem key={newsletter.newsletterId}
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 1, fontFamily: 'font-family: Arial, Helvetica, sans-serif;'}}
                                     secondaryAction={
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 3}}>
                                             <Box sx={{display: { xs: 'none', sm: 'flex' } ,  alignItems: "center" }}>
@@ -76,7 +76,7 @@ export default function Newsletters() {
                                 >
                                     <ListItemText primary={newsletter.newsletterId} slotProps={{
                                         primary: {
-                                            fontFamily: "Montserrat"
+                                            fontFamily: 'font-family: Arial, Helvetica, sans-serif;'
                                         }
                                     }}/>
                                 </ListItem>

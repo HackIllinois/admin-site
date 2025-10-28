@@ -127,6 +127,10 @@ export type ListRoles = {
     userIds: Array<UserId>;
 };
 
+export type ListUsers = {
+    userInfo: Array<UserInfo>;
+};
+
 export type Location = {
     description: string;
     latitude: number;
@@ -754,6 +758,15 @@ export type GetAuthRolesListByRoleData = {
     url: '/auth/roles/list/{role}/';
 };
 
+export type GetAuthUserByRoleData = {
+    body?: never;
+    path: {
+        role: Role;
+    };
+    query?: never;
+    url: '/auth/roles/list-info/{role}/';
+};
+
 export type GetAuthRolesListByRoleResponses = {
     /**
      * The user ids that have the specified role
@@ -762,6 +775,15 @@ export type GetAuthRolesListByRoleResponses = {
 };
 
 export type GetAuthRolesListByRoleResponse = GetAuthRolesListByRoleResponses[keyof GetAuthRolesListByRoleResponses];
+
+export type GetAuthUserByRoleResponses = {
+    /**
+     * The users that have the specified role
+     */
+    200: ListUsers;
+};
+
+export type GetAuthUserByRoleResponse = GetAuthUserByRoleResponses[keyof GetAuthUserByRoleResponses];
 
 export type GetAuthRolesByIdData = {
     body?: never;
