@@ -21,9 +21,9 @@ import { AttendanceRecord } from './AttendanceModal'
 import { StaffStatistics } from './AttendanceBar'
 import {
   getAllStaffUsers,
-  getAllMandatoryEvents,
   getUserAttendanceRecords,
   calculateAttendanceStatistics,
+  preloadEventNames,
   type UserInfo,
 } from '../lib/api/attendance'
 
@@ -49,11 +49,12 @@ export default function AttendanceView() {
     async function fetchAttendanceData() {
       setLoading(true)
       try {
+        await preloadEventNames()
+        
         const users = await getAllStaffUsers()
-        const events = await getAllMandatoryEvents()
 
         const attendancePromises = users.map(async (user) => {
-          const records = await getUserAttendanceRecords(user.userId, events)
+          const records = await getUserAttendanceRecords(user.userId)
           const statistics = calculateAttendanceStatistics(records)
 
           return {
@@ -69,7 +70,6 @@ export default function AttendanceView() {
 
         const attendanceData = await Promise.all(attendancePromises)
         
-        // Sort alphabetically by name
         attendanceData.sort((a, b) => 
           a.user.name.localeCompare(b.user.name)
         )

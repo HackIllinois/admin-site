@@ -98,6 +98,24 @@ export type Event = {
     isPro: boolean;
 };
 
+export type EventAttendance = {
+    present: Array<[
+        string,
+        number,
+        number
+    ]>;
+    excused: Array<[
+        string,
+        number,
+        number
+    ]>;
+    absent: Array<[
+        string,
+        number,
+        number
+    ]>;
+};
+
 export type EventAttendees = {
     eventId: EventId;
     attendees: Array<UserId>;
@@ -287,12 +305,35 @@ export type RegisterDeviceToken = {
     deviceToken: string;
 };
 
-export type RegistrationApplication = RegistrationApplicationRequest & {
+export type RegistrationApplicationDraft = RegistrationApplicationDraftRequest & {
     userId: UserId;
-    hasSubmitted: boolean;
 };
 
-export type RegistrationApplicationRequest = {
+export type RegistrationApplicationDraftRequest = {
+    preferredName: string;
+    legalName: string;
+    emailAddress: string | '';
+    gender: Gender;
+    race?: Array<Race>;
+    resumeFileName?: string;
+    requestedTravelReimbursement?: boolean;
+    location?: string;
+    degree?: Degree;
+    major?: string;
+    minor?: string;
+    university?: string;
+    gradYear?: number;
+    hackInterest?: Array<HackInterest>;
+    hackOutreach?: Array<HackOutreach>;
+    dietaryRestrictions?: Array<string>;
+    hackEssay1?: string;
+    hackEssay2?: string;
+    optionalEssay?: string;
+    proEssay?: string;
+    considerForGeneral?: boolean;
+};
+
+export type RegistrationApplicationSubmittedRequest = {
     preferredName: string;
     legalName: string;
     emailAddress: string | '';
@@ -372,6 +413,7 @@ export type Roles = {
 export type ScanAttendee = {
     success: true;
     userId: UserId;
+    eventName: string;
     dietaryRestrictions: Array<string>;
 };
 
@@ -385,6 +427,7 @@ export type ScanAttendeeRequest = {
 
 export type ScanEvent = {
     success: true;
+    eventName: string;
     /**
      * Points added from checking into the event
      */
@@ -1056,6 +1099,24 @@ export type PutEventResponses = {
 
 export type PutEventResponse = PutEventResponses[keyof PutEventResponses];
 
+export type GetEventAttendanceByIdData = {
+    body?: never;
+    path: {
+        id: UserId;
+    };
+    query?: never;
+    url: '/event/attendance/{id}/';
+};
+
+export type GetEventAttendanceByIdResponses = {
+    /**
+     * List of mandatory events in which the user is absent, present, and excused
+     */
+    200: EventAttendance;
+};
+
+export type GetEventAttendanceByIdResponse = GetEventAttendanceByIdResponses[keyof GetEventAttendanceByIdResponses];
+
 export type GetEventAttendeesInfoByIdData = {
     body?: never;
     path: {
@@ -1146,9 +1207,10 @@ export type GetEventFollowersByIdResponses = {
 
 export type GetEventFollowersByIdResponse = GetEventFollowersByIdResponses[keyof GetEventFollowersByIdResponses];
 
-export type PostEventMarkExcusedByIdData = {
+export type PutEventMarkExcusedByIdData = {
     body?: {
         userId: string;
+        excused: boolean;
     };
     path: {
         id: EventId;
@@ -1157,7 +1219,7 @@ export type PostEventMarkExcusedByIdData = {
     url: '/event/mark-excused/{id}/';
 };
 
-export type PostEventMarkExcusedByIdErrors = {
+export type PutEventMarkExcusedByIdErrors = {
     /**
      * Couldn't find the event specified
      */
@@ -1167,18 +1229,18 @@ export type PostEventMarkExcusedByIdErrors = {
     };
 };
 
-export type PostEventMarkExcusedByIdError = PostEventMarkExcusedByIdErrors[keyof PostEventMarkExcusedByIdErrors];
+export type PutEventMarkExcusedByIdError = PutEventMarkExcusedByIdErrors[keyof PutEventMarkExcusedByIdErrors];
 
-export type PostEventMarkExcusedByIdResponses = {
+export type PutEventMarkExcusedByIdResponses = {
     /**
-     * Successfully marked user as excused
+     * Successfully updated user's excused status
      */
     200: {
         success: true;
     };
 };
 
-export type PostEventMarkExcusedByIdResponse = PostEventMarkExcusedByIdResponses[keyof PostEventMarkExcusedByIdResponses];
+export type PutEventMarkExcusedByIdResponse = PutEventMarkExcusedByIdResponses[keyof PutEventMarkExcusedByIdResponses];
 
 export type GetEventStaffData = {
     body?: never;
@@ -1823,13 +1885,13 @@ export type GetRegistrationResponses = {
     /**
      * The registration information
      */
-    200: RegistrationApplication;
+    200: RegistrationApplicationDraft;
 };
 
 export type GetRegistrationResponse = GetRegistrationResponses[keyof GetRegistrationResponses];
 
 export type PostRegistrationData = {
-    body?: RegistrationApplicationRequest;
+    body?: RegistrationApplicationDraftRequest;
     path?: never;
     query?: never;
     url: '/registration/';
@@ -1858,7 +1920,7 @@ export type PostRegistrationResponses = {
     /**
      * The new registration information
      */
-    200: RegistrationApplicationRequest;
+    200: RegistrationApplicationDraftRequest;
 };
 
 export type PostRegistrationResponse = PostRegistrationResponses[keyof PostRegistrationResponses];
@@ -1946,11 +2008,18 @@ export type PostRegistrationSubmitData = {
 
 export type PostRegistrationSubmitErrors = {
     /**
-     * Registration is already submitted, cannot update anymore
+     * One of:
+     * - AlreadySubmitted: Registration is already submitted, cannot update anymore
+     * - IncompleteApplication: Your application is incomplete. Please fill out all required fields before submitting.
+     *
+     * **See examples dropdown below**
      */
     400: {
         error: 'AlreadySubmitted';
         message: "You've already submitted your registration!";
+    } | {
+        error: 'IncompleteApplication';
+        message: 'Your application is incomplete. Please fill out all required fields before submitting.';
     };
     /**
      * Registration is closed
@@ -1974,7 +2043,7 @@ export type PostRegistrationSubmitResponses = {
     /**
      * The new registration information
      */
-    200: RegistrationApplicationRequest;
+    200: RegistrationApplicationSubmittedRequest;
 };
 
 export type PostRegistrationSubmitResponse = PostRegistrationSubmitResponses[keyof PostRegistrationSubmitResponses];
@@ -2004,7 +2073,7 @@ export type GetRegistrationUseridByIdResponses = {
     /**
      * The registration information
      */
-    200: RegistrationApplication;
+    200: RegistrationApplicationDraft;
 };
 
 export type GetRegistrationUseridByIdResponse = GetRegistrationUseridByIdResponses[keyof GetRegistrationUseridByIdResponses];
