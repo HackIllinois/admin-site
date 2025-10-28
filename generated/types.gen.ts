@@ -95,6 +95,7 @@ export type Event = {
     isPrivate: boolean;
     displayOnStaffCheckIn?: boolean;
     isMandatory?: boolean;
+    isMandatory?: boolean;
     isPro: boolean;
 };
 
@@ -119,6 +120,12 @@ export type EventAttendance = {
 export type EventAttendees = {
     eventId: EventId;
     attendees: Array<UserId>;
+    excusedAttendees: Array<UserId>;
+};
+
+export type EventAttendeesInfo = {
+    eventId: EventId;
+    attendeesInfo: Array<UserInfo>;
     excusedAttendees: Array<UserId>;
 };
 
@@ -151,6 +158,10 @@ export type HackOutreach = 'Instagram' | 'Twitter/X' | 'TikTok' | 'Discord' | 'F
 
 export type ListRoles = {
     userIds: Array<UserId>;
+};
+
+export type ListRolesInfo = {
+    userInfo: Array<UserInfo>;
 };
 
 export type ListRolesInfo = {
@@ -529,6 +540,7 @@ export type UpdateEventRequest = {
     isPrivate?: boolean;
     displayOnStaffCheckIn?: boolean;
     isMandatory?: boolean;
+    isMandatory?: boolean;
     isPro?: boolean;
     eventId: EventId;
 };
@@ -800,6 +812,24 @@ export type GetAuthRolesResponses = {
 };
 
 export type GetAuthRolesResponse = GetAuthRolesResponses[keyof GetAuthRolesResponses];
+
+export type GetAuthRolesListInfoByRoleData = {
+    body?: never;
+    path: {
+        role: Role;
+    };
+    query?: never;
+    url: '/auth/roles/list-info/{role}/';
+};
+
+export type GetAuthRolesListInfoByRoleResponses = {
+    /**
+     * User info of all users that have the specified role
+     */
+    200: ListRolesInfo;
+};
+
+export type GetAuthRolesListInfoByRoleResponse = GetAuthRolesListInfoByRoleResponses[keyof GetAuthRolesListInfoByRoleResponses];
 
 export type GetAuthRolesListInfoByRoleData = {
     body?: never;
