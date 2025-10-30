@@ -1,11 +1,4 @@
 import { AuthService, EventService } from '@/generated'
-import { createClient, createConfig } from '@hey-api/client-fetch'
-import type { ClientOptions } from '@/generated/types.gen'
-
-// Create a custom client that uses the full URL (same as other SDK calls)
-const customClient = createClient(createConfig<ClientOptions>({
-  baseUrl: 'https://adonix.hackillinois.org'
-}))
 
 export interface UserInfo {
   userId: string
@@ -30,6 +23,7 @@ export interface AttendanceStatistics {
 
 const FALL_2025_START = new Date('2025-09-01').getTime() / 1000
 
+// Cache for event names
 const eventNameCache = new Map<string, string>()
 
 export async function getAllStaffUsers(): Promise<UserInfo[]> {
@@ -85,6 +79,7 @@ async function getEventName(eventId: string): Promise<string> {
 export async function preloadEventNames(): Promise<void> {
   try {
     const events = await getAllMandatoryEvents()
+    console.log('Preloading events:', events.length)
     events.forEach(event => {
       if (event.eventId && event.name) {
         eventNameCache.set(event.eventId, event.name)
@@ -100,17 +95,21 @@ export async function getUserAttendanceRecords(
 ): Promise<AttendanceData[]> {
   try {
     const response = await EventService.getEventAttendanceById({
-      path: { id: userId },
-      client: customClient
+      path: { id: userId }
     })
     
     const data = response.data
+    console.log(`Raw attendance data for ${userId}:`, data)
+    
     const records: AttendanceData[] = []
     
     if (data?.present && Array.isArray(data.present)) {
+      console.log(`${userId} - Present events:`, data.present.length)
       for (const [eventId, startTime] of data.present) {
+        console.log(`  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`)
         if (startTime >= FALL_2025_START) {
           const eventName = await getEventName(eventId)
+          console.log(`  Event name: ${eventName}`)
           if (eventName.includes('Staff Meeting')) {
             records.push({
               eventId,
@@ -124,6 +123,7 @@ export async function getUserAttendanceRecords(
     }
     
     if (data?.excused && Array.isArray(data.excused)) {
+      console.log(`${userId} - Excused events:`, data.excused.length)
       for (const [eventId, startTime] of data.excused) {
         if (startTime >= FALL_2025_START) {
           const eventName = await getEventName(eventId)
@@ -140,6 +140,7 @@ export async function getUserAttendanceRecords(
     }
     
     if (data?.absent && Array.isArray(data.absent)) {
+      console.log(`${userId} - Absent events:`, data.absent.length)
       for (const [eventId, startTime] of data.absent) {
         if (startTime >= FALL_2025_START) {
           const eventName = await getEventName(eventId)
@@ -155,7 +156,9 @@ export async function getUserAttendanceRecords(
       }
     }
     
+    console.log(`Final records for ${userId}:`, records.length)
     records.sort((a, b) => b.eventDate.localeCompare(a.eventDate))
+    
     return records
   } catch (error) {
     console.error(`Error fetching attendance for user ${userId}:`, error)
