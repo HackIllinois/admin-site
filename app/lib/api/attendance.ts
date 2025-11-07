@@ -42,15 +42,15 @@ export async function getAllMandatoryEvents(): Promise<any[]> {
   try {
     const response = await EventService.getEvent()
     const events = response.data?.events || []
-    
-    const staffMeetings = events.filter((event: any) => {
-      const isStaffMeeting = event.name && event.name.includes('Staff Meeting')
-      const isAfterSept1 = event.startTime >= FALL_2025_START
-      
-      return isStaffMeeting && isAfterSept1
+
+    const mandatoryEvents = events.filter((event: any) => {
+      const isMandatory = event.isMandatory === true
+      const isAfterFallStart = event.startTime >= FALL_2025_START
+
+      return isMandatory && isAfterFallStart
     })
-    
-    return staffMeetings
+
+    return mandatoryEvents
   } catch (error) {
     console.error('Error fetching events:', error)
     return []
@@ -76,11 +76,11 @@ async function getEventName(eventId: string): Promise<string> {
   }
 }
 
-export async function preloadEventNames(): Promise<void> {
+export async function preloadEventNames(events?: any[]): Promise<void> {
   try {
-    const events = await getAllMandatoryEvents()
-    console.log('Preloading events:', events.length)
-    events.forEach(event => {
+    const mandatoryEvents = events || await getAllMandatoryEvents()
+    console.log('Preloading events:', mandatoryEvents.length)
+    mandatoryEvents.forEach(event => {
       if (event.eventId && event.name) {
         eventNameCache.set(event.eventId, event.name)
       }
@@ -91,74 +91,73 @@ export async function preloadEventNames(): Promise<void> {
 }
 
 export async function getUserAttendanceRecords(
-  userId: string
+  userId: string,
+  mandatoryEvents?: any[]
 ): Promise<AttendanceData[]> {
   try {
     const response = await EventService.getEventAttendanceById({
       path: { id: userId }
     })
-    
+
     const data = response.data
     console.log(`Raw attendance data for ${userId}:`, data)
-    
+
     const records: AttendanceData[] = []
-    
+
+    // Get all mandatory events to check against (use provided or fetch if not provided)
+    const events = mandatoryEvents || await getAllMandatoryEvents()
+    const mandatoryEventIds = new Set(events.map(e => e.eventId))
+
     if (data?.present && Array.isArray(data.present)) {
       console.log(`${userId} - Present events:`, data.present.length)
       for (const [eventId, startTime] of data.present) {
         console.log(`  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`)
-        if (startTime >= FALL_2025_START) {
+        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
           const eventName = await getEventName(eventId)
           console.log(`  Event name: ${eventName}`)
-          if (eventName.includes('Staff Meeting')) {
-            records.push({
-              eventId,
-              eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
-              eventName,
-              status: 'PRESENT',
-            })
-          }
+          records.push({
+            eventId,
+            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
+            eventName,
+            status: 'PRESENT',
+          })
         }
       }
     }
-    
+
     if (data?.excused && Array.isArray(data.excused)) {
       console.log(`${userId} - Excused events:`, data.excused.length)
       for (const [eventId, startTime] of data.excused) {
-        if (startTime >= FALL_2025_START) {
+        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
           const eventName = await getEventName(eventId)
-          if (eventName.includes('Staff Meeting')) {
-            records.push({
-              eventId,
-              eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
-              eventName,
-              status: 'EXCUSED',
-            })
-          }
+          records.push({
+            eventId,
+            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
+            eventName,
+            status: 'EXCUSED',
+          })
         }
       }
     }
-    
+
     if (data?.absent && Array.isArray(data.absent)) {
       console.log(`${userId} - Absent events:`, data.absent.length)
       for (const [eventId, startTime] of data.absent) {
-        if (startTime >= FALL_2025_START) {
+        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
           const eventName = await getEventName(eventId)
-          if (eventName.includes('Staff Meeting')) {
-            records.push({
-              eventId,
-              eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
-              eventName,
-              status: 'ABSENT',
-            })
-          }
+          records.push({
+            eventId,
+            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
+            eventName,
+            status: 'ABSENT',
+          })
         }
       }
     }
-    
+
     console.log(`Final records for ${userId}:`, records.length)
     records.sort((a, b) => b.eventDate.localeCompare(a.eventDate))
-    
+
     return records
   } catch (error) {
     console.error(`Error fetching attendance for user ${userId}:`, error)

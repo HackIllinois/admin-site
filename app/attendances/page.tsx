@@ -21,6 +21,7 @@ import { AttendanceRecord } from './AttendanceModal'
 import { StaffStatistics } from './AttendanceBar'
 import {
   getAllStaffUsers,
+  getAllMandatoryEvents,
   getUserAttendanceRecords,
   calculateAttendanceStatistics,
   preloadEventNames,
@@ -49,12 +50,16 @@ export default function AttendanceView() {
     async function fetchAttendanceData() {
       setLoading(true)
       try {
-        await preloadEventNames()
-        
+        // Fetch mandatory events once for all users
+        const mandatoryEvents = await getAllMandatoryEvents()
+
+        // Preload event names using the already-fetched events
+        await preloadEventNames(mandatoryEvents)
+
         const users = await getAllStaffUsers()
 
         const attendancePromises = users.map(async (user) => {
-          const records = await getUserAttendanceRecords(user.userId)
+          const records = await getUserAttendanceRecords(user.userId, mandatoryEvents)
           const statistics = calculateAttendanceStatistics(records)
 
           return {

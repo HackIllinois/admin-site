@@ -72,6 +72,7 @@ export default function EventEditPopup({
         isAsync: false,
         isStaff: staffView,
         isPro: false,
+        isMandatory: true,
         ...initialEvent,
         eventType: initialEvent.eventType
             ? {
@@ -272,6 +273,15 @@ export default function EventEditPopup({
                                         name="isAsync"
                                         label="Async Event"
                                     />
+
+                                    {staffView && (
+                                        <Field
+                                            className={styles["form-margins"]}
+                                            component={FormikCheckbox}
+                                            name="isMandatory"
+                                            label="Mandatory Event"
+                                        />
+                                    )}
 
                                     <div className={styles.buttons}>
                                         {editingEventId && (
