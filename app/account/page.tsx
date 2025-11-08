@@ -53,31 +53,31 @@ export default function Account() {
                 <h2>Account</h2>
             </div>
             <div className={styles.account}>
-                <div className={styles.name}>
+                <div className={styles.dataItem}>
                     <div className={styles.label}>
                         <FontAwesomeIcon icon={faUser} />
-                        Name:
+                        Name
                     </div>
                     {user.name}
                 </div>
-                <div className={styles["user-id"]}>
+                <div className={styles.dataItem}>
                     <div className={styles.label}>
                         <FontAwesomeIcon icon={faIdBadge} />
-                        User Id:
+                        User Id
                     </div>
                     {user.userId}
                 </div>
-                <div className={styles.email}>
+                <div className={styles.dataItem}>
                     <div className={styles.label}>
                         <FontAwesomeIcon icon={faEnvelope} />
-                        Email:
+                        Email
                     </div>
                     {user.email}
                 </div>
                 <div className={styles.roles}>
                     <div className={styles.label}>
                         <FontAwesomeIcon icon={faKey} />
-                        Roles:
+                        Roles
                     </div>
                     {roles.map((role) => (
                         <div

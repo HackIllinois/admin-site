@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { Formik, Form, Field, FormikHelpers } from "formik"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPaperPlane, faSync } from "@fortawesome/free-solid-svg-icons"
+import { Tab, Tabs } from "@mui/material"
 
 import SelectField from "@/components/SelectField/SelectField"
 import Loading from "@/components/Loading"
@@ -188,6 +189,7 @@ export default function Notifications() {
     }
 
     const isAdmin = roles.includes("ADMIN")
+    const tabIndex = 0
 
     return (
         <div className={styles.page}>
@@ -287,10 +289,10 @@ export default function Notifications() {
             )}
 
             <div className={styles["heading-container"]}>
-                <div className={styles.heading}>
-                    Past Notifications
-                    <div className={styles.underline} />
-                </div>
+
+                <Tabs value={tabIndex}>
+                    <Tab label="Past Notifications" className={styles.tab} />
+                </Tabs>
 
                 <FontAwesomeIcon
                     className={styles.refresh}
@@ -307,9 +309,11 @@ export default function Notifications() {
                         </div>
                         <div className={styles.title}>{notification.title}</div>
                         <div className={styles.body}>{notification.body}</div>
+                        <div className={styles.spacer}></div>
                         <div className={styles.sent}>
                             Sent: {notification.sent.length}
-                            <br />
+                        </div>
+                        <div className={styles.failed}>
                             Failed: {notification.failed.length}
                         </div>
                     </div>

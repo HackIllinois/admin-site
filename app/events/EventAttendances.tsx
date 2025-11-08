@@ -15,7 +15,7 @@ import {
     Tooltip,
     Typography
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { getAllStaffUsers } from "@/app/lib/api/attendance"
 
 type EventAttendancesProps = {
@@ -105,11 +105,11 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [eventId]);
 
   useEffect(() => {
     handleLoadEventAttendances()
-  }, [eventId])
+  }, [handleLoadEventAttendances])
 
   if (loading) {
     return (
@@ -147,17 +147,16 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
       <Table stickyHeader aria-label="Event Attendance">
         <TableHead>
             <TableRow>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}>Email</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}>Status</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat', fontWeight: 'bold' }}>Actions</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Name</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Email</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}></TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
             {attendances.map(({ user, status }) => (
                 <TableRow key={user.userId}>
-                <TableCell sx={{ fontFamily: 'Montserrat' }}>{user.name}</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat' }}>{user.email}</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif' }}>{user.name}</TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif' }}>{user.email}</TableCell>
                 <TableCell>{getStatusChip(status)}</TableCell>
                 <TableCell>
                     <Tooltip title={status === 'EXCUSED' ? 'Unmark as excused' : 'Mark as excused'}>

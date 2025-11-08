@@ -131,7 +131,7 @@ export default function Events() {
                         variant="contained"
                         color="primary"
                         startIcon={<Add />}
-                        sx={{ fontFamily: "Montserrat", marginRight: 1 }}
+                        sx={{ fontFamily: "Montserrat, Segoe UI, Roboto, sans-serif", marginRight: 1 }}
                         onClick={() => {
                             const local = dayjs()
                                 .startOf('day')      // sets hour/min/sec/ms → 0
