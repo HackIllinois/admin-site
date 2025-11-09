@@ -5,7 +5,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styles from './style.module.scss';
 import { AuthService, StaffService } from '@/generated';
 import { useParams } from 'next/navigation';

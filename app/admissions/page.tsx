@@ -13,7 +13,7 @@ import {
 import {
     AdmissionDecision,
     AdmissionService,
-    RegistrationApplication,
+    RegistrationApplicationDraft,
     RegistrationService,
     UserId,
 } from "@/generated"
@@ -93,7 +93,7 @@ export default function Admissions() {
     const [cellModesModel, setCellModesModel] = useState({})
     const [openRegistration, setOpenRegistration] = useState(false)
     const [registration, setRegistration] =
-        useState<RegistrationApplication | null>(null)
+        useState<RegistrationApplicationDraft | null>(null)
 
     const refresh = useCallback(async () => {
         setLoading(true)

@@ -16,7 +16,7 @@ import {
     Typography
 } from "@mui/material"
 import { useEffect, useState, useCallback } from "react"
-import { getAllStaffUsers } from "@/app/lib/api/attendance"
+import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
 
 type EventAttendancesProps = {
   eventId: string
@@ -68,11 +68,14 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     }
   }
 
-  const handleLoadEventAttendances = async () => {
+  const handleLoadEventAttendances = useCallback(async () => {
     setLoading(true)
     try {
       // Fetch all staff members
       const allStaff = await getAllStaffUsers()
+
+      // Filter for active members only
+      const activeStaff = allStaff.filter(user => isActiveStaffMember(user.email))
 
       // Fetch event attendees and excused list
       const eventData = await EventService.getEventAttendeesById({
@@ -82,8 +85,8 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
       const attendeeIds = new Set(eventData.data?.attendees || [])
       const excusedIds = new Set(eventData.data?.excusedAttendees || [])
 
-      // Map all staff to their attendance status
-      const staffWithStatus: StaffAttendanceStatus[] = allStaff.map(user => {
+      // Map all active staff to their attendance status
+      const staffWithStatus: StaffAttendanceStatus[] = activeStaff.map(user => {
         let status: 'PRESENT' | 'EXCUSED' | 'ABSENT' = 'ABSENT'
 
         if (excusedIds.has(user.userId)) {
@@ -105,7 +108,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     } finally {
       setLoading(false)
     }
-  }, [eventId]);
+  }, [eventId])
 
   useEffect(() => {
     handleLoadEventAttendances()
