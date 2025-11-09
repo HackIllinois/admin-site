@@ -13,7 +13,7 @@ import {
 import {
     AdmissionDecision,
     AdmissionService,
-    RegistrationApplication,
+    RegistrationApplicationDraft,
     RegistrationService,
     UserId,
 } from "@/generated"
@@ -93,7 +93,7 @@ export default function Admissions() {
     const [cellModesModel, setCellModesModel] = useState({})
     const [openRegistration, setOpenRegistration] = useState(false)
     const [registration, setRegistration] =
-        useState<RegistrationApplication | null>(null)
+        useState<RegistrationApplicationDraft | null>(null)
 
     const refresh = useCallback(async () => {
         setLoading(true)
@@ -179,6 +179,7 @@ export default function Admissions() {
                         label="View Application"
                         onClick={handleViewApplicationClick(id as string)}
                         color="inherit"
+                        disabled
                     />,
                 ]
             },
@@ -273,8 +274,8 @@ export default function Admissions() {
                                             {fieldGroup.map((field: string) => (
                                                 <AdmissionModalField
                                                     key={field}
-                                                    field={field as keyof RegistrationApplication}
-                                                    value={registration[field as keyof RegistrationApplication] ?? null}
+                                                    field={field as keyof RegistrationApplicationDraft}
+                                                    value={registration[field as keyof RegistrationApplicationDraft] ?? null}
                                                 />
                                             ))}
                                         </div>
@@ -285,8 +286,8 @@ export default function Admissions() {
                                 {essayFields.map((field) => (
                                     <AdmissionModalField
                                         key={field}
-                                        field={field as keyof RegistrationApplication}
-                                        value={registration[field as keyof RegistrationApplication] ?? null}
+                                        field={field as keyof RegistrationApplicationDraft}
+                                        value={registration[field as keyof RegistrationApplicationDraft] ?? null}
                                     />
                                 ))}
                             </div>
@@ -300,8 +301,8 @@ export default function Admissions() {
 }
 
 type AdmissionModalFieldProps = {
-    field: keyof RegistrationApplication,
-    value: RegistrationApplication[keyof RegistrationApplication] | null,
+    field: keyof RegistrationApplicationDraft,
+    value: RegistrationApplicationDraft[keyof RegistrationApplicationDraft] | null,
 }
 
 function AdmissionModalField({
