@@ -273,8 +273,8 @@ export default function Admissions() {
                                             {fieldGroup.map((field: string) => (
                                                 <AdmissionModalField
                                                     key={field}
-                                                    field={field as keyof RegistrationApplication}
-                                                    value={registration[field as keyof RegistrationApplication] ?? null}
+                                                    field={field as keyof RegistrationApplicationDraft}
+                                                    value={registration[field as keyof RegistrationApplicationDraft] ?? null}
                                                 />
                                             ))}
                                         </div>
@@ -285,8 +285,8 @@ export default function Admissions() {
                                 {essayFields.map((field) => (
                                     <AdmissionModalField
                                         key={field}
-                                        field={field as keyof RegistrationApplication}
-                                        value={registration[field as keyof RegistrationApplication] ?? null}
+                                        field={field as keyof RegistrationApplicationDraft}
+                                        value={registration[field as keyof RegistrationApplicationDraft] ?? null}
                                     />
                                 ))}
                             </div>
@@ -300,8 +300,8 @@ export default function Admissions() {
 }
 
 type AdmissionModalFieldProps = {
-    field: keyof RegistrationApplication,
-    value: RegistrationApplication[keyof RegistrationApplication] | null,
+    field: keyof RegistrationApplicationDraft,
+    value: RegistrationApplicationDraft[keyof RegistrationApplicationDraft] | null,
 }
 
 function AdmissionModalField({
