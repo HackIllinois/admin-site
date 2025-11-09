@@ -140,7 +140,6 @@ async function getEventName(eventId: string): Promise<string> {
 export async function preloadEventNames(events?: Event[]): Promise<void> {
     try {
         const mandatoryEvents = events || (await getAllMandatoryEvents())
-        console.log("Preloading events:", mandatoryEvents.length)
         mandatoryEvents.forEach((event) => {
             if (event.eventId && event.name) {
                 eventNameCache.set(event.eventId, event.name)
@@ -161,7 +160,6 @@ export async function getUserAttendanceRecords(
         })
 
         const data = response.data
-        console.log(`Raw attendance data for ${userId}:`, data)
 
         const records: AttendanceData[] = []
 
@@ -170,17 +168,12 @@ export async function getUserAttendanceRecords(
         const mandatoryEventIds = new Set(events.map((e) => e.eventId))
 
         if (data?.present && Array.isArray(data.present)) {
-            console.log(`${userId} - Present events:`, data.present.length)
             for (const [eventId, startTime] of data.present) {
-                console.log(
-                    `  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`,
-                )
                 if (
                     startTime >= FALL_2025_START &&
                     mandatoryEventIds.has(eventId)
                 ) {
                     const eventName = await getEventName(eventId)
-                    console.log(`  Event name: ${eventName}`)
                     records.push({
                         eventId,
                         eventDate: new Date(startTime * 1000)
@@ -194,7 +187,6 @@ export async function getUserAttendanceRecords(
         }
 
         if (data?.excused && Array.isArray(data.excused)) {
-            console.log(`${userId} - Excused events:`, data.excused.length)
             for (const [eventId, startTime] of data.excused) {
                 if (
                     startTime >= FALL_2025_START &&
@@ -214,7 +206,6 @@ export async function getUserAttendanceRecords(
         }
 
         if (data?.absent && Array.isArray(data.absent)) {
-            console.log(`${userId} - Absent events:`, data.absent.length)
             for (const [eventId, startTime] of data.absent) {
                 if (
                     startTime >= FALL_2025_START &&
@@ -233,7 +224,6 @@ export async function getUserAttendanceRecords(
             }
         }
 
-        console.log(`Final records for ${userId}:`, records.length)
         records.sort((a, b) => a.eventDate.localeCompare(b.eventDate))
 
         return records
