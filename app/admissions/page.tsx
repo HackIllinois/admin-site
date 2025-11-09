@@ -179,6 +179,7 @@ export default function Admissions() {
                         label="View Application"
                         onClick={handleViewApplicationClick(id as string)}
                         color="inherit"
+                        disabled
                     />,
                 ]
             },
