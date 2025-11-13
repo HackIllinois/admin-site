@@ -21,10 +21,78 @@ export interface AttendanceStatistics {
   TOTAL: number
 }
 
+export interface EventData {
+  eventId: string
+  name: string
+  isMandatory: boolean
+  startTime: number
+}
+
 const FALL_2025_START = new Date('2025-09-01').getTime() / 1000
+
+// Active members list (as of Fall 2025)
+const ACTIVE_MEMBERS_EMAILS = new Set([
+  'lucy.wu@hackillinois.org',
+  'sada.challa@hackillinois.org',
+  'rachel.madamba@hackillinois.org',
+  'kyle.park@hackillinois.org',
+  'katrina.lin@hackillinois.org',
+  'leqi.huang@hackillinois.org',
+  'michelle.kuo@hackillinois.org',
+  'milana.dam@hackillinois.org',
+  'murray.ahmed@hackillinois.org',
+  'pranav.konjeti@hackillinois.org',
+  'ritsika.medury@hackillinois.org',
+  'erin.yu@hackillinois.org',
+  'shreenija.daggavolu@hackillinois.org',
+  'zoeya.khan@hackillinois.org',
+  'eric.zhang@hackillinois.org',
+  'ethan.yao@hackillinois.org',
+  'lisa.spencer@hackillinois.org',
+  'michelle.huang@hackillinois.org',
+  'mini.liang@hackillinois.org',
+  'rohan.nunugonda@hackillinois.org',
+  'benjamin.cerda-menchaca@hackillinois.org',
+  'anushree.atmakuri@hackillinois.org',
+  'lily.windmiller@hackillinois.org',
+  'sarah.xu@hackillinois.org',
+  'arwa.hameed@hackillinois.org',
+  'mia.huang@hackillinois.org',
+  'jenica.jeevan@hackillinois.org',
+  'cindy.zou@hackillinois.org',
+  'anhiti.mandal@hackillinois.org',
+  'ari.coulekar@hackillinois.org',
+  'akul.sharma@hackillinois.org',
+  'aryan.bahl@hackillinois.org',
+  'arvand.marandi@hackillinois.org',
+  'nathan.wang@hackillinois.org',
+  'nikhil.richard@hackillinois.org',
+  'megan.tran@hackillinois.org',
+  'bill.zhang@hackillinois.org',
+  'naomi.lin@hackillinois.org',
+  'jacob.edley@hackillinois.org',
+  'yash.jagtap@hackillinois.org',
+  'sherry.long@hackillinois.org',
+  'miguel.aenlle@hackillinois.org',
+  'quinten.schafer@hackillinois.org',
+  'grace.zeng@hackillinois.org',
+  'shreepad.earanti@hackillinois.org',
+  'prachod.kakatur@hackillinois.org',
+  'ananya.anand@hackillinois.org',
+  'jasmine.liu@hackillinois.org',
+  'richard.xu@hackillinois.org',
+  'advita.gelli@hackillinois.org',
+  'megh.patel@hackillinois.org',
+  'yaseen.halabi@hackillinois.org',
+  'aditya.kshirsagar@hackillinois.org',
+])
 
 // Cache for event names
 const eventNameCache = new Map<string, string>()
+
+export function isActiveStaffMember(email: string): boolean {
+  return ACTIVE_MEMBERS_EMAILS.has(email)
+}
 
 export async function getAllStaffUsers(): Promise<UserInfo[]> {
   try {
@@ -38,12 +106,12 @@ export async function getAllStaffUsers(): Promise<UserInfo[]> {
   }
 }
 
-export async function getAllMandatoryEvents(): Promise<any[]> {
+export async function getAllMandatoryEvents(): Promise<EventData[]> {
   try {
     const response = await EventService.getEvent()
     const events = response.data?.events || []
 
-    const mandatoryEvents = events.filter((event: any) => {
+    const mandatoryEvents = events.filter((event: EventData) => {
       const isMandatory = event.isMandatory === true
       const isAfterFallStart = event.startTime >= FALL_2025_START
 
@@ -76,7 +144,7 @@ async function getEventName(eventId: string): Promise<string> {
   }
 }
 
-export async function preloadEventNames(events?: any[]): Promise<void> {
+export async function preloadEventNames(events?: EventData[]): Promise<void> {
   try {
     const mandatoryEvents = events || await getAllMandatoryEvents()
     console.log('Preloading events:', mandatoryEvents.length)
@@ -92,7 +160,7 @@ export async function preloadEventNames(events?: any[]): Promise<void> {
 
 export async function getUserAttendanceRecords(
   userId: string,
-  mandatoryEvents?: any[]
+  mandatoryEvents?: EventData[]
 ): Promise<AttendanceData[]> {
   try {
     const response = await EventService.getEventAttendanceById({
@@ -102,50 +170,21 @@ export async function getUserAttendanceRecords(
     const data = response.data
     console.log(`Raw attendance data for ${userId}:`, data)
 
-    const records: AttendanceData[] = []
+    // Use a Map to track events and prioritize: PRESENT > EXCUSED > ABSENT
+    // If someone checked in, they're present regardless of excused status
+    const recordsMap = new Map<string, AttendanceData>()
 
     // Get all mandatory events to check against (use provided or fetch if not provided)
     const events = mandatoryEvents || await getAllMandatoryEvents()
     const mandatoryEventIds = new Set(events.map(e => e.eventId))
 
-    if (data?.present && Array.isArray(data.present)) {
-      console.log(`${userId} - Present events:`, data.present.length)
-      for (const [eventId, startTime] of data.present) {
-        console.log(`  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`)
-        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
-          const eventName = await getEventName(eventId)
-          console.log(`  Event name: ${eventName}`)
-          records.push({
-            eventId,
-            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
-            eventName,
-            status: 'PRESENT',
-          })
-        }
-      }
-    }
-
-    if (data?.excused && Array.isArray(data.excused)) {
-      console.log(`${userId} - Excused events:`, data.excused.length)
-      for (const [eventId, startTime] of data.excused) {
-        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
-          const eventName = await getEventName(eventId)
-          records.push({
-            eventId,
-            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
-            eventName,
-            status: 'EXCUSED',
-          })
-        }
-      }
-    }
-
+    // Process ABSENT first (lowest priority)
     if (data?.absent && Array.isArray(data.absent)) {
       console.log(`${userId} - Absent events:`, data.absent.length)
       for (const [eventId, startTime] of data.absent) {
         if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
           const eventName = await getEventName(eventId)
-          records.push({
+          recordsMap.set(eventId, {
             eventId,
             eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
             eventName,
@@ -155,8 +194,43 @@ export async function getUserAttendanceRecords(
       }
     }
 
+    // Process EXCUSED next (medium priority, overwrites ABSENT)
+    if (data?.excused && Array.isArray(data.excused)) {
+      console.log(`${userId} - Excused events:`, data.excused.length)
+      for (const [eventId, startTime] of data.excused) {
+        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
+          const eventName = await getEventName(eventId)
+          recordsMap.set(eventId, {
+            eventId,
+            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
+            eventName,
+            status: 'EXCUSED',
+          })
+        }
+      }
+    }
+
+    // Process PRESENT last (highest priority, overwrites EXCUSED and ABSENT)
+    if (data?.present && Array.isArray(data.present)) {
+      console.log(`${userId} - Present events:`, data.present.length)
+      for (const [eventId, startTime] of data.present) {
+        console.log(`  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`)
+        if (startTime >= FALL_2025_START && mandatoryEventIds.has(eventId)) {
+          const eventName = await getEventName(eventId)
+          console.log(`  Event name: ${eventName}`)
+          recordsMap.set(eventId, {
+            eventId,
+            eventDate: new Date(startTime * 1000).toISOString().split('T')[0],
+            eventName,
+            status: 'PRESENT',
+          })
+        }
+      }
+    }
+
+    const records = Array.from(recordsMap.values())
     console.log(`Final records for ${userId}:`, records.length)
-    records.sort((a, b) => b.eventDate.localeCompare(a.eventDate))
+    records.sort((a, b) => a.eventDate.localeCompare(b.eventDate))
 
     return records
   } catch (error) {

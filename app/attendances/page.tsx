@@ -25,6 +25,7 @@ import {
   getUserAttendanceRecords,
   calculateAttendanceStatistics,
   preloadEventNames,
+  isActiveStaffMember,
   type UserInfo,
 } from '../lib/api/attendance'
 
@@ -58,7 +59,10 @@ export default function AttendanceView() {
 
         const users = await getAllStaffUsers()
 
-        const attendancePromises = users.map(async (user) => {
+        // Filter for active members only
+        const activeUsers = users.filter(user => isActiveStaffMember(user.email))
+
+        const attendancePromises = activeUsers.map(async (user) => {
           const records = await getUserAttendanceRecords(user.userId, mandatoryEvents)
           const statistics = calculateAttendanceStatistics(records)
 
@@ -83,7 +87,7 @@ export default function AttendanceView() {
 
         const uniqueTeams = Array.from(
           new Set(
-            users
+            activeUsers
               .map((u) => u.teamId)
               .filter((id): id is string => Boolean(id))
           )

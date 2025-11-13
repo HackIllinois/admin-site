@@ -1,10 +1,9 @@
 import { EventService, UserInfo } from "@/generated"
-import { CheckCircle, Delete, EventBusy, Cancel } from "@mui/icons-material"
+import { CheckCircle, EventBusy, Cancel } from "@mui/icons-material"
 import {
     Box,
     Chip,
     CircularProgress,
-    IconButton,
     Paper,
     Table,
     TableBody,
@@ -12,11 +11,11 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Tooltip,
     Typography
 } from "@mui/material"
-import { useEffect, useState, useCallback } from "react"
-import { getAllStaffUsers } from "@/app/lib/api/attendance"
+import { useEffect, useState } from "react"
+import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
+import { Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material"
 
 type EventAttendancesProps = {
   eventId: string
@@ -30,6 +29,8 @@ type StaffAttendanceStatus = {
 export default function EventAttendances({ eventId }: EventAttendancesProps) {
   const [attendances, setAttendances] = useState<StaffAttendanceStatus[]>([])
   const [loading, setLoading] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [selectedUser, setSelectedUser] = useState<{userId: string, status: 'PRESENT' | 'EXCUSED' | 'ABSENT'} | null>(null)
 
   const handleToggleExcused = async (userId: string, currentStatus: 'PRESENT' | 'EXCUSED' | 'ABSENT') => {
     try {
@@ -74,6 +75,9 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
       // Fetch all staff members
       const allStaff = await getAllStaffUsers()
 
+      // Filter for active members only
+      const activeStaff = allStaff.filter(user => isActiveStaffMember(user.email))
+
       // Fetch event attendees and excused list
       const eventData = await EventService.getEventAttendeesById({
         path: { id: eventId },
@@ -82,14 +86,15 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
       const attendeeIds = new Set(eventData.data?.attendees || [])
       const excusedIds = new Set(eventData.data?.excusedAttendees || [])
 
-      // Map all staff to their attendance status
-      const staffWithStatus: StaffAttendanceStatus[] = allStaff.map(user => {
+      // Map all active staff to their attendance status
+      // Priority: PRESENT > EXCUSED > ABSENT (if someone checked in, they're present regardless of excused status)
+      const staffWithStatus: StaffAttendanceStatus[] = activeStaff.map(user => {
         let status: 'PRESENT' | 'EXCUSED' | 'ABSENT' = 'ABSENT'
 
-        if (excusedIds.has(user.userId)) {
-          status = 'EXCUSED'
-        } else if (attendeeIds.has(user.userId)) {
+        if (attendeeIds.has(user.userId)) {
           status = 'PRESENT'
+        } else if (excusedIds.has(user.userId)) {
+          status = 'EXCUSED'
         }
 
         return { user, status }
@@ -105,11 +110,12 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     } finally {
       setLoading(false)
     }
-  }, [eventId]);
+  }
 
   useEffect(() => {
     handleLoadEventAttendances()
-  }, [handleLoadEventAttendances])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventId])
 
   if (loading) {
     return (
@@ -119,15 +125,48 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     )
   }
 
-  const getStatusChip = (status: 'PRESENT' | 'EXCUSED' | 'ABSENT') => {
-    switch (status) {
-      case 'PRESENT':
-        return <Chip icon={<CheckCircle />} label="Present" color="success" size="small" />
-      case 'EXCUSED':
-        return <Chip icon={<EventBusy />} label="Excused" color="primary" size="small" />
-      case 'ABSENT':
-        return <Chip icon={<Cancel />} label="Absent" color="error" size="small" />
+  const handleStatusClick = (event: React.MouseEvent<HTMLDivElement>, userId: string, status: 'PRESENT' | 'EXCUSED' | 'ABSENT') => {
+    setAnchorEl(event.currentTarget)
+    setSelectedUser({ userId, status })
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+    setSelectedUser(null)
+  }
+
+  const handleStatusChange = async (newStatus: 'PRESENT' | 'EXCUSED' | 'ABSENT') => {
+    if (!selectedUser) return
+
+    // Only handle EXCUSED status change (toggle)
+    if (newStatus === 'EXCUSED' || selectedUser.status === 'EXCUSED') {
+      await handleToggleExcused(selectedUser.userId, selectedUser.status)
     }
+    // For other status changes, do nothing (no API endpoint available)
+
+    handleCloseMenu()
+  }
+
+  const getStatusChip = (status: 'PRESENT' | 'EXCUSED' | 'ABSENT', userId: string) => {
+    const chip = (() => {
+      switch (status) {
+        case 'PRESENT':
+          return <Chip icon={<CheckCircle />} label="Present" color="success" size="small" />
+        case 'EXCUSED':
+          return <Chip icon={<EventBusy />} label="Excused" color="primary" size="small" />
+        case 'ABSENT':
+          return <Chip icon={<Cancel />} label="Absent" color="error" size="small" />
+      }
+    })()
+
+    return (
+      <Box
+        onClick={(e) => handleStatusClick(e, userId, status)}
+        sx={{ cursor: 'pointer', display: 'inline-block' }}
+      >
+        {chip}
+      </Box>
+    )
   }
 
   if (attendances.length === 0) {
@@ -149,7 +188,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
             <TableRow>
                 <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Name</TableCell>
                 <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Email</TableCell>
-                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}></TableCell>
+                <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif', fontWeight: 'bold' }}>Status</TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
@@ -157,36 +196,36 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                 <TableRow key={user.userId}>
                 <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif' }}>{user.name}</TableCell>
                 <TableCell sx={{ fontFamily: 'Montserrat, Segoe UI, Roboto, sans-serif' }}>{user.email}</TableCell>
-                <TableCell>{getStatusChip(status)}</TableCell>
-                <TableCell>
-                    <Tooltip title={status === 'EXCUSED' ? 'Unmark as excused' : 'Mark as excused'}>
-                        <IconButton
-                            size="small"
-                            onClick={() => handleToggleExcused(user.userId, status)}
-                            aria-label={status === 'EXCUSED' ? `Unmark ${user.name} as excused` : `Mark ${user.name} as excused`}
-                            color={status === 'EXCUSED' ? 'default' : 'primary'}
-                        >
-                            <EventBusy fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Remove attendee">
-                        <IconButton
-                            size="small"
-                            onClick={() => {
-                                // TODO: call your removeAttendance function here
-                                console.log("Remove", user.userId)
-                            }}
-                            aria-label={`Remove ${user.name}`}
-                            color="error"
-                        >
-                            <Delete fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                </TableCell>
+                <TableCell>{getStatusChip(status, user.userId)}</TableCell>
                 </TableRow>
             ))}
             </TableBody>
       </Table>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+      >
+        <MenuItem onClick={() => handleStatusChange('PRESENT')}>
+          <ListItemIcon>
+            <CheckCircle fontSize="small" color="success" />
+          </ListItemIcon>
+          <ListItemText>Present</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleStatusChange('EXCUSED')}>
+          <ListItemIcon>
+            <EventBusy fontSize="small" color="primary" />
+          </ListItemIcon>
+          <ListItemText>Excused</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleStatusChange('ABSENT')}>
+          <ListItemIcon>
+            <Cancel fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText>Absent</ListItemText>
+        </MenuItem>
+      </Menu>
     </TableContainer>
   )
 }

@@ -74,7 +74,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
   }
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>
         <Box>
           <Typography variant="h6">{name} - Attendance</Typography>
@@ -107,7 +107,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
             <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
               <Box sx={{ width: 120 }}></Box>
               {months.map((month) => (
-                <Box key={month} sx={{ minWidth: 180, textAlign: 'center' }}>
+                <Box key={month} sx={{ minWidth: 180, textAlign: 'left' }}>
                   <Typography variant="subtitle1" fontWeight="bold">
                     {formatMonth(month)}
                   </Typography>
