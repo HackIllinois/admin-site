@@ -21,6 +21,13 @@ export interface AttendanceStatistics {
     TOTAL: number
 }
 
+export interface EventData {
+    eventId: string
+    name: string
+    isMandatory: boolean
+    startTime: number
+}
+
 const FALL_2025_START = new Date("2025-09-01").getTime() / 1000
 
 // Active members list (as of Fall 2025)
@@ -99,7 +106,7 @@ export async function getAllStaffUsers(): Promise<UserInfo[]> {
     }
 }
 
-export async function getAllMandatoryEvents(): Promise<Event[]> {
+export async function getAllMandatoryEvents(): Promise<EventData[]> {
     try {
         const response = await EventService.getEvent()
         const events = response.data?.events || []
@@ -109,7 +116,7 @@ export async function getAllMandatoryEvents(): Promise<Event[]> {
             const isAfterFallStart = event.startTime >= FALL_2025_START
 
             return isMandatory && isAfterFallStart
-        })
+        }) as EventData[]
 
         return mandatoryEvents
     } catch (error) {
@@ -137,9 +144,10 @@ async function getEventName(eventId: string): Promise<string> {
     }
 }
 
-export async function preloadEventNames(events?: Event[]): Promise<void> {
+export async function preloadEventNames(events?: EventData[]): Promise<void> {
     try {
         const mandatoryEvents = events || (await getAllMandatoryEvents())
+        console.log("Preloading events:", mandatoryEvents.length)
         mandatoryEvents.forEach((event) => {
             if (event.eventId && event.name) {
                 eventNameCache.set(event.eventId, event.name)
@@ -152,7 +160,7 @@ export async function preloadEventNames(events?: Event[]): Promise<void> {
 
 export async function getUserAttendanceRecords(
     userId: string,
-    mandatoryEvents?: Event[],
+    mandatoryEvents?: EventData[],
 ): Promise<AttendanceData[]> {
     try {
         const response = await EventService.getEventAttendanceById({
@@ -161,58 +169,24 @@ export async function getUserAttendanceRecords(
 
         const data = response.data
 
-        const records: AttendanceData[] = []
+        // Use a Map to track events and prioritize: PRESENT > EXCUSED > ABSENT
+        // If someone checked in, they're present regardless of excused status
+        const recordsMap = new Map<string, AttendanceData>()
 
         // Get all mandatory events to check against (use provided or fetch if not provided)
         const events = mandatoryEvents || (await getAllMandatoryEvents())
         const mandatoryEventIds = new Set(events.map((e) => e.eventId))
 
-        if (data?.present && Array.isArray(data.present)) {
-            for (const [eventId, startTime] of data.present) {
-                if (
-                    startTime >= FALL_2025_START &&
-                    mandatoryEventIds.has(eventId)
-                ) {
-                    const eventName = await getEventName(eventId)
-                    records.push({
-                        eventId,
-                        eventDate: new Date(startTime * 1000)
-                            .toISOString()
-                            .split("T")[0],
-                        eventName,
-                        status: "PRESENT",
-                    })
-                }
-            }
-        }
-
-        if (data?.excused && Array.isArray(data.excused)) {
-            for (const [eventId, startTime] of data.excused) {
-                if (
-                    startTime >= FALL_2025_START &&
-                    mandatoryEventIds.has(eventId)
-                ) {
-                    const eventName = await getEventName(eventId)
-                    records.push({
-                        eventId,
-                        eventDate: new Date(startTime * 1000)
-                            .toISOString()
-                            .split("T")[0],
-                        eventName,
-                        status: "EXCUSED",
-                    })
-                }
-            }
-        }
-
+        // Process ABSENT first (lowest priority)
         if (data?.absent && Array.isArray(data.absent)) {
+            console.log(`${userId} - Absent events:`, data.absent.length)
             for (const [eventId, startTime] of data.absent) {
                 if (
                     startTime >= FALL_2025_START &&
                     mandatoryEventIds.has(eventId)
                 ) {
                     const eventName = await getEventName(eventId)
-                    records.push({
+                    recordsMap.set(eventId, {
                         eventId,
                         eventDate: new Date(startTime * 1000)
                             .toISOString()
@@ -224,6 +198,54 @@ export async function getUserAttendanceRecords(
             }
         }
 
+        // Process EXCUSED next (medium priority, overwrites ABSENT)
+        if (data?.excused && Array.isArray(data.excused)) {
+            console.log(`${userId} - Excused events:`, data.excused.length)
+            for (const [eventId, startTime] of data.excused) {
+                if (
+                    startTime >= FALL_2025_START &&
+                    mandatoryEventIds.has(eventId)
+                ) {
+                    const eventName = await getEventName(eventId)
+                    recordsMap.set(eventId, {
+                        eventId,
+                        eventDate: new Date(startTime * 1000)
+                            .toISOString()
+                            .split("T")[0],
+                        eventName,
+                        status: "EXCUSED",
+                    })
+                }
+            }
+        }
+
+        // Process PRESENT last (highest priority, overwrites EXCUSED and ABSENT)
+        if (data?.present && Array.isArray(data.present)) {
+            console.log(`${userId} - Present events:`, data.present.length)
+            for (const [eventId, startTime] of data.present) {
+                console.log(
+                    `  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`,
+                )
+                if (
+                    startTime >= FALL_2025_START &&
+                    mandatoryEventIds.has(eventId)
+                ) {
+                    const eventName = await getEventName(eventId)
+                    console.log(`  Event name: ${eventName}`)
+                    recordsMap.set(eventId, {
+                        eventId,
+                        eventDate: new Date(startTime * 1000)
+                            .toISOString()
+                            .split("T")[0],
+                        eventName,
+                        status: "PRESENT",
+                    })
+                }
+            }
+        }
+
+        const records = Array.from(recordsMap.values())
+        console.log(`Final records for ${userId}:`, records.length)
         records.sort((a, b) => a.eventDate.localeCompare(b.eventDate))
 
         return records
