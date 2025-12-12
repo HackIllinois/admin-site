@@ -1,9 +1,10 @@
 import js from "@eslint/js"
 import tseslint from "typescript-eslint"
+import { defineConfig } from "eslint/config"
 import reactHooks from "eslint-plugin-react-hooks"
 import reactRefresh from "eslint-plugin-react-refresh"
 
-const config = tseslint.config(
+const config = defineConfig(
     { ignores: ["dist", "generated/*"] },
     {
         extends: [js.configs.recommended, ...tseslint.configs.recommended],
@@ -28,7 +29,7 @@ const config = tseslint.config(
                 },
             ],
         },
-    }
+    },
 )
 
 export default config
