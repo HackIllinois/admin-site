@@ -9,7 +9,7 @@ import {
     faUserCheck,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons"
-import { usePathname } from "next/navigation"
+import { useLocation } from "react-router-dom"
 
 export const routes = [
     // { path: '/', name: "Statistics", icon: faCalculator },
@@ -25,7 +25,7 @@ export const routes = [
 ]
 
 export function useRouteOpen() {
-    const pathname = usePathname()
+    const { pathname } = useLocation()
 
     for (const route of routes) {
         if (pathname.startsWith(route.path)) {

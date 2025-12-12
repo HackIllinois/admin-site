@@ -1,5 +1,3 @@
-'use client'
-
 import { Box, TableCell, TableRow, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import AttendanceBar, { StaffStatistics } from './AttendanceBar'

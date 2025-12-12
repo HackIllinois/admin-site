@@ -1,4 +1,3 @@
-"use client"
 import Loading from "@/components/Loading"
 import { AuthService, UserInfo, UserService } from "@/generated"
 import { handleError, useRoles } from "@/util/api-client"

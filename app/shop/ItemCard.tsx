@@ -1,7 +1,6 @@
 import { ShopItem } from "@/generated"
 
 import styles from "./ItemCard.module.scss"
-import Image from "next/image"
 import { faPlus, faTrophy } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
@@ -28,7 +27,7 @@ export default function ItemCard({
             >
                 <div className={styles.title}>{item.name}</div>
                 <div>
-                    <Image
+                    <img
                         src={item.imageURL}
                         alt="Image"
                         width={100}

@@ -1,5 +1,3 @@
-"use client"
-
 import { Skeleton } from "@mui/material"
 import styles from "./style.module.scss"
 

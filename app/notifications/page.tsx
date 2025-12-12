@@ -1,4 +1,3 @@
-"use client"
 import React, { useCallback, useEffect, useState } from "react"
 import { Formik, Form, Field, FormikHelpers } from "formik"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
