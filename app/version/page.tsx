@@ -1,5 +1,3 @@
-"use client"
-
 import Loading from "@/components/Loading"
 import { VersionService } from "@/generated"
 import { handleError, useRoles } from "@/util/api-client"

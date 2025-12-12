@@ -1,4 +1,3 @@
-"use client"
 import React, { useCallback, useEffect, useState } from "react"
 import { NewsletterService, NewsletterSubscription } from "@/generated"
 import { handleError } from "@/util/api-client"

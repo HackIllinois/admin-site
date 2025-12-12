@@ -7,6 +7,15 @@ $success: #00cc00;
 $primary-color-light: color.adjust($primary-color, $lightness: 40%);
 $secondary-color-light: color.adjust($secondary-color, $lightness: 40%);
 
+// Global styles applied to html and body
+html,
+body {
+    margin: 0;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 .root {
     // allows you to import these variables from javascript
     --primarycolor: #{$primary-color};

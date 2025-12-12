@@ -1,5 +1,3 @@
-'use client'
-
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -8,10 +6,10 @@ import Snackbar from '@mui/material/Snackbar';
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from './style.module.scss';
 import { AuthService, StaffService } from '@/generated';
-import { useParams } from 'next/navigation';
+import { useParams } from 'react-router-dom';
 
 const CheckinPage: React.FC = () => {
-  const { eventId } = useParams() as { eventId: string };
+  const { eventId } = useParams<{ eventId: string }>();
 
   // UI state
   const [loading, setLoading] = useState(false);
@@ -32,6 +30,7 @@ const CheckinPage: React.FC = () => {
 
   // Performs the check-in
   const handleCheckinUser = useCallback(async () => {
+    if (!eventId) return;
     setLoading(true);
     try {
       const response = await StaffService.postStaffAttendance({

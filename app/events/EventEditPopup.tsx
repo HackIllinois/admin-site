@@ -9,7 +9,6 @@ import styles from "./EventEditPopup.module.scss"
 import { CreateEventRequest, EventId } from "@/generated"
 import LocationInput from "./LocationInput"
 import { getMetadataSuffix, METADATA_REPO, useMetadata } from "@/util/metadata"
-import Link from "next/link"
 import { Tab, Tabs } from "@mui/material"
 import EventAttendances from "./EventAttendances"
 
@@ -238,12 +237,13 @@ export default function EventEditPopup({
                                             />
                                             <small>
                                                 Images are pulled from{" "}
-                                                <Link
+                                                <a
                                                     href={METADATA_REPO}
                                                     target="_blank"
+                                                    rel="noopener noreferrer"
                                                 >
                                                     adonix-metadata
-                                                </Link>{" "}
+                                                </a>{" "}
                                                 - please contact systems to add more
                                             </small>
                                             <Field

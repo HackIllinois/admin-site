@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useRef, useState } from "react"
 import { QRCode } from "react-qrcode-logo"
 import { Event } from "@/generated"

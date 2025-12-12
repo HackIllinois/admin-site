@@ -1,10 +1,8 @@
 import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState } from "react"
-import logo from "@/public/logo.svg"
-import Image from "next/image"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Link, useLocation } from "react-router-dom"
+import logo from "@/src/assets/logo.svg"
 import styles from "./NavBar.module.scss"
 
 // Fix font awesome scaling issue by manually importing css
@@ -14,7 +12,7 @@ config.autoAddCss = false
 import "../../node_modules/@fortawesome/fontawesome-svg-core/styles.css"
 
 export default function NavBar() {
-    const path = usePathname()
+    const { pathname } = useLocation()
     const [menuOpen, setMenuOpen] = useState(false)
     return (
         <>
@@ -37,21 +35,23 @@ export default function NavBar() {
             >
                 <div className={styles.menu}>
                     <div className={styles.logo}>
-                        <Image src={logo} alt="HackIllinois Logo" />
+                        <img src={logo} alt="HackIllinois Logo" />
                     </div>
                     {routes.map((route) => (
                         <Link
-                            href={route.path}
+                            to={route.path}
                             className={
-                                path === route.path
+                                pathname === route.path
                                     ? styles.link + " " + styles.active
                                     : styles.link
                             }
                             onClick={() => setMenuOpen(false)}
                             key={route.name}
-                            prefetch={false}
                         >
-                            <FontAwesomeIcon className={styles.icon} icon={route.icon} />
+                            <FontAwesomeIcon
+                                className={styles.icon}
+                                icon={route.icon}
+                            />
                             <span>&nbsp; {route.name}</span>
                         </Link>
                     ))}

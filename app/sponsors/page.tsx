@@ -1,5 +1,3 @@
-"use client"
-
 import Loading from "@/components/Loading"
 import Unauthorized from "@/components/Unauthorized/Unauthorized"
 import { Sponsor, SponsorService } from "@/generated"

@@ -5,7 +5,6 @@ import styles from "./ItemEditPopup.module.scss"
 import { Field, Form, Formik } from "formik"
 import { FormikCheckbox } from "@/components/Checkbox"
 import SelectField from "@/components/SelectField/SelectField"
-import Link from "next/link"
 import { useRef } from "react"
 
 type ItemEditForm = Omit<ShopItemCreateRequest, "imageURL"> & {
@@ -115,9 +114,9 @@ export default function ItemEditPopup({
                             />
                             <small>
                                 Images are pulled from{" "}
-                                <Link href={METADATA_REPO} target="_blank">
+                                <a href={METADATA_REPO} target="_blank" rel="noopener noreferrer">
                                     adonix-metadata
-                                </Link>{" "}
+                                </a>{" "}
                                 - please contact systems to add more
                             </small>
 
