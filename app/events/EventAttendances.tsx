@@ -17,7 +17,7 @@ import {
     ListItemIcon,
     ListItemText,
 } from "@mui/material"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
 
 type EventAttendancesProps = {
@@ -38,47 +38,67 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         status: "PRESENT" | "EXCUSED" | "ABSENT"
     } | null>(null)
 
-    const handleToggleExcused = async (
+    const handleStatusChange = async (
         userId: string,
-        currentStatus: "PRESENT" | "EXCUSED" | "ABSENT",
+        newStatus: "PRESENT" | "EXCUSED" | "ABSENT",
     ) => {
         try {
-            // Toggle: if currently excused, set to not excused (absent), otherwise set to excused
-            const shouldBeExcused = currentStatus !== "EXCUSED"
+            if (newStatus === "PRESENT") {
+                // Set as present and remove excused status
+                await Promise.all([
+                    EventService.putEventUpdateAttendanceById({
+                        path: { id: eventId },
+                        body: { userId, present: true },
+                    }),
+                    EventService.putEventMarkExcusedById({
+                        path: { id: eventId },
+                        body: { userId, excused: false },
+                    }),
+                ])
+            } else if (newStatus === "EXCUSED") {
+                // Set as excused AND remove from present
+                await Promise.all([
+                    EventService.putEventUpdateAttendanceById({
+                        path: { id: eventId },
+                        body: { userId, present: false },
+                    }),
+                    EventService.putEventMarkExcusedById({
+                        path: { id: eventId },
+                        body: { userId, excused: true },
+                    }),
+                ])
+            } else if (newStatus === "ABSENT") {
+                // Set as not present and remove excused status
+                await Promise.all([
+                    EventService.putEventUpdateAttendanceById({
+                        path: { id: eventId },
+                        body: { userId, present: false },
+                    }),
+                    EventService.putEventMarkExcusedById({
+                        path: { id: eventId },
+                        body: { userId, excused: false },
+                    }),
+                ])
+            }
 
-            await EventService.putEventMarkExcusedById({
-                path: { id: eventId },
-                body: { userId, excused: shouldBeExcused },
-            })
-
-            // Update local state instead of reloading everything
+            // Update local state
             setAttendances((prevAttendances) =>
                 prevAttendances.map((attendance) => {
                     if (attendance.user.userId === userId) {
-                        // Determine new status
-                        let newStatus: "PRESENT" | "EXCUSED" | "ABSENT"
-                        if (shouldBeExcused) {
-                            newStatus = "EXCUSED"
-                        } else if (currentStatus === "EXCUSED") {
-                            // If they were excused and we're unmarking them, check if they were originally present
-                            newStatus = "ABSENT" // Default to absent when unmarking excused
-                        } else {
-                            newStatus = currentStatus
-                        }
                         return { ...attendance, status: newStatus }
                     }
                     return attendance
                 }),
             )
         } catch (err) {
-            console.error("Failed to update excused status:", err)
-            alert("Failed to update excused status. Please try again.")
+            console.error("Failed to update status:", err)
+            alert("Failed to update status. Please try again.")
             // Reload on error to ensure data is in sync
             await handleLoadEventAttendances()
         }
     }
 
-    const handleLoadEventAttendances = useCallback(async () => {
+    const handleLoadEventAttendances = async () => {
         setLoading(true)
         try {
             // Fetch all staff members
@@ -125,7 +145,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         } finally {
             setLoading(false)
         }
-    }, [eventId])
+    }
 
     useEffect(() => {
         handleLoadEventAttendances()
@@ -154,17 +174,11 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         setSelectedUser(null)
     }
 
-    const handleStatusChange = async (
+    const handleMenuStatusChange = async (
         newStatus: "PRESENT" | "EXCUSED" | "ABSENT",
     ) => {
         if (!selectedUser) return
-
-        // Only handle EXCUSED status change (toggle)
-        if (newStatus === "EXCUSED" || selectedUser.status === "EXCUSED") {
-            await handleToggleExcused(selectedUser.userId, selectedUser.status)
-        }
-        // For other status changes, do nothing (no API endpoint available)
-
+        await handleStatusChange(selectedUser.userId, newStatus)
         handleCloseMenu()
     }
 
@@ -300,19 +314,19 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                 open={Boolean(anchorEl)}
                 onClose={handleCloseMenu}
             >
-                <MenuItem onClick={() => handleStatusChange("PRESENT")}>
+                <MenuItem onClick={() => handleMenuStatusChange("PRESENT")}>
                     <ListItemIcon>
                         <CheckCircle fontSize="small" color="success" />
                     </ListItemIcon>
                     <ListItemText>Present</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={() => handleStatusChange("EXCUSED")}>
+                <MenuItem onClick={() => handleMenuStatusChange("EXCUSED")}>
                     <ListItemIcon>
                         <EventBusy fontSize="small" color="primary" />
                     </ListItemIcon>
                     <ListItemText>Excused</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={() => handleStatusChange("ABSENT")}>
+                <MenuItem onClick={() => handleMenuStatusChange("ABSENT")}>
                     <ListItemIcon>
                         <Cancel fontSize="small" color="error" />
                     </ListItemIcon>
