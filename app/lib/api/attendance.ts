@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { AuthService, EventService, Event } from "@/generated"
-=======
 import { AuthService, EventService, type Event } from "@/generated"
->>>>>>> 4435259 (Fix attendance updates and modal layout)
 
 export interface UserInfo {
     userId: string
@@ -25,19 +21,10 @@ export interface AttendanceStatistics {
     TOTAL: number
 }
 
-<<<<<<< HEAD
-export interface EventData {
-    eventId: string
-    name: string
-    isMandatory: boolean
-    startTime: number
-}
-=======
 export type EventData = Pick<
     Event,
     "eventId" | "name" | "isMandatory" | "startTime"
 >
->>>>>>> 4435259 (Fix attendance updates and modal layout)
 
 const FALL_2025_START = new Date("2025-09-01").getTime() / 1000
 
@@ -122,20 +109,12 @@ export async function getAllMandatoryEvents(): Promise<EventData[]> {
         const response = await EventService.getEvent()
         const events = response.data?.events || []
 
-<<<<<<< HEAD
-        const mandatoryEvents = events.filter((event) => {
-=======
         const mandatoryEvents = events.filter((event: Event) => {
->>>>>>> 4435259 (Fix attendance updates and modal layout)
             const isMandatory = event.isMandatory === true
             const isAfterFallStart = event.startTime >= FALL_2025_START
 
             return isMandatory && isAfterFallStart
-<<<<<<< HEAD
-        }) as EventData[]
-=======
         })
->>>>>>> 4435259 (Fix attendance updates and modal layout)
 
         return mandatoryEvents
     } catch (error) {
@@ -187,10 +166,7 @@ export async function getUserAttendanceRecords(
         })
 
         const data = response.data
-<<<<<<< HEAD
-=======
         console.log(`Raw attendance data for ${userId}:`, data)
->>>>>>> 4435259 (Fix attendance updates and modal layout)
 
         // Use a Map to track events and prioritize: PRESENT > EXCUSED > ABSENT
         // If someone checked in, they're present regardless of excused status
