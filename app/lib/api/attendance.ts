@@ -118,7 +118,7 @@ export async function getAllMandatoryEvents(): Promise<EventData[]> {
 
         return mandatoryEvents
     } catch (error) {
-        console.error("Error fetching events:", error)
+        console.error("Error fetching mandatory events:", error)
         return []
     }
 }

@@ -15,6 +15,8 @@ import {
     ToggleButtonGroup,
     CircularProgress,
     IconButton,
+    Snackbar,
+    Alert,
 } from "@mui/material"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { Refresh as RefreshIcon } from "@mui/icons-material"
@@ -48,6 +50,7 @@ export default function AttendanceView() {
     const [loading, setLoading] = useState(true)
     const [teamFilter, setTeamFilter] = useState<string>("all")
     const [teams, setTeams] = useState<string[]>(["all"])
+    const [error, setError] = useState<string | null>(null)
 
     const fetchAttendanceData = useCallback(async () => {
         setLoading(true)
@@ -101,10 +104,15 @@ export default function AttendanceView() {
             setTeams(["all", ...uniqueTeams])
         } catch (error) {
             console.error("Error fetching attendance data:", error)
+            setError("Failed to load attendance data. Please try again.")
         } finally {
             setLoading(false)
         }
     }, [])
+
+    const handleCloseError = () => {
+        setError(null)
+    }
 
     useEffect(() => {
         fetchAttendanceData()
@@ -222,6 +230,21 @@ export default function AttendanceView() {
                     </Table>
                 </TableContainer>
             </Box>
+
+            <Snackbar
+                open={error !== null}
+                autoHideDuration={6000}
+                onClose={handleCloseError}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseError}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    {error}
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     )
 }

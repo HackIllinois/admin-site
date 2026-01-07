@@ -16,6 +16,8 @@ import {
     MenuItem,
     ListItemIcon,
     ListItemText,
+    Snackbar,
+    Alert,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
@@ -37,6 +39,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         userId: string
         status: "PRESENT" | "EXCUSED" | "ABSENT"
     } | null>(null)
+    const [error, setError] = useState<string | null>(null)
 
     const handleStatusChange = async (
         userId: string,
@@ -95,7 +98,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
             )
         } catch (err) {
             console.error("Failed to update status:", err)
-            alert("Failed to update status. Please try again.")
+            setError("Failed to update status. Please try again.")
             // Reload on error to ensure data is in sync
             await handleLoadEventAttendances()
         }
@@ -143,11 +146,16 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
 
             setAttendances(staffWithStatus)
         } catch (err) {
-            console.error(err)
+            console.error("Failed to load event attendances:", err)
+            setError("Failed to load attendance data. Please try again.")
             setAttendances([])
         } finally {
             setLoading(false)
         }
+    }
+
+    const handleCloseError = () => {
+        setError(null)
     }
 
     useEffect(() => {
@@ -336,6 +344,21 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                     <ListItemText>Absent</ListItemText>
                 </MenuItem>
             </Menu>
+
+            <Snackbar
+                open={error !== null}
+                autoHideDuration={6000}
+                onClose={handleCloseError}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={handleCloseError}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    {error}
+                </Alert>
+            </Snackbar>
         </TableContainer>
     )
 }
