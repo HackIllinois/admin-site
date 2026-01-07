@@ -3,7 +3,6 @@
 import {
     Box,
     Button,
-    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -24,7 +23,6 @@ export interface AttendanceModalProps {
     onClose: () => void
     name: string
     email: string
-    team: string
     attendanceRecords: AttendanceRecord[]
 }
 
@@ -32,7 +30,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     open,
     onClose,
     name,
-    team,
     attendanceRecords = [],
 }) => {
     const groupedByMonth = attendanceRecords.reduce(
@@ -97,15 +94,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
                 </Box>
             </DialogTitle>
             <DialogContent dividers sx={{ bgcolor: "#f5f5f5" }}>
-                <Box sx={{ mb: 3 }}>
-                    <Chip
-                        label={team}
-                        icon={<span>💼</span>}
-                        variant="outlined"
-                        sx={{ bgcolor: "white" }}
-                    />
-                </Box>
-
                 {months.length === 0 ? (
                     <Typography variant="body1" color="text.secondary">
                         No attendance records found.

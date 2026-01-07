@@ -213,9 +213,6 @@ export default function AttendanceView() {
                                         key={attendance.user.userId}
                                         name={attendance.user.name}
                                         email={attendance.user.email}
-                                        team={
-                                            attendance.user.teamId || "No Team"
-                                        }
                                         statistics={attendance.statistics}
                                         attendanceRecords={attendance.records}
                                     />
