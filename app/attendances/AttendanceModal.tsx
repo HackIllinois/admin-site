@@ -26,6 +26,121 @@ export interface AttendanceModalProps {
     attendanceRecords: AttendanceRecord[]
 }
 
+const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "PRESENT":
+                return "#4caf50"
+            case "ABSENT":
+                return "#f44336"
+            case "EXCUSED":
+                return "#2196f3"
+            default:
+                return "#e0e0e0"
+        }
+    }
+
+    const formatFullDate = (dateStr: string) => {
+        const date = new Date(dateStr)
+        return date.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        })
+    }
+
+    return (
+        <Tooltip
+            title={
+                <Box>
+                    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                        {formatFullDate(record.date)}
+                    </Typography>
+                    <Typography variant="body2">
+                        {record.eventName || "Staff Meeting"}
+                    </Typography>
+                    <Typography variant="body2">
+                        Status: {record.status}
+                    </Typography>
+                </Box>
+            }
+            arrow
+            placement="top"
+        >
+            <Box
+                sx={{
+                    width: 50,
+                    height: 50,
+                    bgcolor: getStatusColor(record.status),
+                    borderRadius: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "0.75rem",
+                    cursor: "pointer",
+                    "&:hover": {
+                        opacity: 0.8,
+                    },
+                }}
+            >
+                {new Date(record.date).getDate()}
+            </Box>
+        </Tooltip>
+    )
+}
+
+const AttendanceMonth: React.FC<{
+    month: string
+    records: AttendanceRecord[]
+}> = ({ month, records }) => {
+    const formatMonth = (monthStr: string) => {
+        const [year, monthNum] = monthStr.split("-")
+        const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ]
+        return `${monthNames[parseInt(monthNum) - 1]} ${year}`
+    }
+
+    return (
+        <Box
+            sx={{
+                minWidth: 200,
+                flexShrink: 0,
+            }}
+        >
+            <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+                {formatMonth(month)}
+            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 1,
+                    flexWrap: "wrap",
+                    alignContent: "flex-start",
+                }}
+            >
+                {records.map((record, idx) => (
+                    <AttendanceDate key={idx} record={record} />
+                ))}
+            </Box>
+        </Box>
+    )
+}
+
 const AttendanceModal: React.FC<AttendanceModalProps> = ({
     open,
     onClose,
@@ -43,48 +158,6 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     )
 
     const months = Object.keys(groupedByMonth).sort()
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "PRESENT":
-                return "#4caf50"
-            case "ABSENT":
-                return "#f44336"
-            case "EXCUSED":
-                return "#2196f3"
-            default:
-                return "#e0e0e0"
-        }
-    }
-
-    const formatMonth = (monthStr: string) => {
-        const [year, month] = monthStr.split("-")
-        const monthNames = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ]
-        return `${monthNames[parseInt(month) - 1]} ${year}`
-    }
-
-    const formatFullDate = (dateStr: string) => {
-        const date = new Date(dateStr)
-        return date.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        })
-    }
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
@@ -133,94 +206,11 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
                                 }}
                             >
                                 {months.map((month) => (
-                                    <Box
+                                    <AttendanceMonth
                                         key={month}
-                                        sx={{
-                                            minWidth: 200,
-                                            flexShrink: 0,
-                                        }}
-                                    >
-                                        <Typography
-                                            variant="subtitle1"
-                                            fontWeight="bold"
-                                            sx={{ mb: 2 }}
-                                        >
-                                            {formatMonth(month)}
-                                        </Typography>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                gap: 1,
-                                                flexWrap: "wrap",
-                                                alignContent: "flex-start",
-                                            }}
-                                        >
-                                            {groupedByMonth[month]?.map(
-                                                (record, idx) => (
-                                                    <Tooltip
-                                                        key={idx}
-                                                        title={
-                                                            <Box>
-                                                                <Typography
-                                                                    variant="body2"
-                                                                    sx={{
-                                                                        fontWeight:
-                                                                            "bold",
-                                                                    }}
-                                                                >
-                                                                    {formatFullDate(
-                                                                        record.date,
-                                                                    )}
-                                                                </Typography>
-                                                                <Typography variant="body2">
-                                                                    {record.eventName ||
-                                                                        "Staff Meeting"}
-                                                                </Typography>
-                                                                <Typography variant="body2">
-                                                                    Status:{" "}
-                                                                    {
-                                                                        record.status
-                                                                    }
-                                                                </Typography>
-                                                            </Box>
-                                                        }
-                                                        arrow
-                                                        placement="top"
-                                                    >
-                                                        <Box
-                                                            sx={{
-                                                                width: 50,
-                                                                height: 50,
-                                                                bgcolor:
-                                                                    getStatusColor(
-                                                                        record.status,
-                                                                    ),
-                                                                borderRadius: 1,
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                justifyContent:
-                                                                    "center",
-                                                                color: "white",
-                                                                fontWeight:
-                                                                    "bold",
-                                                                fontSize:
-                                                                    "0.75rem",
-                                                                cursor: "pointer",
-                                                                "&:hover": {
-                                                                    opacity: 0.8,
-                                                                },
-                                                            }}
-                                                        >
-                                                            {new Date(
-                                                                record.date,
-                                                            ).getDate()}
-                                                        </Box>
-                                                    </Tooltip>
-                                                ),
-                                            )}
-                                        </Box>
-                                    </Box>
+                                        month={month}
+                                        records={groupedByMonth[month] || []}
+                                    />
                                 ))}
                             </Box>
                         </Box>
