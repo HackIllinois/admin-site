@@ -145,7 +145,6 @@ async function getEventName(eventId: string): Promise<string> {
 export async function preloadEventNames(events?: EventData[]): Promise<void> {
     try {
         const mandatoryEvents = events || (await getAllMandatoryEvents())
-        console.log("Preloading events:", mandatoryEvents.length)
         mandatoryEvents.forEach((event) => {
             if (event.eventId && event.name) {
                 eventNameCache.set(event.eventId, event.name)
@@ -166,7 +165,6 @@ export async function getUserAttendanceRecords(
         })
 
         const data = response.data
-        console.log(`Raw attendance data for ${userId}:`, data)
 
         // Use a Map to track events and prioritize: PRESENT > EXCUSED > ABSENT
         // If someone checked in, they're present regardless of excused status
@@ -178,7 +176,6 @@ export async function getUserAttendanceRecords(
 
         // Process ABSENT first (lowest priority)
         if (data?.absent && Array.isArray(data.absent)) {
-            console.log(`${userId} - Absent events:`, data.absent.length)
             for (const [eventId, startTime] of data.absent) {
                 if (
                     startTime >= FALL_2025_START &&
@@ -199,7 +196,6 @@ export async function getUserAttendanceRecords(
 
         // Process EXCUSED next (medium priority, overwrites ABSENT)
         if (data?.excused && Array.isArray(data.excused)) {
-            console.log(`${userId} - Excused events:`, data.excused.length)
             for (const [eventId, startTime] of data.excused) {
                 if (
                     startTime >= FALL_2025_START &&
@@ -220,17 +216,12 @@ export async function getUserAttendanceRecords(
 
         // Process PRESENT last (highest priority, overwrites EXCUSED and ABSENT)
         if (data?.present && Array.isArray(data.present)) {
-            console.log(`${userId} - Present events:`, data.present.length)
             for (const [eventId, startTime] of data.present) {
-                console.log(
-                    `  Event ${eventId}, time: ${startTime}, filter: ${FALL_2025_START}`,
-                )
                 if (
                     startTime >= FALL_2025_START &&
                     mandatoryEventIds.has(eventId)
                 ) {
                     const eventName = await getEventName(eventId)
-                    console.log(`  Event name: ${eventName}`)
                     recordsMap.set(eventId, {
                         eventId,
                         eventDate: new Date(startTime * 1000)
@@ -244,7 +235,6 @@ export async function getUserAttendanceRecords(
         }
 
         const records = Array.from(recordsMap.values())
-        console.log(`Final records for ${userId}:`, records.length)
         records.sort((a, b) => a.eventDate.localeCompare(b.eventDate))
 
         return records
