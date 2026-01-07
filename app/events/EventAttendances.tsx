@@ -12,12 +12,12 @@ import {
     TableHead,
     TableRow,
     Typography,
-    Menu,
     MenuItem,
-    ListItemIcon,
-    ListItemText,
+    Select,
+    SelectChangeEvent,
     Snackbar,
     Alert,
+    FormControl,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
@@ -31,14 +31,93 @@ type StaffAttendanceStatus = {
     status: "PRESENT" | "EXCUSED" | "ABSENT"
 }
 
+interface StatusSelectorProps {
+    userId: string
+    status: "PRESENT" | "EXCUSED" | "ABSENT"
+    onStatusChange: (
+        userId: string,
+        newStatus: "PRESENT" | "EXCUSED" | "ABSENT",
+    ) => void
+}
+
+const StatusSelector: React.FC<StatusSelectorProps> = ({
+    userId,
+    status,
+    onStatusChange,
+}) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
+        const newStatus = event.target.value as "PRESENT" | "EXCUSED" | "ABSENT"
+        onStatusChange(userId, newStatus)
+    }
+
+    const getStatusChip = (currentStatus: "PRESENT" | "EXCUSED" | "ABSENT") => {
+        switch (currentStatus) {
+            case "PRESENT":
+                return (
+                    <Chip
+                        icon={<CheckCircle />}
+                        label="Present"
+                        color="success"
+                        size="small"
+                    />
+                )
+            case "EXCUSED":
+                return (
+                    <Chip
+                        icon={<EventBusy />}
+                        label="Excused"
+                        color="primary"
+                        size="small"
+                    />
+                )
+            case "ABSENT":
+                return (
+                    <Chip
+                        icon={<Cancel />}
+                        label="Absent"
+                        color="error"
+                        size="small"
+                    />
+                )
+        }
+    }
+
+    return (
+        <FormControl size="small">
+            <Select
+                value={status}
+                onChange={handleChange}
+                renderValue={getStatusChip}
+                sx={{ minWidth: 150 }}
+            >
+                <MenuItem value="PRESENT">
+                    <CheckCircle
+                        fontSize="small"
+                        color="success"
+                        sx={{ mr: 1 }}
+                    />
+                    Present
+                </MenuItem>
+                <MenuItem value="EXCUSED">
+                    <EventBusy
+                        fontSize="small"
+                        color="primary"
+                        sx={{ mr: 1 }}
+                    />
+                    Excused
+                </MenuItem>
+                <MenuItem value="ABSENT">
+                    <Cancel fontSize="small" color="error" sx={{ mr: 1 }} />
+                    Absent
+                </MenuItem>
+            </Select>
+        </FormControl>
+    )
+}
+
 export default function EventAttendances({ eventId }: EventAttendancesProps) {
     const [attendances, setAttendances] = useState<StaffAttendanceStatus[]>([])
     const [loading, setLoading] = useState(false)
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [selectedUser, setSelectedUser] = useState<{
-        userId: string
-        status: "PRESENT" | "EXCUSED" | "ABSENT"
-    } | null>(null)
     const [error, setError] = useState<string | null>(null)
 
     const handleStatusChange = async (
@@ -171,74 +250,6 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         )
     }
 
-    const handleStatusClick = (
-        event: React.MouseEvent<HTMLDivElement>,
-        userId: string,
-        status: "PRESENT" | "EXCUSED" | "ABSENT",
-    ) => {
-        setAnchorEl(event.currentTarget)
-        setSelectedUser({ userId, status })
-    }
-
-    const handleCloseMenu = () => {
-        setAnchorEl(null)
-        setSelectedUser(null)
-    }
-
-    const handleMenuStatusChange = async (
-        newStatus: "PRESENT" | "EXCUSED" | "ABSENT",
-    ) => {
-        if (!selectedUser) return
-        await handleStatusChange(selectedUser.userId, newStatus)
-        handleCloseMenu()
-    }
-
-    const getStatusChip = (
-        status: "PRESENT" | "EXCUSED" | "ABSENT",
-        userId: string,
-    ) => {
-        const chip = (() => {
-            switch (status) {
-                case "PRESENT":
-                    return (
-                        <Chip
-                            icon={<CheckCircle />}
-                            label="Present"
-                            color="success"
-                            size="small"
-                        />
-                    )
-                case "EXCUSED":
-                    return (
-                        <Chip
-                            icon={<EventBusy />}
-                            label="Excused"
-                            color="primary"
-                            size="small"
-                        />
-                    )
-                case "ABSENT":
-                    return (
-                        <Chip
-                            icon={<Cancel />}
-                            label="Absent"
-                            color="error"
-                            size="small"
-                        />
-                    )
-            }
-        })()
-
-        return (
-            <Box
-                onClick={(e) => handleStatusClick(e, userId, status)}
-                sx={{ cursor: "pointer", display: "inline-block" }}
-            >
-                {chip}
-            </Box>
-        )
-    }
-
     if (attendances.length === 0) {
         return (
             <Typography
@@ -313,37 +324,16 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                                 {user.email}
                             </TableCell>
                             <TableCell>
-                                {getStatusChip(status, user.userId)}
+                                <StatusSelector
+                                    userId={user.userId}
+                                    status={status}
+                                    onStatusChange={handleStatusChange}
+                                />
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-            >
-                <MenuItem onClick={() => handleMenuStatusChange("PRESENT")}>
-                    <ListItemIcon>
-                        <CheckCircle fontSize="small" color="success" />
-                    </ListItemIcon>
-                    <ListItemText>Present</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={() => handleMenuStatusChange("EXCUSED")}>
-                    <ListItemIcon>
-                        <EventBusy fontSize="small" color="primary" />
-                    </ListItemIcon>
-                    <ListItemText>Excused</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={() => handleMenuStatusChange("ABSENT")}>
-                    <ListItemIcon>
-                        <Cancel fontSize="small" color="error" />
-                    </ListItemIcon>
-                    <ListItemText>Absent</ListItemText>
-                </MenuItem>
-            </Menu>
 
             <Snackbar
                 open={error !== null}
