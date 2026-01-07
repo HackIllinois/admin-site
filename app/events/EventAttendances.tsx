@@ -43,6 +43,9 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         newStatus: "PRESENT" | "EXCUSED" | "ABSENT",
     ) => {
         try {
+            // TODO: Making two API calls opens possibility of partial failure (e.g., one succeeds, other fails),
+            // potentially resulting in invalid data states like being both present and excused.
+            // The DB should ideally store a single status enum (PRESENT/EXCUSED/ABSENT) instead.
             if (newStatus === "PRESENT") {
                 // Set as present and remove excused status
                 await Promise.all([
