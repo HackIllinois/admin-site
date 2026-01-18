@@ -102,6 +102,10 @@ export default function AttendanceView() {
                 ),
             )
             setTeams(["all", ...uniqueTeams])
+
+
+            throw new Error("Simulated error for testing purposes")
+
         } catch (error) {
             console.error("Error fetching attendance data:", error)
             setError("Failed to load attendance data. Please try again.")
@@ -235,7 +239,7 @@ export default function AttendanceView() {
                 open={error !== null}
                 autoHideDuration={6000}
                 onClose={handleCloseError}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
                 <Alert
                     onClose={handleCloseError}
