@@ -72,7 +72,7 @@ export default function EventEditPopup({
         isAsync: false,
         isStaff: staffView,
         isPro: false,
-        isMandatory: true,
+        isMandatory: false,
         ...initialEvent,
         eventType: initialEvent.eventType
             ? {
