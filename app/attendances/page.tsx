@@ -51,6 +51,7 @@ export default function AttendanceView() {
     const [teamFilter, setTeamFilter] = useState<string>("all")
     const [teams, setTeams] = useState<string[]>(["all"])
     const [error, setError] = useState<string | null>(null)
+    const [errorOpen, setErrorOpen] = useState(false)
 
     const fetchAttendanceData = useCallback(async () => {
         setLoading(true)
@@ -103,19 +104,19 @@ export default function AttendanceView() {
             )
             setTeams(["all", ...uniqueTeams])
 
-
             throw new Error("Simulated error for testing purposes")
-
         } catch (error) {
             console.error("Error fetching attendance data:", error)
             setError("Failed to load attendance data. Please try again.")
+            setErrorOpen(true)
         } finally {
             setLoading(false)
         }
     }, [])
 
     const handleCloseError = () => {
-        setError(null)
+        setErrorOpen(false)
+        setTimeout(() => setError(null), 400)
     }
 
     useEffect(() => {
@@ -236,7 +237,7 @@ export default function AttendanceView() {
             </Box>
 
             <Snackbar
-                open={error !== null}
+                open={errorOpen}
                 autoHideDuration={6000}
                 onClose={handleCloseError}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}

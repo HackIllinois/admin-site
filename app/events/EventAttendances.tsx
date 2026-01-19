@@ -87,8 +87,7 @@ const StatusSelector: React.FC<StatusSelectorProps> = ({
             <Select
                 value={status}
                 onChange={handleChange}
-                renderValue={getStatusChip}
-                sx={{ minWidth: 150 }}
+                sx={{ minWidth: 150, textAlign: "center" }}
             >
                 <MenuItem value="PRESENT">
                     <CheckCircle
