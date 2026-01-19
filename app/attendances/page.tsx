@@ -103,8 +103,6 @@ export default function AttendanceView() {
                 ),
             )
             setTeams(["all", ...uniqueTeams])
-
-            throw new Error("Simulated error for testing purposes")
         } catch (error) {
             console.error("Error fetching attendance data:", error)
             setError("Failed to load attendance data. Please try again.")

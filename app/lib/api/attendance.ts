@@ -182,6 +182,7 @@ export async function getUserAttendanceRecords(
                     mandatoryEventIds.has(eventId)
                 ) {
                     const eventName = await getEventName(eventId)
+
                     recordsMap.set(eventId, {
                         eventId,
                         eventDate: new Date(startTime * 1000)

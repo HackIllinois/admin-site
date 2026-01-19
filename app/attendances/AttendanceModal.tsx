@@ -12,6 +12,8 @@ import {
 } from "@mui/material"
 import React from "react"
 
+import dayjs from "dayjs";
+
 export interface AttendanceRecord {
     date: string
     status: "PRESENT" | "ABSENT" | "EXCUSED"
@@ -50,6 +52,8 @@ const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
         })
     }
 
+    const dayNumber = dayjs(record.date).date();
+
     return (
         <Tooltip
             title={
@@ -86,7 +90,7 @@ const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
                     },
                 }}
             >
-                {new Date(record.date).getDate()}
+                {dayNumber}
             </Box>
         </Tooltip>
     )

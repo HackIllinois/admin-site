@@ -1,26 +1,25 @@
+import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
 import { EventService, UserInfo } from "@/generated"
-import { CheckCircle, EventBusy, Cancel } from "@mui/icons-material"
+import { Cancel, CheckCircle, EventBusy } from "@mui/icons-material"
 import {
+    Alert,
     Box,
-    Chip,
     CircularProgress,
+    FormControl,
+    MenuItem,
     Paper,
+    Select,
+    SelectChangeEvent,
+    Snackbar,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Typography,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Snackbar,
-    Alert,
-    FormControl,
+    Typography
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import { getAllStaffUsers, isActiveStaffMember } from "@/app/lib/api/attendance"
 
 type EventAttendancesProps = {
     eventId: string
@@ -50,64 +49,51 @@ const StatusSelector: React.FC<StatusSelectorProps> = ({
         onStatusChange(userId, newStatus)
     }
 
-    const getStatusChip = (currentStatus: "PRESENT" | "EXCUSED" | "ABSENT") => {
-        switch (currentStatus) {
-            case "PRESENT":
-                return (
-                    <Chip
-                        icon={<CheckCircle />}
-                        label="Present"
-                        color="success"
-                        size="small"
-                    />
-                )
-            case "EXCUSED":
-                return (
-                    <Chip
-                        icon={<EventBusy />}
-                        label="Excused"
-                        color="primary"
-                        size="small"
-                    />
-                )
-            case "ABSENT":
-                return (
-                    <Chip
-                        icon={<Cancel />}
-                        label="Absent"
-                        color="error"
-                        size="small"
-                    />
-                )
-        }
-    }
-
     return (
-        <FormControl size="small">
+        <FormControl size="small" sx={{
+            display: 'flex',
+            alignItems: "center"
+        }}>
             <Select
                 value={status}
                 onChange={handleChange}
-                sx={{ minWidth: 150, textAlign: "center" }}
+                sx={{
+                    minWidth: 150,
+                    "& .MuiSelect-select": {
+                        display: "flex",
+                        alignItems: "center",
+                    },
+                }}
             >
                 <MenuItem value="PRESENT">
                     <CheckCircle
                         fontSize="small"
                         color="success"
-                        sx={{ mr: 1 }}
+                        sx={{ mr: 0.5, mb: 0.2 }}
                     />
-                    Present
+                    <Typography
+                    >
+                        Present
+                    </Typography>
                 </MenuItem>
                 <MenuItem value="EXCUSED">
                     <EventBusy
                         fontSize="small"
                         color="primary"
-                        sx={{ mr: 1 }}
+                        sx={{ mr: 0.5, mb: 0.2 }}
                     />
-                    Excused
+                    <Typography
+                    >
+                        Excused
+                    </Typography>   
                 </MenuItem>
                 <MenuItem value="ABSENT">
-                    <Cancel fontSize="small" color="error" sx={{ mr: 1 }} />
-                    Absent
+                    <Cancel fontSize="small" color="error" 
+                        sx={{ mr: 0.5, mb: 0.2 }}/>
+                    <Typography
+                    >
+                        Absent
+                    </Typography>
                 </MenuItem>
             </Select>
         </FormControl>
