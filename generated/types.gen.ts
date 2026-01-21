@@ -7,6 +7,7 @@ export type AdmissionDecision = {
     response: 'PENDING' | 'ACCEPTED' | 'DECLINED';
     emailSent: boolean;
     reimbursementValue: number;
+    correctProChallenge: boolean;
 };
 
 export type AdmissionDecisionUpdate = {
@@ -24,11 +25,13 @@ export type AttendeeProfile = {
     points: number;
     pointsAccumulated: number;
     foodWave: number;
+    dietaryRestrictions: Array<string>;
 };
 
 export type AttendeeProfileCreateRequest = {
     discordTag: string;
     displayName: string;
+    dietaryRestrictions: Array<string>;
     avatarId: string;
 };
 
@@ -39,6 +42,7 @@ export type AttendeeProfileRanking = {
 export type AttendeeProfileUpdateRequest = {
     discordTag?: string;
     displayName?: string;
+    dietaryRestrictions?: Array<string>;
     avatarId?: string;
 };
 
@@ -71,8 +75,6 @@ export type DecisionStatistic = {
     waitlisted: number;
     tbd: number;
 };
-
-export type Degree = "Associates' Degree" | "Bachelors' Degree " | "Masters' Degree" | 'PhD' | 'Graduated' | 'Other' | 'N/A' | '';
 
 export type DeleteSponsorRequest = {
     userId: UserId;
@@ -143,12 +145,6 @@ export type Events = {
     events: Array<Event>;
 };
 
-export type Gender = 'Male' | 'Female' | 'Non-Binary' | 'Other' | 'Prefer Not To Answer' | '';
-
-export type HackInterest = 'Attending technical workshops' | 'Submitting a project to win prizes' | 'Participating in mini-events' | 'Meeting new people' | 'Working with mentors to get feedback' | 'Company Q&As and networking events' | 'OTHER';
-
-export type HackOutreach = 'Instagram' | 'Twitter/X' | 'TikTok' | 'Discord' | 'Facebook' | 'LinkedIn' | 'Reddit' | 'Word of Mouth' | 'CS Department Email' | 'Posters/Flyers on Campus' | 'Slack' | 'HackIllinois Newsletter' | 'OTHER';
-
 export type ListRoles = {
     userIds: Array<UserId>;
 };
@@ -165,18 +161,12 @@ export type Location = {
 
 export type MailInfo = {
     templateId: string;
-    recipients: Array<string>;
-    scheduleTime?: string;
-    subs?: {};
-    recipientSubs?: Array<{}>;
+    recipient: string;
+    templateData?: {};
 };
 
 export type MailSendResults = {
-    results: {
-        total_rejected_recipients: number;
-        total_accepted_recipients: number;
-        id: string;
-    };
+    messageId: string;
 };
 
 export type MentorAttendanceRequest = {
@@ -294,8 +284,6 @@ export type RsvpStatistic = {
     pending: number;
 };
 
-export type Race = 'American Indian or Alaska Native' | 'Arab or Middle Eastern' | 'Black or African American' | 'East Asian' | 'Hispanic or Latino' | 'Native Hawaiian or Pacific Islander' | 'South East Asian' | 'South Asian' | 'White' | 'Other' | 'Prefer Not To Answer';
-
 /**
  * Must be a valid HTTPS URL (or HTTP for localhost)
  */
@@ -310,64 +298,65 @@ export type RegistrationApplicationDraft = RegistrationApplicationDraftRequest &
 };
 
 export type RegistrationApplicationDraftRequest = {
-    preferredName: string;
-    legalName: string;
-    emailAddress: string | '';
-    gender: Gender;
-    race?: Array<Race>;
-    resumeFileName?: string;
-    requestedTravelReimbursement?: boolean;
-    location?: string;
-    degree?: Degree;
+    firstName?: string;
+    lastName?: string;
+    preferredName?: string;
+    age?: string;
+    email?: string;
+    phoneNumber?: string;
+    gender?: string;
+    race?: Array<string>;
+    country?: string;
+    state?: string;
+    school?: string;
+    education?: string;
+    graduate?: string;
     major?: string;
-    minor?: string;
-    university?: string;
-    gradYear?: number;
-    hackInterest?: Array<HackInterest>;
-    hackOutreach?: Array<HackOutreach>;
-    dietaryRestrictions?: Array<string>;
-    hackEssay1?: string;
-    hackEssay2?: string;
-    optionalEssay?: string;
-    proEssay?: string;
-    considerForGeneral?: boolean;
+    underrepresented?: string;
+    hackathonsParticipated?: string;
+    application1?: string;
+    application2?: string;
+    application3?: string;
+    applicationOptional?: string;
+    pro?: boolean;
+    attribution?: Array<string>;
+    eventInterest?: Array<string>;
+    requestTravelReimbursement?: boolean;
+    mlhNewsletter?: boolean;
 };
 
 export type RegistrationApplicationSubmittedRequest = {
-    preferredName: string;
-    legalName: string;
-    emailAddress: string | '';
-    gender: Gender;
-    race: Array<Race>;
-    resumeFileName?: string;
-    requestedTravelReimbursement: boolean;
-    location: string;
-    degree: Degree;
+    firstName: string;
+    lastName: string;
+    preferredName?: string;
+    age: string;
+    email: string;
+    phoneNumber: string;
+    gender: string;
+    race: Array<string>;
+    country: string;
+    state?: string;
+    school: string;
+    education: string;
+    graduate: string;
     major: string;
-    minor?: string;
-    university: string;
-    gradYear: number;
-    hackInterest: Array<HackInterest>;
-    hackOutreach: Array<HackOutreach>;
-    dietaryRestrictions: Array<string>;
-    hackEssay1: string;
-    hackEssay2: string;
-    optionalEssay?: string;
-    proEssay?: string;
-    considerForGeneral?: boolean;
+    underrepresented: string;
+    hackathonsParticipated: string;
+    application1: string;
+    application2: string;
+    application3: string;
+    applicationOptional?: string;
+    pro?: boolean;
+    attribution: Array<string>;
+    eventInterest: Array<string>;
+    requestTravelReimbursement: boolean;
+    mlhNewsletter: boolean;
 };
 
-export type RegistrationChallengeInput = {
-    people: {
-        [key: string]: number;
-    };
-    alliances: Array<Array<string>>;
+export type RegistrationChallengeStatus = {
+    inputFileId: string;
     attempts: number;
     complete: boolean;
-};
-
-export type RegistrationChallengeSolve = {
-    solution: number;
 };
 
 /**
@@ -379,14 +368,13 @@ export type RegistrationStatus = {
 
 export type ResumeBookEntry = {
     userId: UserId;
-    emailAddress: string | '';
-    legalName: string;
-    location: string;
-    university: string;
-    degree: Degree;
+    email: string;
+    firstName: string;
+    lastName: string;
+    school: string;
+    education: string;
     major: string;
-    minor?: string;
-    gradYear: number;
+    graduate: string;
 };
 
 export type ResumeBookFilter = {
@@ -1270,6 +1258,41 @@ export type GetEventStaffResponses = {
 
 export type GetEventStaffResponse = GetEventStaffResponses[keyof GetEventStaffResponses];
 
+export type PutEventUpdateAttendanceByIdData = {
+    body?: {
+        userId: string;
+        present: boolean;
+    };
+    path: {
+        id: EventId;
+    };
+    query?: never;
+    url: '/event/update-attendance/{id}/';
+};
+
+export type PutEventUpdateAttendanceByIdErrors = {
+    /**
+     * Couldn't find the event specified
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Could not find event';
+    };
+};
+
+export type PutEventUpdateAttendanceByIdError = PutEventUpdateAttendanceByIdErrors[keyof PutEventUpdateAttendanceByIdErrors];
+
+export type PutEventUpdateAttendanceByIdResponses = {
+    /**
+     * Successfully updated user's attendance status
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PutEventUpdateAttendanceByIdResponse = PutEventUpdateAttendanceByIdResponses[keyof PutEventUpdateAttendanceByIdResponses];
+
 export type DeleteEventByIdData = {
     body?: never;
     path: {
@@ -1647,13 +1670,6 @@ export type PostProfileErrors = {
         error: 'AlreadyExists';
         message: 'Your profile is already created!';
     };
-    /**
-     * Couldn't find registration information
-     */
-    404: {
-        error: 'NotFound';
-        message: "Couldn't find your registration";
-    };
 };
 
 export type PostProfileError = PostProfileErrors[keyof PostProfileErrors];
@@ -1890,7 +1906,7 @@ export type GetRegistrationData = {
 
 export type GetRegistrationErrors = {
     /**
-     * Couldn't find registration information (make sure you create it first!)
+     * Couldn't find submitted registration information (make sure you create it first!)
      */
     404: {
         error: 'NotFound';
@@ -1902,47 +1918,12 @@ export type GetRegistrationError = GetRegistrationErrors[keyof GetRegistrationEr
 
 export type GetRegistrationResponses = {
     /**
-     * The registration information
+     * The submitted registration information
      */
     200: RegistrationApplicationDraft;
 };
 
 export type GetRegistrationResponse = GetRegistrationResponses[keyof GetRegistrationResponses];
-
-export type PostRegistrationData = {
-    body?: RegistrationApplicationDraftRequest;
-    path?: never;
-    query?: never;
-    url: '/registration/';
-};
-
-export type PostRegistrationErrors = {
-    /**
-     * Registration is already submitted, cannot update anymore
-     */
-    400: {
-        error: 'AlreadySubmitted';
-        message: "You've already submitted your registration!";
-    };
-    /**
-     * Registration is closed
-     */
-    403: {
-        error: 'RegistrationClosed';
-        message: 'Registration is closed, check back next year!';
-    };
-};
-
-export type PostRegistrationError = PostRegistrationErrors[keyof PostRegistrationErrors];
-
-export type PostRegistrationResponses = {
-    /**
-     * The new registration information
-     */
-    200: RegistrationApplicationDraftRequest;
-};
-
-export type PostRegistrationResponse = PostRegistrationResponses[keyof PostRegistrationResponses];
 
 export type GetRegistrationChallengeData = {
     body?: never;
@@ -1951,17 +1932,36 @@ export type GetRegistrationChallengeData = {
     url: '/registration/challenge/';
 };
 
+export type GetRegistrationChallengeErrors = {
+    /**
+     * You are not registered for this track
+     */
+    403: {
+        error: 'MissingPro';
+        message: 'You are not registered for this track';
+    };
+    /**
+     * Couldn't find your registration
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type GetRegistrationChallengeError = GetRegistrationChallengeErrors[keyof GetRegistrationChallengeErrors];
+
 export type GetRegistrationChallengeResponses = {
     /**
      * The challenge status
      */
-    200: RegistrationChallengeInput;
+    200: RegistrationChallengeStatus;
 };
 
 export type GetRegistrationChallengeResponse = GetRegistrationChallengeResponses[keyof GetRegistrationChallengeResponses];
 
 export type PostRegistrationChallengeData = {
-    body?: RegistrationChallengeSolve;
+    body?: never;
     path?: never;
     query?: never;
     url: '/registration/challenge/';
@@ -1997,10 +1997,73 @@ export type PostRegistrationChallengeResponses = {
     /**
      * Successfully solved, the new challenge status is returned
      */
-    200: RegistrationChallengeInput;
+    200: RegistrationChallengeStatus;
 };
 
 export type PostRegistrationChallengeResponse = PostRegistrationChallengeResponses[keyof PostRegistrationChallengeResponses];
+
+export type GetRegistrationDraftData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/registration/draft/';
+};
+
+export type GetRegistrationDraftErrors = {
+    /**
+     * Couldn't find draft registration information (make sure you create it first!)
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type GetRegistrationDraftError = GetRegistrationDraftErrors[keyof GetRegistrationDraftErrors];
+
+export type GetRegistrationDraftResponses = {
+    /**
+     * The draft registration information
+     */
+    200: RegistrationApplicationDraft;
+};
+
+export type GetRegistrationDraftResponse = GetRegistrationDraftResponses[keyof GetRegistrationDraftResponses];
+
+export type PutRegistrationDraftData = {
+    body?: RegistrationApplicationDraftRequest;
+    path?: never;
+    query?: never;
+    url: '/registration/draft/';
+};
+
+export type PutRegistrationDraftErrors = {
+    /**
+     * Registration is already submitted, cannot update anymore
+     */
+    400: {
+        error: 'AlreadySubmitted';
+        message: "You've already submitted your registration!";
+    };
+    /**
+     * Registration is closed
+     */
+    403: {
+        error: 'RegistrationClosed';
+        message: 'Registration is closed, check back next year!';
+    };
+};
+
+export type PutRegistrationDraftError = PutRegistrationDraftErrors[keyof PutRegistrationDraftErrors];
+
+export type PutRegistrationDraftResponses = {
+    /**
+     * The registration draft was created or updated
+     */
+    200: RegistrationApplicationDraftRequest;
+};
+
+export type PutRegistrationDraftResponse = PutRegistrationDraftResponses[keyof PutRegistrationDraftResponses];
 
 export type GetRegistrationStatusData = {
     body?: never;
@@ -2019,7 +2082,7 @@ export type GetRegistrationStatusResponses = {
 export type GetRegistrationStatusResponse = GetRegistrationStatusResponses[keyof GetRegistrationStatusResponses];
 
 export type PostRegistrationSubmitData = {
-    body?: never;
+    body?: RegistrationApplicationSubmittedRequest;
     path?: never;
     query?: never;
     url: '/registration/submit/';
@@ -2027,18 +2090,11 @@ export type PostRegistrationSubmitData = {
 
 export type PostRegistrationSubmitErrors = {
     /**
-     * One of:
-     * - AlreadySubmitted: Registration is already submitted, cannot update anymore
-     * - IncompleteApplication: Your application is incomplete. Please fill out all required fields before submitting.
-     *
-     * **See examples dropdown below**
+     * Registration is already submitted, cannot update anymore
      */
     400: {
         error: 'AlreadySubmitted';
         message: "You've already submitted your registration!";
-    } | {
-        error: 'IncompleteApplication';
-        message: 'Your application is incomplete. Please fill out all required fields before submitting.';
     };
     /**
      * Registration is closed
@@ -2046,13 +2102,6 @@ export type PostRegistrationSubmitErrors = {
     403: {
         error: 'RegistrationClosed';
         message: 'Registration is closed, check back next year!';
-    };
-    /**
-     * Couldn't find registration information (make sure you create it first!)
-     */
-    404: {
-        error: 'NotFound';
-        message: "Couldn't find your registration";
     };
 };
 
