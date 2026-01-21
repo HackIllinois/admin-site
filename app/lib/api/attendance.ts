@@ -1,4 +1,5 @@
 import { AuthService, EventService, type Event } from "@/generated"
+import dayjs from "dayjs"
 
 export interface UserInfo {
     userId: string
@@ -10,7 +11,7 @@ export interface UserInfo {
 export interface AttendanceData {
     eventId: string
     eventName: string
-    eventDate: string
+    eventDate: dayjs.Dayjs
     status: "PRESENT" | "ABSENT" | "EXCUSED"
 }
 
@@ -185,9 +186,7 @@ export async function getUserAttendanceRecords(
 
                     recordsMap.set(eventId, {
                         eventId,
-                        eventDate: new Date(startTime * 1000)
-                            .toISOString()
-                            .split("T")[0],
+                        eventDate: dayjs(startTime * 1000),
                         eventName,
                         status: "ABSENT",
                     })
@@ -205,9 +204,7 @@ export async function getUserAttendanceRecords(
                     const eventName = await getEventName(eventId)
                     recordsMap.set(eventId, {
                         eventId,
-                        eventDate: new Date(startTime * 1000)
-                            .toISOString()
-                            .split("T")[0],
+                        eventDate: dayjs(startTime * 1000),
                         eventName,
                         status: "EXCUSED",
                     })
@@ -225,9 +222,7 @@ export async function getUserAttendanceRecords(
                     const eventName = await getEventName(eventId)
                     recordsMap.set(eventId, {
                         eventId,
-                        eventDate: new Date(startTime * 1000)
-                            .toISOString()
-                            .split("T")[0],
+                        eventDate: dayjs(startTime * 1000),
                         eventName,
                         status: "PRESENT",
                     })
@@ -236,7 +231,7 @@ export async function getUserAttendanceRecords(
         }
 
         const records = Array.from(recordsMap.values())
-        records.sort((a, b) => a.eventDate.localeCompare(b.eventDate))
+        records.sort((a, b) => a.eventDate.valueOf() - b.eventDate.valueOf())
 
         return records
     } catch (error) {

@@ -1,17 +1,17 @@
-import React, { useState } from "react"
-import { Formik, Form, Field } from "formik"
+import { Field, Form, Formik } from "formik"
+import { useState } from "react"
 
+import Checkbox, { FormikCheckbox } from "@/components/Checkbox"
 import DateInput from "@/components/DateInput"
 import SelectField from "@/components/SelectField/SelectField"
-import Checkbox, { FormikCheckbox } from "@/components/Checkbox"
 
-import styles from "./EventEditPopup.module.scss"
 import { CreateEventRequest, EventId } from "@/generated"
-import LocationInput from "./LocationInput"
 import { getMetadataSuffix, METADATA_REPO, useMetadata } from "@/util/metadata"
-import Link from "next/link"
 import { Tab, Tabs } from "@mui/material"
+import Link from "next/link"
 import EventAttendances from "./EventAttendances"
+import styles from "./EventEditPopup.module.scss"
+import LocationInput from "./LocationInput"
 
 const publicEventTypes = [
     "MEAL",
@@ -94,6 +94,11 @@ export default function EventEditPopup({
         if (!values.eventType) {
             return alert("Event type is required")
         }
+
+        if (values.endTime < values.startTime) {
+            return alert("End time must be after start time")
+        }
+
         const newEvent: CreateEventRequest = {
             ...values,
             eventType: values.eventType.value,
@@ -300,7 +305,7 @@ export default function EventEditPopup({
                                         <button type="button" onClick={onDismiss}>
                                             Cancel
                                         </button>
-                                        <button type="submit">Create</button>
+                                        <button type="submit">{editingEventId ? 'Save' : 'Create'}</button>
                                     </div>
                                 </Form>
                             )}

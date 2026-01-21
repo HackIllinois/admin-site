@@ -7,15 +7,15 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Typography,
     Tooltip,
-} from "@mui/material"
-import React from "react"
-
+    Typography,
+} from "@mui/material";
 import dayjs from "dayjs";
+import React, { useEffect } from "react";
+
 
 export interface AttendanceRecord {
-    date: string
+    date: dayjs.Dayjs
     status: "PRESENT" | "ABSENT" | "EXCUSED"
     eventName?: string
 }
@@ -42,24 +42,15 @@ const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
         }
     }
 
-    const formatFullDate = (dateStr: string) => {
-        const date = new Date(dateStr)
-        return date.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        })
-    }
-
-    const dayNumber = dayjs(record.date).date();
+    const formattedFullDate = record.date.format("dddd, MMMM D, YYYY");
+    const dayNumber = record.date.date();
 
     return (
         <Tooltip
             title={
                 <Box>
                     <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                        {formatFullDate(record.date)}
+                        {formattedFullDate}
                     </Typography>
                     <Typography variant="body2">
                         {record.eventName || "Staff Meeting"}
@@ -97,11 +88,12 @@ const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
 }
 
 const AttendanceMonth: React.FC<{
-    month: string
+    /** {year}-{month}, month being 0-indexed */
+    month: string;
     records: AttendanceRecord[]
 }> = ({ month, records }) => {
     const formatMonth = (monthStr: string) => {
-        const [year, monthNum] = monthStr.split("-")
+        const [year, month] = monthStr.split("-").map(Number)
         const monthNames = [
             "Jan",
             "Feb",
@@ -116,7 +108,7 @@ const AttendanceMonth: React.FC<{
             "Nov",
             "Dec",
         ]
-        return `${monthNames[parseInt(monthNum) - 1]} ${year}`
+        return `${monthNames[month]} ${year}`
     }
 
     return (
@@ -153,15 +145,31 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 }) => {
     const groupedByMonth = attendanceRecords.reduce(
         (acc, record) => {
-            const month = record.date.substring(0, 7)
-            if (!acc[month]) acc[month] = []
-            acc[month].push(record)
+            const month = record.date.month();
+            const year = record.date.year();
+
+            const monthKey = `${year}-${month}`
+
+            if (!acc[monthKey]) acc[monthKey] = []
+            acc[monthKey].push(record)
             return acc
         },
         {} as Record<string, AttendanceRecord[]>,
     )
 
-    const months = Object.keys(groupedByMonth).sort()
+    const months = Object.keys(groupedByMonth).sort((a, b) => {
+        const [yearA, monthA] = a.split("-").map(Number)
+        const [yearB, monthB] = b.split("-").map(Number)
+        
+        if (yearA !== yearB) {
+            return yearA - yearB
+        }
+        return monthA - monthB
+    })
+
+    useEffect(() => {
+        console.log('months', months);
+    }, [months])
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
