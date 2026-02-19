@@ -16,7 +16,7 @@ interface EventCodeFormProps {
 export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
   const [code, setCode] = useState(event.eventId)
   const [copySuccess, setCopySuccess] = useState(false)
-  const [isWeb, setIsWeb] = useState(true)
+  const [isWeb, setIsWeb] = useState(false)
   const qrCodeRef = useRef<QRCode>(null)
 
   const displayedValue = isWeb
