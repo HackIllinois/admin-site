@@ -8,7 +8,17 @@ import { Location } from "@/generated"
 
 const buildingLocations: Location[] = [
     {
-        description: "Siebel",
+        description: "Siebel Center for Computer Science",
+        latitude: 40.113812,
+        longitude: -88.224937,
+    },
+    {
+        description: "Siebel Center for Design",
+        latitude: 40.113812,
+        longitude: -88.224937,
+    },
+    {
+        description: "Sidney Lu Mechanical Engineering Building",
         latitude: 40.113812,
         longitude: -88.224937,
     },
@@ -41,6 +51,11 @@ const buildingLocations: Location[] = [
         description: "Legends",
         latitude: 40.110436,
         longitude: -88.231146,
+    },
+    {
+        description: "Siebel",
+        latitude: 40.113812,
+        longitude: -88.224937,
     },
 ]
 
