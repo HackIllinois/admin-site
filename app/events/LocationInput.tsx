@@ -14,13 +14,13 @@ const buildingLocations: Location[] = [
     },
     {
         description: "Siebel Center for Design",
-        latitude: 40.113812,
-        longitude: -88.224937,
+        latitude: 40.1026852,
+        longitude: -88.235361,
     },
     {
         description: "Sidney Lu Mechanical Engineering Building",
-        latitude: 40.113812,
-        longitude: -88.224937,
+        latitude: 40.1107766,
+        longitude: -88.2273495,
     },
     //   {
     //     description: 'ECEB',
