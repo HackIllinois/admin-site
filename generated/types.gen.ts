@@ -26,12 +26,22 @@ export type AttendeeProfile = {
     pointsAccumulated: number;
     foodWave: number;
     dietaryRestrictions: Array<string>;
+    shirtSize: string;
+    team?: string;
+    teamBadge?: string;
+    tier?: number;
+    duelStats?: {
+        duelsPlayed?: number;
+        uniqueDuelsPlayed?: number;
+        duelsWon?: number;
+    };
 };
 
 export type AttendeeProfileCreateRequest = {
     discordTag: string;
     displayName: string;
     dietaryRestrictions: Array<string>;
+    shirtSize: string;
     avatarId: string;
 };
 
@@ -43,7 +53,27 @@ export type AttendeeProfileUpdateRequest = {
     discordTag?: string;
     displayName?: string;
     dietaryRestrictions?: Array<string>;
+    shirtSize?: string;
     avatarId?: string;
+};
+
+export type AttendeeTeam = {
+    id?: string;
+    name: string;
+    badge: string;
+    points: number;
+    members: number;
+};
+
+export type Ctf = {
+    flagId: string;
+    flag: string;
+    points: number;
+};
+
+export type CreateAttendeeTeamRequest = {
+    name: string;
+    badge: string;
 };
 
 export type CreateEventRequest = {
@@ -53,7 +83,7 @@ export type CreateEventRequest = {
     startTime: number;
     endTime: number;
     exp?: number;
-    eventType: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
+    eventType: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'SIDEQUEST' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
     locations: Array<Location>;
     isAsync: boolean;
     mapImageUrl?: string;
@@ -63,6 +93,7 @@ export type CreateEventRequest = {
     displayOnStaffCheckIn?: boolean;
     isMandatory?: boolean;
     isPro: boolean;
+    menu?: Array<string>;
 };
 
 export type CreateSponsorRequest = {
@@ -80,6 +111,36 @@ export type DeleteSponsorRequest = {
     userId: UserId;
 };
 
+export type Duel = {
+    hostId: string;
+    guestId: string;
+    hostScore: number;
+    guestScore: number;
+    hostHasDisconnected: boolean;
+    guestHasDisconnected: boolean;
+    hasFinished: boolean;
+    isScoringDuel: boolean;
+    pendingUpdates: {
+        host: Array<string>;
+        guest: Array<string>;
+    };
+};
+
+export type DuelCreateRequest = {
+    hostId: string;
+    guestId: string;
+};
+
+export type DuelId = string;
+
+export type DuelUpdateRequest = {
+    hostScore?: number;
+    guestScore?: number;
+    hostHasDisconnected?: boolean;
+    guestHasDisconnected?: boolean;
+    hasFinished?: boolean;
+};
+
 export type Event = {
     eventId: EventId;
     isStaff: boolean;
@@ -88,7 +149,7 @@ export type Event = {
     startTime: number;
     endTime: number;
     exp?: number;
-    eventType: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
+    eventType: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'SIDEQUEST' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
     locations: Array<Location>;
     isAsync: boolean;
     mapImageUrl?: string;
@@ -98,6 +159,7 @@ export type Event = {
     displayOnStaffCheckIn?: boolean;
     isMandatory?: boolean;
     isPro: boolean;
+    menu?: Array<string>;
 };
 
 export type EventAttendance = {
@@ -145,6 +207,12 @@ export type Events = {
     events: Array<Event>;
 };
 
+export type FlagCreateRequest = {
+    flagId: string;
+    flag: string;
+    points: number;
+};
+
 export type ListRoles = {
     userIds: Array<UserId>;
 };
@@ -159,14 +227,32 @@ export type Location = {
     longitude: number;
 };
 
-export type MailInfo = {
-    templateId: string;
-    recipient: string;
-    templateData?: {};
+export type MailBulkSendResult = {
+    success: boolean;
+    successCount: number;
+    failedCount: number;
+    errors: Array<string>;
 };
 
-export type MailSendResults = {
-    messageId: string;
+export type MailSend = {
+    subject: string;
+    body: string;
+    emails: Array<string>;
+};
+
+export type MailSendAttendees = {
+    subject: string;
+    body: string;
+};
+
+export type MailSendResult = {
+    success: boolean;
+    message?: string;
+};
+
+export type MailSendSelf = {
+    subject: string;
+    body: string;
 };
 
 export type MentorAttendanceRequest = {
@@ -175,13 +261,21 @@ export type MentorAttendanceRequest = {
 
 export type MentorCreateOfficeHours = {
     mentorName: string;
+    location: string;
+    /**
+     * Unix timestamp
+     */
+    startTime: number;
+    /**
+     * Unix timestamp
+     */
+    endTime: number;
 };
 
 export type MentorId = string;
 
 export type MentorOfficeHours = MentorCreateOfficeHours & {
     mentorId: MentorId;
-    attendees: Array<UserId>;
 };
 
 export type NewsletterId = string;
@@ -375,6 +469,8 @@ export type ResumeBookEntry = {
     education: string;
     major: string;
     graduate: string;
+    pro?: boolean;
+    title?: string;
 };
 
 export type ResumeBookFilter = {
@@ -385,6 +481,10 @@ export type ResumeBookFilter = {
 
 export type ResumeDownloadUrl = {
     url: string;
+};
+
+export type ResumeListDownloadUrl = {
+    urls: Array<string>;
 };
 
 export type ResumeUploadUrl = ResumeDownloadUrl & {
@@ -476,6 +576,14 @@ export type SponsorLoginRequest = {
     code: string;
 };
 
+/**
+ * Represents a team within the organization.
+ */
+export type StaffTeam = {
+    id?: string;
+    name: string;
+};
+
 export type StatisticLog = {
     timestamp: number;
     events: Array<EventStatistic>;
@@ -508,7 +616,7 @@ export type UpdateEventRequest = {
     startTime?: number;
     endTime?: number;
     exp?: number;
-    eventType?: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
+    eventType?: 'MEAL' | 'SPEAKER' | 'WORKSHOP' | 'MINIEVENT' | 'SIDEQUEST' | 'QNA' | 'MEETING' | 'STAFFSHIFT' | 'OTHER';
     locations?: Array<Location>;
     isAsync?: boolean;
     mapImageUrl?: string;
@@ -518,6 +626,7 @@ export type UpdateEventRequest = {
     displayOnStaffCheckIn?: boolean;
     isMandatory?: boolean;
     isPro?: boolean;
+    menu?: Array<string>;
     eventId: EventId;
 };
 
@@ -549,6 +658,69 @@ export type VersionResponse = {
      */
     version: string;
 };
+
+export type PutAdmissionAcceptData = {
+    body?: AttendeeProfileCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/admission/accept/';
+};
+
+export type PutAdmissionAcceptErrors = {
+    /**
+     * One of:
+     * - AlreadyExists: Profile already exists
+     * - ProfileDataRequired: Profile data required when accepting
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'AlreadyExists';
+        message: 'Your profile is already created!';
+    } | {
+        error: 'ProfileDataRequired';
+        message: 'Profile data is required when accepting admission';
+    };
+    /**
+     * Not accepted so can't make a decision
+     */
+    403: {
+        error: 'NotAccepted';
+        message: "You weren't accepted, you cannot accept/decline this decision";
+    };
+    /**
+     * One of:
+     * - DecisionNotFound: Couldn't find user's decision
+     * - NotFound: Couldn't find user's application
+     *
+     * **See examples dropdown below**
+     */
+    404: {
+        error: 'DecisionNotFound';
+        message: "Couldn't find your decision!";
+    } | {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+    /**
+     * Already RSVPd
+     */
+    409: {
+        error: 'AlreadyRSVPed';
+        message: "You've already RSVPed!";
+    };
+};
+
+export type PutAdmissionAcceptError = PutAdmissionAcceptErrors[keyof PutAdmissionAcceptErrors];
+
+export type PutAdmissionAcceptResponses = {
+    /**
+     * The updated decision
+     */
+    200: AdmissionDecision;
+};
+
+export type PutAdmissionAcceptResponse = PutAdmissionAcceptResponses[keyof PutAdmissionAcceptResponses];
 
 export type GetAdmissionNotsentData = {
     body?: never;
@@ -612,9 +784,7 @@ export type GetAdmissionRsvpStaffResponse = GetAdmissionRsvpStaffResponses[keyof
 
 export type PutAdmissionRsvpByDecisionData = {
     body?: never;
-    path: {
-        decision: 'accept' | 'decline';
-    };
+    path?: never;
     query?: never;
     url: '/admission/rsvp/{decision}/';
 };
@@ -721,6 +891,86 @@ export type PutAdmissionUpdateResponses = {
 
 export type PutAdmissionUpdateResponse = PutAdmissionUpdateResponses[keyof PutAdmissionUpdateResponses];
 
+export type GetAttendeeTeamData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/attendee-team/';
+};
+
+export type GetAttendeeTeamResponses = {
+    /**
+     * List of all teams
+     */
+    200: Array<AttendeeTeam>;
+};
+
+export type GetAttendeeTeamResponse = GetAttendeeTeamResponses[keyof GetAttendeeTeamResponses];
+
+export type PostAttendeeTeamData = {
+    body?: CreateAttendeeTeamRequest;
+    path?: never;
+    query?: never;
+    url: '/attendee-team/';
+};
+
+export type PostAttendeeTeamResponses = {
+    /**
+     * The created team
+     */
+    201: AttendeeTeam;
+};
+
+export type PostAttendeeTeamResponse = PostAttendeeTeamResponses[keyof PostAttendeeTeamResponses];
+
+export type PostAttendeeTeamAssignData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/attendee-team/assign/';
+};
+
+export type PostAttendeeTeamAssignResponses = {
+    /**
+     * List of all teams
+     */
+    200: Array<AttendeeTeam>;
+};
+
+export type PostAttendeeTeamAssignResponse = PostAttendeeTeamAssignResponses[keyof PostAttendeeTeamAssignResponses];
+
+export type DeleteAttendeeTeamByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/attendee-team/{id}/';
+};
+
+export type DeleteAttendeeTeamByIdErrors = {
+    /**
+     * Could not find the team
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find team';
+    };
+};
+
+export type DeleteAttendeeTeamByIdError = DeleteAttendeeTeamByIdErrors[keyof DeleteAttendeeTeamByIdErrors];
+
+export type DeleteAttendeeTeamByIdResponses = {
+    /**
+     * Empty response
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeleteAttendeeTeamByIdResponse = DeleteAttendeeTeamByIdResponses[keyof DeleteAttendeeTeamByIdResponses];
+
 export type GetAuthLoginByProviderData = {
     body?: never;
     path: {
@@ -772,6 +1022,24 @@ export type PostAuthLogoutResponses = {
 };
 
 export type PostAuthLogoutResponse = PostAuthLogoutResponses[keyof PostAuthLogoutResponses];
+
+export type PostAuthRefreshData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auth/refresh/';
+};
+
+export type PostAuthRefreshResponses = {
+    /**
+     * JWT refresh succeeded
+     */
+    200: {
+        jwt: string;
+    };
+};
+
+export type PostAuthRefreshResponse = PostAuthRefreshResponses[keyof PostAuthRefreshResponses];
 
 export type GetAuthRolesData = {
     body?: never;
@@ -941,7 +1209,7 @@ export type PostAuthSponsorLoginResponses = {
      * Successfully logged in, returns the auth token for future requests
      */
     200: {
-        success: true;
+        jwt: string;
     };
 };
 
@@ -1026,6 +1294,235 @@ export type GetAuthByProviderCallbackErrors = {
 };
 
 export type GetAuthByProviderCallbackError = GetAuthByProviderCallbackErrors[keyof GetAuthByProviderCallbackErrors];
+
+export type GetCtfData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/ctf/';
+};
+
+export type GetCtfResponses = {
+    /**
+     * The list of CTF flags
+     */
+    200: Array<Ctf>;
+};
+
+export type GetCtfResponse = GetCtfResponses[keyof GetCtfResponses];
+
+export type PostCtfData = {
+    body?: FlagCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/ctf/';
+};
+
+export type PostCtfResponses = {
+    /**
+     * The created CTF flag
+     */
+    201: Ctf;
+};
+
+export type PostCtfResponse = PostCtfResponses[keyof PostCtfResponses];
+
+export type PostCtfSubmitByIdData = {
+    body?: {
+        answer: string;
+    };
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/ctf/submit/{id}/';
+};
+
+export type PostCtfSubmitByIdErrors = {
+    /**
+     * One of:
+     * - CTFSolveFailed: The submitted flag is incorrect
+     * - AlreadyClaimed: The flag has already been claimed
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'CTFSolveFailed';
+        message: 'The submitted flag is incorrect';
+    } | {
+        error: 'AlreadyClaimed';
+        message: "You've already claimed this flag";
+    };
+    /**
+     * Failed to find flag
+     */
+    404: {
+        error: 'FlagNotFound';
+        message: 'Failed to find flag';
+    };
+};
+
+export type PostCtfSubmitByIdError = PostCtfSubmitByIdErrors[keyof PostCtfSubmitByIdErrors];
+
+export type PostCtfSubmitByIdResponses = {
+    /**
+     * The submitted answer is correct
+     */
+    200: Ctf;
+};
+
+export type PostCtfSubmitByIdResponse = PostCtfSubmitByIdResponses[keyof PostCtfSubmitByIdResponses];
+
+export type DeleteCtfByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/ctf/{id}/';
+};
+
+export type DeleteCtfByIdErrors = {
+    /**
+     * Failed to find flag
+     */
+    404: {
+        error: 'FlagNotFound';
+        message: 'Failed to find flag';
+    };
+};
+
+export type DeleteCtfByIdError = DeleteCtfByIdErrors[keyof DeleteCtfByIdErrors];
+
+export type DeleteCtfByIdResponses = {
+    /**
+     * Empty response
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeleteCtfByIdResponse = DeleteCtfByIdResponses[keyof DeleteCtfByIdResponses];
+
+export type PostDuelData = {
+    body?: DuelCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/duel/';
+};
+
+export type PostDuelResponses = {
+    /**
+     * The created duel
+     */
+    201: Duel;
+};
+
+export type PostDuelResponse = PostDuelResponses[keyof PostDuelResponses];
+
+export type DeleteDuelByIdData = {
+    body?: never;
+    path: {
+        id: DuelId;
+    };
+    query?: never;
+    url: '/duel/{id}/';
+};
+
+export type DeleteDuelByIdErrors = {
+    /**
+     * The requested duel was not found.
+     */
+    404: {
+        error: 'DuelNotFoundError';
+        message: 'The requested duel was not found.';
+    };
+};
+
+export type DeleteDuelByIdError = DeleteDuelByIdErrors[keyof DeleteDuelByIdErrors];
+
+export type DeleteDuelByIdResponses = {
+    /**
+     * The duel was deleted
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteDuelByIdResponse = DeleteDuelByIdResponses[keyof DeleteDuelByIdResponses];
+
+export type GetDuelByIdData = {
+    body?: never;
+    path: {
+        id: DuelId;
+    };
+    query?: never;
+    url: '/duel/{id}/';
+};
+
+export type GetDuelByIdErrors = {
+    /**
+     * The requested duel was not found.
+     */
+    404: {
+        error: 'DuelNotFoundError';
+        message: 'The requested duel was not found.';
+    };
+};
+
+export type GetDuelByIdError = GetDuelByIdErrors[keyof GetDuelByIdErrors];
+
+export type GetDuelByIdResponses = {
+    /**
+     * The requested duel
+     */
+    200: Duel;
+};
+
+export type GetDuelByIdResponse = GetDuelByIdResponses[keyof GetDuelByIdResponses];
+
+export type PutDuelByIdData = {
+    body?: DuelUpdateRequest;
+    path: {
+        id: DuelId;
+    };
+    query?: never;
+    url: '/duel/{id}/';
+};
+
+export type PutDuelByIdErrors = {
+    /**
+     * You do not have permission to perform this action.
+     */
+    403: {
+        error: 'DuelForbiddenError';
+        message: 'You do not have permission to perform this action.';
+    };
+    /**
+     * The requested duel was not found.
+     */
+    404: {
+        error: 'DuelNotFoundError';
+        message: 'The requested duel was not found.';
+    };
+};
+
+export type PutDuelByIdError = PutDuelByIdErrors[keyof PutDuelByIdErrors];
+
+export type PutDuelByIdResponses = {
+    /**
+     * The updated duel
+     */
+    200: Duel;
+    /**
+     * Update pending confirmation
+     */
+    202: Duel;
+};
+
+export type PutDuelByIdResponse = PutDuelByIdResponses[keyof PutDuelByIdResponses];
 
 export type GetEventData = {
     body?: never;
@@ -1357,7 +1854,7 @@ export type GetEventByIdResponses = {
 export type GetEventByIdResponse = GetEventByIdResponses[keyof GetEventByIdResponses];
 
 export type PostMailSendData = {
-    body?: MailInfo;
+    body?: MailSend;
     path?: never;
     query?: never;
     url: '/mail/send/';
@@ -1365,12 +1862,56 @@ export type PostMailSendData = {
 
 export type PostMailSendResponses = {
     /**
-     * The upload url
+     * Bulk send results
      */
-    200: MailSendResults;
+    200: MailBulkSendResult;
 };
 
 export type PostMailSendResponse = PostMailSendResponses[keyof PostMailSendResponses];
+
+export type PostMailSendAttendeesData = {
+    body?: MailSendAttendees;
+    path?: never;
+    query?: never;
+    url: '/mail/send/attendees/';
+};
+
+export type PostMailSendAttendeesResponses = {
+    /**
+     * Bulk send results
+     */
+    200: MailBulkSendResult;
+};
+
+export type PostMailSendAttendeesResponse = PostMailSendAttendeesResponses[keyof PostMailSendAttendeesResponses];
+
+export type PostMailSendSelfData = {
+    body?: MailSendSelf;
+    path?: never;
+    query?: never;
+    url: '/mail/send/self/';
+};
+
+export type PostMailSendSelfErrors = {
+    /**
+     * User email not found
+     */
+    404: {
+        error: 'UserEmailNotFound';
+        message: 'User email not found';
+    };
+};
+
+export type PostMailSendSelfError = PostMailSendSelfErrors[keyof PostMailSendSelfErrors];
+
+export type PostMailSendSelfResponses = {
+    /**
+     * Email sent successfully
+     */
+    200: MailSendResult;
+};
+
+export type PostMailSendSelfResponse = PostMailSendSelfResponses[keyof PostMailSendSelfResponses];
 
 export type GetMentorData = {
     body?: never;
@@ -1399,7 +1940,7 @@ export type PostMentorResponses = {
     /**
      * The new office hours
      */
-    200: MentorOfficeHours;
+    201: MentorOfficeHours;
 };
 
 export type PostMentorResponse = PostMentorResponses[keyof PostMentorResponses];
@@ -2146,6 +2687,24 @@ export type GetRegistrationUseridByIdResponses = {
 
 export type GetRegistrationUseridByIdResponse = GetRegistrationUseridByIdResponses[keyof GetRegistrationUseridByIdResponses];
 
+export type PostResumeBatchDownloadData = {
+    body?: {
+        userIds: Array<string>;
+    };
+    path?: never;
+    query?: never;
+    url: '/resume/batch-download/';
+};
+
+export type PostResumeBatchDownloadResponses = {
+    /**
+     * List of download urls
+     */
+    200: ResumeListDownloadUrl;
+};
+
+export type PostResumeBatchDownloadResponse = PostResumeBatchDownloadResponses[keyof PostResumeBatchDownloadResponses];
+
 export type GetResumeDownloadData = {
     body?: never;
     path?: never;
@@ -2581,6 +3140,22 @@ export type PostSponsorResponses = {
 
 export type PostSponsorResponse = PostSponsorResponses[keyof PostSponsorResponses];
 
+export type GetSponsorResumebookAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/sponsor/resumebook/all';
+};
+
+export type GetSponsorResumebookAllResponses = {
+    /**
+     * The complete list of admitted applicants
+     */
+    200: Array<ResumeBookEntry>;
+};
+
+export type GetSponsorResumebookAllResponse = GetSponsorResumebookAllResponses[keyof GetSponsorResumebookAllResponses];
+
 export type PostSponsorResumebookPagecountData = {
     body?: ResumeBookFilter;
     path?: never;
@@ -2616,6 +3191,152 @@ export type PostSponsorResumebookByPageResponses = {
 };
 
 export type PostSponsorResumebookByPageResponse = PostSponsorResumebookByPageResponses[keyof PostSponsorResumebookByPageResponses];
+
+export type GetStaffTeamData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/staff-team/';
+};
+
+export type GetStaffTeamResponses = {
+    /**
+     * List of all teams
+     */
+    200: Array<StaffTeam>;
+};
+
+export type GetStaffTeamResponse = GetStaffTeamResponses[keyof GetStaffTeamResponses];
+
+export type PostStaffTeamData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/staff-team/';
+};
+
+export type PostStaffTeamResponses = {
+    /**
+     * The created team
+     */
+    201: StaffTeam;
+};
+
+export type PostStaffTeamResponse = PostStaffTeamResponses[keyof PostStaffTeamResponses];
+
+export type DeleteStaffTeamByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/staff-team/{id}/';
+};
+
+export type DeleteStaffTeamByIdErrors = {
+    /**
+     * Could not find the team
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find team';
+    };
+};
+
+export type DeleteStaffTeamByIdError = DeleteStaffTeamByIdErrors[keyof DeleteStaffTeamByIdErrors];
+
+export type DeleteStaffTeamByIdResponses = {
+    /**
+     * Empty response
+     */
+    204: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeleteStaffTeamByIdResponse = DeleteStaffTeamByIdResponses[keyof DeleteStaffTeamByIdResponses];
+
+export type GetStaffTeamByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/staff-team/{id}/';
+};
+
+export type GetStaffTeamByIdErrors = {
+    /**
+     * Could not find the team
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find team';
+    };
+};
+
+export type GetStaffTeamByIdError = GetStaffTeamByIdErrors[keyof GetStaffTeamByIdErrors];
+
+export type GetStaffTeamByIdResponses = {
+    /**
+     * Team and its staff members
+     */
+    200: {
+        team: StaffTeam;
+        /**
+         * List of staff in the team
+         */
+        staff: Array<{
+            firstName: string;
+            lastName: string;
+            title: string;
+            team?: string;
+            emoji?: string;
+            profilePictureUrl?: string;
+            quote?: string;
+            isActive?: boolean;
+            email: string;
+            staffEmail: string;
+            school: string;
+            major: string;
+            education: string;
+            graduate: string;
+            userId: UserId;
+        }>;
+    };
+};
+
+export type GetStaffTeamByIdResponse = GetStaffTeamByIdResponses[keyof GetStaffTeamByIdResponses];
+
+export type PutStaffTeamByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/staff-team/{id}/';
+};
+
+export type PutStaffTeamByIdErrors = {
+    /**
+     * Could not find the team
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find team';
+    };
+};
+
+export type PutStaffTeamByIdError = PutStaffTeamByIdErrors[keyof PutStaffTeamByIdErrors];
+
+export type PutStaffTeamByIdResponses = {
+    /**
+     * Updated team
+     */
+    200: StaffTeam;
+};
+
+export type PutStaffTeamByIdResponse = PutStaffTeamByIdResponses[keyof PutStaffTeamByIdResponses];
 
 export type PostStaffAttendanceData = {
     body?: {
@@ -2655,6 +3376,164 @@ export type PostStaffAttendanceResponses = {
 };
 
 export type PostStaffAttendanceResponse = PostStaffAttendanceResponses[keyof PostStaffAttendanceResponses];
+
+export type DeleteStaffInfoData = {
+    body?: {
+        staffId: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/staff/info/';
+};
+
+export type DeleteStaffInfoErrors = {
+    /**
+     * Staff member not found
+     */
+    404: {
+        error: 'StaffNotFound';
+        message: 'The specified staff member was not found';
+    };
+};
+
+export type DeleteStaffInfoError = DeleteStaffInfoErrors[keyof DeleteStaffInfoErrors];
+
+export type DeleteStaffInfoResponses = {
+    /**
+     * Staff member deleted successfully
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteStaffInfoResponse = DeleteStaffInfoResponses[keyof DeleteStaffInfoResponses];
+
+export type GetStaffInfoData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/staff/info/';
+};
+
+export type GetStaffInfoResponses = {
+    /**
+     * Active staff information
+     */
+    200: {
+        staffInfo: Array<{
+            firstName: string;
+            lastName: string;
+            title: string;
+            team?: string;
+            emoji?: string;
+            profilePictureUrl?: string;
+            quote?: string;
+            isActive?: boolean;
+            email: string;
+            staffEmail: string;
+            school: string;
+            major: string;
+            education: string;
+            graduate: string;
+            userId: UserId;
+        }>;
+    };
+};
+
+export type GetStaffInfoResponse = GetStaffInfoResponses[keyof GetStaffInfoResponses];
+
+export type PostStaffInfoData = {
+    body?: {
+        firstName: string;
+        lastName: string;
+        title: string;
+        team?: string;
+        emoji?: string;
+        profilePictureUrl?: string;
+        quote?: string;
+        isActive?: boolean;
+        email: string;
+        staffEmail: string;
+        school: string;
+        major: string;
+        education: string;
+        graduate: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/staff/info/';
+};
+
+export type PostStaffInfoErrors = {
+    /**
+     * No account found for the provided email
+     */
+    400: {
+        error: 'StaffEmailNotFound';
+        message: 'No account found for this email, the staff member must sign in with their staff email first';
+    };
+};
+
+export type PostStaffInfoError = PostStaffInfoErrors[keyof PostStaffInfoErrors];
+
+export type PostStaffInfoResponses = {
+    /**
+     * Staff member created successfully
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostStaffInfoResponse = PostStaffInfoResponses[keyof PostStaffInfoResponses];
+
+export type PutStaffInfoData = {
+    body?: {
+        firstName?: string;
+        lastName?: string;
+        title?: string;
+        team?: string;
+        emoji?: string;
+        profilePictureUrl?: string;
+        quote?: string;
+        isActive?: boolean;
+        email?: string;
+        staffEmail?: string;
+        school?: string;
+        major?: string;
+        education?: string;
+        graduate?: string;
+        userId?: UserId;
+        staffId: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/staff/info/';
+};
+
+export type PutStaffInfoErrors = {
+    /**
+     * Staff member not found
+     */
+    404: {
+        error: 'StaffNotFound';
+        message: 'The specified staff member was not found';
+    };
+};
+
+export type PutStaffInfoError = PutStaffInfoErrors[keyof PutStaffInfoErrors];
+
+export type PutStaffInfoResponses = {
+    /**
+     * Staff member updated successfully
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PutStaffInfoResponse = PutStaffInfoResponses[keyof PutStaffInfoResponses];
 
 export type PutStaffScanAttendeeData = {
     body?: ScanAttendeeRequest;

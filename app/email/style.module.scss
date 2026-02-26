@@ -1,0 +1,123 @@
+@use "../constants.scss" as *;
+
+.container {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+
+        h1 {
+            margin: 0;
+            color: #444;
+        }
+    }
+
+    .subjectRow {
+        margin-bottom: 12px;
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        input {
+            @include form-field;
+            margin: 0;
+        }
+    }
+
+    .editorLayout {
+        display: flex;
+        gap: 20px;
+        height: calc(100vh - 260px);
+        min-height: 400px;
+
+        @include phone {
+            flex-direction: column;
+            height: auto;
+        }
+    }
+
+    .editorPane {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        label {
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        textarea {
+            @include form-field;
+            flex: 1;
+            margin: 0;
+            resize: none;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            tab-size: 2;
+            min-height: 300px;
+        }
+    }
+
+    .previewPane {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        label {
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        .previewFrame {
+            flex: 1;
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 5px;
+            background: white;
+            min-height: 300px;
+        }
+    }
+
+    .errorMessage {
+        color: $red;
+        font-weight: bold;
+        margin-top: 12px;
+    }
+
+    .successMessage {
+        color: $success;
+        font-weight: bold;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 16px;
+
+        .sendSelfBtn {
+            @include button;
+        }
+
+        .editBtn {
+            @include button;
+        }
+
+        .sendAttendeesBtn {
+            @include button($red);
+        }
+    }
+}
