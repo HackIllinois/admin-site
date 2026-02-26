@@ -107,6 +107,7 @@
         align-items: center;
         gap: 12px;
         margin-top: 16px;
+        flex-wrap: wrap;
 
         .sendSelfBtn {
             @include button;
@@ -118,6 +119,18 @@
 
         .sendAttendeesBtn {
             @include button($red);
+        }
+
+        .resultInfo {
+            font-size: 0.95em;
+            color: #444;
+
+            .errorList {
+                margin: 4px 0 0 20px;
+                padding: 0;
+                color: $red;
+                font-size: 0.9em;
+            }
         }
     }
 }

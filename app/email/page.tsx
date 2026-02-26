@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useMemo, useState } from "react"
-import { MailService } from "@/generated"
+import { MailService, MailBulkSendResult } from "@/generated"
 import { handleError } from "@/util/api-client"
 import styles from "./style.module.scss"
 
@@ -17,6 +17,7 @@ export default function Email() {
     const [body, setBody] = useState("")
     const [template, setTemplate] = useState("")
     const [sendState, setSendState] = useState<SendState>({ status: "editing" })
+    const [sendResult, setSendResult] = useState<MailBulkSendResult | null>(null)
 
     const locked = sendState.status !== "editing" && sendState.status !== "error"
 
@@ -59,7 +60,8 @@ export default function Email() {
             const result = await MailService.postMailSendAttendees({
                 body: { subject, body },
             })
-            handleError(result)
+            const data = handleError(result)
+            setSendResult(data)
             setSendState({ status: "sent-attendees" })
         } catch (err) {
             setSendState({
@@ -71,6 +73,7 @@ export default function Email() {
 
     const handleEdit = () => {
         setSendState({ status: "editing" })
+        setSendResult(null)
     }
 
     return (
@@ -149,10 +152,24 @@ export default function Email() {
                     </button>
                 ) : sendState.status === "sent-attendees" ? (
                     <>
-                        <span className={styles.successMessage}>Sent to all attendees!</span>
                         <button className={styles.editBtn} onClick={handleEdit}>
                             Edit
                         </button>
+                        {sendResult && (
+                            <div className={styles.resultInfo}>
+                                <span className={sendResult.success ? styles.successMessage : styles.errorMessage}>
+                                    {sendResult.success ? "Sent successfully" : "Completed with errors"}
+                                </span>
+                                <span> — {sendResult.successCount} succeeded, {sendResult.failedCount} failed</span>
+                                {sendResult.errors.length > 0 && (
+                                    <ul className={styles.errorList}>
+                                        {sendResult.errors.map((err, i) => (
+                                            <li key={i}>{err}</li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        )}
                     </>
                 ) : null}
             </div>
