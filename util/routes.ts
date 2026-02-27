@@ -8,6 +8,7 @@ import {
     faShoppingCart,
     faUser,
     faUserCheck,
+    faUserTie,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons"
 import { usePathname } from "next/navigation"
@@ -17,6 +18,7 @@ export const routes = [
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
+    { path: "/mentorship", name: "Mentorship", icon: faUserTie },
     { path: "/newsletters", name: "Newsletters", icon: faEnvelope },
     { path: "/email", name: "Email", icon: faPenToSquare },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
