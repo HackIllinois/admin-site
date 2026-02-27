@@ -15,13 +15,14 @@ import Loading from "@/components/Loading"
 import ItemEditPopup from "./ItemEditPopup"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
-import { Tab, Tabs } from "@mui/material"
+import { Box, Tab, Tabs, TextField } from "@mui/material"
 
 export default function Shop() {
     const [loading, setLoading] = useState(true)
     const [items, setItems] = useState<ShopItem[]>([])
 
     const [raffleView, setRaffleView] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("")
     const [editingItem, setEditingItem] = useState<Partial<ShopItem> | null>(
         null,
     )
@@ -77,6 +78,12 @@ export default function Shop() {
 
     const isAdmin = roles.includes("ADMIN")
     const tabIndex = raffleView ? 0 : 1
+    const filteredItems = items.filter((item) => {
+        if (item.isRaffle !== raffleView) return false
+        const query = searchQuery.trim().toLowerCase()
+        if (!query) return true
+        return item.name.toLowerCase().includes(query)
+    })
 
     return (
         <div className={styles.container}>
@@ -94,6 +101,15 @@ export default function Shop() {
                     onClick={refresh}
                 />
             </div>
+            <Box sx={{ mb: 2 }}>
+                <TextField
+                    label="Search items"
+                    size="small"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    sx={{ minWidth: 320, maxWidth: 520 }}
+                />
+            </Box>
 
             <div className={styles.items}>
                 {editingItem && (
@@ -105,9 +121,7 @@ export default function Shop() {
                         onUpdateItem={updateItem}
                     />
                 )}
-                {items
-                    .filter((item) => item.isRaffle === raffleView)
-                    .map((item) => (
+                {filteredItems.map((item) => (
                         <ItemCard
                             key={item.itemId}
                             item={item}

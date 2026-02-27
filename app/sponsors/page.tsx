@@ -14,7 +14,10 @@ import styles from "./styles.module.scss"
 import {
     DataGrid,
     GridActionsCellItem,
-    GridColDef
+    GridColDef,
+    GridToolbarColumnsButton,
+    GridToolbarContainer,
+    GridToolbarFilterButton,
 } from "@mui/x-data-grid"
 
 interface SponsorAddCardProps {
@@ -29,6 +32,34 @@ function SponsorAddCard({ onAdd }: SponsorAddCardProps) {
                 &nbsp; Add Sponsor 
             </div>
         </div>
+    )
+}
+
+function GridToolbar({ refresh }: { refresh: () => void }) {
+    return (
+        <GridToolbarContainer
+            sx={{ fontFamily: "Montserrat, Segoe UI, Roboto, sans-serif" }}
+        >
+            <GridToolbarColumnsButton
+                slotProps={{
+                    button: {
+                        color: "inherit",
+                    },
+                }}
+            />
+            <GridToolbarFilterButton
+                slotProps={{
+                    button: {
+                        color: "inherit",
+                    },
+                }}
+            />
+            <FontAwesomeIcon
+                className={styles.refresh}
+                icon={faSync}
+                onClick={refresh}
+            />
+        </GridToolbarContainer>
     )
 }
 
@@ -122,6 +153,9 @@ export default function Sponsors() {
                         columns={columns}
                         getRowId={(row) => row.userId}
                         sx={{fontFamily: 'Arial'}}
+                        slots={{
+                            toolbar: () => <GridToolbar refresh={refresh} />,
+                        }}
                     />
                     
                 <SponsorAddCard

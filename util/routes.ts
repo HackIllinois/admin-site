@@ -20,7 +20,7 @@ export const routes = [
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/staff-shifts", name: "Staff Shifts", icon: faUserClock },
-    { path: "/mentorship", name: "Mentorship", icon: faUserTie },
+    { path: "/mentorship", name: "Mentors/Judges", icon: faUserTie },
     { path: "/newsletters", name: "Newsletters", icon: faEnvelope },
     { path: "/email", name: "Email", icon: faPenToSquare },
     { path: "/shop", name: "Shop", icon: faShoppingCart },

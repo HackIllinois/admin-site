@@ -3,7 +3,14 @@ import React, { useCallback, useEffect, useState } from "react"
 import { Formik, Form, Field, FormikHelpers } from "formik"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPaperPlane, faSync } from "@fortawesome/free-solid-svg-icons"
-import { Tab, Tabs } from "@mui/material"
+import { Box, IconButton, Tab, Tabs } from "@mui/material"
+import {
+    DataGrid,
+    GridColDef,
+    GridToolbarColumnsButton,
+    GridToolbarContainer,
+    GridToolbarFilterButton,
+} from "@mui/x-data-grid"
 
 import SelectField from "@/components/SelectField/SelectField"
 import Loading from "@/components/Loading"
@@ -62,6 +69,43 @@ const foodWaveOptions = [
     { label: "2", value: 2 },
 ]
 
+type NotificationRow = NotificationMessage & {
+    id: string
+    sentCount: number
+    failedCount: number
+}
+
+function GridToolbar({ refresh }: { refresh: () => void }) {
+    return (
+        <GridToolbarContainer
+            sx={{ fontFamily: "Montserrat, Segoe UI, Roboto, sans-serif" }}
+        >
+            <GridToolbarColumnsButton
+                slotProps={{
+                    button: {
+                        color: "inherit",
+                    },
+                }}
+            />
+            <GridToolbarFilterButton
+                slotProps={{
+                    button: {
+                        color: "inherit",
+                    },
+                }}
+            />
+            <IconButton
+                size="small"
+                sx={{ marginLeft: "0.5rem" }}
+                onClick={refresh}
+                aria-label="Refresh notifications"
+            >
+                <FontAwesomeIcon icon={faSync} />
+            </IconButton>
+        </GridToolbarContainer>
+    )
+}
+
 // function formatDate(seconds) {
 //   return new Date(seconds * 1000).toLocaleDateString('en-US', {
 //     month: 'long',
@@ -75,7 +119,7 @@ const foodWaveOptions = [
 export default function Notifications() {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [sendProcessing, setSendProcessing] = useState<boolean>(false)
-    const [notifications, setNotifications] = useState<NotificationMessage[]>(
+    const [notifications, setNotifications] = useState<NotificationRow[]>(
         [],
     )
 
@@ -90,7 +134,18 @@ export default function Notifications() {
     const updateNotifications = () =>
         NotificationService.getNotification()
             .then(handleError)
-            .then((response) => setNotifications(response.reverse()))
+            .then((response) =>
+                setNotifications(
+                    response
+                        .reverse()
+                        .map((notification, index) => ({
+                            ...notification,
+                            id: `${notification.sender}-${index}`,
+                            sentCount: notification.sent.length,
+                            failedCount: notification.failed.length,
+                        })),
+                ),
+            )
 
     const updateEventOptions = () =>
         EventService.getEvent()
@@ -190,6 +245,38 @@ export default function Notifications() {
 
     const isAdmin = roles.includes("ADMIN")
     const tabIndex = 0
+    const columns: GridColDef<NotificationRow>[] = [
+        {
+            field: "sender",
+            headerName: "Sender",
+            minWidth: 220,
+            flex: 1,
+        },
+        {
+            field: "title",
+            headerName: "Title",
+            minWidth: 220,
+            flex: 1,
+        },
+        {
+            field: "body",
+            headerName: "Body",
+            minWidth: 420,
+            flex: 2,
+        },
+        {
+            field: "sentCount",
+            headerName: "Sent",
+            minWidth: 120,
+            type: "number",
+        },
+        {
+            field: "failedCount",
+            headerName: "Failed",
+            minWidth: 120,
+            type: "number",
+        },
+    ]
 
     return (
         <div className={styles.page}>
@@ -300,25 +387,17 @@ export default function Notifications() {
                     onClick={() => refresh()}
                 />
             </div>
-
-            <div className={styles.notifications}>
-                {notifications.map((notification, index) => (
-                    <div className={styles.notification} key={index}>
-                        <div className={styles.topic}>
-                            Sender: {notification.sender}
-                        </div>
-                        <div className={styles.title}>{notification.title}</div>
-                        <div className={styles.body}>{notification.body}</div>
-                        <div className={styles.spacer}></div>
-                        <div className={styles.sent}>
-                            Sent: {notification.sent.length}
-                        </div>
-                        <div className={styles.failed}>
-                            Failed: {notification.failed.length}
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <Box sx={{ width: "100%" }}>
+                <DataGrid
+                    autoHeight
+                    rows={notifications}
+                    columns={columns}
+                    sx={{ fontFamily: "Montserrat" }}
+                    slots={{
+                        toolbar: () => <GridToolbar refresh={refresh} />,
+                    }}
+                />
+            </Box>
         </div>
     )
 }
