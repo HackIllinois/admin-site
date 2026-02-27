@@ -12,15 +12,29 @@ import {
     faUserTie,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons"
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core"
+import { Role } from "@/generated"
 import { usePathname } from "next/navigation"
 
-export const routes = [
-    // { path: '/', name: "Statistics", icon: faCalculator },
+export type NavRoute = {
+    path: string
+    name: string
+    icon: IconDefinition
+    requiredRoles?: Role[]
+}
+
+export const routes: NavRoute[] = [
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/staff-shifts", name: "Staff Shifts", icon: faUserClock },
-    { path: "/mentorship", name: "Mentors/Judges", icon: faUserTie },
+    {
+        path: "/staff/roles",
+        name: "Staff Roles",
+        icon: faUser,
+        requiredRoles: ["ADMIN"],
+    },
+    { path: "/mentorship", name: "Mentorship", icon: faUserTie },
     { path: "/newsletters", name: "Newsletters", icon: faEnvelope },
     { path: "/email", name: "Email", icon: faPenToSquare },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
