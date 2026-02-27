@@ -40,6 +40,7 @@ interface MentorProfile {
     mentorId: string
     name: string
     description: string
+    imageUrl: string
 }
 
 type MentorOfficeHoursRow = MentorOfficeHours & {
@@ -51,6 +52,9 @@ type MentorOfficeHoursRow = MentorOfficeHours & {
 type MentorProfileRow = MentorProfile & {
     id: string
 }
+
+const DEFAULT_MENTOR_IMAGE_URL =
+    "https://raw.githubusercontent.com/HackIllinois/mobile/refs/heads/main/assets/point-shop/point-shop-shopkeeper-2.png"
 
 function parseMentorOfficeHours(response: MentorResponseShape): MentorOfficeHours[] {
     if (Array.isArray(response)) return response
@@ -141,7 +145,14 @@ export default function MentorshipPage() {
     const [editingMentorId, setEditingMentorId] = useState<string | null>(null)
     const [mentorFormName, setMentorFormName] = useState("")
     const [mentorFormDescription, setMentorFormDescription] = useState("")
+    const [mentorFormImageUrl, setMentorFormImageUrl] = useState(
+        DEFAULT_MENTOR_IMAGE_URL,
+    )
     const [savingMentor, setSavingMentor] = useState(false)
+    const [mentorDetailsOpen, setMentorDetailsOpen] = useState(false)
+    const [selectedMentor, setSelectedMentor] = useState<MentorProfileRow | null>(
+        null,
+    )
     const [officeHoursModalOpen, setOfficeHoursModalOpen] = useState(false)
     const [editingOfficeHoursId, setEditingOfficeHoursId] = useState<string | null>(
         null,
@@ -157,7 +168,11 @@ export default function MentorshipPage() {
         const rows = mentors
             .slice()
             .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }))
-            .map((mentor) => ({ ...mentor, id: mentor.mentorId }))
+            .map((mentor) => ({
+                ...mentor,
+                imageUrl: mentor.imageUrl || DEFAULT_MENTOR_IMAGE_URL,
+                id: mentor.mentorId,
+            }))
         setMentorRows(rows)
     }, [])
 
@@ -206,6 +221,7 @@ export default function MentorshipPage() {
         setEditingMentorId(null)
         setMentorFormName("")
         setMentorFormDescription("")
+        setMentorFormImageUrl(DEFAULT_MENTOR_IMAGE_URL)
         setMentorModalOpen(true)
     }, [])
 
@@ -213,6 +229,7 @@ export default function MentorshipPage() {
         setEditingMentorId(mentor.mentorId)
         setMentorFormName(mentor.name)
         setMentorFormDescription(mentor.description)
+        setMentorFormImageUrl(mentor.imageUrl || DEFAULT_MENTOR_IMAGE_URL)
         setMentorModalOpen(true)
     }, [])
 
@@ -224,9 +241,16 @@ export default function MentorshipPage() {
     const handleSaveMentor = useCallback(async () => {
         const name = mentorFormName.trim()
         const description = mentorFormDescription.trim()
+        const imageUrl = mentorFormImageUrl.trim() || DEFAULT_MENTOR_IMAGE_URL
 
         if (!name) {
             alert("Mentor name is required.")
+            return
+        }
+        try {
+            new URL(imageUrl)
+        } catch {
+            alert("Image URL must be a valid URL.")
             return
         }
 
@@ -235,12 +259,12 @@ export default function MentorshipPage() {
             if (editingMentorId) {
                 await mentorInfoRequest(`/mentor/info/${editingMentorId}/`, {
                     method: "PUT",
-                    body: JSON.stringify({ name, description }),
+                    body: JSON.stringify({ name, description, imageUrl }),
                 })
             } else {
                 await mentorInfoRequest("/mentor/info/", {
                     method: "POST",
-                    body: JSON.stringify({ name, description }),
+                    body: JSON.stringify({ name, description, imageUrl }),
                 })
             }
             await refreshMentors()
@@ -248,7 +272,13 @@ export default function MentorshipPage() {
         } finally {
             setSavingMentor(false)
         }
-    }, [editingMentorId, mentorFormDescription, mentorFormName, refreshMentors])
+    }, [
+        editingMentorId,
+        mentorFormDescription,
+        mentorFormImageUrl,
+        mentorFormName,
+        refreshMentors,
+    ])
 
     const handleDeleteMentor = useCallback(async (mentor: MentorProfileRow) => {
         const confirmed = confirm(`Delete mentor "${mentor.name}"?`)
@@ -259,6 +289,15 @@ export default function MentorshipPage() {
         })
         await refreshMentors()
     }, [refreshMentors])
+
+    const openMentorDetails = useCallback((mentor: MentorProfileRow) => {
+        setSelectedMentor(mentor)
+        setMentorDetailsOpen(true)
+    }, [])
+
+    const closeMentorDetails = useCallback(() => {
+        setMentorDetailsOpen(false)
+    }, [])
 
     const openCreateOfficeHoursModal = useCallback(() => {
         setEditingOfficeHoursId(null)
@@ -360,6 +399,30 @@ export default function MentorshipPage() {
 
     const mentorColumns = useMemo<GridColDef<MentorProfileRow>[]>(
         () => [
+            {
+                field: "imageUrl",
+                headerName: "Avatar",
+                width: 90,
+                sortable: false,
+                filterable: false,
+                renderCell: ({ row }) => (
+                    <Box
+                        component="img"
+                        src={row.imageUrl || DEFAULT_MENTOR_IMAGE_URL}
+                        alt={`${row.name} avatar`}
+                        onError={(event: React.SyntheticEvent<HTMLImageElement>) => {
+                            event.currentTarget.src = DEFAULT_MENTOR_IMAGE_URL
+                        }}
+                        sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            border: "1px solid #ddd",
+                        }}
+                    />
+                ),
+            },
             {
                 field: "name",
                 headerName: "Name",
@@ -504,6 +567,10 @@ export default function MentorshipPage() {
                     rows={mentorRows}
                     columns={mentorColumns}
                     sx={{ fontFamily: "Montserrat" }}
+                    onCellClick={(params) => {
+                        if (params.field === "actions") return
+                        openMentorDetails(params.row as MentorProfileRow)
+                    }}
                     slots={{
                         toolbar: () => <GridToolbar refresh={refresh} />,
                     }}
@@ -558,6 +625,13 @@ export default function MentorshipPage() {
                             setMentorFormDescription(e.target.value)
                         }
                     />
+                    <TextField
+                        margin="dense"
+                        label="Image URL"
+                        fullWidth
+                        value={mentorFormImageUrl}
+                        onChange={(e) => setMentorFormImageUrl(e.target.value)}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeMentorModal} disabled={savingMentor}>
@@ -570,6 +644,66 @@ export default function MentorshipPage() {
                     >
                         Save
                     </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={mentorDetailsOpen}
+                onClose={closeMentorDetails}
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle>Mentor Profile</DialogTitle>
+                <DialogContent>
+                    {selectedMentor && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: 2,
+                                pt: 1,
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src={
+                                    selectedMentor.imageUrl ||
+                                    DEFAULT_MENTOR_IMAGE_URL
+                                }
+                                alt={`${selectedMentor.name} profile`}
+                                onError={(
+                                    event: React.SyntheticEvent<HTMLImageElement>,
+                                ) => {
+                                    event.currentTarget.src =
+                                        DEFAULT_MENTOR_IMAGE_URL
+                                }}
+                                sx={{
+                                    width: 180,
+                                    height: 180,
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    border: "1px solid #ddd",
+                                }}
+                            />
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 600, textAlign: "center" }}
+                            >
+                                {selectedMentor.name}
+                            </Typography>
+                            <Typography
+                                variant="body1"
+                                color="text.secondary"
+                                sx={{ width: "100%", whiteSpace: "pre-wrap" }}
+                            >
+                                {selectedMentor.description}
+                            </Typography>
+                        </Box>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeMentorDetails}>Close</Button>
                 </DialogActions>
             </Dialog>
 
