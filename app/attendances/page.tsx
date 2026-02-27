@@ -17,6 +17,7 @@ import {
     IconButton,
     Snackbar,
     Alert,
+    TextField,
 } from "@mui/material"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { Refresh as RefreshIcon } from "@mui/icons-material"
@@ -49,6 +50,7 @@ export default function AttendanceView() {
     const [attendances, setAttendances] = useState<AttendanceData[]>([])
     const [loading, setLoading] = useState(true)
     const [teamFilter, setTeamFilter] = useState<string>("all")
+    const [searchQuery, setSearchQuery] = useState("")
     const [teams, setTeams] = useState<string[]>(["all"])
     const [error, setError] = useState<string | null>(null)
     const [errorOpen, setErrorOpen] = useState(false)
@@ -125,6 +127,15 @@ export default function AttendanceView() {
         teamFilter === "all"
             ? attendances
             : attendances.filter((a) => a.user.teamId === teamFilter)
+    const searchedAttendances = filteredAttendances.filter((attendance) => {
+        const query = searchQuery.trim().toLowerCase()
+        if (!query) return true
+        return (
+            attendance.user.name.toLowerCase().includes(query) ||
+            attendance.user.email.toLowerCase().includes(query) ||
+            (attendance.user.teamId || "").toLowerCase().includes(query)
+        )
+    })
 
     const handleTeamChange = (
         _event: React.MouseEvent<HTMLElement>,
@@ -172,6 +183,13 @@ export default function AttendanceView() {
                 </Box>
 
                 <Box sx={{ mb: 3 }}>
+                    <TextField
+                        label="Search name/email/team"
+                        size="small"
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        sx={{ mb: 2, minWidth: 320, maxWidth: 480 }}
+                    />
                     <ToggleButtonGroup
                         value={teamFilter}
                         exclusive
@@ -210,7 +228,7 @@ export default function AttendanceView() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredAttendances.length === 0 ? (
+                            {searchedAttendances.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={3} align="center">
                                         <Typography color="text.secondary">
@@ -219,7 +237,7 @@ export default function AttendanceView() {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                filteredAttendances.map((attendance) => (
+                                searchedAttendances.map((attendance) => (
                                     <AttendanceRow
                                         key={attendance.user.userId}
                                         name={attendance.user.name}

@@ -17,6 +17,7 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    TextField,
     Typography
 } from "@mui/material"
 import { useEffect, useState } from "react"
@@ -104,6 +105,7 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
     const [attendances, setAttendances] = useState<StaffAttendanceStatus[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [searchQuery, setSearchQuery] = useState("")
 
     const handleStatusChange = async (
         userId: string,
@@ -248,16 +250,34 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
         )
     }
 
+    const filteredAttendances = attendances.filter(({ user, status }) => {
+        const query = searchQuery.trim().toLowerCase()
+        if (!query) return true
+        return (
+            user.name.toLowerCase().includes(query) ||
+            user.email.toLowerCase().includes(query) ||
+            status.toLowerCase().includes(query)
+        )
+    })
+
     return (
-        <TableContainer
-            component={Paper}
-            sx={{
-                marginBottom: 2,
-                maxHeight: "calc(100vh - 300px)",
-                overflow: "auto",
-            }}
-        >
-            <Table stickyHeader aria-label="Event Attendance">
+        <>
+            <TextField
+                label="Search name/email/status"
+                size="small"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                sx={{ mb: 1, minWidth: 320, maxWidth: 480 }}
+            />
+            <TableContainer
+                component={Paper}
+                sx={{
+                    marginBottom: 2,
+                    maxHeight: "calc(100vh - 300px)",
+                    overflow: "auto",
+                }}
+            >
+                <Table stickyHeader aria-label="Event Attendance">
                 <TableHead>
                     <TableRow>
                         <TableCell
@@ -289,8 +309,8 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    {attendances.map(({ user, status }) => (
+                    <TableBody>
+                    {filteredAttendances.map(({ user, status }) => (
                         <TableRow key={user.userId}>
                             <TableCell
                                 sx={{
@@ -317,23 +337,24 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                             </TableCell>
                         </TableRow>
                     ))}
-                </TableBody>
-            </Table>
+                    </TableBody>
+                </Table>
 
-            <Snackbar
-                open={error !== null}
-                autoHideDuration={6000}
-                onClose={handleCloseError}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            >
-                <Alert
+                <Snackbar
+                    open={error !== null}
+                    autoHideDuration={6000}
                     onClose={handleCloseError}
-                    severity="error"
-                    sx={{ width: "100%" }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
-                    {error}
-                </Alert>
-            </Snackbar>
-        </TableContainer>
+                    <Alert
+                        onClose={handleCloseError}
+                        severity="error"
+                        sx={{ width: "100%" }}
+                    >
+                        {error}
+                    </Alert>
+                </Snackbar>
+            </TableContainer>
+        </>
     )
 }
