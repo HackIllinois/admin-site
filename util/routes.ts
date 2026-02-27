@@ -18,7 +18,7 @@ export const routes = [
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
-    { path: "/mentorship", name: "Mentorship", icon: faUserTie },
+    { path: "/mentorship", name: "Mentors/Judges", icon: faUserTie },
     { path: "/newsletters", name: "Newsletters", icon: faEnvelope },
     { path: "/email", name: "Email", icon: faPenToSquare },
     { path: "/shop", name: "Shop", icon: faShoppingCart },
