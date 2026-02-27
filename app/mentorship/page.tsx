@@ -14,7 +14,11 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControl,
     IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
     Tab,
     Tabs,
     TextField,
@@ -28,7 +32,6 @@ import {
     GridToolbarContainer,
     GridToolbarFilterButton,
 } from "@mui/x-data-grid"
-import dayjs from "dayjs"
 import EditIcon from "@mui/icons-material/Edit"
 import CloseIcon from "@mui/icons-material/Close"
 
@@ -38,6 +41,13 @@ type MentorResponseShape =
 
 interface MentorProfile {
     mentorId: string
+    name: string
+    description: string
+    imageUrl: string
+}
+
+interface JudgeProfile {
+    _id: string
     name: string
     description: string
     imageUrl: string
@@ -53,8 +63,26 @@ type MentorProfileRow = MentorProfile & {
     id: string
 }
 
+type JudgeProfileRow = JudgeProfile & {
+    id: string
+}
+
 const DEFAULT_MENTOR_IMAGE_URL =
     "https://raw.githubusercontent.com/HackIllinois/mobile/refs/heads/main/assets/point-shop/point-shop-shopkeeper-2.png"
+
+function formatChicagoEpoch(value: number): string {
+    const epochMs = value < 1_000_000_000_000 ? value * 1000 : value
+    return new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Chicago",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+    }).format(new Date(epochMs))
+}
 
 function parseMentorOfficeHours(response: MentorResponseShape): MentorOfficeHours[] {
     if (Array.isArray(response)) return response
@@ -134,10 +162,11 @@ async function mentorInfoRequest<T>(path: string, init?: RequestInit): Promise<T
 
 export default function MentorshipPage() {
     const [loading, setLoading] = useState(true)
-    const [activeTab, setActiveTab] = useState<"mentors" | "officeHours">(
-        "mentors",
+    const [activeTab, setActiveTab] = useState<"mentors" | "officeHours" | "judges">(
+        "judges",
     )
     const [mentorRows, setMentorRows] = useState<MentorProfileRow[]>([])
+    const [judgeRows, setJudgeRows] = useState<JudgeProfileRow[]>([])
     const [officeHoursRows, setOfficeHoursRows] = useState<MentorOfficeHoursRow[]>(
         [],
     )
@@ -151,6 +180,18 @@ export default function MentorshipPage() {
     const [savingMentor, setSavingMentor] = useState(false)
     const [mentorDetailsOpen, setMentorDetailsOpen] = useState(false)
     const [selectedMentor, setSelectedMentor] = useState<MentorProfileRow | null>(
+        null,
+    )
+    const [judgeModalOpen, setJudgeModalOpen] = useState(false)
+    const [editingJudgeId, setEditingJudgeId] = useState<string | null>(null)
+    const [judgeFormName, setJudgeFormName] = useState("")
+    const [judgeFormDescription, setJudgeFormDescription] = useState("")
+    const [judgeFormImageUrl, setJudgeFormImageUrl] = useState(
+        DEFAULT_MENTOR_IMAGE_URL,
+    )
+    const [savingJudge, setSavingJudge] = useState(false)
+    const [judgeDetailsOpen, setJudgeDetailsOpen] = useState(false)
+    const [selectedJudge, setSelectedJudge] = useState<JudgeProfileRow | null>(
         null,
     )
     const [officeHoursModalOpen, setOfficeHoursModalOpen] = useState(false)
@@ -189,15 +230,24 @@ export default function MentorshipPage() {
             .map((mentor) => ({
                 ...mentor,
                 id: mentor.mentorId,
-                startTimeDisplay: dayjs
-                    .unix(mentor.startTime)
-                    .format("MMM D, YYYY h:mm A"),
-                endTimeDisplay: dayjs
-                    .unix(mentor.endTime)
-                    .format("MMM D, YYYY h:mm A"),
+                startTimeDisplay: formatChicagoEpoch(mentor.startTime),
+                endTimeDisplay: formatChicagoEpoch(mentor.endTime),
             }))
 
         setOfficeHoursRows(rows)
+    }, [])
+
+    const refreshJudges = useCallback(async () => {
+        const judges = await mentorInfoRequest<JudgeProfile[]>("/judge/info/")
+        const rows = judges
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }))
+            .map((judge) => ({
+                ...judge,
+                imageUrl: judge.imageUrl || DEFAULT_MENTOR_IMAGE_URL,
+                id: judge._id,
+            }))
+        setJudgeRows(rows)
     }, [])
 
     const refresh = useCallback(async () => {
@@ -205,13 +255,15 @@ export default function MentorshipPage() {
             setLoading(true)
             if (activeTab === "mentors") {
                 await refreshMentors()
+            } else if (activeTab === "judges") {
+                await refreshJudges()
             } else {
-                await refreshOfficeHours()
+                await Promise.all([refreshOfficeHours(), refreshMentors()])
             }
         } finally {
             setLoading(false)
         }
-    }, [activeTab, refreshMentors, refreshOfficeHours])
+    }, [activeTab, refreshJudges, refreshMentors, refreshOfficeHours])
 
     useEffect(() => {
         refresh()
@@ -299,6 +351,88 @@ export default function MentorshipPage() {
         setMentorDetailsOpen(false)
     }, [])
 
+    const openCreateJudgeModal = useCallback(() => {
+        setEditingJudgeId(null)
+        setJudgeFormName("")
+        setJudgeFormDescription("")
+        setJudgeFormImageUrl(DEFAULT_MENTOR_IMAGE_URL)
+        setJudgeModalOpen(true)
+    }, [])
+
+    const openEditJudgeModal = useCallback((judge: JudgeProfileRow) => {
+        setEditingJudgeId(judge._id)
+        setJudgeFormName(judge.name)
+        setJudgeFormDescription(judge.description)
+        setJudgeFormImageUrl(judge.imageUrl || DEFAULT_MENTOR_IMAGE_URL)
+        setJudgeModalOpen(true)
+    }, [])
+
+    const closeJudgeModal = useCallback(() => {
+        if (savingJudge) return
+        setJudgeModalOpen(false)
+    }, [savingJudge])
+
+    const handleSaveJudge = useCallback(async () => {
+        const name = judgeFormName.trim()
+        const description = judgeFormDescription.trim()
+        const imageUrl = judgeFormImageUrl.trim() || DEFAULT_MENTOR_IMAGE_URL
+
+        if (!name) {
+            alert("Judge name is required.")
+            return
+        }
+        try {
+            new URL(imageUrl)
+        } catch {
+            alert("Image URL must be a valid URL.")
+            return
+        }
+
+        setSavingJudge(true)
+        try {
+            if (editingJudgeId) {
+                await mentorInfoRequest(`/judge/info/${editingJudgeId}/`, {
+                    method: "PUT",
+                    body: JSON.stringify({ name, description, imageUrl }),
+                })
+            } else {
+                await mentorInfoRequest("/judge/info/", {
+                    method: "POST",
+                    body: JSON.stringify({ name, description, imageUrl }),
+                })
+            }
+            await refreshJudges()
+            setJudgeModalOpen(false)
+        } finally {
+            setSavingJudge(false)
+        }
+    }, [
+        editingJudgeId,
+        judgeFormDescription,
+        judgeFormImageUrl,
+        judgeFormName,
+        refreshJudges,
+    ])
+
+    const handleDeleteJudge = useCallback(async (judge: JudgeProfileRow) => {
+        const confirmed = confirm(`Delete judge "${judge.name}"?`)
+        if (!confirmed) return
+
+        await mentorInfoRequest(`/judge/info/${judge._id}/`, {
+            method: "DELETE",
+        })
+        await refreshJudges()
+    }, [refreshJudges])
+
+    const openJudgeDetails = useCallback((judge: JudgeProfileRow) => {
+        setSelectedJudge(judge)
+        setJudgeDetailsOpen(true)
+    }, [])
+
+    const closeJudgeDetails = useCallback(() => {
+        setJudgeDetailsOpen(false)
+    }, [])
+
     const openCreateOfficeHoursModal = useCallback(() => {
         setEditingOfficeHoursId(null)
         setOfficeHoursFormMentorName("")
@@ -329,7 +463,11 @@ export default function MentorshipPage() {
         const endTime = Number(officeHoursFormEndTime.trim())
 
         if (!mentorName) {
-            alert("Mentor name is required.")
+            alert("Mentor is required.")
+            return
+        }
+        if (!mentorRows.some((mentor) => mentor.name === mentorName)) {
+            alert("Please select an existing mentor.")
             return
         }
         if (!location) {
@@ -378,6 +516,7 @@ export default function MentorshipPage() {
         officeHoursFormLocation,
         officeHoursFormMentorName,
         officeHoursFormStartTime,
+        mentorRows,
         refreshOfficeHours,
     ])
 
@@ -461,6 +600,70 @@ export default function MentorshipPage() {
         [handleDeleteMentor, openEditMentorModal],
     )
 
+    const judgeColumns = useMemo<GridColDef<JudgeProfileRow>[]>(
+        () => [
+            {
+                field: "imageUrl",
+                headerName: "Avatar",
+                width: 90,
+                sortable: false,
+                filterable: false,
+                renderCell: ({ row }) => (
+                    <Box
+                        component="img"
+                        src={row.imageUrl || DEFAULT_MENTOR_IMAGE_URL}
+                        alt={`${row.name} avatar`}
+                        onError={(event: React.SyntheticEvent<HTMLImageElement>) => {
+                            event.currentTarget.src = DEFAULT_MENTOR_IMAGE_URL
+                        }}
+                        sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            border: "1px solid #ddd",
+                        }}
+                    />
+                ),
+            },
+            {
+                field: "name",
+                headerName: "Name",
+                minWidth: 220,
+                flex: 1,
+            },
+            {
+                field: "description",
+                headerName: "Description",
+                minWidth: 420,
+                flex: 2,
+            },
+            {
+                field: "actions",
+                type: "actions",
+                headerName: "",
+                width: 120,
+                getActions: ({ row }) => [
+                    <GridActionsCellItem
+                        key={`${row.id}-edit`}
+                        icon={<EditIcon />}
+                        label="Edit judge"
+                        onClick={() => openEditJudgeModal(row)}
+                        color="inherit"
+                    />,
+                    <GridActionsCellItem
+                        key={`${row.id}-delete`}
+                        icon={<CloseIcon />}
+                        label="Delete judge"
+                        onClick={() => handleDeleteJudge(row)}
+                        color="inherit"
+                    />,
+                ],
+            },
+        ],
+        [handleDeleteJudge, openEditJudgeModal],
+    )
+
     const officeHoursColumns = useMemo<GridColDef<MentorOfficeHoursRow>[]>(
         () => [
             {
@@ -526,11 +729,18 @@ export default function MentorshipPage() {
                 mb={2}
             >
                 <Tabs
-                    value={activeTab === "mentors" ? 0 : 1}
+                    value={activeTab === "judges" ? 0 : activeTab === "mentors" ? 1 : 2}
                     onChange={(_, idx) =>
-                        setActiveTab(idx === 0 ? "mentors" : "officeHours")
+                        setActiveTab(
+                            idx === 0
+                                ? "judges"
+                                : idx === 1
+                                ? "mentors"
+                                : "officeHours",
+                        )
                     }
                 >
+                    <Tab label="Judges" />
                     <Tab label="Mentors" />
                     <Tab label="Office Hours" />
                 </Tabs>
@@ -552,6 +762,14 @@ export default function MentorshipPage() {
                             <FontAwesomeIcon icon={faPlus} />
                         </IconButton>
                     )}
+                    {activeTab === "judges" && (
+                        <IconButton
+                            onClick={openCreateJudgeModal}
+                            aria-label="Create judge"
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                        </IconButton>
+                    )}
                     <IconButton
                         onClick={refresh}
                         aria-label="Refresh mentorship data"
@@ -561,7 +779,21 @@ export default function MentorshipPage() {
                 </Box>
             </Box>
 
-            {activeTab === "mentors" ? (
+            {activeTab === "judges" ? (
+                <DataGrid
+                    autoHeight
+                    rows={judgeRows}
+                    columns={judgeColumns}
+                    sx={{ fontFamily: "Montserrat" }}
+                    onCellClick={(params) => {
+                        if (params.field === "actions") return
+                        openJudgeDetails(params.row as JudgeProfileRow)
+                    }}
+                    slots={{
+                        toolbar: () => <GridToolbar refresh={refresh} />,
+                    }}
+                />
+            ) : activeTab === "mentors" ? (
                 <DataGrid
                     autoHeight
                     rows={mentorRows}
@@ -571,6 +803,16 @@ export default function MentorshipPage() {
                         if (params.field === "actions") return
                         openMentorDetails(params.row as MentorProfileRow)
                     }}
+                    slots={{
+                        toolbar: () => <GridToolbar refresh={refresh} />,
+                    }}
+                />
+            ) : activeTab === "officeHours" ? (
+                <DataGrid
+                    autoHeight
+                    rows={officeHoursRows}
+                    columns={officeHoursColumns}
+                    sx={{ fontFamily: "Montserrat" }}
                     slots={{
                         toolbar: () => <GridToolbar refresh={refresh} />,
                     }}
@@ -708,6 +950,124 @@ export default function MentorshipPage() {
             </Dialog>
 
             <Dialog
+                open={judgeModalOpen}
+                onClose={closeJudgeModal}
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle>
+                    {editingJudgeId ? "Edit Judge" : "Create Judge"}
+                </DialogTitle>
+                <DialogContent>
+                    {editingJudgeId && (
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ marginTop: 1, marginBottom: 2 }}
+                        >
+                            Judge ID: {editingJudgeId}
+                        </Typography>
+                    )}
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Name"
+                        fullWidth
+                        value={judgeFormName}
+                        onChange={(e) => setJudgeFormName(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Description"
+                        fullWidth
+                        multiline
+                        minRows={4}
+                        value={judgeFormDescription}
+                        onChange={(e) => setJudgeFormDescription(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Image URL"
+                        fullWidth
+                        value={judgeFormImageUrl}
+                        onChange={(e) => setJudgeFormImageUrl(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeJudgeModal} disabled={savingJudge}>
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleSaveJudge}
+                        variant="contained"
+                        disabled={savingJudge}
+                    >
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={judgeDetailsOpen}
+                onClose={closeJudgeDetails}
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle>Judge Profile</DialogTitle>
+                <DialogContent>
+                    {selectedJudge && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: 2,
+                                pt: 1,
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src={
+                                    selectedJudge.imageUrl ||
+                                    DEFAULT_MENTOR_IMAGE_URL
+                                }
+                                alt={`${selectedJudge.name} profile`}
+                                onError={(
+                                    event: React.SyntheticEvent<HTMLImageElement>,
+                                ) => {
+                                    event.currentTarget.src =
+                                        DEFAULT_MENTOR_IMAGE_URL
+                                }}
+                                sx={{
+                                    width: 180,
+                                    height: 180,
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    border: "1px solid #ddd",
+                                }}
+                            />
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 600, textAlign: "center" }}
+                            >
+                                {selectedJudge.name}
+                            </Typography>
+                            <Typography
+                                variant="body1"
+                                color="text.secondary"
+                                sx={{ width: "100%", whiteSpace: "pre-wrap" }}
+                            >
+                                {selectedJudge.description}
+                            </Typography>
+                        </Box>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeJudgeDetails}>Close</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
                 open={officeHoursModalOpen}
                 onClose={closeOfficeHoursModal}
                 fullWidth
@@ -728,16 +1088,29 @@ export default function MentorshipPage() {
                             Mentor ID: {editingOfficeHoursId}
                         </Typography>
                     )}
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Mentor Name"
-                        fullWidth
-                        value={officeHoursFormMentorName}
-                        onChange={(e) =>
-                            setOfficeHoursFormMentorName(e.target.value)
-                        }
-                    />
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel id="office-hours-mentor-label">
+                            Mentor
+                        </InputLabel>
+                        <Select
+                            autoFocus
+                            labelId="office-hours-mentor-label"
+                            label="Mentor"
+                            value={officeHoursFormMentorName}
+                            onChange={(e) =>
+                                setOfficeHoursFormMentorName(e.target.value)
+                            }
+                        >
+                            {mentorRows.map((mentor) => (
+                                <MenuItem
+                                    key={mentor.mentorId}
+                                    value={mentor.name}
+                                >
+                                    {mentor.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         margin="dense"
                         label="Location"
