@@ -10,7 +10,7 @@ import { handleError, useRoles } from "@/util/api-client"
 import styles from "./style.module.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
-import { Box, Button, IconButton, Tab, Tabs } from "@mui/material"
+import { Box, Button, IconButton, Tab, Tabs, TextField } from "@mui/material"
 import { Add } from "@mui/icons-material"
 
 import dayjs from "dayjs"
@@ -60,6 +60,7 @@ export default function Events() {
         [],
     )
     const [staffView, setStaffView] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("")
     const [editingEvent, setEditingEvent] = useState<Partial<Event> | null>(
         null,
     )
@@ -115,7 +116,23 @@ export default function Events() {
     }
 
     const isAdmin = roles.includes("ADMIN")
-    const eventsByDays = staffView ? staffEventsByDays : attendeeEventsByDays
+    const eventsByDays = (staffView ? staffEventsByDays : attendeeEventsByDays)
+        .map((day) => ({
+            ...day,
+            events: day.events.filter((event) => {
+                const query = searchQuery.trim().toLowerCase()
+                if (!query) return true
+                return (
+                    event.name.toLowerCase().includes(query) ||
+                    (event.description || "").toLowerCase().includes(query) ||
+                    (event.sponsor || "").toLowerCase().includes(query) ||
+                    event.locations.some((location) =>
+                        location.description.toLowerCase().includes(query),
+                    )
+                )
+            }),
+        }))
+        .filter((day) => day.events.length > 0)
 
     const tabIndex = staffView ? 0 : 1
 
@@ -159,7 +176,15 @@ export default function Events() {
                     </IconButton>
                 </Box>
             </div>
-            <div></div>
+            <Box sx={{ mb: 2 }}>
+                <TextField
+                    label="Search events"
+                    size="small"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    sx={{ minWidth: 320, maxWidth: 520 }}
+                />
+            </Box>
             <div className={styles["events-page"]}>
                 {editingEvent && (
                     <EventEditPopup
