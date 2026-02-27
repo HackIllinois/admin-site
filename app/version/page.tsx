@@ -43,7 +43,7 @@ export default function Version() {
         const version = prompt("Enter ios version:", iosVersion ?? "")
         if (!version) return
 
-        await VersionService.postVersionAndroidByVersion({ path: { version } })
+        await VersionService.postVersionIosByVersion({ path: { version } })
         await refresh()
     }
 
