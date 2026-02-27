@@ -1,8 +1,4 @@
-import {
-    faClone,
-    faLock,
-    faPlus
-} from "@fortawesome/free-solid-svg-icons"
+import { faClone, faLock, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import clsx from "clsx"
 import { useState } from "react"
@@ -68,7 +64,7 @@ export default function EventCard({
                             />
                         )}
                         {event.name}
-                    </div>  
+                    </div>
                     <div className={styles.tags}>
                         <div className={styles.type}>{event.eventType}</div>
                         {event.points > 0 && (
@@ -94,7 +90,9 @@ export default function EventCard({
                                         </span>
                                     </div>
                                 </>
-                            ) : <></>}
+                            ) : (
+                                <></>
+                            )}
                         </div>
                         {event.locations.length > 0 && (
                             <div className={styles.location}>
@@ -109,7 +107,6 @@ export default function EventCard({
                             </div>
                         )}
                     </div>
-
                 </div>
 
                 <div className={styles.details}>
@@ -120,9 +117,12 @@ export default function EventCard({
             </button>
 
             <div className={styles.buttons}>
-                <button onClick={onDuplicate}>
-                    <FontAwesomeIcon icon={faClone} fixedWidth />
-                </button>
+                {canEdit && (
+                    <button onClick={onDuplicate}>
+                        <FontAwesomeIcon icon={faClone} fixedWidth />
+                    </button>
+                )}
+
                 <button onClick={() => setShowCodeForm(true)}>
                     <FontAwesomeIcon icon={faQrcode} fixedWidth />
                 </button>

@@ -13,12 +13,12 @@ import { faSync } from "@fortawesome/free-solid-svg-icons"
 import { Box, Button, IconButton, Tab, Tabs } from "@mui/material"
 import { Add } from "@mui/icons-material"
 
-import dayjs from 'dayjs';
-import utc   from 'dayjs/plugin/utc';
-import tz    from 'dayjs/plugin/timezone';
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import tz from "dayjs/plugin/timezone"
 
-dayjs.extend(utc);
-dayjs.extend(tz);
+dayjs.extend(utc)
+dayjs.extend(tz)
 
 interface EventsForDay {
     date: Date
@@ -122,36 +122,44 @@ export default function Events() {
     return (
         <div className={styles.container}>
             <div className={styles.titles}>
-                <Tabs value={tabIndex} onChange={(_, idx) => setStaffView(idx === 0)}>
+                <Tabs
+                    value={tabIndex}
+                    onChange={(_, idx) => setStaffView(idx === 0)}
+                >
                     <Tab label="Staff Schedule" className={styles.tab} />
                     <Tab label="Attendee Schedule" className={styles.tab} />
                 </Tabs>
                 <Box>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<Add />}
-                        sx={{ fontFamily: "Montserrat, Segoe UI, Roboto, sans-serif", marginRight: 1 }}
-                        onClick={() => {
-                            const local = dayjs()
-                                .startOf('day')      // sets hour/min/sec/ms → 0
-                                .toDate();
-                            setEditingDay(local);
-                            setEditingEvent({})
-                        }}
+                    {isAdmin && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<Add />}
+                            sx={{
+                                fontFamily:
+                                    "Montserrat, Segoe UI, Roboto, sans-serif",
+                                marginRight: 1,
+                            }}
+                            onClick={() => {
+                                const local = dayjs()
+                                    .startOf("day") // sets hour/min/sec/ms → 0
+                                    .toDate()
+                                setEditingDay(local)
+                                setEditingEvent({})
+                            }}
                         >
-                        Add Event
+                            Add Event
                         </Button>
+                    )}
                     <IconButton
                         onClick={fetchEvents}
                         aria-label="Refresh events"
-                        >
+                    >
                         <FontAwesomeIcon icon={faSync} />
                     </IconButton>
                 </Box>
             </div>
-            <div>
-            </div>
+            <div></div>
             <div className={styles["events-page"]}>
                 {editingEvent && (
                     <EventEditPopup
