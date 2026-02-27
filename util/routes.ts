@@ -8,6 +8,7 @@ import {
     faShoppingCart,
     faUser,
     faUserCheck,
+    faUserClock,
     faUserTie,
     faUsers,
 } from "@fortawesome/free-solid-svg-icons"
@@ -18,6 +19,7 @@ export const routes = [
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
+    { path: "/staff-shifts", name: "Staff Shifts", icon: faUserClock },
     { path: "/mentorship", name: "Mentors/Judges", icon: faUserTie },
     { path: "/newsletters", name: "Newsletters", icon: faEnvelope },
     { path: "/email", name: "Email", icon: faPenToSquare },
