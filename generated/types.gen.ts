@@ -27,8 +27,8 @@ export type AttendeeProfile = {
     foodWave: number;
     dietaryRestrictions: Array<string>;
     shirtSize: string;
-    team?: string;
-    teamBadge?: string;
+    team: string;
+    teamBadge: string;
     tier?: number;
     duelStats?: {
         duelsPlayed?: number;
@@ -198,6 +198,8 @@ export type EventFollowers = {
 
 export type EventId = string;
 
+export type EventQrCode = string;
+
 export type EventStatistic = {
     eventId: EventId;
     attendees: number;
@@ -211,6 +213,21 @@ export type FlagCreateRequest = {
     flagId: string;
     flag: string;
     points: number;
+};
+
+export type JudgeMongoId = string;
+
+export type JudgeProfile = JudgeProfileCreateRequest & {
+    _id: JudgeMongoId;
+};
+
+export type JudgeProfileCreateRequest = {
+    name: string;
+    description: string;
+    /**
+     * Public URL for the judge profile image bytes
+     */
+    imageUrl?: string;
 };
 
 export type ListRoles = {
@@ -276,6 +293,19 @@ export type MentorId = string;
 
 export type MentorOfficeHours = MentorCreateOfficeHours & {
     mentorId: MentorId;
+};
+
+export type MentorProfile = MentorProfileCreateRequest & {
+    mentorId: MentorId;
+};
+
+export type MentorProfileCreateRequest = {
+    name: string;
+    description: string;
+    /**
+     * Public URL for the mentor profile image bytes
+     */
+    imageUrl?: string;
 };
 
 export type NewsletterId = string;
@@ -922,22 +952,6 @@ export type PostAttendeeTeamResponses = {
 };
 
 export type PostAttendeeTeamResponse = PostAttendeeTeamResponses[keyof PostAttendeeTeamResponses];
-
-export type PostAttendeeTeamAssignData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/attendee-team/assign/';
-};
-
-export type PostAttendeeTeamAssignResponses = {
-    /**
-     * List of all teams
-     */
-    200: Array<AttendeeTeam>;
-};
-
-export type PostAttendeeTeamAssignResponse = PostAttendeeTeamAssignResponses[keyof PostAttendeeTeamAssignResponses];
 
 export type DeleteAttendeeTeamByIdData = {
     body?: never;
@@ -1853,6 +1867,132 @@ export type GetEventByIdResponses = {
 
 export type GetEventByIdResponse = GetEventByIdResponses[keyof GetEventByIdResponses];
 
+export type GetEventByIdQrData = {
+    body?: never;
+    path: {
+        id: EventId;
+    };
+    query?: never;
+    url: '/event/{id}/qr';
+};
+
+export type GetEventByIdQrErrors = {
+    /**
+     * Couldn't find the event specified.
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Could not find event';
+    };
+};
+
+export type GetEventByIdQrError = GetEventByIdQrErrors[keyof GetEventByIdQrErrors];
+
+export type GetEventByIdQrResponses = {
+    /**
+     * The QR code
+     */
+    200: {
+        qrCode: EventQrCode;
+    };
+};
+
+export type GetEventByIdQrResponse = GetEventByIdQrResponses[keyof GetEventByIdQrResponses];
+
+export type GetJudgeInfoData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/judge/info/';
+};
+
+export type GetJudgeInfoResponses = {
+    /**
+     * The judge profiles
+     */
+    200: Array<JudgeProfile>;
+};
+
+export type GetJudgeInfoResponse = GetJudgeInfoResponses[keyof GetJudgeInfoResponses];
+
+export type PostJudgeInfoData = {
+    body?: JudgeProfileCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/judge/info/';
+};
+
+export type PostJudgeInfoResponses = {
+    /**
+     * The created judge profile
+     */
+    201: JudgeProfile;
+};
+
+export type PostJudgeInfoResponse = PostJudgeInfoResponses[keyof PostJudgeInfoResponses];
+
+export type DeleteJudgeInfoByIdData = {
+    body?: never;
+    path: {
+        id: JudgeMongoId;
+    };
+    query?: never;
+    url: '/judge/info/{id}/';
+};
+
+export type DeleteJudgeInfoByIdErrors = {
+    /**
+     * Failed to find the judge requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find judge';
+    };
+};
+
+export type DeleteJudgeInfoByIdError = DeleteJudgeInfoByIdErrors[keyof DeleteJudgeInfoByIdErrors];
+
+export type DeleteJudgeInfoByIdResponses = {
+    /**
+     * Successfully deleted
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteJudgeInfoByIdResponse = DeleteJudgeInfoByIdResponses[keyof DeleteJudgeInfoByIdResponses];
+
+export type PutJudgeInfoByIdData = {
+    body?: JudgeProfileCreateRequest;
+    path: {
+        id: JudgeMongoId;
+    };
+    query?: never;
+    url: '/judge/info/{id}/';
+};
+
+export type PutJudgeInfoByIdErrors = {
+    /**
+     * Failed to find the judge requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find judge';
+    };
+};
+
+export type PutJudgeInfoByIdError = PutJudgeInfoByIdErrors[keyof PutJudgeInfoByIdErrors];
+
+export type PutJudgeInfoByIdResponses = {
+    /**
+     * The updated judge profile
+     */
+    200: JudgeProfile;
+};
+
+export type PutJudgeInfoByIdResponse = PutJudgeInfoByIdResponses[keyof PutJudgeInfoByIdResponses];
+
 export type PostMailSendData = {
     body?: MailSend;
     path?: never;
@@ -1985,6 +2125,100 @@ export type PostMentorAttendanceResponses = {
 
 export type PostMentorAttendanceResponse = PostMentorAttendanceResponses[keyof PostMentorAttendanceResponses];
 
+export type GetMentorInfoData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/mentor/info/';
+};
+
+export type GetMentorInfoResponses = {
+    /**
+     * The mentor profiles
+     */
+    200: Array<MentorProfile>;
+};
+
+export type GetMentorInfoResponse = GetMentorInfoResponses[keyof GetMentorInfoResponses];
+
+export type PostMentorInfoData = {
+    body?: MentorProfileCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/mentor/info/';
+};
+
+export type PostMentorInfoResponses = {
+    /**
+     * The created mentor profile
+     */
+    201: MentorProfile;
+};
+
+export type PostMentorInfoResponse = PostMentorInfoResponses[keyof PostMentorInfoResponses];
+
+export type DeleteMentorInfoByIdData = {
+    body?: never;
+    path: {
+        id: MentorId;
+    };
+    query?: never;
+    url: '/mentor/info/{id}/';
+};
+
+export type DeleteMentorInfoByIdErrors = {
+    /**
+     * Failed to find the mentor requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find mentor';
+    };
+};
+
+export type DeleteMentorInfoByIdError = DeleteMentorInfoByIdErrors[keyof DeleteMentorInfoByIdErrors];
+
+export type DeleteMentorInfoByIdResponses = {
+    /**
+     * Successfully deleted
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteMentorInfoByIdResponse = DeleteMentorInfoByIdResponses[keyof DeleteMentorInfoByIdResponses];
+
+export type PutMentorInfoByIdData = {
+    body?: MentorProfileCreateRequest;
+    path: {
+        id: MentorId;
+    };
+    query?: never;
+    url: '/mentor/info/{id}/';
+};
+
+export type PutMentorInfoByIdErrors = {
+    /**
+     * Failed to find the mentor requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find mentor';
+    };
+};
+
+export type PutMentorInfoByIdError = PutMentorInfoByIdErrors[keyof PutMentorInfoByIdErrors];
+
+export type PutMentorInfoByIdResponses = {
+    /**
+     * The updated mentor profile
+     */
+    200: MentorProfile;
+};
+
+export type PutMentorInfoByIdResponse = PutMentorInfoByIdResponses[keyof PutMentorInfoByIdResponses];
+
 export type DeleteMentorByIdData = {
     body?: never;
     path: {
@@ -2016,6 +2250,36 @@ export type DeleteMentorByIdResponses = {
 };
 
 export type DeleteMentorByIdResponse = DeleteMentorByIdResponses[keyof DeleteMentorByIdResponses];
+
+export type PutMentorByIdData = {
+    body?: MentorCreateOfficeHours;
+    path: {
+        id: MentorId;
+    };
+    query?: never;
+    url: '/mentor/{id}/';
+};
+
+export type PutMentorByIdErrors = {
+    /**
+     * Failed to find the mentor requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find mentor';
+    };
+};
+
+export type PutMentorByIdError = PutMentorByIdErrors[keyof PutMentorByIdErrors];
+
+export type PutMentorByIdResponses = {
+    /**
+     * The updated office hours
+     */
+    200: MentorOfficeHours;
+};
+
+export type PutMentorByIdResponse = PutMentorByIdResponses[keyof PutMentorByIdResponses];
 
 export type GetNewsletterData = {
     body?: never;
@@ -3662,6 +3926,87 @@ export type PostStaffShiftResponses = {
 };
 
 export type PostStaffShiftResponse = PostStaffShiftResponses[keyof PostStaffShiftResponses];
+
+export type PostStaffShiftAddData = {
+    body?: {
+        userId: UserId;
+        shiftId: EventId;
+    };
+    path?: never;
+    query?: never;
+    url: '/staff/shift/add/';
+};
+
+export type PostStaffShiftAddResponses = {
+    /**
+     * Successfully added shift assignment
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostStaffShiftAddResponse = PostStaffShiftAddResponses[keyof PostStaffShiftAddResponses];
+
+export type GetStaffShiftAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/staff/shift/all/';
+};
+
+export type GetStaffShiftAllResponses = {
+    /**
+     * All staff shift assignments
+     */
+    200: {
+        assignments: Array<{
+            userId: UserId;
+            shifts: Array<EventId>;
+        }>;
+    };
+};
+
+export type GetStaffShiftAllResponse = GetStaffShiftAllResponses[keyof GetStaffShiftAllResponses];
+
+export type GetStaffShiftCandidatesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/staff/shift/candidates/';
+};
+
+export type GetStaffShiftCandidatesResponses = {
+    /**
+     * Google users eligible for staff shift assignment
+     */
+    200: {
+        users: Array<UserInfo>;
+    };
+};
+
+export type GetStaffShiftCandidatesResponse = GetStaffShiftCandidatesResponses[keyof GetStaffShiftCandidatesResponses];
+
+export type PostStaffShiftRemoveData = {
+    body?: {
+        userId: UserId;
+        shiftId: EventId;
+    };
+    path?: never;
+    query?: never;
+    url: '/staff/shift/remove/';
+};
+
+export type PostStaffShiftRemoveResponses = {
+    /**
+     * Successfully removed shift assignment
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PostStaffShiftRemoveResponse = PostStaffShiftRemoveResponses[keyof PostStaffShiftRemoveResponses];
 
 export type GetStatisticData = {
     body?: never;
