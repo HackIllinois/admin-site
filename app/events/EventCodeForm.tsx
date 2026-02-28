@@ -1,11 +1,12 @@
 "use client"
 
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { QRCode } from "react-qrcode-logo"
-import { Event } from "@/generated"
+import { Event, EventService } from "@/generated"
 
 import styles from "./EventCodeForm.module.scss"
 import { BASENAME } from "@/util/basename"
+import { handleError } from "@/util/api-client"
 
 interface EventCodeFormProps {
     event: Event

@@ -492,34 +492,6 @@ export default function StaffShiftsPage() {
         [refreshAssignments, selectedStaffUserId, updateShiftAssignment],
     )
 
-    const handleBulkAssignmentSync = useCallback(async () => {
-        if (!selectedBulkShiftId) {
-            alert("Please select a shift.")
-            return
-        }
-
-        const { toAdd, toRemove } = bulkDelta
-        if (toAdd.length === 0 && toRemove.length === 0) {
-            alert("No changes to apply.")
-            return
-        }
-
-        setSavingBulkAssignment(true)
-        try {
-            await Promise.all([
-                ...toAdd.map((userId) =>
-                    updateShiftAssignment(userId, selectedBulkShiftId, "add"),
-                ),
-                ...toRemove.map((userId) =>
-                    updateShiftAssignment(userId, selectedBulkShiftId, "remove"),
-                ),
-            ])
-            await refreshAssignments()
-        } finally {
-            setSavingBulkAssignment(false)
-        }
-    }, [bulkDelta, refreshAssignments, selectedBulkShiftId, updateShiftAssignment])
-
     const openCreateStaffInfoModal = useCallback(() => {
         setEditingStaffInfoId(null)
         setStaffInfoFirstName("")
@@ -798,6 +770,34 @@ export default function StaffShiftsPage() {
         () => shiftRows.find((shift) => shift.eventId === selectedBulkShiftId),
         [selectedBulkShiftId, shiftRows],
     )
+
+    const handleBulkAssignmentSync = useCallback(async () => {
+        if (!selectedBulkShiftId) {
+            alert("Please select a shift.")
+            return
+        }
+
+        const { toAdd, toRemove } = bulkDelta
+        if (toAdd.length === 0 && toRemove.length === 0) {
+            alert("No changes to apply.")
+            return
+        }
+
+        setSavingBulkAssignment(true)
+        try {
+            await Promise.all([
+                ...toAdd.map((userId) =>
+                    updateShiftAssignment(userId, selectedBulkShiftId, "add"),
+                ),
+                ...toRemove.map((userId) =>
+                    updateShiftAssignment(userId, selectedBulkShiftId, "remove"),
+                ),
+            ])
+            await refreshAssignments()
+        } finally {
+            setSavingBulkAssignment(false)
+        }
+    }, [bulkDelta, refreshAssignments, selectedBulkShiftId, updateShiftAssignment])
 
     const assignmentColumns = useMemo<GridColDef<ShiftAssignmentRow>[]>(
         () => [
