@@ -9,8 +9,10 @@ import { client } from "@/generated/client.gen"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus, faSync } from "@fortawesome/free-solid-svg-icons"
 import {
+    Autocomplete,
     Box,
     Button,
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -39,7 +41,7 @@ import {
     GridToolbarFilterButton,
 } from "@mui/x-data-grid"
 
-type TabValue = "shifts" | "assignments" | "staffInfo"
+type TabValue = "shifts" | "assignments" | "bulkAssignments" | "staffInfo"
 
 type ShiftRow = Event & {
     id: string
@@ -86,6 +88,11 @@ type ShiftAssignmentRow = ShiftRow & {
     assignedCount: number
     assignedUsersDisplay: string
     selectedAssigned: boolean
+}
+
+type BulkStaffOption = {
+    userId: string
+    label: string
 }
 
 function formatChicagoTime(epochSeconds: number): string {
@@ -163,6 +170,10 @@ export default function StaffShiftsPage() {
 
     const [selectedStaffUserId, setSelectedStaffUserId] = useState("")
     const [savingAssignment, setSavingAssignment] = useState(false)
+    const [selectedBulkShiftId, setSelectedBulkShiftId] = useState("")
+    const [bulkSelectedUserIds, setBulkSelectedUserIds] = useState<string[]>([])
+    const [bulkBaseUserIds, setBulkBaseUserIds] = useState<string[]>([])
+    const [savingBulkAssignment, setSavingBulkAssignment] = useState(false)
 
     const [staffInfoModalOpen, setStaffInfoModalOpen] = useState(false)
     const [editingStaffInfoId, setEditingStaffInfoId] = useState<string | null>(null)
@@ -432,6 +443,19 @@ export default function StaffShiftsPage() {
         [refreshShifts],
     )
 
+    const updateShiftAssignment = useCallback(
+        async (userId: string, shiftId: string, action: "add" | "remove") => {
+            await apiRequest<{ success: true }>(
+                action === "add" ? "/staff/shift/add/" : "/staff/shift/remove/",
+                {
+                    method: "POST",
+                    body: JSON.stringify({ userId, shiftId }),
+                },
+            )
+        },
+        [apiRequest],
+    )
+
     const handleAddAssignment = useCallback(
         async (shiftId: string) => {
             if (!selectedStaffUserId) {
@@ -441,16 +465,13 @@ export default function StaffShiftsPage() {
 
             setSavingAssignment(true)
             try {
-                await apiRequest<{ success: true }>("/staff/shift/add/", {
-                    method: "POST",
-                    body: JSON.stringify({ userId: selectedStaffUserId, shiftId }),
-                })
+                await updateShiftAssignment(selectedStaffUserId, shiftId, "add")
                 await refreshAssignments()
             } finally {
                 setSavingAssignment(false)
             }
         },
-        [apiRequest, refreshAssignments, selectedStaffUserId],
+        [refreshAssignments, selectedStaffUserId, updateShiftAssignment],
     )
 
     const handleRemoveAssignment = useCallback(
@@ -462,16 +483,13 @@ export default function StaffShiftsPage() {
 
             setSavingAssignment(true)
             try {
-                await apiRequest<{ success: true }>("/staff/shift/remove/", {
-                    method: "POST",
-                    body: JSON.stringify({ userId: selectedStaffUserId, shiftId }),
-                })
+                await updateShiftAssignment(selectedStaffUserId, shiftId, "remove")
                 await refreshAssignments()
             } finally {
                 setSavingAssignment(false)
             }
         },
-        [apiRequest, refreshAssignments, selectedStaffUserId],
+        [refreshAssignments, selectedStaffUserId, updateShiftAssignment],
     )
 
     const openCreateStaffInfoModal = useCallback(() => {
@@ -670,6 +688,117 @@ export default function StaffShiftsPage() {
         })
     }, [selectedStaffUserId, shiftAssignments, shiftRows, staffUsers])
 
+    const shiftAssignmentsByShiftId = useMemo(() => {
+        const assignments = new Map<string, string[]>()
+        for (const assignment of shiftAssignments) {
+            for (const shiftId of assignment.shifts) {
+                const users = assignments.get(shiftId) ?? []
+                users.push(assignment.userId)
+                assignments.set(shiftId, users)
+            }
+        }
+        return assignments
+    }, [shiftAssignments])
+
+    const bulkStaffOptions = useMemo<BulkStaffOption[]>(() => {
+        const options = new Map<string, BulkStaffOption>()
+        for (const user of staffUsers) {
+            options.set(user.userId, {
+                userId: user.userId,
+                label: `${user.displayName} (${user.staffEmail})`,
+            })
+        }
+
+        if (selectedBulkShiftId) {
+            const assignedUserIds = shiftAssignmentsByShiftId.get(selectedBulkShiftId) ?? []
+            for (const userId of assignedUserIds) {
+                if (!options.has(userId)) {
+                    options.set(userId, {
+                        userId,
+                        label: `(Existing assignment) ${userId}`,
+                    })
+                }
+            }
+        }
+
+        return Array.from(options.values()).sort((a, b) =>
+            a.label.localeCompare(b.label),
+        )
+    }, [selectedBulkShiftId, shiftAssignmentsByShiftId, staffUsers])
+
+    const bulkStaffOptionsById = useMemo(
+        () => new Map(bulkStaffOptions.map((option) => [option.userId, option])),
+        [bulkStaffOptions],
+    )
+
+    useEffect(() => {
+        if (!selectedBulkShiftId) {
+            setBulkBaseUserIds([])
+            setBulkSelectedUserIds([])
+            return
+        }
+        const assignedUserIds = (
+            shiftAssignmentsByShiftId.get(selectedBulkShiftId) ?? []
+        ).slice()
+        assignedUserIds.sort()
+        setBulkBaseUserIds(assignedUserIds)
+        setBulkSelectedUserIds(assignedUserIds)
+    }, [selectedBulkShiftId, shiftAssignmentsByShiftId])
+
+    const bulkSelectedStaffOptions = useMemo(
+        () =>
+            bulkSelectedUserIds.map((userId) => {
+                const option = bulkStaffOptionsById.get(userId)
+                if (option) return option
+                return {
+                    userId,
+                    label: `(Existing assignment) ${userId}`,
+                }
+            }),
+        [bulkSelectedUserIds, bulkStaffOptionsById],
+    )
+
+    const bulkDelta = useMemo(() => {
+        const selectedSet = new Set(bulkSelectedUserIds)
+        const existingSet = new Set(bulkBaseUserIds)
+        const toAdd = bulkSelectedUserIds.filter((userId) => !existingSet.has(userId))
+        const toRemove = bulkBaseUserIds.filter((userId) => !selectedSet.has(userId))
+        return { toAdd, toRemove }
+    }, [bulkBaseUserIds, bulkSelectedUserIds])
+
+    const selectedBulkShift = useMemo(
+        () => shiftRows.find((shift) => shift.eventId === selectedBulkShiftId),
+        [selectedBulkShiftId, shiftRows],
+    )
+
+    const handleBulkAssignmentSync = useCallback(async () => {
+        if (!selectedBulkShiftId) {
+            alert("Please select a shift.")
+            return
+        }
+
+        const { toAdd, toRemove } = bulkDelta
+        if (toAdd.length === 0 && toRemove.length === 0) {
+            alert("No changes to apply.")
+            return
+        }
+
+        setSavingBulkAssignment(true)
+        try {
+            await Promise.all([
+                ...toAdd.map((userId) =>
+                    updateShiftAssignment(userId, selectedBulkShiftId, "add"),
+                ),
+                ...toRemove.map((userId) =>
+                    updateShiftAssignment(userId, selectedBulkShiftId, "remove"),
+                ),
+            ])
+            await refreshAssignments()
+        } finally {
+            setSavingBulkAssignment(false)
+        }
+    }, [bulkDelta, refreshAssignments, selectedBulkShiftId, updateShiftAssignment])
+
     const assignmentColumns = useMemo<GridColDef<ShiftAssignmentRow>[]>(
         () => [
             {
@@ -798,7 +927,9 @@ export default function StaffShiftsPage() {
                             ? 0
                             : activeTab === "assignments"
                               ? 1
-                              : 2
+                              : activeTab === "bulkAssignments"
+                                ? 2
+                                : 3
                     }
                     onChange={(_, idx) =>
                         setActiveTab(
@@ -806,12 +937,15 @@ export default function StaffShiftsPage() {
                                 ? "shifts"
                                 : idx === 1
                                   ? "assignments"
-                                  : "staffInfo",
+                                  : idx === 2
+                                    ? "bulkAssignments"
+                                    : "staffInfo",
                         )
                     }
                 >
                     <Tab label="Staff Shifts" />
                     <Tab label="Assign Staff" />
+                    <Tab label="Bulk Assign Shifts" />
                     <Tab label="Staff Info" />
                 </Tabs>
 
@@ -899,6 +1033,115 @@ export default function StaffShiftsPage() {
                             toolbar: () => <GridToolbar refresh={refreshAll} />,
                         }}
                     />
+                </Box>
+            ) : activeTab === "bulkAssignments" ? (
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                    }}
+                >
+                    <Typography variant="h6">Bulk Assign Shifts</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Pick a shift, select all assignees, then apply once. This
+                        syncs to add newly selected staff and remove deselected staff.
+                    </Typography>
+
+                    <FormControl fullWidth>
+                        <InputLabel id="bulk-shift-select-label">Shift</InputLabel>
+                        <Select
+                            labelId="bulk-shift-select-label"
+                            label="Shift"
+                            value={selectedBulkShiftId}
+                            onChange={(event: SelectChangeEvent<string>) =>
+                                setSelectedBulkShiftId(event.target.value)
+                            }
+                        >
+                            {shiftRows.map((shift) => (
+                                <MenuItem key={shift.eventId} value={shift.eventId}>
+                                    {shift.name} - {shift.startDisplay}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    <Autocomplete
+                        multiple
+                        options={bulkStaffOptions}
+                        value={bulkSelectedStaffOptions}
+                        isOptionEqualToValue={(option, value) =>
+                            option.userId === value.userId
+                        }
+                        onChange={(_, values) =>
+                            setBulkSelectedUserIds(
+                                Array.from(new Set(values.map((option) => option.userId))),
+                            )
+                        }
+                        disabled={!selectedBulkShiftId}
+                        filterSelectedOptions
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Assigned Staff"
+                                placeholder="Search staff to add/remove"
+                            />
+                        )}
+                        renderTags={(value, getTagProps) =>
+                            value.map((option, index) => {
+                                const tagProps = getTagProps({ index })
+                                const { key, ...chipProps } = tagProps
+                                return (
+                                    <Chip
+                                        key={key}
+                                        label={option.label}
+                                        size="small"
+                                        {...chipProps}
+                                    />
+                                )
+                            })
+                        }
+                    />
+
+                    <Typography variant="body2">
+                        Selected shift:{" "}
+                        {selectedBulkShift
+                            ? `${selectedBulkShift.name} (${selectedBulkShift.startDisplay})`
+                            : "None"}
+                    </Typography>
+                    <Typography variant="body2">
+                        Pending changes: add {bulkDelta.toAdd.length}, remove{" "}
+                        {bulkDelta.toRemove.length}
+                    </Typography>
+
+                    <Box display="flex" gap={1} flexWrap="wrap">
+                        <Button
+                            variant="outlined"
+                            disabled={!selectedBulkShiftId || savingBulkAssignment}
+                            onClick={() => setBulkSelectedUserIds(bulkBaseUserIds)}
+                        >
+                            Reset To Current
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            disabled={!selectedBulkShiftId || savingBulkAssignment}
+                            onClick={() => setBulkSelectedUserIds([])}
+                        >
+                            Clear All
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={
+                                !selectedBulkShiftId ||
+                                savingBulkAssignment ||
+                                (bulkDelta.toAdd.length === 0 &&
+                                    bulkDelta.toRemove.length === 0)
+                            }
+                            onClick={handleBulkAssignmentSync}
+                        >
+                            Apply Bulk Update
+                        </Button>
+                    </Box>
                 </Box>
             ) : (
                 <DataGrid
