@@ -85,7 +85,6 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
                 type="text"
                 placeholder="Enter a code..."
                 value={displayedValue}
-                readOnly={isWeb}
                 onChange={(e) => setCode(e.target.value)}
             />
 
