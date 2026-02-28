@@ -1,12 +1,11 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { QRCode } from "react-qrcode-logo"
-import { Event, EventService } from "@/generated"
+import { Event } from "@/generated"
 
 import styles from "./EventCodeForm.module.scss"
 import { BASENAME } from "@/util/basename"
-import { handleError } from "@/util/api-client"
 
 interface EventCodeFormProps {
     event: Event
@@ -15,7 +14,7 @@ interface EventCodeFormProps {
 }
 
 export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
-    const [code, setCode] = useState<string | undefined>(undefined)
+    const [code, setCode] = useState<string>(event.eventId)
     const [copySuccess, setCopySuccess] = useState(false)
     const [isWeb, setIsWeb] = useState(false)
     const qrCodeRef = useRef<QRCode>(null)
@@ -85,6 +84,7 @@ export default function EventCodeForm({ event, onCancel }: EventCodeFormProps) {
                 type="text"
                 placeholder="Enter a code..."
                 value={displayedValue}
+                readOnly={isWeb}
                 onChange={(e) => setCode(e.target.value)}
             />
 
