@@ -215,6 +215,20 @@ export type FlagCreateRequest = {
     points: number;
 };
 
+export type JobPosting = JobPostingCreateRequest & {
+    _id: JobPostingMongoId;
+};
+
+export type JobPostingCreateRequest = {
+    companyName: string;
+    logoUrl: string;
+    jobTitle: string;
+    jobDescription: string;
+    applicationUrl: string;
+};
+
+export type JobPostingMongoId = string;
+
 export type JudgeMongoId = string;
 
 export type JudgeProfile = JudgeProfileCreateRequest & {
@@ -1357,6 +1371,7 @@ export type PostCtfSubmitByIdErrors = {
      * One of:
      * - CTFSolveFailed: The submitted flag is incorrect
      * - AlreadyClaimed: The flag has already been claimed
+     * - CTFNotActive: CTF is not currently active
      *
      * **See examples dropdown below**
      */
@@ -1366,6 +1381,9 @@ export type PostCtfSubmitByIdErrors = {
     } | {
         error: 'AlreadyClaimed';
         message: "You've already claimed this flag";
+    } | {
+        error: 'CTFNotActive';
+        message: 'CTF is not currently active';
     };
     /**
      * Failed to find flag
@@ -1898,6 +1916,100 @@ export type GetEventByIdQrResponses = {
 };
 
 export type GetEventByIdQrResponse = GetEventByIdQrResponses[keyof GetEventByIdQrResponses];
+
+export type GetJobData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/job/';
+};
+
+export type GetJobResponses = {
+    /**
+     * The job postings
+     */
+    200: Array<JobPosting>;
+};
+
+export type GetJobResponse = GetJobResponses[keyof GetJobResponses];
+
+export type PostJobData = {
+    body?: JobPostingCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/job/';
+};
+
+export type PostJobResponses = {
+    /**
+     * The created job posting
+     */
+    201: JobPosting;
+};
+
+export type PostJobResponse = PostJobResponses[keyof PostJobResponses];
+
+export type DeleteJobByIdData = {
+    body?: never;
+    path: {
+        id: JobPostingMongoId;
+    };
+    query?: never;
+    url: '/job/{id}/';
+};
+
+export type DeleteJobByIdErrors = {
+    /**
+     * Failed to find the job posting requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find job posting';
+    };
+};
+
+export type DeleteJobByIdError = DeleteJobByIdErrors[keyof DeleteJobByIdErrors];
+
+export type DeleteJobByIdResponses = {
+    /**
+     * Successfully deleted
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteJobByIdResponse = DeleteJobByIdResponses[keyof DeleteJobByIdResponses];
+
+export type PutJobByIdData = {
+    body?: JobPostingCreateRequest;
+    path: {
+        id: JobPostingMongoId;
+    };
+    query?: never;
+    url: '/job/{id}/';
+};
+
+export type PutJobByIdErrors = {
+    /**
+     * Failed to find the job posting requested
+     */
+    404: {
+        error: 'NotFound';
+        message: 'Failed to find job posting';
+    };
+};
+
+export type PutJobByIdError = PutJobByIdErrors[keyof PutJobByIdErrors];
+
+export type PutJobByIdResponses = {
+    /**
+     * The updated job posting
+     */
+    200: JobPosting;
+};
+
+export type PutJobByIdResponse = PutJobByIdResponses[keyof PutJobByIdResponses];
 
 export type GetJudgeInfoData = {
     body?: never;
