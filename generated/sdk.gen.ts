@@ -601,7 +601,7 @@ export class JobService {
             ...options
         });
     }
-    
+
     /**
      * Creates a job posting
      * **Required role: ADMIN**
@@ -616,7 +616,7 @@ export class JobService {
             }
         });
     }
-    
+
     /**
      * Deletes a job posting
      * **Required role: ADMIN**
@@ -627,7 +627,7 @@ export class JobService {
             ...options
         });
     }
-    
+
     /**
      * Updates a job posting
      * **Required role: ADMIN**
@@ -642,7 +642,7 @@ export class JobService {
             }
         });
     }
-    
+
 }
 
 export class JudgeService {

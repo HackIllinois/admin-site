@@ -124,6 +124,8 @@ export default function Jobs() {
                     {postings.map((posting) => (
                         <article className={styles.card} key={posting._id}>
                             <div className={styles.logoContainer}>
+                                {/* Logo domains are supplied dynamically by admins. */}
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={posting.logoUrl}
                                     alt={`${posting.companyName} logo`}
