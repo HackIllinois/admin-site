@@ -4,7 +4,7 @@ import { MailService, MailBulkSendResult } from "@/generated"
 import { handleError } from "@/util/api-client"
 import { renderEmailBody, renderEmailPreview } from "@/util/email-template"
 import styles from "./style.module.scss"
-import ImageUpload from "./ImageUpload"
+import ImagePicker from "./ImagePicker"
 
 type SendState =
     | { status: "editing" }
@@ -18,7 +18,6 @@ export default function Email() {
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
     const [assetBaseUrl, setAssetBaseUrl] = useState("")
-    const [uploading, setUploading] = useState(false)
     const bodyRef = useRef<HTMLTextAreaElement>(null)
     const selectionRef = useRef({ start: 0, end: 0 })
     const previewRef = useRef<HTMLIFrameElement>(null)
@@ -160,10 +159,10 @@ export default function Email() {
                 />
             </div>
 
-            <ImageUpload
+            <ImagePicker
+                assetBaseUrl={assetBaseUrl}
                 disabled={locked}
                 onInsert={insertImage}
-                onBusyChange={setUploading}
             />
 
             <div className={styles.editorLayout}>
@@ -172,7 +171,7 @@ export default function Email() {
                     <p className={styles.editorHint} id="email-body-hint">
                         The HackIllinois header and footer are included
                         automatically. Place your cursor where you want an
-                        image, then upload it above.
+                        image, then select Insert image above.
                     </p>
                     <textarea
                         ref={bodyRef}
@@ -181,7 +180,7 @@ export default function Email() {
                         placeholder="Enter email body HTML..."
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
-                        disabled={locked || uploading}
+                        disabled={locked}
                         onSelect={(event) => {
                             selectionRef.current = {
                                 start: event.currentTarget.selectionStart,
@@ -223,7 +222,7 @@ export default function Email() {
                     <button
                         className={styles.sendSelfBtn}
                         onClick={handleSendSelf}
-                        disabled={uploading || !subject || !body || !email.body}
+                        disabled={!subject || !body || !email.body}
                     >
                         Send to Self
                     </button>

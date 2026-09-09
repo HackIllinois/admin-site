@@ -1,19 +1,35 @@
-export const MAX_EMAIL_IMAGE_BYTES = 5 * 1024 * 1024
-export const EMAIL_IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif"]
+// Files are deployed from public/email/. Use a new filename for revised artwork
+// so images referenced by previously sent emails remain unchanged.
+export const EMAIL_IMAGES = [
+    {
+        path: "/email/speedrun_alpha_graphic.png",
+        label: "speedrun Alpha banner",
+        alt: "speedrun Alpha",
+    },
+    {
+        path: "/email/header-2027.png",
+        label: "HackIllinois 2027 header",
+        alt: "HackIllinois",
+    },
+    {
+        path: "/email/footer-2027.png",
+        label: "HackIllinois 2027 footer",
+        alt: "",
+    },
+] as const
 
-export function imageExtension(bytes: Uint8Array): string | null {
-    if ([137, 80, 78, 71, 13, 10, 26, 10].every((byte, i) => bytes[i] === byte))
-        return "png"
-    if (bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) return "jpg"
-    const signature = String.fromCharCode(...bytes.slice(0, 6))
-    if (signature === "GIF87a" || signature === "GIF89a") return "gif"
-    return null
+export function emailImageUrl(path: string, assetBaseUrl: string): string {
+    const base = new URL(assetBaseUrl)
+    if (!["http:", "https:"].includes(base.protocol)) {
+        throw new Error("Email images must be hosted at an HTTP or HTTPS URL.")
+    }
+    return new URL(path, base).href
 }
 
 export function emailImageHtml(url: string, alt: string): string {
     const parsed = new URL(url)
-    if (parsed.protocol !== "https:")
-        throw new Error("Images need a public HTTPS URL.")
+    if (!["http:", "https:"].includes(parsed.protocol))
+        throw new Error("Images need an HTTP or HTTPS URL.")
     const escape = (value: string) =>
         value.replace(
             /[&<>"']/g,
