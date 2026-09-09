@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { MailService, MailBulkSendResult } from "@/generated"
 import { handleError } from "@/util/api-client"
 import { renderEmailBody, renderEmailPreview } from "@/util/email-template"
@@ -17,6 +17,7 @@ export default function Email() {
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
     const [assetBaseUrl, setAssetBaseUrl] = useState("")
+    const previewRef = useRef<HTMLIFrameElement>(null)
     const [sendState, setSendState] = useState<SendState>({ status: "editing" })
     const [sendResult, setSendResult] = useState<MailBulkSendResult | null>(
         null,
@@ -44,10 +45,38 @@ export default function Email() {
         }
     }, [assetBaseUrl, body])
 
-    const previewHtml = useMemo(
-        () => renderEmailPreview(subject, email.body),
-        [subject, email.body],
-    )
+    // Keep srcDoc stable while editing so the iframe and artwork stay loaded.
+    const previewHtml = useMemo(() => {
+        if (!assetBaseUrl) return ""
+        try {
+            return renderEmailPreview(
+                "",
+                renderEmailBody(
+                    '<div id="email-preview-body"></div>',
+                    assetBaseUrl,
+                ),
+            )
+        } catch {
+            // The existing email error reports invalid artwork configuration.
+            return ""
+        }
+    }, [assetBaseUrl])
+
+    const updatePreviewBody = useCallback(() => {
+        const container =
+            previewRef.current?.contentDocument?.getElementById(
+                "email-preview-body",
+            )
+        if (container) container.innerHTML = body
+    }, [body])
+
+    const updatePreviewTitle = useCallback(() => {
+        const document = previewRef.current?.contentDocument
+        if (document) document.title = subject
+    }, [subject])
+
+    useEffect(updatePreviewBody, [updatePreviewBody])
+    useEffect(updatePreviewTitle, [updatePreviewTitle])
 
     const handleSendSelf = async () => {
         if (!email.body) return
@@ -134,8 +163,13 @@ export default function Email() {
                 <div className={styles.previewPane}>
                     <label>Preview</label>
                     <iframe
+                        ref={previewRef}
                         className={styles.previewFrame}
                         srcDoc={previewHtml}
+                        onLoad={() => {
+                            updatePreviewBody()
+                            updatePreviewTitle()
+                        }}
                         sandbox="allow-same-origin"
                         title="Email Preview"
                     />
