@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { MailService, MailBulkSendResult } from "@/generated"
 import { handleError } from "@/util/api-client"
+import { renderEmailBody, renderEmailPreview } from "@/util/email-template"
 import styles from "./style.module.scss"
 
 type SendState =
@@ -15,31 +16,45 @@ type SendState =
 export default function Email() {
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
-    const [template, setTemplate] = useState("")
+    const [assetBaseUrl, setAssetBaseUrl] = useState("")
     const [sendState, setSendState] = useState<SendState>({ status: "editing" })
-    const [sendResult, setSendResult] = useState<MailBulkSendResult | null>(null)
+    const [sendResult, setSendResult] = useState<MailBulkSendResult | null>(
+        null,
+    )
 
-    const locked = sendState.status !== "editing" && sendState.status !== "error"
+    const locked =
+        sendState.status !== "editing" && sendState.status !== "error"
 
     useEffect(() => {
-        fetch("/email-template.html")
-            .then((res) => res.text())
-            .then(setTemplate)
-            .catch((err) => console.error("Failed to load email template:", err))
+        setAssetBaseUrl(
+            process.env.NEXT_PUBLIC_EMAIL_ASSET_BASE_URL ||
+                window.location.origin,
+        )
     }, [])
 
-    const previewHtml = useMemo(() => {
-        if (!template) return ""
-        return template
-            .replace("{{subject}}", subject)
-            .replace("{{body}}", body)
-    }, [template, subject, body])
+    const email = useMemo(() => {
+        if (!assetBaseUrl) return { body: "", error: "" }
+        try {
+            return { body: renderEmailBody(body, assetBaseUrl), error: "" }
+        } catch (err) {
+            return {
+                body: "",
+                error: err instanceof Error ? err.message : String(err),
+            }
+        }
+    }, [assetBaseUrl, body])
+
+    const previewHtml = useMemo(
+        () => renderEmailPreview(subject, email.body),
+        [subject, email.body],
+    )
 
     const handleSendSelf = async () => {
+        if (!email.body) return
         setSendState({ status: "sending-self" })
         try {
             const result = await MailService.postMailSendSelf({
-                body: { subject, body },
+                body: { subject, body: email.body },
             })
             handleError(result)
             setSendState({ status: "sent-self" })
@@ -52,13 +67,18 @@ export default function Email() {
     }
 
     const handleSendAttendees = async () => {
-        if (!window.confirm("Are you sure you want to send this email to ALL attendees? This cannot be undone.")) {
+        if (!email.body) return
+        if (
+            !window.confirm(
+                "Are you sure you want to send this email to ALL attendees? This cannot be undone.",
+            )
+        ) {
             return
         }
         setSendState({ status: "sending-attendees" })
         try {
             const result = await MailService.postMailSendAttendees({
-                body: { subject, body },
+                body: { subject, body: email.body },
             })
             const data = handleError(result)
             setSendResult(data)
@@ -97,8 +117,13 @@ export default function Email() {
             <div className={styles.editorLayout}>
                 <div className={styles.editorPane}>
                     <label htmlFor="email-body">Body (HTML)</label>
+                    <p className={styles.editorHint} id="email-body-hint">
+                        The HackIllinois header and footer are included
+                        automatically.
+                    </p>
                     <textarea
                         id="email-body"
+                        aria-describedby="email-body-hint"
                         placeholder="Enter email body HTML..."
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
@@ -121,12 +146,19 @@ export default function Email() {
                 <div className={styles.errorMessage}>{sendState.message}</div>
             )}
 
+            {email.error && (
+                <div className={styles.errorMessage} role="alert">
+                    {email.error}
+                </div>
+            )}
+
             <div className={styles.actions}>
-                {sendState.status === "editing" || sendState.status === "error" ? (
+                {sendState.status === "editing" ||
+                sendState.status === "error" ? (
                     <button
                         className={styles.sendSelfBtn}
                         onClick={handleSendSelf}
-                        disabled={!subject || !body}
+                        disabled={!subject || !body || !email.body}
                     >
                         Send to Self
                     </button>
@@ -142,6 +174,7 @@ export default function Email() {
                         <button
                             className={styles.sendAttendeesBtn}
                             onClick={handleSendAttendees}
+                            disabled={!email.body}
                         >
                             Send to All Attendees
                         </button>
@@ -157,10 +190,22 @@ export default function Email() {
                         </button>
                         {sendResult && (
                             <div className={styles.resultInfo}>
-                                <span className={sendResult.success ? styles.successMessage : styles.errorMessage}>
-                                    {sendResult.success ? "Sent successfully" : "Completed with errors"}
+                                <span
+                                    className={
+                                        sendResult.success
+                                            ? styles.successMessage
+                                            : styles.errorMessage
+                                    }
+                                >
+                                    {sendResult.success
+                                        ? "Sent successfully"
+                                        : "Completed with errors"}
                                 </span>
-                                <span> — {sendResult.successCount} succeeded, {sendResult.failedCount} failed</span>
+                                <span>
+                                    {" "}
+                                    — {sendResult.successCount} succeeded,{" "}
+                                    {sendResult.failedCount} failed
+                                </span>
                                 {sendResult.errors.length > 0 && (
                                     <ul className={styles.errorList}>
                                         {sendResult.errors.map((err, i) => (
