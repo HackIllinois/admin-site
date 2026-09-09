@@ -76,7 +76,7 @@
         font-size: 13px;
     }
 
-    .imageUpload {
+    .imagePicker {
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 12px;
@@ -87,20 +87,27 @@
             font-size: 13px;
             margin-bottom: 4px;
         }
-        input:not([type="file"]) {
+        .imageUrl {
             @include form-field;
-            margin: 0 0 8px;
+            margin: 8px 0;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 13px;
+        }
+        select {
+            @include form-field;
+            width: auto;
+            max-width: 100%;
+            margin: 0;
         }
         button {
             @include button;
         }
-        .errorMessage {
-            margin: 8px 0 0;
+        .editorHint {
+            margin-bottom: 0;
         }
     }
 
-    .imageActions,
-    .uploadResult {
+    .imageActions {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -109,8 +116,13 @@
         color: #666;
     }
 
-    .uploadResult {
-        margin-top: 8px;
+    .copyStatus {
+        display: block;
+        font-size: 13px;
+        color: #444;
+        &:not(:empty) {
+            margin-top: 8px;
+        }
     }
 
     .previewPane {
