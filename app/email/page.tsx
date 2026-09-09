@@ -4,6 +4,7 @@ import { MailService, MailBulkSendResult } from "@/generated"
 import { handleError } from "@/util/api-client"
 import { renderEmailBody, renderEmailPreview } from "@/util/email-template"
 import styles from "./style.module.scss"
+import ImageUpload from "./ImageUpload"
 
 type SendState =
     | { status: "editing" }
@@ -17,6 +18,9 @@ export default function Email() {
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
     const [assetBaseUrl, setAssetBaseUrl] = useState("")
+    const [uploading, setUploading] = useState(false)
+    const bodyRef = useRef<HTMLTextAreaElement>(null)
+    const selectionRef = useRef({ start: 0, end: 0 })
     const previewRef = useRef<HTMLIFrameElement>(null)
     const [sendState, setSendState] = useState<SendState>({ status: "editing" })
     const [sendResult, setSendResult] = useState<MailBulkSendResult | null>(
@@ -125,6 +129,19 @@ export default function Email() {
         setSendResult(null)
     }
 
+    const insertImage = (html: string) => {
+        const { start, end } = selectionRef.current
+        setBody(
+            (current) => current.slice(0, start) + html + current.slice(end),
+        )
+        const cursor = start + html.length
+        selectionRef.current = { start: cursor, end: cursor }
+        requestAnimationFrame(() => {
+            bodyRef.current?.focus()
+            bodyRef.current?.setSelectionRange(cursor, cursor)
+        })
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -143,20 +160,34 @@ export default function Email() {
                 />
             </div>
 
+            <ImageUpload
+                disabled={locked}
+                onInsert={insertImage}
+                onBusyChange={setUploading}
+            />
+
             <div className={styles.editorLayout}>
                 <div className={styles.editorPane}>
                     <label htmlFor="email-body">Body (HTML)</label>
                     <p className={styles.editorHint} id="email-body-hint">
                         The HackIllinois header and footer are included
-                        automatically.
+                        automatically. Place your cursor where you want an
+                        image, then upload it above.
                     </p>
                     <textarea
+                        ref={bodyRef}
                         id="email-body"
                         aria-describedby="email-body-hint"
                         placeholder="Enter email body HTML..."
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
-                        disabled={locked}
+                        disabled={locked || uploading}
+                        onSelect={(event) => {
+                            selectionRef.current = {
+                                start: event.currentTarget.selectionStart,
+                                end: event.currentTarget.selectionEnd,
+                            }
+                        }}
                     />
                 </div>
 
@@ -192,7 +223,7 @@ export default function Email() {
                     <button
                         className={styles.sendSelfBtn}
                         onClick={handleSendSelf}
-                        disabled={!subject || !body || !email.body}
+                        disabled={uploading || !subject || !body || !email.body}
                     >
                         Send to Self
                     </button>

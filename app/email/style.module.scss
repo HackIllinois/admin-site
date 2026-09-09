@@ -36,7 +36,7 @@
     .editorLayout {
         display: flex;
         gap: 20px;
-        height: calc(100vh - 260px);
+        height: calc(100vh - 420px);
         min-height: 400px;
 
         @include phone {
@@ -74,6 +74,43 @@
         margin: 0 0 8px;
         color: #666;
         font-size: 13px;
+    }
+
+    .imageUpload {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 12px;
+        margin-bottom: 16px;
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        input:not([type="file"]) {
+            @include form-field;
+            margin: 0 0 8px;
+        }
+        button {
+            @include button;
+        }
+        .errorMessage {
+            margin: 8px 0 0;
+        }
+    }
+
+    .imageActions,
+    .uploadResult {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: #666;
+    }
+
+    .uploadResult {
+        margin-top: 8px;
     }
 
     .previewPane {
