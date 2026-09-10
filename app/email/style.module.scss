@@ -17,7 +17,8 @@
         }
     }
 
-    .subjectRow {
+    .subjectRow,
+    .recipientRow {
         margin-bottom: 12px;
 
         label {
@@ -31,6 +32,29 @@
             @include form-field;
             margin: 0;
         }
+    }
+
+    .recipientControls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+        select {
+            @include form-field;
+            flex: 1;
+            min-width: 200px;
+            margin: 0;
+        }
+        button {
+            @include button;
+        }
+    }
+
+    .sendHint {
+        color: #666;
+        font-size: 13px;
+        margin-top: 8px;
     }
 
     .editorLayout {
@@ -172,7 +196,7 @@
             @include button;
         }
 
-        .sendAttendeesBtn {
+        .sendGroupBtn {
             @include button($red);
         }
 

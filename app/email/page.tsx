@@ -1,23 +1,40 @@
 "use client"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { MailService, MailBulkSendResult } from "@/generated"
+import {
+    MailService,
+    MailBulkSendResult,
+    NewsletterService,
+    NewsletterSubscription,
+} from "@/generated"
 import { handleError } from "@/util/api-client"
 import { renderEmailBody, renderEmailPreview } from "@/util/email-template"
 import styles from "./style.module.scss"
 import ImagePicker from "./ImagePicker"
+import {
+    DEFAULT_EMAIL_GROUP,
+    groupConfirmation,
+    newsletterGroupValue,
+    newsletterRecipients,
+    sendEmailToGroup,
+} from "@/util/email-recipients"
 
 type SendState =
     | { status: "editing" }
     | { status: "sending-self" }
     | { status: "sent-self" }
-    | { status: "sending-attendees" }
-    | { status: "sent-attendees" }
+    | { status: "preparing-group" }
+    | { status: "sending-group" }
+    | { status: "sent-group" }
     | { status: "error"; message: string }
 
 export default function Email() {
     const [subject, setSubject] = useState("")
     const [body, setBody] = useState("")
     const [assetBaseUrl, setAssetBaseUrl] = useState("")
+    const [recipientGroup, setRecipientGroup] = useState(DEFAULT_EMAIL_GROUP)
+    const [newsletters, setNewsletters] = useState<NewsletterSubscription[]>([])
+    const [groupsLoading, setGroupsLoading] = useState(true)
+    const [groupsError, setGroupsError] = useState("")
     const bodyRef = useRef<HTMLTextAreaElement>(null)
     const selectionRef = useRef({ start: 0, end: 0 })
     const previewRef = useRef<HTMLIFrameElement>(null)
@@ -28,6 +45,45 @@ export default function Email() {
 
     const locked =
         sendState.status !== "editing" && sendState.status !== "error"
+
+    const registrationSelected = recipientGroup === DEFAULT_EMAIL_GROUP
+    const selectedNewsletter = newsletters.find(
+        (newsletter) =>
+            newsletterGroupValue(newsletter.newsletterId) === recipientGroup,
+    )
+    const groupLabel = registrationSelected
+        ? DEFAULT_EMAIL_GROUP
+        : `Newsletter: ${selectedNewsletter?.newsletterId ?? "unavailable"}`
+    const recipientCount = selectedNewsletter
+        ? newsletterRecipients(selectedNewsletter.subscribers).length
+        : 0
+    const groupReady =
+        registrationSelected ||
+        (!groupsLoading &&
+            !groupsError &&
+            !!selectedNewsletter &&
+            recipientCount > 0)
+
+    const loadGroups = useCallback(async () => {
+        setGroupsLoading(true)
+        setGroupsError("")
+        try {
+            const data = handleError(await NewsletterService.getNewsletter())
+            setNewsletters(
+                [...data].sort((a, b) =>
+                    a.newsletterId.localeCompare(b.newsletterId),
+                ),
+            )
+        } catch (err) {
+            setGroupsError(err instanceof Error ? err.message : String(err))
+        } finally {
+            setGroupsLoading(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        void loadGroups()
+    }, [loadGroups])
 
     useEffect(() => {
         setAssetBaseUrl(
@@ -98,23 +154,26 @@ export default function Email() {
         }
     }
 
-    const handleSendAttendees = async () => {
-        if (!email.body) return
-        if (
-            !window.confirm(
-                "Are you sure you want to send this email to ALL attendees? This cannot be undone.",
-            )
-        ) {
+    const handleSendGroup = async () => {
+        if (!email.body || !groupReady || sendState.status !== "sent-self")
             return
-        }
-        setSendState({ status: "sending-attendees" })
+        setSendState({ status: "preparing-group" })
         try {
-            const result = await MailService.postMailSendAttendees({
-                body: { subject, body: email.body },
-            })
-            const data = handleError(result)
+            const data = await sendEmailToGroup(
+                recipientGroup,
+                { subject, body: email.body },
+                (group) => {
+                    if (!window.confirm(groupConfirmation(group))) return false
+                    setSendState({ status: "sending-group" })
+                    return true
+                },
+            )
+            if (!data) {
+                setSendState({ status: "sent-self" })
+                return
+            }
             setSendResult(data)
-            setSendState({ status: "sent-attendees" })
+            setSendState({ status: "sent-group" })
         } catch (err) {
             setSendState({
                 status: "error",
@@ -157,6 +216,80 @@ export default function Email() {
                     onChange={(e) => setSubject(e.target.value)}
                     disabled={locked}
                 />
+            </div>
+
+            <div className={styles.recipientRow}>
+                <label htmlFor="email-recipient-group">Recipient group</label>
+                <div className={styles.recipientControls}>
+                    <select
+                        id="email-recipient-group"
+                        value={recipientGroup}
+                        disabled={locked}
+                        aria-describedby="email-recipient-hint"
+                        onChange={(event) => {
+                            setRecipientGroup(event.target.value)
+                            setSendState({ status: "editing" })
+                            setSendResult(null)
+                        }}
+                    >
+                        <option value={DEFAULT_EMAIL_GROUP}>
+                            registration_submissions
+                        </option>
+                        <optgroup label="Newsletter groups">
+                            {newsletters.map((newsletter) => (
+                                <option
+                                    key={newsletter.newsletterId}
+                                    value={newsletterGroupValue(
+                                        newsletter.newsletterId,
+                                    )}
+                                >
+                                    {newsletter.newsletterId} (
+                                    {
+                                        newsletterRecipients(
+                                            newsletter.subscribers,
+                                        ).length
+                                    }{" "}
+                                    recipients)
+                                </option>
+                            ))}
+                        </optgroup>
+                        {!registrationSelected && !selectedNewsletter && (
+                            <option value={recipientGroup} disabled>
+                                Selected newsletter unavailable
+                            </option>
+                        )}
+                    </select>
+                    <button
+                        type="button"
+                        disabled={locked || groupsLoading}
+                        onClick={loadGroups}
+                    >
+                        {groupsLoading ? "Loading groups…" : "Refresh groups"}
+                    </button>
+                </div>
+                <p className={styles.editorHint} id="email-recipient-hint">
+                    {registrationSelected
+                        ? "Current registration audience: submissions matched to attendee profiles. No year filter is applied."
+                        : `${recipientCount} unique recipients in this newsletter. The latest subscriber list is checked before confirmation.`}
+                </p>
+                {groupsError && (
+                    <p className={styles.errorMessage} role="alert">
+                        Could not load newsletter groups: {groupsError}.
+                        Registration submissions remain available. Select
+                        Refresh groups to retry.
+                    </p>
+                )}
+                {!groupsLoading && !groupsError && newsletters.length === 0 && (
+                    <p className={styles.editorHint}>
+                        No newsletter groups found.
+                    </p>
+                )}
+                {!registrationSelected && !groupsLoading && !groupReady && (
+                    <p className={styles.editorHint}>
+                        This group is unavailable or empty. Select another group
+                        or refresh the list.
+                    </p>
+                )}
             </div>
 
             <ImagePicker
@@ -236,24 +369,28 @@ export default function Email() {
                             Edit
                         </button>
                         <button
-                            className={styles.sendAttendeesBtn}
-                            onClick={handleSendAttendees}
-                            disabled={!email.body}
+                            className={styles.sendGroupBtn}
+                            onClick={handleSendGroup}
+                            disabled={!email.body || !groupReady}
                         >
-                            Send to All Attendees
+                            Send to {groupLabel}
                         </button>
                     </>
-                ) : sendState.status === "sending-attendees" ? (
-                    <button className={styles.sendAttendeesBtn} disabled>
-                        Sending to Attendees...
+                ) : sendState.status === "preparing-group" ||
+                  sendState.status === "sending-group" ? (
+                    <button className={styles.sendGroupBtn} disabled>
+                        {sendState.status === "preparing-group"
+                            ? "Checking recipients…"
+                            : `Sending to ${groupLabel}…`}
                     </button>
-                ) : sendState.status === "sent-attendees" ? (
+                ) : sendState.status === "sent-group" ? (
                     <>
                         <button className={styles.editBtn} onClick={handleEdit}>
                             Edit
                         </button>
                         {sendResult && (
                             <div className={styles.resultInfo}>
+                                <span>{groupLabel}: </span>
                                 <span
                                     className={
                                         sendResult.success
@@ -282,6 +419,14 @@ export default function Email() {
                     </>
                 ) : null}
             </div>
+            <p className={styles.sendHint}>
+                {sendState.status === "sent-self"
+                    ? `Test email sent. Check your inbox, then send to ${groupLabel}. Select Edit to change the message or recipient group.`
+                    : sendState.status === "editing" ||
+                        sendState.status === "error"
+                      ? `Send to Self sends only a test email to your account. After it succeeds, you can send to ${groupLabel}.`
+                      : ""}
+            </p>
         </div>
     )
 }
