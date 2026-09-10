@@ -38,6 +38,27 @@ The mail API receives a complete header/body/footer HTML fragment in its `body`
 field. Its hosted `generic` mail template should insert that HTML without adding
 another branded header or footer.
 
+## Email recipient groups
+
+The **Recipient group** selector defaults to `registration_submissions`. This
+preserves the existing `/mail/send/attendees/` behavior: registration submissions
+matched to attendee profiles, with no year filter. It does not include every
+registration submission automatically.
+
+Newsletter groups come from the same `/newsletter/` API as the Newsletters page.
+Each option shows its unique recipient count. **Refresh groups** reloads the list;
+newsletter loading errors do not remove the registration option.
+
+**Send to Self** sends a test only to the signed-in user's account. After it
+succeeds, the bulk-send button names the selected group. Choose **Edit** to change
+the message or group, then send another test. The final confirmation names the
+audience and, for newsletters, its current unique recipient count.
+
+For newsletter sends, the app fetches that group's latest subscribers immediately
+before confirmation and submits only those addresses to `/mail/send/`. Duplicate
+addresses are removed after trimming and case normalization. Empty, missing, or
+unavailable newsletter groups never fall back to the registration audience.
+
 ## Email image library
 
 Select a banner in **Email images**, then choose **Copy image URL**. Replace the
