@@ -1,6 +1,7 @@
 import {
     faBell,
     faBriefcase,
+    faCalculator,
     faCalendar,
     faCodeBranch,
     faEnvelope,
@@ -16,7 +17,6 @@ import {
 import { usePathname } from "next/navigation"
 
 export const routes = [
-    // { path: '/', name: "Statistics", icon: faCalculator },
     { path: "/admissions", name: "Admissions", icon: faUsers },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
@@ -30,6 +30,7 @@ export const routes = [
     { path: "/attendances", name: "Attendances", icon: faUserCheck },
     { path: "/version", name: "Version", icon: faCodeBranch },
     { path: "/account", name: "Account", icon: faUser },
+    { path: "/statistics", name: "Statistics", icon: faCalculator },
 ]
 
 export function useRouteOpen() {

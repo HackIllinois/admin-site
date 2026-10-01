@@ -1,0 +1,226 @@
+@use "sass:color";
+@use "../constants.scss" as *;
+
+.container {
+    padding: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+}
+
+.header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin: 0 auto 8px;
+
+    .title {
+        font-size: 2em;
+        font-weight: bold;
+        padding: 15px 0;
+    }
+
+    .refresh {
+        cursor: pointer;
+        position: absolute;
+        right: -1rem;
+        transform: translateX(100%);
+    }
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 16px;
+}
+
+.statusRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85em;
+
+    &.enabled {
+        background: color.adjust($success, $lightness: 45%);
+        color: color.adjust($success, $lightness: -25%);
+    }
+
+    &.disabled {
+        background: #f0f0f0;
+        color: #666;
+    }
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.panel {
+    border: #ccc 1.5px solid;
+    border-radius: 7px;
+    margin: 10px 0;
+    padding: 15px;
+
+    h2 {
+        margin: 0 0 12px;
+        font-size: 1.15em;
+        color: $primary-color;
+    }
+
+    h3 {
+        margin: 16px 0 8px;
+        font-size: 1em;
+        color: $secondary-color;
+    }
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    label {
+        font-weight: 600;
+        color: $primary-color;
+    }
+
+    select {
+        @include form-field;
+        width: auto;
+        min-width: 72px;
+        padding: 8px 10px;
+    }
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-top: 10px;
+    font-size: 0.85em;
+
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+    }
+}
+
+.metricGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.metricCard {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 12px;
+
+    .label {
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .value {
+        font-size: 1.4em;
+        font-weight: 700;
+        color: $primary-color;
+    }
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 0.92em;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .count {
+            font-weight: 600;
+            color: $primary-color;
+        }
+    }
+}
+
+.empty {
+    text-align: center;
+    color: #666;
+    padding: 24px 12px;
+    line-height: 1.5;
+}
+
+.historyTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px 10px;
+        text-align: left;
+    }
+
+    th {
+        background: $primary-color-light;
+        color: $primary-color;
+        font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #fafafa;
+    }
+}
+
+.toggleButton {
+    @include button($secondary-color);
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
+.toggleButtonDanger {
+    @include button($red);
+}
