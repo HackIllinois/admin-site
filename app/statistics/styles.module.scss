@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../constants.scss" as *;
 
 .page {
@@ -8,6 +7,7 @@
 
 .headingContainer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
@@ -63,41 +63,6 @@
     color: #777;
 }
 
-.badge {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.82em;
-
-    &.enabled {
-        background: color.adjust($success, $lightness: 45%);
-        color: color.adjust($success, $lightness: -25%);
-    }
-
-    &.disabled {
-        background: #f0f0f0;
-        color: #666;
-    }
-}
-
-.field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9em;
-    font-weight: 600;
-    color: #444;
-
-    select {
-        @include form-field;
-        width: auto;
-        min-width: 72px;
-        margin: 0;
-        padding: 6px 8px;
-        font-weight: 500;
-    }
-}
-
 .tabs {
     border-bottom: 1px solid #eee;
 }
@@ -106,62 +71,101 @@
     padding-top: 12px;
 }
 
-.filters {
+.listHeader {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px 16px;
-    margin-bottom: 10px;
+    gap: 8px 14px;
+    margin-bottom: 8px;
+}
 
-    input {
-        @include form-field;
-        width: auto;
-        min-width: 220px;
-        margin: 0;
-        padding: 8px 10px;
-    }
+.filterButton {
+    font-family: inherit !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    color: $primary-color !important;
+    border-color: $primary-color !important;
+}
 
-    label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.9em;
-        font-weight: 600;
-        color: #444;
+.popover {
+    width: min(300px, calc(100vw - 32px));
+    padding: 16px;
+    border-radius: 10px !important;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+}
 
-        input[type="number"] {
-            min-width: 0;
-            width: 80px;
-        }
-    }
+.popoverSection {
+    margin-bottom: 14px;
+}
 
-    .checkbox {
-        cursor: pointer;
-        font-weight: 500;
+.popoverLabel {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 6px;
+}
 
-        input {
-            min-width: 0;
-            width: 16px;
-            height: 16px;
-            accent-color: $secondary-color;
-            box-shadow: none;
-        }
+.popoverActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.collapsible {
+    margin-top: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+
+    .dataTable {
+        margin-top: 0;
     }
 }
 
-.note {
-    margin: 0 0 10px;
-    font-size: 0.85em;
-    color: #777;
+.collapsibleHeader {
+    @include div-button;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92em;
+    color: #444;
+    background: #fcfcfc;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background: #f3f3f3;
+    }
+
+    .chevron {
+        color: #888;
+        transition: transform 0.2s;
+
+        &.open {
+            transform: rotate(180deg);
+        }
+    }
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px;
+
+    @include phone {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
 }
 
 .card {
+    min-width: 0;
     border: #e4e4e4 1.5px solid;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     border-radius: 7px;
@@ -189,6 +193,19 @@
         font-size: 1.6em;
         font-weight: 700;
         color: #444;
+
+        @include phone {
+            font-size: 1.3em;
+        }
+    }
+
+    .hint {
+        margin-top: 2px;
+        font-size: 0.75em;
+        color: #888;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .accent {
@@ -201,7 +218,7 @@
 
 .chartRow {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 
     @include mobile {
@@ -216,6 +233,10 @@
     padding: 12px 14px;
     margin-top: 12px;
     min-width: 0;
+
+    @include phone {
+        padding: 10px;
+    }
 
     h3 {
         margin: 0 0 8px;
@@ -236,11 +257,17 @@
     color: #888;
 }
 
-.donutTotal {
+.donutValue {
     font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
-    font-size: 1.3em;
+    font-size: 1.5em;
     font-weight: 700;
     fill: #444;
+}
+
+.donutCaption {
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    font-size: 0.75em;
+    fill: #888;
 }
 
 .chartEmpty {
@@ -250,21 +277,52 @@
     padding: 32px 8px;
 }
 
-.historyTable {
+.tableScroll {
+    max-height: 320px;
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    @include phone {
+        max-height: 280px;
+    }
+}
+
+.dataTable {
     width: 100%;
     margin-top: 12px;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 0.85em;
+
+    @include phone {
+        font-size: 0.8em;
+    }
 
     th,
     td {
-        border: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid #eee;
         padding: 8px 10px;
         text-align: left;
         white-space: nowrap;
+
+        @include phone {
+            padding: 6px 8px;
+        }
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
     }
 
     th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
         background: #fcfcfc;
         color: #444;
     }
@@ -272,11 +330,15 @@
     tbody tr:hover {
         background: #f7f7f7;
     }
+}
 
-    .muted {
-        color: #999;
-        font-style: italic;
-    }
+.swatch {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    margin-right: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
 }
 
 .empty {

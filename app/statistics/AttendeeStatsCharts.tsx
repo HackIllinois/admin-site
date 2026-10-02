@@ -1,9 +1,7 @@
 "use client"
 
-import type { TrendPoint } from "@/app/lib/statistics/statistic-metrics"
+import { useMediaQuery } from "@mui/material"
 import {
-    Area,
-    AreaChart,
     Bar,
     BarChart,
     CartesianGrid,
@@ -21,7 +19,10 @@ import styles from "./styles.module.scss"
 const CHART_FONT = "Montserrat, Segoe UI, Roboto, sans-serif"
 const TOOLTIP_STYLE = { fontFamily: CHART_FONT, fontSize: 12, borderRadius: 6 }
 const TICK_STYLE = { fontSize: 11, fontFamily: CHART_FONT, fill: "#666" }
+const LEGEND_STYLE = { fontFamily: CHART_FONT, fontSize: 12 }
 const MAX_LABEL_LENGTH = 24
+const PHONE_LABEL_LENGTH = 14
+const PHONE_QUERY = "(max-width: 767.9px)"
 
 export interface ChartSlice {
     name: string
@@ -29,21 +30,29 @@ export interface ChartSlice {
     color: string
 }
 
-function truncate(label: string): string {
-    return label.length > MAX_LABEL_LENGTH
-        ? label.slice(0, MAX_LABEL_LENGTH - 1) + "…"
+function truncate(label: string, maxLength: number): string {
+    return label.length > maxLength
+        ? label.slice(0, maxLength - 1) + "…"
         : label
 }
 
 interface DonutChartProps {
     slices: ChartSlice[]
     emptyLabel: string
+    centerValue: string
+    centerCaption: string
 }
 
 /**
- * Donut chart for a single snapshot breakdown.
+ * Donut chart for a single snapshot breakdown, with a rate in the center.
  */
-export function DonutChart({ slices, emptyLabel }: DonutChartProps) {
+export function DonutChart({
+    slices,
+    emptyLabel,
+    centerValue,
+    centerCaption,
+}: DonutChartProps) {
+    const isPhone = useMediaQuery(PHONE_QUERY)
     const data = slices.filter((slice) => slice.value > 0)
     const total = data.reduce((sum, slice) => sum + slice.value, 0)
 
@@ -60,8 +69,8 @@ export function DonutChart({ slices, emptyLabel }: DonutChartProps) {
                     nameKey="name"
                     cx="50%"
                     cy="45%"
-                    innerRadius={52}
-                    outerRadius={78}
+                    innerRadius={isPhone ? 48 : 56}
+                    outerRadius={isPhone ? 70 : 80}
                     paddingAngle={2}
                 >
                     {data.map((slice) => (
@@ -70,112 +79,31 @@ export function DonutChart({ slices, emptyLabel }: DonutChartProps) {
                 </Pie>
                 <text
                     x="50%"
-                    y="45%"
+                    y="42%"
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    className={styles.donutTotal}
+                    className={styles.donutValue}
                 >
-                    {total}
+                    {centerValue}
+                </text>
+                <text
+                    x="50%"
+                    y="53%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className={styles.donutCaption}
+                >
+                    {centerCaption}
                 </text>
                 <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     formatter={(value) => {
                         const count = Number(value)
-                        return `${count} (${Math.round((count / total) * 100)}%)`
+                        return `${count.toLocaleString()} (${Math.round((count / total) * 100)}%)`
                     }}
                 />
-                <Legend
-                    iconType="circle"
-                    wrapperStyle={{ fontFamily: CHART_FONT, fontSize: 12 }}
-                />
+                <Legend iconType="circle" wrapperStyle={LEGEND_STYLE} />
             </PieChart>
-        </ResponsiveContainer>
-    )
-}
-
-interface FunnelChartProps {
-    steps: ChartSlice[]
-}
-
-/**
- * Vertical bars showing drop-off from applied to accepted to RSVP.
- */
-export function FunnelChart({ steps }: FunnelChartProps) {
-    return (
-        <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={steps} margin={{ top: 16, right: 8, left: -12, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eee" vertical={false} />
-                <XAxis dataKey="name" tick={TICK_STYLE} axisLine={false} tickLine={false} />
-                <YAxis tick={TICK_STYLE} allowDecimals={false} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "rgba(0,0,0,0.04)" }} />
-                <Bar dataKey="value" name="People" radius={[6, 6, 0, 0]} label={{ position: "top", fontSize: 11, fill: "#444" }}>
-                    {steps.map((step) => (
-                        <Cell key={step.name} fill={step.color} />
-                    ))}
-                </Bar>
-            </BarChart>
-        </ResponsiveContainer>
-    )
-}
-
-interface ActivityTrendChartProps {
-    series: TrendPoint[]
-}
-
-/**
- * Cumulative check-ins and shop redemptions across the activity window.
- */
-export function ActivityTrendChart({ series }: ActivityTrendChartProps) {
-    if (series.length < 2) {
-        return (
-            <div className={styles.chartEmpty}>
-                Not enough logs in this window to show a trend
-            </div>
-        )
-    }
-
-    return (
-        <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={series} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
-                <defs>
-                    <linearGradient id="checkInsFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#5e997a" stopOpacity={0.35} />
-                        <stop offset="100%" stopColor="#5e997a" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="redeemedFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#505f85" stopOpacity={0.35} />
-                        <stop offset="100%" stopColor="#505f85" stopOpacity={0} />
-                    </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eee" vertical={false} />
-                <XAxis
-                    dataKey="label"
-                    tick={TICK_STYLE}
-                    axisLine={false}
-                    tickLine={false}
-                    interval="preserveStartEnd"
-                    minTickGap={24}
-                />
-                <YAxis tick={TICK_STYLE} allowDecimals={false} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Legend iconType="circle" wrapperStyle={{ fontFamily: CHART_FONT, fontSize: 12 }} />
-                <Area
-                    type="monotone"
-                    dataKey="checkIns"
-                    name="Event check-ins"
-                    stroke="#5e997a"
-                    strokeWidth={2}
-                    fill="url(#checkInsFill)"
-                />
-                <Area
-                    type="monotone"
-                    dataKey="redeemed"
-                    name="Shop redemptions"
-                    stroke="#505f85"
-                    strokeWidth={2}
-                    fill="url(#redeemedFill)"
-                />
-            </AreaChart>
         </ResponsiveContainer>
     )
 }
@@ -201,7 +129,9 @@ export function TopItemsBarChart({
     color,
     limit = 10,
 }: TopItemsBarChartProps) {
+    const isPhone = useMediaQuery(PHONE_QUERY)
     const data = rows.slice(0, limit)
+    const labelLength = isPhone ? PHONE_LABEL_LENGTH : MAX_LABEL_LENGTH
 
     if (data.length === 0) {
         return <div className={styles.chartEmpty}>Nothing to chart</div>
@@ -212,9 +142,18 @@ export function TopItemsBarChart({
             <BarChart
                 data={data}
                 layout="vertical"
-                margin={{ top: 4, right: 40, left: 8, bottom: 4 }}
+                margin={{
+                    top: 4,
+                    right: isPhone ? 28 : 40,
+                    left: 0,
+                    bottom: 4,
+                }}
             >
-                <CartesianGrid strokeDasharray="3 3" stroke="#eee" horizontal={false} />
+                <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#eee"
+                    horizontal={false}
+                />
                 <XAxis
                     type="number"
                     allowDecimals={false}
@@ -225,9 +164,11 @@ export function TopItemsBarChart({
                 <YAxis
                     type="category"
                     dataKey="name"
-                    width={180}
+                    width={isPhone ? 100 : 180}
                     tick={TICK_STYLE}
-                    tickFormatter={truncate}
+                    tickFormatter={(label: string) =>
+                        truncate(label, labelLength)
+                    }
                     axisLine={false}
                     tickLine={false}
                 />

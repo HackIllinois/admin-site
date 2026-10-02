@@ -3,18 +3,8 @@ import { handleError } from "@/util/api-client"
 
 const PROBES_PER_ROUND = 12
 const SEARCH_ROUNDS = 4
-const TIMELINE_POINTS = 24
 const TAIL_PAGE_LIMIT = 25
 const MAX_TAIL_PAGES = 5
-
-/** Length of the activity window that ends at the latest log, in seconds. */
-export const TIMELINE_WINDOW_SECONDS = 3 * 24 * 60 * 60
-
-export interface StatisticTimeline {
-    readonly latest: StatisticLog | null
-    /** Sampled logs across the activity window, oldest first. */
-    readonly points: StatisticLog[]
-}
 
 async function logsAfter(after: number, limit = 1): Promise<StatisticLog[]> {
     const result = await StatisticService.getStatistic({
@@ -39,7 +29,7 @@ function newest(a: StatisticLog, b: StatisticLog | undefined): StatisticLog {
  * supports `after`/`before`/`limit`, so the newest log is located with a
  * parallel k-ary search over `after`.
  */
-async function findLatestLog(): Promise<StatisticLog | null> {
+export async function findLatestLog(): Promise<StatisticLog | null> {
     const [first] = await StatisticService.getStatistic({
         query: { limit: 1 },
     }).then(handleError)
@@ -51,7 +41,9 @@ async function findLatestLog(): Promise<StatisticLog | null> {
 
     for (let round = 0; round < SEARCH_ROUNDS && hi - lo > 1; round++) {
         const probes = evenlySpaced(lo, hi, PROBES_PER_ROUND)
-        const results = await Promise.all(probes.map((probe) => logsAfter(probe)))
+        const results = await Promise.all(
+            probes.map((probe) => logsAfter(probe)),
+        )
 
         let lastHit = -1
         results.forEach(([log], index) => {
@@ -74,36 +66,4 @@ async function findLatestLog(): Promise<StatisticLog | null> {
     }
 
     return latest
-}
-
-/**
- * Loads the latest statistic log plus evenly sampled logs from the activity
- * window that ends at it.
- */
-export async function loadStatisticTimeline(): Promise<StatisticTimeline> {
-    const latest = await findLatestLog()
-    if (!latest) return { latest: null, points: [] }
-
-    const start = latest.timestamp - TIMELINE_WINDOW_SECONDS
-    const samples = await Promise.all(
-        evenlySpaced(start, latest.timestamp, TIMELINE_POINTS).map((probe) =>
-            logsAfter(probe),
-        ),
-    )
-
-    const byTimestamp = new Map<number, StatisticLog>([
-        [latest.timestamp, latest],
-    ])
-    for (const [log] of samples) {
-        if (log && log.timestamp <= latest.timestamp) {
-            byTimestamp.set(log.timestamp, log)
-        }
-    }
-
-    return {
-        latest,
-        points: [...byTimestamp.values()].sort(
-            (a, b) => a.timestamp - b.timestamp,
-        ),
-    }
 }
