@@ -30,7 +30,7 @@ export const routes = [
     { path: "/attendances", name: "Attendances", icon: faUserCheck },
     { path: "/version", name: "Version", icon: faCodeBranch },
     { path: "/account", name: "Account", icon: faUser },
-    { path: "/statistics", name: "Statistics", icon: faCalculator },
+    { path: "/statistics", name: "Attendee Stats", icon: faCalculator },
 ]
 
 export function useRouteOpen() {

@@ -1,10 +1,10 @@
-import type { Event, ShopItem, StatisticLog } from "@/generated"
+import type { Event, ShopItem } from "@/generated"
 
 /**
- * Builds a lookup from event id to display name.
+ * Builds a lookup from event id to event.
  */
-export function buildEventNameMap(events: Event[]): Map<string, string> {
-    return new Map(events.map((event) => [event.eventId, event.name]))
+export function buildEventLookup(events: Event[]): Map<string, Event> {
+    return new Map(events.map((event) => [event.eventId, event]))
 }
 
 /**
@@ -15,10 +15,10 @@ export function buildShopItemNameMap(items: ShopItem[]): Map<string, string> {
 }
 
 /**
- * Sorts statistic logs newest first by timestamp.
+ * Label for an id that no longer exists in Adonix (for example, a past year's event).
  */
-export function sortLogsNewestFirst(logs: StatisticLog[]): StatisticLog[] {
-    return [...logs].sort((a, b) => b.timestamp - a.timestamp)
+export function formatMissingLabel(prefix: string, id: string): string {
+    return `${prefix} · ${id.slice(0, 6)}`
 }
 
 /**
@@ -28,5 +28,15 @@ export function formatStatisticTimestamp(timestamp: number): string {
     return new Date(timestamp * 1000).toLocaleString(undefined, {
         dateStyle: "medium",
         timeStyle: "short",
+    })
+}
+
+/**
+ * Short label for chart axes (Unix seconds).
+ */
+export function formatTrendAxisLabel(timestamp: number): string {
+    return new Date(timestamp * 1000).toLocaleString(undefined, {
+        weekday: "short",
+        hour: "numeric",
     })
 }
