@@ -1,10 +1,20 @@
-import { StatisticLog, StatisticService } from "@/generated"
+import {
+    Event,
+    EventService,
+    StatisticLog,
+    StatisticService,
+} from "@/generated"
 import { handleError } from "@/util/api-client"
 
 const PROBES_PER_ROUND = 12
 const SEARCH_ROUNDS = 4
 const TAIL_PAGE_LIMIT = 25
 const MAX_TAIL_PAGES = 5
+
+export interface AttendeeStatsSnapshot {
+    latest: StatisticLog | null
+    eventLookup: Map<string, Event>
+}
 
 async function logsAfter(after: number, limit = 1): Promise<StatisticLog[]> {
     const result = await StatisticService.getStatistic({
@@ -29,7 +39,7 @@ function newest(a: StatisticLog, b: StatisticLog | undefined): StatisticLog {
  * supports `after`/`before`/`limit`, so the newest log is located with a
  * parallel k-ary search over `after`.
  */
-export async function findLatestLog(): Promise<StatisticLog | null> {
+async function findLatestLog(): Promise<StatisticLog | null> {
     const [first] = await StatisticService.getStatistic({
         query: { limit: 1 },
     }).then(handleError)
@@ -66,4 +76,47 @@ export async function findLatestLog(): Promise<StatisticLog | null> {
     }
 
     return latest
+}
+
+/**
+ * Loads the latest statistic snapshot and event metadata for the Attendee Stats page.
+ */
+export async function loadLatestAttendeeStats(): Promise<AttendeeStatsSnapshot> {
+    const [latest, events, staffEvents] = await Promise.all([
+        findLatestLog(),
+        EventService.getEvent().then(handleError),
+        EventService.getEventStaff().then(handleError),
+    ])
+
+    return {
+        latest,
+        eventLookup: buildEventLookup([
+            ...events.events,
+            ...staffEvents.events,
+        ]),
+    }
+}
+
+/**
+ * Builds a lookup from event id to event.
+ */
+export function buildEventLookup(events: Event[]): Map<string, Event> {
+    return new Map(events.map((event) => [event.eventId, event]))
+}
+
+/**
+ * Formats a Unix-seconds timestamp for display.
+ */
+export function formatStatisticTimestamp(timestamp: number): string {
+    return new Date(timestamp * 1000).toLocaleString(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short",
+    })
+}
+
+/**
+ * Formats `part / whole` as a whole-number percentage.
+ */
+export function formatPercent(part: number, whole: number): string {
+    return whole === 0 ? "—" : `${Math.round((part / whole) * 100)}%`
 }
