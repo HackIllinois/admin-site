@@ -6,10 +6,7 @@ import {
     buildEventLookup,
     formatStatisticTimestamp,
 } from "@/app/lib/statistics/statistic-labels"
-import {
-    formatPercent,
-    totalRedeemed,
-} from "@/app/lib/statistics/statistic-metrics"
+import { formatPercent } from "@/app/lib/statistics/statistic-metrics"
 import { findLatestLog } from "@/app/lib/statistics/statistic-latest"
 import { handleError } from "@/util/api-client"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
@@ -227,11 +224,6 @@ export default function AttendeeStatsPage() {
                                     value: busiestEvent?.attendees ?? 0,
                                     color: COLORS.green,
                                     hint: busiestEvent?.name,
-                                },
-                                {
-                                    label: "Shop redemptions",
-                                    value: totalRedeemed(latest),
-                                    color: COLORS.blue,
                                 },
                             ].map(({ label, value, color, hint }) => (
                                 <div className={styles.card} key={label}>
