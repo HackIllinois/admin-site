@@ -1,25 +1,31 @@
+@use "../constants.scss" as *;
+
 .admissions {
     margin: auto;
     width: 100%;
     box-sizing: border-box;
-    height: 85vh;
+    min-height: 85vh;
     overflow-y: visible;
-    padding-bottom: 10vh;
+    padding: 1.5rem 2rem 10vh;
+    background: #f7f8fb;
 
     @media screen and (max-width: 1024px) {
-        height: fit-content;
+        min-height: 100%;
+        padding: 1rem;
     }
 
-    h1 {
-        text-align: center;
-        color: #444444;
-    }
+    .portalTab {
+        min-height: 48px;
+        padding: 0 1.25rem;
+        color: $primary-color;
+        font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-transform: none;
 
-    .submitButton {
-        margin: auto;
-        display: flex;
-        justify-content: center;
-        padding: 15px;
+        &:hover {
+            background: rgba($primary-color, 0.08);
+        }
     }
 }
 

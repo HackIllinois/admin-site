@@ -5,6 +5,7 @@ import {
     faCalendar,
     faCodeBranch,
     faEnvelope,
+    faFileLines,
     faMedal,
     faPenToSquare,
     faShoppingCart,
@@ -18,6 +19,11 @@ import { usePathname } from "next/navigation"
 
 export const routes = [
     { path: "/admissions", name: "Admissions", icon: faUsers },
+    {
+        path: "/application-portal",
+        name: "Application Portal",
+        icon: faFileLines,
+    },
     { path: "/notifications", name: "Notifications", icon: faBell },
     { path: "/events", name: "Events", icon: faCalendar },
     { path: "/staff-shifts", name: "Staff Shifts", icon: faUserClock },
