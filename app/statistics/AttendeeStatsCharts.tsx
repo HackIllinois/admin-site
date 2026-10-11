@@ -20,13 +20,9 @@ const CHART_FONT = "Montserrat, Segoe UI, Roboto, sans-serif"
 const TOOLTIP_STYLE = { fontFamily: CHART_FONT, fontSize: 12, borderRadius: 6 }
 const TICK_STYLE = { fontSize: 11, fontFamily: CHART_FONT, fill: "#666" }
 const LEGEND_STYLE = { fontFamily: CHART_FONT, fontSize: 12 }
+const MAX_LABEL_LENGTH = 24
+const PHONE_LABEL_LENGTH = 14
 const PHONE_QUERY = "(max-width: 767.9px)"
-const Y_AXIS_CHAR_WIDTH_DESKTOP = 6.2
-const Y_AXIS_CHAR_WIDTH_PHONE = 5.6
-const Y_AXIS_PADDING = 10
-const Y_AXIS_MIN_WIDTH = 72
-const Y_AXIS_MAX_WIDTH_DESKTOP = 480
-const Y_AXIS_MAX_WIDTH_PHONE = 200
 
 export interface ChartSlice {
     name: string
@@ -34,32 +30,10 @@ export interface ChartSlice {
     color: string
 }
 
-/**
- * Estimates Y-axis width so category labels render without truncation.
- */
-function measureYAxisWidth(names: string[], isPhone: boolean): number {
-    const charWidth = isPhone
-        ? Y_AXIS_CHAR_WIDTH_PHONE
-        : Y_AXIS_CHAR_WIDTH_DESKTOP
-    const maxWidth = isPhone
-        ? Y_AXIS_MAX_WIDTH_PHONE
-        : Y_AXIS_MAX_WIDTH_DESKTOP
-    const longest = names.reduce(
-        (max, name) => Math.max(max, name.length),
-        0,
-    )
-    return Math.min(
-        maxWidth,
-        Math.max(Y_AXIS_MIN_WIDTH, Math.ceil(longest * charWidth) + Y_AXIS_PADDING),
-    )
-}
-
-function measureValueLabelMargin(values: number[]): number {
-    const widest = values.reduce((max, value) => {
-        const digits = value.toLocaleString().length
-        return Math.max(max, digits)
-    }, 1)
-    return Math.max(36, widest * 8 + 12)
+function truncate(label: string, maxLength: number): string {
+    return label.length > maxLength
+        ? label.slice(0, maxLength - 1) + "…"
+        : label
 }
 
 interface DonutChartProps {
@@ -157,11 +131,7 @@ export function TopItemsBarChart({
 }: TopItemsBarChartProps) {
     const isPhone = useMediaQuery(PHONE_QUERY)
     const data = rows.slice(0, limit)
-    const yAxisWidth = measureYAxisWidth(
-        data.map((row) => row.name),
-        isPhone,
-    )
-    const rightMargin = measureValueLabelMargin(data.map((row) => row.value))
+    const labelLength = isPhone ? PHONE_LABEL_LENGTH : MAX_LABEL_LENGTH
 
     if (data.length === 0) {
         return <div className={styles.chartEmpty}>Nothing to chart</div>
@@ -174,7 +144,7 @@ export function TopItemsBarChart({
                 layout="vertical"
                 margin={{
                     top: 4,
-                    right: rightMargin,
+                    right: isPhone ? 28 : 40,
                     left: 0,
                     bottom: 4,
                 }}
@@ -194,8 +164,11 @@ export function TopItemsBarChart({
                 <YAxis
                     type="category"
                     dataKey="name"
-                    width={yAxisWidth}
+                    width={isPhone ? 100 : 180}
                     tick={TICK_STYLE}
+                    tickFormatter={(label: string) =>
+                        truncate(label, labelLength)
+                    }
                     axisLine={false}
                     tickLine={false}
                 />

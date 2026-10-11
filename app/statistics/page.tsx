@@ -1,12 +1,14 @@
 "use client"
 
 import Loading from "@/components/Loading"
-import { Event, StatisticLog } from "@/generated"
+import { Event, EventService, StatisticLog } from "@/generated"
 import {
-    formatPercent,
+    buildEventLookup,
     formatStatisticTimestamp,
-    loadLatestAttendeeStats,
-} from "@/app/lib/api/statistics"
+} from "@/app/lib/statistics/statistic-labels"
+import { formatPercent } from "@/app/lib/statistics/statistic-metrics"
+import { findLatestLog } from "@/app/lib/statistics/statistic-latest"
+import { handleError } from "@/util/api-client"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Tab, Tabs } from "@mui/material"
@@ -42,11 +44,16 @@ export default function AttendeeStatsPage() {
     const refresh = useCallback(async () => {
         setLoading(true)
         try {
-            const { latest: latestLog, eventLookup: lookup } =
-                await loadLatestAttendeeStats()
+            const [latestLog, events, staffEvents] = await Promise.all([
+                findLatestLog(),
+                EventService.getEvent().then(handleError),
+                EventService.getEventStaff().then(handleError),
+            ])
 
             setLatest(latestLog)
-            setEventLookup(lookup)
+            setEventLookup(
+                buildEventLookup([...events.events, ...staffEvents.events]),
+            )
         } finally {
             setLoading(false)
             setLoaded(true)
