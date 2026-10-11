@@ -74,10 +74,12 @@ const mockApplications: RegistrationApplicationSubmittedRequest[] = [
 type RatingState = number | null
 
 async function saveApplicationRating(
-    _application: RegistrationApplicationSubmittedRequest,
-    _rating: number,
+    application: RegistrationApplicationSubmittedRequest,
+    rating: number,
 ) {
     // Replace this mock with Aditya's reviewer endpoint once its request shape is available.
+    void application
+    void rating
     await Promise.resolve()
 }
 
