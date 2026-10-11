@@ -7,8 +7,8 @@ import NewsletterModal from "./NewsletterModal"
 import styles from "./style.module.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Box, IconButton } from '@mui/material';
+import MoreVertIcon from "@mui/icons-material/MoreVert"
+import { Box, IconButton } from "@mui/material"
 import {
     DataGrid,
     GridActionsCellItem,

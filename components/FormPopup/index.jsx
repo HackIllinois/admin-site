@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
+import React, { useEffect, useRef, useState } from "react"
+import ReactDOM from "react-dom"
 
-import './style.scss'
+import "./style.scss"
 
 /* FormPopup can be used in 2 ways:
  *
@@ -47,11 +47,11 @@ import './style.scss'
 
 const ModalPopup = ({ children }) => {
     // the following uses React Portals to place the popup directly in body rather than in the current component tree
-    const popupRootRef = useRef(document.createElement('div'))
+    const popupRootRef = useRef(document.createElement("div"))
 
     useEffect(() => {
         const popupRoot = popupRootRef.current
-        popupRoot.tabIndex = '-1'
+        popupRoot.tabIndex = "-1"
 
         document.body.appendChild(popupRoot)
         popupRoot.focus()
@@ -107,7 +107,7 @@ const FormPopup = ({
     }
 
     const handleKeyUp = (e) => {
-        if (e.key === 'Escape') {
+        if (e.key === "Escape") {
             cancel()
         }
     }

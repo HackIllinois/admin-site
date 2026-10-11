@@ -1,13 +1,12 @@
-import React from 'react'
-import { isAuthenticated, authenticate, getRoles, getUserId } from 'util/api'
+import React from "react"
+import { isAuthenticated, authenticate, getRoles, getUserId } from "util/api"
 
 // TODO: make distinction between google auth and github auth clearer
 
 // checks if the user's token matches the desired provider
-const isDesiredAuthentication = (provider) =>
-    getUserId().startsWith(provider)
+const isDesiredAuthentication = (provider) => getUserId().startsWith(provider)
 
-const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
+const AuthenticatedRoute = ({ path, provider = "google", ...props }) => {
     // make sure user is authenticated, and that their authentication provider matches the desired one
     if (!isAuthenticated() || !isDesiredAuthentication(provider)) {
         authenticate(path, provider)
@@ -15,12 +14,12 @@ const AuthenticatedRoute = ({ path, provider = 'google', ...props }) => {
     }
 
     // indicates that the route is private (only for Staff and Admin)
-    if (provider === 'google') {
+    if (provider === "google") {
         const roles = getRoles()
-        if (roles.includes('STAFF') || roles.includes('ADMIN')) {
+        if (roles.includes("STAFF") || roles.includes("ADMIN")) {
             return <React.Fragment {...props} />
         } else {
-            window.location.replace('https://hackillinois.org/')
+            window.location.replace("https://hackillinois.org/")
             return
         }
     }

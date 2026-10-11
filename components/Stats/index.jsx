@@ -1,21 +1,21 @@
-import React from 'react'
-import Chart from 'react-frappe-charts'
+import React from "react"
+import Chart from "react-frappe-charts"
 
-import './style.scss'
-import COLORS from 'constants.scss'
-import { formatCamelCase } from 'util/registrations'
+import "./style.scss"
+import COLORS from "constants.scss"
+import { formatCamelCase } from "util/registrations"
 
 const { primaryColor } = COLORS
 
 const omittedColumns = new Set([
-    'firstName',
-    'lastName',
-    'email',
-    'resumeFilename',
-    'createdAt',
-    'updatedAt',
-    'github',
-    'id',
+    "firstName",
+    "lastName",
+    "email",
+    "resumeFilename",
+    "createdAt",
+    "updatedAt",
+    "github",
+    "id",
 ])
 
 export default function Stats({ registrations }) {
@@ -52,9 +52,9 @@ export default function Stats({ registrations }) {
         // sort the map so that keys are in order
         const sortedData = new Map(
             [...data.entries()].sort(([key1], [key2]) => {
-                if (typeof key1 == 'boolean' && typeof key2 == 'boolean') {
+                if (typeof key1 == "boolean" && typeof key2 == "boolean") {
                     return Number(key1) - Number(key2)
-                } else if (typeof key1 == 'number' && typeof key2 == 'number') {
+                } else if (typeof key1 == "number" && typeof key2 == "number") {
                     return key1 - key2
                 } else {
                     return String(key1).localeCompare(key2)
@@ -83,7 +83,7 @@ export default function Stats({ registrations }) {
                     labels: Array.from(chart.data.keys()),
                     datasets: [
                         {
-                            name: 'Applicants',
+                            name: "Applicants",
                             values: Array.from(chart.data.values()),
                         },
                     ],

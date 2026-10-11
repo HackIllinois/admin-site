@@ -157,7 +157,9 @@ export default function StaffShiftsPage() {
     const [shiftRows, setShiftRows] = useState<ShiftRow[]>([])
     const [staffUsers, setStaffUsers] = useState<StaffUser[]>([])
     const [staffInfoRows, setStaffInfoRows] = useState<StaffInfoRow[]>([])
-    const [shiftAssignments, setShiftAssignments] = useState<ShiftAssignment[]>([])
+    const [shiftAssignments, setShiftAssignments] = useState<ShiftAssignment[]>(
+        [],
+    )
 
     const [shiftModalOpen, setShiftModalOpen] = useState(false)
     const [editingShiftId, setEditingShiftId] = useState<string | null>(null)
@@ -176,7 +178,9 @@ export default function StaffShiftsPage() {
     const [savingBulkAssignment, setSavingBulkAssignment] = useState(false)
 
     const [staffInfoModalOpen, setStaffInfoModalOpen] = useState(false)
-    const [editingStaffInfoId, setEditingStaffInfoId] = useState<string | null>(null)
+    const [editingStaffInfoId, setEditingStaffInfoId] = useState<string | null>(
+        null,
+    )
     const [staffInfoFirstName, setStaffInfoFirstName] = useState("")
     const [staffInfoLastName, setStaffInfoLastName] = useState("")
     const [staffInfoTitle, setStaffInfoTitle] = useState("")
@@ -194,13 +198,16 @@ export default function StaffShiftsPage() {
 
     const apiRequest = useCallback(
         async <T,>(path: string, init?: RequestInit): Promise<T> => {
-            const response = await fetch(`${client.getConfig().baseUrl}${path}`, {
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
+            const response = await fetch(
+                `${client.getConfig().baseUrl}${path}`,
+                {
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    ...init,
                 },
-                ...init,
-            })
+            )
 
             let payload: unknown = null
             try {
@@ -280,7 +287,10 @@ export default function StaffShiftsPage() {
                     major: staff.major,
                     education: staff.education,
                     graduate: staff.graduate,
-                    isActive: typeof staff.isActive === "boolean" ? staff.isActive : true,
+                    isActive:
+                        typeof staff.isActive === "boolean"
+                            ? staff.isActive
+                            : true,
                 }
             })
 
@@ -321,7 +331,12 @@ export default function StaffShiftsPage() {
         } finally {
             setLoading(false)
         }
-    }, [refreshAssignments, refreshShifts, refreshStaffCandidates, refreshStaffInfo])
+    }, [
+        refreshAssignments,
+        refreshShifts,
+        refreshStaffCandidates,
+        refreshStaffInfo,
+    ])
 
     useEffect(() => {
         refreshAll()
@@ -335,7 +350,9 @@ export default function StaffShiftsPage() {
         setShiftName("")
         setShiftDescription("")
         setShiftLocation("")
-        setShiftStartLocal(unixToDateTimeLocal(Math.floor(now.getTime() / 1000)))
+        setShiftStartLocal(
+            unixToDateTimeLocal(Math.floor(now.getTime() / 1000)),
+        )
         setShiftEndLocal(
             unixToDateTimeLocal(Math.floor(oneHourFromNow.getTime() / 1000)),
         )
@@ -413,7 +430,9 @@ export default function StaffShiftsPage() {
                     },
                 }).then(handleError)
             } else {
-                await EventService.postEvent({ body: shiftPayload }).then(handleError)
+                await EventService.postEvent({ body: shiftPayload }).then(
+                    handleError,
+                )
             }
             await refreshShifts()
             setShiftModalOpen(false)
@@ -483,7 +502,11 @@ export default function StaffShiftsPage() {
 
             setSavingAssignment(true)
             try {
-                await updateShiftAssignment(selectedStaffUserId, shiftId, "remove")
+                await updateShiftAssignment(
+                    selectedStaffUserId,
+                    shiftId,
+                    "remove",
+                )
                 await refreshAssignments()
             } finally {
                 setSavingAssignment(false)
@@ -552,7 +575,12 @@ export default function StaffShiftsPage() {
             alert("Email and staff email are required.")
             return
         }
-        if (!payload.school || !payload.major || !payload.education || !payload.graduate) {
+        if (
+            !payload.school ||
+            !payload.major ||
+            !payload.education ||
+            !payload.graduate
+        ) {
             alert("School, major, education, and graduate are required.")
             return
         }
@@ -668,8 +696,9 @@ export default function StaffShiftsPage() {
             staffUsers.map((staff) => [staff.userId, staff.displayName]),
         )
         const selectedAssignments =
-            shiftAssignments.find((entry) => entry.userId === selectedStaffUserId)
-                ?.shifts ?? []
+            shiftAssignments.find(
+                (entry) => entry.userId === selectedStaffUserId,
+            )?.shifts ?? []
 
         return shiftRows.map((shift) => {
             const assignedUsers = shiftAssignments
@@ -710,7 +739,8 @@ export default function StaffShiftsPage() {
         }
 
         if (selectedBulkShiftId) {
-            const assignedUserIds = shiftAssignmentsByShiftId.get(selectedBulkShiftId) ?? []
+            const assignedUserIds =
+                shiftAssignmentsByShiftId.get(selectedBulkShiftId) ?? []
             for (const userId of assignedUserIds) {
                 if (!options.has(userId)) {
                     options.set(userId, {
@@ -727,7 +757,8 @@ export default function StaffShiftsPage() {
     }, [selectedBulkShiftId, shiftAssignmentsByShiftId, staffUsers])
 
     const bulkStaffOptionsById = useMemo(
-        () => new Map(bulkStaffOptions.map((option) => [option.userId, option])),
+        () =>
+            new Map(bulkStaffOptions.map((option) => [option.userId, option])),
         [bulkStaffOptions],
     )
 
@@ -761,8 +792,12 @@ export default function StaffShiftsPage() {
     const bulkDelta = useMemo(() => {
         const selectedSet = new Set(bulkSelectedUserIds)
         const existingSet = new Set(bulkBaseUserIds)
-        const toAdd = bulkSelectedUserIds.filter((userId) => !existingSet.has(userId))
-        const toRemove = bulkBaseUserIds.filter((userId) => !selectedSet.has(userId))
+        const toAdd = bulkSelectedUserIds.filter(
+            (userId) => !existingSet.has(userId),
+        )
+        const toRemove = bulkBaseUserIds.filter(
+            (userId) => !selectedSet.has(userId),
+        )
         return { toAdd, toRemove }
     }, [bulkBaseUserIds, bulkSelectedUserIds])
 
@@ -790,14 +825,23 @@ export default function StaffShiftsPage() {
                     updateShiftAssignment(userId, selectedBulkShiftId, "add"),
                 ),
                 ...toRemove.map((userId) =>
-                    updateShiftAssignment(userId, selectedBulkShiftId, "remove"),
+                    updateShiftAssignment(
+                        userId,
+                        selectedBulkShiftId,
+                        "remove",
+                    ),
                 ),
             ])
             await refreshAssignments()
         } finally {
             setSavingBulkAssignment(false)
         }
-    }, [bulkDelta, refreshAssignments, selectedBulkShiftId, updateShiftAssignment])
+    }, [
+        bulkDelta,
+        refreshAssignments,
+        selectedBulkShiftId,
+        updateShiftAssignment,
+    ])
 
     const assignmentColumns = useMemo<GridColDef<ShiftAssignmentRow>[]>(
         () => [
@@ -867,7 +911,12 @@ export default function StaffShiftsPage() {
             { field: "lastName", headerName: "Last Name", minWidth: 140 },
             { field: "title", headerName: "Title", minWidth: 180, flex: 1 },
             { field: "team", headerName: "Team", minWidth: 140 },
-            { field: "staffEmail", headerName: "Staff Email", minWidth: 240, flex: 1 },
+            {
+                field: "staffEmail",
+                headerName: "Staff Email",
+                minWidth: 240,
+                flex: 1,
+            },
             { field: "email", headerName: "Email", minWidth: 240, flex: 1 },
             { field: "school", headerName: "School", minWidth: 180 },
             { field: "major", headerName: "Major", minWidth: 140 },
@@ -1044,12 +1093,15 @@ export default function StaffShiftsPage() {
                 >
                     <Typography variant="h6">Bulk Assign Shifts</Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Pick a shift, select all assignees, then apply once. This
-                        syncs to add newly selected staff and remove deselected staff.
+                        Pick a shift, select all assignees, then apply once.
+                        This syncs to add newly selected staff and remove
+                        deselected staff.
                     </Typography>
 
                     <FormControl fullWidth>
-                        <InputLabel id="bulk-shift-select-label">Shift</InputLabel>
+                        <InputLabel id="bulk-shift-select-label">
+                            Shift
+                        </InputLabel>
                         <Select
                             labelId="bulk-shift-select-label"
                             label="Shift"
@@ -1059,7 +1111,10 @@ export default function StaffShiftsPage() {
                             }
                         >
                             {shiftRows.map((shift) => (
-                                <MenuItem key={shift.eventId} value={shift.eventId}>
+                                <MenuItem
+                                    key={shift.eventId}
+                                    value={shift.eventId}
+                                >
                                     {shift.name} - {shift.startDisplay}
                                 </MenuItem>
                             ))}
@@ -1075,7 +1130,11 @@ export default function StaffShiftsPage() {
                         }
                         onChange={(_, values) =>
                             setBulkSelectedUserIds(
-                                Array.from(new Set(values.map((option) => option.userId))),
+                                Array.from(
+                                    new Set(
+                                        values.map((option) => option.userId),
+                                    ),
+                                ),
                             )
                         }
                         disabled={!selectedBulkShiftId}
@@ -1117,14 +1176,20 @@ export default function StaffShiftsPage() {
                     <Box display="flex" gap={1} flexWrap="wrap">
                         <Button
                             variant="outlined"
-                            disabled={!selectedBulkShiftId || savingBulkAssignment}
-                            onClick={() => setBulkSelectedUserIds(bulkBaseUserIds)}
+                            disabled={
+                                !selectedBulkShiftId || savingBulkAssignment
+                            }
+                            onClick={() =>
+                                setBulkSelectedUserIds(bulkBaseUserIds)
+                            }
                         >
                             Reset To Current
                         </Button>
                         <Button
                             variant="outlined"
-                            disabled={!selectedBulkShiftId || savingBulkAssignment}
+                            disabled={
+                                !selectedBulkShiftId || savingBulkAssignment
+                            }
                             onClick={() => setBulkSelectedUserIds([])}
                         >
                             Clear All
@@ -1189,7 +1254,9 @@ export default function StaffShiftsPage() {
                         label="Location"
                         fullWidth
                         value={shiftLocation}
-                        onChange={(event) => setShiftLocation(event.target.value)}
+                        onChange={(event) =>
+                            setShiftLocation(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
@@ -1208,7 +1275,9 @@ export default function StaffShiftsPage() {
                         type="datetime-local"
                         fullWidth
                         value={shiftEndLocal}
-                        onChange={(event) => setShiftEndLocal(event.target.value)}
+                        onChange={(event) =>
+                            setShiftEndLocal(event.target.value)
+                        }
                         InputLabelProps={{ shrink: true }}
                     />
                 </DialogContent>
@@ -1233,7 +1302,9 @@ export default function StaffShiftsPage() {
                 maxWidth="sm"
             >
                 <DialogTitle>
-                    {editingStaffInfoId ? "Edit Staff Info" : "Create Staff Info"}
+                    {editingStaffInfoId
+                        ? "Edit Staff Info"
+                        : "Create Staff Info"}
                 </DialogTitle>
                 <DialogContent>
                     <TextField
@@ -1242,70 +1313,90 @@ export default function StaffShiftsPage() {
                         label="First Name"
                         fullWidth
                         value={staffInfoFirstName}
-                        onChange={(event) => setStaffInfoFirstName(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoFirstName(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Last Name"
                         fullWidth
                         value={staffInfoLastName}
-                        onChange={(event) => setStaffInfoLastName(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoLastName(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Title"
                         fullWidth
                         value={staffInfoTitle}
-                        onChange={(event) => setStaffInfoTitle(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoTitle(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Team"
                         fullWidth
                         value={staffInfoTeam}
-                        onChange={(event) => setStaffInfoTeam(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoTeam(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Email"
                         fullWidth
                         value={staffInfoEmail}
-                        onChange={(event) => setStaffInfoEmail(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoEmail(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Staff Email"
                         fullWidth
                         value={staffInfoStaffEmail}
-                        onChange={(event) => setStaffInfoStaffEmail(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoStaffEmail(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="School"
                         fullWidth
                         value={staffInfoSchool}
-                        onChange={(event) => setStaffInfoSchool(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoSchool(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Major"
                         fullWidth
                         value={staffInfoMajor}
-                        onChange={(event) => setStaffInfoMajor(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoMajor(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Education"
                         fullWidth
                         value={staffInfoEducation}
-                        onChange={(event) => setStaffInfoEducation(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoEducation(event.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"
                         label="Graduate"
                         fullWidth
                         value={staffInfoGraduate}
-                        onChange={(event) => setStaffInfoGraduate(event.target.value)}
+                        onChange={(event) =>
+                            setStaffInfoGraduate(event.target.value)
+                        }
                     />
                     <FormControl fullWidth margin="dense">
                         <InputLabel id="staff-active-label">Active</InputLabel>
@@ -1314,7 +1405,9 @@ export default function StaffShiftsPage() {
                             label="Active"
                             value={staffInfoIsActive ? "true" : "false"}
                             onChange={(event) =>
-                                setStaffInfoIsActive(event.target.value === "true")
+                                setStaffInfoIsActive(
+                                    event.target.value === "true",
+                                )
                             }
                         >
                             <MenuItem value="true">Active</MenuItem>
@@ -1323,7 +1416,10 @@ export default function StaffShiftsPage() {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeStaffInfoModal} disabled={savingStaffInfo}>
+                    <Button
+                        onClick={closeStaffInfoModal}
+                        disabled={savingStaffInfo}
+                    >
                         Cancel
                     </Button>
                     <Button

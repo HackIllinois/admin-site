@@ -1,11 +1,12 @@
 "use client"
-
 import Loading from "@/components/Loading"
 import { Event, StatisticLog } from "@/generated"
 import {
     formatPercent,
     formatStatisticTimestamp,
     loadLatestAttendeeStats,
+    loadReimbursementStats,
+    loadDraftStats,
 } from "@/app/lib/api/statistics"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -39,6 +40,9 @@ export default function AttendeeStatsPage() {
     const [tab, setTab] = useState<TabId>("overview")
     const [filters, setFilters] = useState<ListFilters>(DEFAULT_FILTERS)
 
+    const [requested, setRequested] = useState<number>(0)
+    const [number_of_drafts, setDraftNumber] = useState<number>(0)
+
     const refresh = useCallback(async () => {
         setLoading(true)
         try {
@@ -47,6 +51,15 @@ export default function AttendeeStatsPage() {
 
             setLatest(latestLog)
             setEventLookup(lookup)
+
+            const { requested: requestReimbursement } =
+                await loadReimbursementStats()
+
+            setRequested(requestReimbursement)
+
+            const { number_of_drafts: countDrafts } = await loadDraftStats()
+
+            setDraftNumber(countDrafts)
         } finally {
             setLoading(false)
             setLoaded(true)
@@ -217,6 +230,16 @@ export default function AttendeeStatsPage() {
                                     value: busiestEvent?.attendees ?? 0,
                                     color: COLORS.green,
                                     hint: busiestEvent?.name,
+                                },
+                                {
+                                    label: "Request reimbursement",
+                                    value: requested,
+                                    color: COLORS.amber,
+                                },
+                                {
+                                    label: "Draft Count",
+                                    value: number_of_drafts,
+                                    color: COLORS.blue,
                                 },
                             ].map(({ label, value, color, hint }) => (
                                 <div className={styles.card} key={label}>

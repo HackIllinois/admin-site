@@ -52,10 +52,12 @@ export default function NewsletterModal({
                 </div>
 
                 <div className={styles.content}>
-
                     <div className={styles.emailSection}>
                         <div className={styles.sectionHeader}>
-                            <h3>{newsletter.subscribers.length} Subscriber Emails</h3>
+                            <h3>
+                                {newsletter.subscribers.length} Subscriber
+                                Emails
+                            </h3>
                             <button
                                 className={`${styles.copyButton} ${copied ? styles.copied : ""}`}
                                 onClick={handleCopy}

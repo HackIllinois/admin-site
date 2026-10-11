@@ -1,6 +1,6 @@
-import React from 'react'
-import queryString from 'query-string'
-import Loading from 'components/Loading'
+import React from "react"
+import queryString from "query-string"
+import Loading from "components/Loading"
 
 export default class Auth extends React.Component {
     componentDidMount() {
@@ -10,8 +10,8 @@ export default class Auth extends React.Component {
         const { to } = localStorage
 
         if (token) {
-            localStorage.setItem('token', token)
-            localStorage.removeItem('to')
+            localStorage.setItem("token", token)
+            localStorage.removeItem("to")
 
             if (to) {
                 window.location.replace(to)

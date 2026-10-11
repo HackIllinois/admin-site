@@ -1,9 +1,9 @@
 // Modified from https://codesandbox.io/s/0mk3qwpl4l
 
-import React from 'react'
-import { FixedSizeList as List } from 'react-window'
+import React from "react"
+import { FixedSizeList as List } from "react-window"
 
-import './style.scss'
+import "./style.scss"
 
 // StickyList works by overriding the list container to always display the sticky rows
 // with position: sticky and by overriding the row renderer to leave the first n rows
@@ -11,7 +11,7 @@ import './style.scss'
 // Note: when scrolling, rows that should be positioned where the sticky rows are still exist, just underneath
 
 const StickyListContext = React.createContext()
-StickyListContext.displayName = 'StickyListContext'
+StickyListContext.displayName = "StickyListContext"
 
 // This overrides rendering of the contents of List (the entire container)
 // We can't directly give this element props because it's inside List, so we use a Context
