@@ -6,7 +6,7 @@ import {
     formatStatisticTimestamp,
     loadLatestAttendeeStats,
     loadReimbursementStats,
-    loadDraftStats
+    loadDraftStats,
 } from "@/app/lib/api/statistics"
 import { faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -52,16 +52,14 @@ export default function AttendeeStatsPage() {
             setLatest(latestLog)
             setEventLookup(lookup)
 
-            const {requested: requestReimbursement} = 
+            const { requested: requestReimbursement } =
                 await loadReimbursementStats()
-            
+
             setRequested(requestReimbursement)
 
-            const {number_of_drafts: countDrafts} =
-                await loadDraftStats()
-            
+            const { number_of_drafts: countDrafts } = await loadDraftStats()
+
             setDraftNumber(countDrafts)
-    
         } finally {
             setLoading(false)
             setLoaded(true)
@@ -236,15 +234,13 @@ export default function AttendeeStatsPage() {
                                 {
                                     label: "Request reimbursement",
                                     value: requested,
-                                    color: COLORS.amber
-
+                                    color: COLORS.amber,
                                 },
                                 {
                                     label: "Draft Count",
                                     value: number_of_drafts,
-                                    color: COLORS.blue
-
-                                }
+                                    color: COLORS.blue,
+                                },
                             ].map(({ label, value, color, hint }) => (
                                 <div className={styles.card} key={label}>
                                     <div className={styles.label}>{label}</div>

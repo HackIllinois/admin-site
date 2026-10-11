@@ -4,5 +4,4 @@ export const createClientConfig: CreateClientConfig = (config) => ({
     ...config,
     baseUrl: "https://adonix.hackillinois.org",
     credentials: "include",
-
 })

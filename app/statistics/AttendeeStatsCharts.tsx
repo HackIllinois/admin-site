@@ -41,16 +41,14 @@ function measureYAxisWidth(names: string[], isPhone: boolean): number {
     const charWidth = isPhone
         ? Y_AXIS_CHAR_WIDTH_PHONE
         : Y_AXIS_CHAR_WIDTH_DESKTOP
-    const maxWidth = isPhone
-        ? Y_AXIS_MAX_WIDTH_PHONE
-        : Y_AXIS_MAX_WIDTH_DESKTOP
-    const longest = names.reduce(
-        (max, name) => Math.max(max, name.length),
-        0,
-    )
+    const maxWidth = isPhone ? Y_AXIS_MAX_WIDTH_PHONE : Y_AXIS_MAX_WIDTH_DESKTOP
+    const longest = names.reduce((max, name) => Math.max(max, name.length), 0)
     return Math.min(
         maxWidth,
-        Math.max(Y_AXIS_MIN_WIDTH, Math.ceil(longest * charWidth) + Y_AXIS_PADDING),
+        Math.max(
+            Y_AXIS_MIN_WIDTH,
+            Math.ceil(longest * charWidth) + Y_AXIS_PADDING,
+        ),
     )
 }
 

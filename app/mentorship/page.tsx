@@ -84,7 +84,9 @@ function formatChicagoEpoch(value: number): string {
     }).format(new Date(epochMs))
 }
 
-function parseMentorOfficeHours(response: MentorResponseShape): MentorOfficeHours[] {
+function parseMentorOfficeHours(
+    response: MentorResponseShape,
+): MentorOfficeHours[] {
     if (Array.isArray(response)) return response
     if (Array.isArray(response.data)) return response.data
     if (Array.isArray(response.mentors)) return response.mentors
@@ -122,7 +124,10 @@ function GridToolbar({ refresh }: { refresh: () => void }) {
     )
 }
 
-async function mentorInfoRequest<T>(path: string, init?: RequestInit): Promise<T> {
+async function mentorInfoRequest<T>(
+    path: string,
+    init?: RequestInit,
+): Promise<T> {
     const response = await fetch(`${client.getConfig().baseUrl}${path}`, {
         credentials: "include",
         headers: {
@@ -162,14 +167,14 @@ async function mentorInfoRequest<T>(path: string, init?: RequestInit): Promise<T
 
 export default function MentorshipPage() {
     const [loading, setLoading] = useState(true)
-    const [activeTab, setActiveTab] = useState<"mentors" | "officeHours" | "judges">(
-        "judges",
-    )
+    const [activeTab, setActiveTab] = useState<
+        "mentors" | "officeHours" | "judges"
+    >("judges")
     const [mentorRows, setMentorRows] = useState<MentorProfileRow[]>([])
     const [judgeRows, setJudgeRows] = useState<JudgeProfileRow[]>([])
-    const [officeHoursRows, setOfficeHoursRows] = useState<MentorOfficeHoursRow[]>(
-        [],
-    )
+    const [officeHoursRows, setOfficeHoursRows] = useState<
+        MentorOfficeHoursRow[]
+    >([])
     const [mentorModalOpen, setMentorModalOpen] = useState(false)
     const [editingMentorId, setEditingMentorId] = useState<string | null>(null)
     const [mentorFormName, setMentorFormName] = useState("")
@@ -179,9 +184,8 @@ export default function MentorshipPage() {
     )
     const [savingMentor, setSavingMentor] = useState(false)
     const [mentorDetailsOpen, setMentorDetailsOpen] = useState(false)
-    const [selectedMentor, setSelectedMentor] = useState<MentorProfileRow | null>(
-        null,
-    )
+    const [selectedMentor, setSelectedMentor] =
+        useState<MentorProfileRow | null>(null)
     const [judgeModalOpen, setJudgeModalOpen] = useState(false)
     const [editingJudgeId, setEditingJudgeId] = useState<string | null>(null)
     const [judgeFormName, setJudgeFormName] = useState("")
@@ -195,20 +199,26 @@ export default function MentorshipPage() {
         null,
     )
     const [officeHoursModalOpen, setOfficeHoursModalOpen] = useState(false)
-    const [editingOfficeHoursId, setEditingOfficeHoursId] = useState<string | null>(
-        null,
-    )
-    const [officeHoursFormMentorName, setOfficeHoursFormMentorName] = useState("")
+    const [editingOfficeHoursId, setEditingOfficeHoursId] = useState<
+        string | null
+    >(null)
+    const [officeHoursFormMentorName, setOfficeHoursFormMentorName] =
+        useState("")
     const [officeHoursFormLocation, setOfficeHoursFormLocation] = useState("")
     const [officeHoursFormStartTime, setOfficeHoursFormStartTime] = useState("")
     const [officeHoursFormEndTime, setOfficeHoursFormEndTime] = useState("")
     const [savingOfficeHours, setSavingOfficeHours] = useState(false)
 
     const refreshMentors = useCallback(async () => {
-        const mentors = await mentorInfoRequest<MentorProfile[]>("/mentor/info/")
+        const mentors =
+            await mentorInfoRequest<MentorProfile[]>("/mentor/info/")
         const rows = mentors
             .slice()
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }))
+            .sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, {
+                    sensitivity: "base",
+                }),
+            )
             .map((mentor) => ({
                 ...mentor,
                 imageUrl: mentor.imageUrl || DEFAULT_MENTOR_IMAGE_URL,
@@ -241,7 +251,11 @@ export default function MentorshipPage() {
         const judges = await mentorInfoRequest<JudgeProfile[]>("/judge/info/")
         const rows = judges
             .slice()
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }))
+            .sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, {
+                    sensitivity: "base",
+                }),
+            )
             .map((judge) => ({
                 ...judge,
                 imageUrl: judge.imageUrl || DEFAULT_MENTOR_IMAGE_URL,
@@ -332,15 +346,18 @@ export default function MentorshipPage() {
         refreshMentors,
     ])
 
-    const handleDeleteMentor = useCallback(async (mentor: MentorProfileRow) => {
-        const confirmed = confirm(`Delete mentor "${mentor.name}"?`)
-        if (!confirmed) return
+    const handleDeleteMentor = useCallback(
+        async (mentor: MentorProfileRow) => {
+            const confirmed = confirm(`Delete mentor "${mentor.name}"?`)
+            if (!confirmed) return
 
-        await mentorInfoRequest(`/mentor/info/${mentor.mentorId}/`, {
-            method: "DELETE",
-        })
-        await refreshMentors()
-    }, [refreshMentors])
+            await mentorInfoRequest(`/mentor/info/${mentor.mentorId}/`, {
+                method: "DELETE",
+            })
+            await refreshMentors()
+        },
+        [refreshMentors],
+    )
 
     const openMentorDetails = useCallback((mentor: MentorProfileRow) => {
         setSelectedMentor(mentor)
@@ -414,15 +431,18 @@ export default function MentorshipPage() {
         refreshJudges,
     ])
 
-    const handleDeleteJudge = useCallback(async (judge: JudgeProfileRow) => {
-        const confirmed = confirm(`Delete judge "${judge.name}"?`)
-        if (!confirmed) return
+    const handleDeleteJudge = useCallback(
+        async (judge: JudgeProfileRow) => {
+            const confirmed = confirm(`Delete judge "${judge.name}"?`)
+            if (!confirmed) return
 
-        await mentorInfoRequest(`/judge/info/${judge._id}/`, {
-            method: "DELETE",
-        })
-        await refreshJudges()
-    }, [refreshJudges])
+            await mentorInfoRequest(`/judge/info/${judge._id}/`, {
+                method: "DELETE",
+            })
+            await refreshJudges()
+        },
+        [refreshJudges],
+    )
 
     const openJudgeDetails = useCallback((judge: JudgeProfileRow) => {
         setSelectedJudge(judge)
@@ -442,14 +462,17 @@ export default function MentorshipPage() {
         setOfficeHoursModalOpen(true)
     }, [])
 
-    const openEditOfficeHoursModal = useCallback((row: MentorOfficeHoursRow) => {
-        setEditingOfficeHoursId(row.mentorId)
-        setOfficeHoursFormMentorName(row.mentorName)
-        setOfficeHoursFormLocation(row.location)
-        setOfficeHoursFormStartTime(row.startTime.toString())
-        setOfficeHoursFormEndTime(row.endTime.toString())
-        setOfficeHoursModalOpen(true)
-    }, [])
+    const openEditOfficeHoursModal = useCallback(
+        (row: MentorOfficeHoursRow) => {
+            setEditingOfficeHoursId(row.mentorId)
+            setOfficeHoursFormMentorName(row.mentorName)
+            setOfficeHoursFormLocation(row.location)
+            setOfficeHoursFormStartTime(row.startTime.toString())
+            setOfficeHoursFormEndTime(row.endTime.toString())
+            setOfficeHoursModalOpen(true)
+        },
+        [],
+    )
 
     const closeOfficeHoursModal = useCallback(() => {
         if (savingOfficeHours) return
@@ -549,7 +572,9 @@ export default function MentorshipPage() {
                         component="img"
                         src={row.imageUrl || DEFAULT_MENTOR_IMAGE_URL}
                         alt={`${row.name} avatar`}
-                        onError={(event: React.SyntheticEvent<HTMLImageElement>) => {
+                        onError={(
+                            event: React.SyntheticEvent<HTMLImageElement>,
+                        ) => {
                             event.currentTarget.src = DEFAULT_MENTOR_IMAGE_URL
                         }}
                         sx={{
@@ -613,7 +638,9 @@ export default function MentorshipPage() {
                         component="img"
                         src={row.imageUrl || DEFAULT_MENTOR_IMAGE_URL}
                         alt={`${row.name} avatar`}
-                        onError={(event: React.SyntheticEvent<HTMLImageElement>) => {
+                        onError={(
+                            event: React.SyntheticEvent<HTMLImageElement>,
+                        ) => {
                             event.currentTarget.src = DEFAULT_MENTOR_IMAGE_URL
                         }}
                         sx={{
@@ -729,14 +756,20 @@ export default function MentorshipPage() {
                 mb={2}
             >
                 <Tabs
-                    value={activeTab === "judges" ? 0 : activeTab === "mentors" ? 1 : 2}
+                    value={
+                        activeTab === "judges"
+                            ? 0
+                            : activeTab === "mentors"
+                              ? 1
+                              : 2
+                    }
                     onChange={(_, idx) =>
                         setActiveTab(
                             idx === 0
                                 ? "judges"
                                 : idx === 1
-                                ? "mentors"
-                                : "officeHours",
+                                  ? "mentors"
+                                  : "officeHours",
                         )
                     }
                 >
@@ -983,7 +1016,9 @@ export default function MentorshipPage() {
                         multiline
                         minRows={4}
                         value={judgeFormDescription}
-                        onChange={(e) => setJudgeFormDescription(e.target.value)}
+                        onChange={(e) =>
+                            setJudgeFormDescription(e.target.value)
+                        }
                     />
                     <TextField
                         margin="dense"

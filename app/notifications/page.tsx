@@ -119,9 +119,7 @@ function GridToolbar({ refresh }: { refresh: () => void }) {
 export default function Notifications() {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [sendProcessing, setSendProcessing] = useState<boolean>(false)
-    const [notifications, setNotifications] = useState<NotificationRow[]>(
-        [],
-    )
+    const [notifications, setNotifications] = useState<NotificationRow[]>([])
 
     const roles = useRoles()
     const [eventOptions, setEventOptions] = useState<
@@ -136,14 +134,12 @@ export default function Notifications() {
             .then(handleError)
             .then((response) =>
                 setNotifications(
-                    response
-                        .reverse()
-                        .map((notification, index) => ({
-                            ...notification,
-                            id: `${notification.sender}-${index}`,
-                            sentCount: notification.sent.length,
-                            failedCount: notification.failed.length,
-                        })),
+                    response.reverse().map((notification, index) => ({
+                        ...notification,
+                        id: `${notification.sender}-${index}`,
+                        sentCount: notification.sent.length,
+                        failedCount: notification.failed.length,
+                    })),
                 ),
             )
 
@@ -376,7 +372,6 @@ export default function Notifications() {
             )}
 
             <div className={styles["heading-container"]}>
-
                 <Tabs value={tabIndex}>
                     <Tab label="Past Notifications" className={styles.tab} />
                 </Tabs>

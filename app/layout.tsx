@@ -7,10 +7,7 @@ import React, { useEffect, useState } from "react"
 import "./constants.scss"
 import styles from "./layout.module.scss"
 
-
-const PAGES_TO_HIDE_NAVBAR: RegExp[] = [
-  /^\/events\/[^/]+\/checkin$/
-]
+const PAGES_TO_HIDE_NAVBAR: RegExp[] = [/^\/events\/[^/]+\/checkin$/]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -19,24 +16,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     const routeOpen = useRouteOpen()
 
-    const [showNavbar, setShowNavbar] = useState(false);
+    const [showNavbar, setShowNavbar] = useState(false)
 
-  const pathname = usePathname() || ''
+    const pathname = usePathname() || ""
 
     useEffect(() => {
         const hide = PAGES_TO_HIDE_NAVBAR.some((rx) => rx.test(pathname))
         setShowNavbar(!hide)
     }, [pathname])
 
-
     return (
         <html lang="en" className="root">
             <link rel="icon" href="./favicon.png" sizes="any" />
             <title>{(routeOpen ? `${routeOpen} - ` : "") + "Admin Site"}</title>
             <body className={styles.body}>
-                {showNavbar ? (
-                    <NavBar />
-                ) : <></>}
+                {showNavbar ? <NavBar /> : <></>}
                 <main>{children}</main>
             </body>
         </html>

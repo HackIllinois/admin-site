@@ -3,7 +3,7 @@ import {
     EventService,
     StatisticLog,
     StatisticService,
-    RegistrationService
+    RegistrationService,
 } from "@/generated"
 import { handleError } from "@/util/api-client"
 
@@ -127,17 +127,18 @@ export function formatPercent(part: number, whole: number): string {
  */
 
 export interface ReimbursementStats {
-    requested: number          
+    requested: number
 }
 
 export async function loadReimbursementStats(): Promise<ReimbursementStats> {
     const submitted = await RegistrationService.getRegistrationAllByType({
-        path: {type: "submitted"}
+        path: { type: "submitted" },
     }).then(handleError)
 
-
     return {
-        requested: submitted.filter(s => s.requestTravelReimbursement === true).length
+        requested: submitted.filter(
+            (s) => s.requestTravelReimbursement === true,
+        ).length,
     }
 }
 
@@ -151,13 +152,10 @@ export interface DraftStats {
 
 export async function loadDraftStats(): Promise<DraftStats> {
     const drafts = await RegistrationService.getRegistrationAllByType({
-        path: {type: "draft"}
+        path: { type: "draft" },
     }).then(handleError)
 
-
     return {
-        number_of_drafts: drafts.length
+        number_of_drafts: drafts.length,
     }
 }
-
-

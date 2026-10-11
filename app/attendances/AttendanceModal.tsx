@@ -9,10 +9,9 @@ import {
     DialogTitle,
     Tooltip,
     Typography,
-} from "@mui/material";
-import dayjs from "dayjs";
-import React, { useEffect } from "react";
-
+} from "@mui/material"
+import dayjs from "dayjs"
+import React, { useEffect } from "react"
 
 export interface AttendanceRecord {
     date: dayjs.Dayjs
@@ -42,8 +41,8 @@ const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
         }
     }
 
-    const formattedFullDate = record.date.format("dddd, MMMM D, YYYY");
-    const dayNumber = record.date.date();
+    const formattedFullDate = record.date.format("dddd, MMMM D, YYYY")
+    const dayNumber = record.date.date()
 
     return (
         <Tooltip
@@ -89,7 +88,7 @@ const AttendanceDate: React.FC<{ record: AttendanceRecord }> = ({ record }) => {
 
 const AttendanceMonth: React.FC<{
     /** {year}-{month}, month being 0-indexed */
-    month: string;
+    month: string
     records: AttendanceRecord[]
 }> = ({ month, records }) => {
     const formatMonth = (monthStr: string) => {
@@ -145,8 +144,8 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 }) => {
     const groupedByMonth = attendanceRecords.reduce(
         (acc, record) => {
-            const month = record.date.month();
-            const year = record.date.year();
+            const month = record.date.month()
+            const year = record.date.year()
 
             const monthKey = `${year}-${month}`
 
@@ -160,7 +159,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     const months = Object.keys(groupedByMonth).sort((a, b) => {
         const [yearA, monthA] = a.split("-").map(Number)
         const [yearB, monthB] = b.split("-").map(Number)
-        
+
         if (yearA !== yearB) {
             return yearA - yearB
         }
@@ -168,7 +167,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
     })
 
     useEffect(() => {
-        console.log('months', months);
+        console.log("months", months)
     }, [months])
 
     return (

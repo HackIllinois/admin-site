@@ -87,10 +87,11 @@ export default function Shop() {
 
     return (
         <div className={styles.container}>
-
             <div className={styles["heading-container"]}>
-
-                <Tabs value={tabIndex} onChange={(_, idx) => setRaffleView(idx === 0)}>
+                <Tabs
+                    value={tabIndex}
+                    onChange={(_, idx) => setRaffleView(idx === 0)}
+                >
                     <Tab label="Raffle" className={styles.tab} />
                     <Tab label="Purchases" className={styles.tab} />
                 </Tabs>
@@ -122,14 +123,14 @@ export default function Shop() {
                     />
                 )}
                 {filteredItems.map((item) => (
-                        <ItemCard
-                            key={item.itemId}
-                            item={item}
-                            editable={isAdmin}
-                            onClick={() => isAdmin && setEditingItem(item)}
-                            onRaffle={() => isAdmin && raffleItem(item.itemId)}
-                        />
-                    ))}
+                    <ItemCard
+                        key={item.itemId}
+                        item={item}
+                        editable={isAdmin}
+                        onClick={() => isAdmin && setEditingItem(item)}
+                        onRaffle={() => isAdmin && raffleItem(item.itemId)}
+                    />
+                ))}
                 {isAdmin && (
                     <ItemAddCard
                         onClick={() => setEditingItem({ isRaffle: raffleView })}
