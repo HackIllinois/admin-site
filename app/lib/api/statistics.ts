@@ -3,7 +3,6 @@ import {
     EventService,
     StatisticLog,
     StatisticService,
-    AuthService,
     RegistrationService
 } from "@/generated"
 import { handleError } from "@/util/api-client"
