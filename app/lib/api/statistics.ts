@@ -3,6 +3,8 @@ import {
     EventService,
     StatisticLog,
     StatisticService,
+    AuthService,
+    RegistrationService
 } from "@/generated"
 import { handleError } from "@/util/api-client"
 
@@ -120,3 +122,43 @@ export function formatStatisticTimestamp(timestamp: number): string {
 export function formatPercent(part: number, whole: number): string {
     return whole === 0 ? "—" : `${Math.round((part / whole) * 100)}%`
 }
+
+/**
+ * Returns the number of users who said yes to reimbursement.
+ */
+
+export interface ReimbursementStats {
+    requested: number          
+}
+
+export async function loadReimbursementStats(): Promise<ReimbursementStats> {
+    const submitted = await RegistrationService.getRegistrationAllByType({
+        path: {type: "submitted"}
+    }).then(handleError)
+
+
+    return {
+        requested: submitted.filter(s => s.requestTravelReimbursement === true).length
+    }
+}
+
+/**
+ * Returns the number of drafts in total
+ */
+
+export interface DraftStats {
+    number_of_drafts: number
+}
+
+export async function loadDraftStats(): Promise<DraftStats> {
+    const drafts = await RegistrationService.getRegistrationAllByType({
+        path: {type: "draft"}
+    }).then(handleError)
+
+
+    return {
+        number_of_drafts: drafts.length
+    }
+}
+
+
