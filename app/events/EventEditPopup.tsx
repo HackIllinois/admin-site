@@ -133,7 +133,11 @@ export default function EventEditPopup({
                         textColor="primary"
                         indicatorColor="primary"
                     >
-                        <Tab className={styles.tab} label="Details" value="edit" />
+                        <Tab
+                            className={styles.tab}
+                            label="Details"
+                            value="edit"
+                        />
                         <Tab
                             className={styles.tab}
                             label="Attendance"
@@ -141,7 +145,7 @@ export default function EventEditPopup({
                         />
                     </Tabs>
                 )}
-                {view === 'edit' ? (
+                {view === "edit" ? (
                     <>
                         <Formik initialValues={initialValues} onSubmit={submit}>
                             {({ values, setFieldValue }) => (
@@ -171,14 +175,20 @@ export default function EventEditPopup({
                                             noHighlight={false}
                                             onChange={(enabled: boolean) => {
                                                 if (enabled) {
-                                                    setFieldValue("exp", values.endTime)
+                                                    setFieldValue(
+                                                        "exp",
+                                                        values.endTime,
+                                                    )
                                                 }
                                                 setExpires(enabled)
                                             }}
                                         />
 
                                         {expires && (
-                                            <Field component={DateInput} name="exp" />
+                                            <Field
+                                                component={DateInput}
+                                                name="exp"
+                                            />
                                         )}
                                     </div>
 
@@ -204,10 +214,12 @@ export default function EventEditPopup({
                                             className={styles.select}
                                             name="eventType"
                                             menuPlacement="top"
-                                            options={staffEventTypes.map((value) => ({
-                                                label: value,
-                                                value,
-                                            }))}
+                                            options={staffEventTypes.map(
+                                                (value) => ({
+                                                    label: value,
+                                                    value,
+                                                }),
+                                            )}
                                             placeholder="Type"
                                         />
                                     )}
@@ -249,22 +261,29 @@ export default function EventEditPopup({
                                                 >
                                                     adonix-metadata
                                                 </Link>{" "}
-                                                - please contact systems to add more
+                                                - please contact systems to add
+                                                more
                                             </small>
                                             <Field
-                                                className={styles["form-margins"]}
+                                                className={
+                                                    styles["form-margins"]
+                                                }
                                                 component={FormikCheckbox}
                                                 name="isPrivate"
                                                 label="Private Event"
                                             />
                                             <Field
-                                                className={styles["form-margins"]}
+                                                className={
+                                                    styles["form-margins"]
+                                                }
                                                 component={FormikCheckbox}
                                                 name="displayOnStaffCheckIn"
                                                 label="Display on Staff Check-in"
                                             />
                                             <Field
-                                                className={styles["form-margins"]}
+                                                className={
+                                                    styles["form-margins"]
+                                                }
                                                 component={FormikCheckbox}
                                                 name="isPro"
                                                 label="Pro Event"
@@ -294,7 +313,9 @@ export default function EventEditPopup({
                                                 className={styles.delete}
                                                 type="button"
                                                 onClick={() =>
-                                                    onDeleteEvent(editingEventId)
+                                                    onDeleteEvent(
+                                                        editingEventId,
+                                                    )
                                                 }
                                             >
                                                 Delete
@@ -302,20 +323,25 @@ export default function EventEditPopup({
                                         )}
 
                                         <div className={styles.spacer} />
-                                        <button type="button" onClick={onDismiss}>
+                                        <button
+                                            type="button"
+                                            onClick={onDismiss}
+                                        >
                                             Cancel
                                         </button>
-                                        <button type="submit">{editingEventId ? 'Save' : 'Create'}</button>
+                                        <button type="submit">
+                                            {editingEventId ? "Save" : "Create"}
+                                        </button>
                                     </div>
                                 </Form>
                             )}
                         </Formik>
                     </>
                 ) : editingEventId ? (
-                    <EventAttendances 
-                        eventId={editingEventId}
-                    />
-                ) : <></>}
+                    <EventAttendances eventId={editingEventId} />
+                ) : (
+                    <></>
+                )}
             </div>
         </div>
     )

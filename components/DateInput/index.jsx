@@ -1,8 +1,8 @@
-import React from 'react'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import React from "react"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
-import './style.scss'
+import "./style.scss"
 
 const DateInput = ({ field, form, ...props }) => {
     const date = new Date(Number(field.value) * 1000)

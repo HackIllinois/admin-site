@@ -1,8 +1,8 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import React from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCheck } from "@fortawesome/free-solid-svg-icons"
 
-import './style.scss'
+import "./style.scss"
 
 export default function Checkbox({
     value,
@@ -12,7 +12,7 @@ export default function Checkbox({
     noHighlight,
     ...props
 }) {
-    const checkboxClass = 'checkbox' + (value ? ' checked' : '')
+    const checkboxClass = "checkbox" + (value ? " checked" : "")
     const handleKeyPress = (event) => {
         if (event.which === 13) {
             // enter key
@@ -20,7 +20,7 @@ export default function Checkbox({
         }
     }
 
-    const clickListenerType = fast ? 'onMouseDown' : 'onClick'
+    const clickListenerType = fast ? "onMouseDown" : "onClick"
     const clickListener = {
         [clickListenerType]: (event) => onChange(!value, event),
     }

@@ -2842,6 +2842,24 @@ export type GetRegistrationResponses = {
 
 export type GetRegistrationResponse = GetRegistrationResponses[keyof GetRegistrationResponses];
 
+export type GetRegistrationAllByTypeData = {
+    body?: never;
+    path: {
+        type: 'submitted' | 'draft';
+    };
+    query?: never;
+    url: '/registration/all/{type}';
+};
+
+export type GetRegistrationAllByTypeResponses = {
+    /**
+     * All registrations of the specified type
+     */
+    200: Array<RegistrationApplicationDraft>;
+};
+
+export type GetRegistrationAllByTypeResponse = GetRegistrationAllByTypeResponses[keyof GetRegistrationAllByTypeResponses];
+
 export type GetRegistrationChallengeData = {
     body?: never;
     path?: never;

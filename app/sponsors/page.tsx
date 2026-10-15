@@ -7,7 +7,7 @@ import { handleError, useRoles } from "@/util/api-client"
 import { faPlus, faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete"
 
 import styles from "./styles.module.scss"
 
@@ -28,8 +28,8 @@ function SponsorAddCard({ onAdd }: SponsorAddCardProps) {
     return (
         <div className={styles.card}>
             <div className={styles.add} onClick={onAdd}>
-                <FontAwesomeIcon icon={faPlus}/>
-                &nbsp; Add Sponsor 
+                <FontAwesomeIcon icon={faPlus} />
+                &nbsp; Add Sponsor
             </div>
         </div>
     )
@@ -62,7 +62,6 @@ function GridToolbar({ refresh }: { refresh: () => void }) {
         </GridToolbarContainer>
     )
 }
-
 
 export default function Sponsors() {
     const [loading, setLoading] = useState(true)
@@ -110,10 +109,10 @@ export default function Sponsors() {
         await SponsorService.deleteSponsor({ body: { userId } })
     }
 
-     const columns: GridColDef[] = [
-         { field: "email", headerName: "Email", width: 300, editable: false },
+    const columns: GridColDef[] = [
+        { field: "email", headerName: "Email", width: 300, editable: false },
         { field: "userId", headerName: "User ID", width: 300, editable: false },
-             {
+        {
             field: "actions",
             type: "actions",
             width: 150,
@@ -133,7 +132,7 @@ export default function Sponsors() {
                 ]
             },
         },
-     ]
+    ]
 
     return (
         <div className={styles.container}>
@@ -145,19 +144,18 @@ export default function Sponsors() {
                     onClick={refresh}
                 />
             </div>
-            
-            <div className={styles.sponsors} >
 
-                        <DataGrid
-                        rows={sponsors}
-                        columns={columns}
-                        getRowId={(row) => row.userId}
-                        sx={{fontFamily: 'Arial'}}
-                        slots={{
-                            toolbar: () => <GridToolbar refresh={refresh} />,
-                        }}
-                    />
-                    
+            <div className={styles.sponsors}>
+                <DataGrid
+                    rows={sponsors}
+                    columns={columns}
+                    getRowId={(row) => row.userId}
+                    sx={{ fontFamily: "Arial" }}
+                    slots={{
+                        toolbar: () => <GridToolbar refresh={refresh} />,
+                    }}
+                />
+
                 <SponsorAddCard
                     onAdd={async () => {
                         await createSponsor()

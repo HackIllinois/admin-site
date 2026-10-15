@@ -32,7 +32,7 @@
     border-bottom: 1px solid var(--light-gray);
     background-color: var(--primary-color);
     color: black;
-    
+
     h2 {
         margin: 0;
         font-size: 1.3rem;
@@ -49,7 +49,7 @@
     padding: 0.5rem;
     border-radius: 4px;
     transition: background-color 0.2s;
-    
+
     &:hover {
         background-color: rgba(255, 255, 255, 0.1);
     }
@@ -81,7 +81,7 @@
         color: var(--dark-gray);
         font-size: 1.1rem;
     }
-    
+
     h4 {
         margin: 1rem 0 0.5rem 0;
         color: var(--gray);
@@ -109,14 +109,14 @@
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.2s;
-    
+
     &:hover {
         background-color: #004494;
     }
-    
+
     &.copied {
         background-color: #28a745;
-        
+
         &:hover {
             background-color: #218838;
         }
@@ -138,7 +138,7 @@
     font-family: monospace;
     font-size: 0.9rem;
     color: var(--dark-gray);
-    
+
     &:last-child {
         border-bottom: none;
     }

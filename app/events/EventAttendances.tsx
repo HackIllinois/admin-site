@@ -18,7 +18,7 @@ import {
     TableHead,
     TableRow,
     TextField,
-    Typography
+    Typography,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
@@ -51,10 +51,13 @@ const StatusSelector: React.FC<StatusSelectorProps> = ({
     }
 
     return (
-        <FormControl size="small" sx={{
-            display: 'flex',
-            alignItems: "center"
-        }}>
+        <FormControl
+            size="small"
+            sx={{
+                display: "flex",
+                alignItems: "center",
+            }}
+        >
             <Select
                 value={status}
                 onChange={handleChange}
@@ -72,10 +75,7 @@ const StatusSelector: React.FC<StatusSelectorProps> = ({
                         color="success"
                         sx={{ mr: 0.5, mb: 0.2 }}
                     />
-                    <Typography
-                    >
-                        Present
-                    </Typography>
+                    <Typography>Present</Typography>
                 </MenuItem>
                 <MenuItem value="EXCUSED">
                     <EventBusy
@@ -83,18 +83,15 @@ const StatusSelector: React.FC<StatusSelectorProps> = ({
                         color="primary"
                         sx={{ mr: 0.5, mb: 0.2 }}
                     />
-                    <Typography
-                    >
-                        Excused
-                    </Typography>   
+                    <Typography>Excused</Typography>
                 </MenuItem>
                 <MenuItem value="ABSENT">
-                    <Cancel fontSize="small" color="error" 
-                        sx={{ mr: 0.5, mb: 0.2 }}/>
-                    <Typography
-                    >
-                        Absent
-                    </Typography>
+                    <Cancel
+                        fontSize="small"
+                        color="error"
+                        sx={{ mr: 0.5, mb: 0.2 }}
+                    />
+                    <Typography>Absent</Typography>
                 </MenuItem>
             </Select>
         </FormControl>
@@ -278,65 +275,65 @@ export default function EventAttendances({ eventId }: EventAttendancesProps) {
                 }}
             >
                 <Table stickyHeader aria-label="Event Attendance">
-                <TableHead>
-                    <TableRow>
-                        <TableCell
-                            sx={{
-                                fontFamily:
-                                    "Montserrat, Segoe UI, Roboto, sans-serif",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            Name
-                        </TableCell>
-                        <TableCell
-                            sx={{
-                                fontFamily:
-                                    "Montserrat, Segoe UI, Roboto, sans-serif",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            Email
-                        </TableCell>
-                        <TableCell
-                            sx={{
-                                fontFamily:
-                                    "Montserrat, Segoe UI, Roboto, sans-serif",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            Status
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                    <TableBody>
-                    {filteredAttendances.map(({ user, status }) => (
-                        <TableRow key={user.userId}>
+                    <TableHead>
+                        <TableRow>
                             <TableCell
                                 sx={{
                                     fontFamily:
                                         "Montserrat, Segoe UI, Roboto, sans-serif",
+                                    fontWeight: "bold",
                                 }}
                             >
-                                {user.name}
+                                Name
                             </TableCell>
                             <TableCell
                                 sx={{
                                     fontFamily:
                                         "Montserrat, Segoe UI, Roboto, sans-serif",
+                                    fontWeight: "bold",
                                 }}
                             >
-                                {user.email}
+                                Email
                             </TableCell>
-                            <TableCell>
-                                <StatusSelector
-                                    userId={user.userId}
-                                    status={status}
-                                    onStatusChange={handleStatusChange}
-                                />
+                            <TableCell
+                                sx={{
+                                    fontFamily:
+                                        "Montserrat, Segoe UI, Roboto, sans-serif",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                Status
                             </TableCell>
                         </TableRow>
-                    ))}
+                    </TableHead>
+                    <TableBody>
+                        {filteredAttendances.map(({ user, status }) => (
+                            <TableRow key={user.userId}>
+                                <TableCell
+                                    sx={{
+                                        fontFamily:
+                                            "Montserrat, Segoe UI, Roboto, sans-serif",
+                                    }}
+                                >
+                                    {user.name}
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        fontFamily:
+                                            "Montserrat, Segoe UI, Roboto, sans-serif",
+                                    }}
+                                >
+                                    {user.email}
+                                </TableCell>
+                                <TableCell>
+                                    <StatusSelector
+                                        userId={user.userId}
+                                        status={status}
+                                        onStatusChange={handleStatusChange}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
 
