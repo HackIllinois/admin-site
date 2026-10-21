@@ -1,5 +1,4 @@
-import { AuthService, UserInfo } from "@/generated"
-import { handleError } from "@/util/api-client"
+import { UserInfo } from "@/generated"
 
 export interface FixedUserList {
     admin: UserInfo[]
