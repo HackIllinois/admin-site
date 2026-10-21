@@ -30,6 +30,11 @@ function submission(
         uploadCompletedAt: "2026-04-12T18:00:00.000Z",
         createdAt: "2026-04-12T17:59:00.000Z",
         updatedAt: "2026-04-12T18:00:00.000Z",
+        status: "pending",
+        reviewedAt: null,
+        reviewedBy: null,
+        rejectionReason: null,
+        reviewerNotes: null,
         ...overrides,
     }
 }

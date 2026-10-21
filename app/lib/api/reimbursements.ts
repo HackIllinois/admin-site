@@ -9,15 +9,14 @@ import { handleError } from "@/util/api-client"
 import {
     capDollarsToCents,
     type ReceiptSubmission,
-    type ReviewStatus,
 } from "@/util/reimbursements"
 
 export { formatMoneyFromCents } from "@/util/reimbursements"
 
-// TODO: The reimbursement routes aren't in the live Adonix spec yet, so generated/ has no
-// ReimbursementService. These calls go through the same hey-api client (and interceptors) the
-// generated services use. Once Adonix ships the routes, run `npm run update-adonix` and swap
-// these for the generated ReimbursementService methods and types.
+// TODO: The reimbursement routes (HackIllinois/adonix#384) aren't in the live Adonix spec until
+// that deploys, so generated/ has no ReimbursementService yet. These calls go through the same
+// hey-api client (and interceptors) the generated services use. Once it's live, run
+// `npm run update-adonix` and swap these for the generated ReimbursementService methods and types.
 
 interface ReceiptSubmissions {
     submissions: ReceiptSubmission[]
@@ -27,11 +26,11 @@ interface ReceiptDownloadURL {
     url: string
 }
 
-export interface ReviewRequest {
-    status: Exclude<ReviewStatus, "pending">
-    rejectionReason?: string
-    reviewerNotes?: string
-}
+// Mirrors adonix ReceiptReviewRequestSchema. "pending" clears a previous decision.
+export type ReviewRequest =
+    | { status: "approved"; reviewerNotes?: string }
+    | { status: "rejected"; rejectionReason: string; reviewerNotes?: string }
+    | { status: "pending" }
 
 export async function loadAllReceiptSubmissions(): Promise<
     ReceiptSubmission[]
@@ -98,6 +97,10 @@ export function rejectReceipt(
         rejectionReason,
         reviewerNotes: reviewerNotes || undefined,
     })
+}
+
+export function resetReceipt(id: string) {
+    return reviewReceipt(id, { status: "pending" })
 }
 
 export interface AttendeeContext {

@@ -6,6 +6,7 @@ import {
     loadAttendeeDirectory,
     loadUserInfo,
     rejectReceipt,
+    resetReceipt,
     type AttendeeContext,
 } from "@/app/lib/api/reimbursements"
 import Loading from "@/components/Loading"
@@ -33,6 +34,7 @@ import {
     faCopy,
     faInbox,
     faMagnifyingGlass,
+    faRotateLeft,
     faSync,
     faTriangleExclamation,
     faXmark,
@@ -287,6 +289,22 @@ export default function Reimbursements() {
         }
     }
 
+    // Undo a decision. Stays on the same receipt so it can be re-reviewed right away.
+    const reset = async () => {
+        if (!selected) return
+        setSubmitting(true)
+        try {
+            const updated = await resetReceipt(selected.id)
+            setSubmissions((prev) =>
+                prev.map((s) => (s.id === updated.id ? updated : s)),
+            )
+        } catch {
+            // handleError already alerted
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
     const closeReject = useCallback(() => setRejecting(false), [])
 
     if (roles.length === 0) {
@@ -488,6 +506,7 @@ export default function Reimbursements() {
                                 submitting={submitting}
                                 onApprove={approve}
                                 onReject={() => setRejecting(true)}
+                                onReset={reset}
                                 onBack={() => setSelectedId(null)}
                             />
                         ) : (
@@ -529,6 +548,7 @@ interface DetailProps {
     submitting: boolean
     onApprove: () => void
     onReject: () => void
+    onReset: () => void
     onBack: () => void
 }
 
@@ -541,6 +561,7 @@ function Detail({
     submitting,
     onApprove,
     onReject,
+    onReset,
     onBack,
 }: DetailProps) {
     const status = displayStatus(submission)
@@ -721,6 +742,17 @@ function Detail({
                           : `Already ${status}. You can change the decision.`}
                 </span>
                 <div className={styles.actions}>
+                    {(status === "approved" || status === "rejected") && (
+                        <button
+                            className={styles.secondaryButton}
+                            onClick={onReset}
+                            disabled={submitting}
+                            title="Clear the decision and put this back in the queue"
+                        >
+                            <FontAwesomeIcon icon={faRotateLeft} /> Move to
+                            review
+                        </button>
+                    )}
                     <button
                         className={styles.dangerButton}
                         onClick={onReject}

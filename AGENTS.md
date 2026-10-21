@@ -37,6 +37,8 @@ npm run update-adonix      # Regenerate generated/ from the live Adonix OpenAPI 
 
 ## Environment
 
+- `NEXT_PUBLIC_ADONIX_BASE_URL` — Optional. Adonix origin, e.g. `http://localhost:3001` for a
+  local Adonix; defaults to `https://adonix.hackillinois.org` (`util/hey-api.ts`)
 - `NEXT_PUBLIC_EMAIL_ASSET_BASE_URL` — Optional. Public origin for email artwork when sending
   from a local server; defaults to the site's own origin (see [README](README.md))
 

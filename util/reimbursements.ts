@@ -15,8 +15,7 @@ export type ReviewStatus = "pending" | "approved" | "rejected"
 // What the page shows: a review status, or "incomplete" when the file never finished uploading
 export type DisplayStatus = ReviewStatus | "incomplete"
 
-// Mirrors adonix ReceiptSubmissionSchema. The review fields come from the planned
-// PATCH /reimbursement/receipts/{id}/review/ endpoint, so they're optional until it ships.
+// Mirrors adonix ReceiptSubmissionSchema
 export interface ReceiptSubmission {
     id: string
     userId: string
@@ -29,11 +28,12 @@ export interface ReceiptSubmission {
     uploadCompletedAt: string | null
     createdAt: string
     updatedAt: string
-    status?: ReviewStatus
-    reviewedAt?: string | null
-    reviewedBy?: string | null
-    rejectionReason?: string | null
-    reviewerNotes?: string | null
+    status: ReviewStatus
+    reviewedAt: string | null
+    reviewedBy: string | null
+    rejectionReason: string | null
+    // Internal to staff; Adonix only returns it to admins
+    reviewerNotes: string | null
 }
 
 export type ReviewFilter =
@@ -62,7 +62,7 @@ export function displayStatus(submission: ReceiptSubmission): DisplayStatus {
     if (!submission.uploadCompletedAt) {
         return "incomplete"
     }
-    return submission.status ?? "pending"
+    return submission.status
 }
 
 export function matchesFilter(
