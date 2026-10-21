@@ -5,6 +5,8 @@ import { useEffect, useState } from "react"
 
 // If the error provided is an authentication error, authenticate
 function handleAuthErrors(error: unknown): boolean {
+    const isLocal = process.env.NEXT_PUBLIC_API_URL !== undefined
+
     if (
         error &&
         typeof error === "object" &&
@@ -12,7 +14,9 @@ function handleAuthErrors(error: unknown): boolean {
         typeof error.error === "string"
     ) {
         if (["TokenInvalid", "TokenExpired", "NoToken"].includes(error.error)) {
-            authenticate()
+            if (!isLocal) {
+                authenticate()
+            }
             return true
         }
     }
@@ -40,6 +44,13 @@ export function setupClient() {
 
 // Redirects to authentication url
 export function authenticate(provider: Provider = "google") {
+    const isLocal = process.env.NEXT_PUBLIC_API_URL !== undefined
+
+    if (isLocal) {
+        window.location.replace("/account")
+        return
+    }
+
     const redirectURI = window.location.toString()
     const authURL = `${client.getConfig().baseUrl}/auth/login/${provider}?redirect=${redirectURI}`
     window.location.replace(authURL)
