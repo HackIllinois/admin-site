@@ -1,0 +1,1063 @@
+@use "sass:color";
+@use "../constants.scss" as *;
+
+// Neutral, finance-style surface palette layered on top of the HackIllinois theme colors
+$ink: #16181d;
+$ink-2: #4b5160;
+$muted: #8a8f9c;
+$line: #e6e7eb;
+$line-strong: #d4d6dc;
+$surface: #ffffff;
+$canvas: #f7f7f9;
+$hover: #f2f3f6;
+$selected: color.adjust($primary-color, $lightness: 47%);
+
+$amber: #b45309;
+$amber-bg: #fef3c7;
+$green: #15803d;
+$green-bg: #dcfce7;
+$red-ink: #b91c1c;
+$red-bg: #fee2e2;
+$gray-bg: #eef0f3;
+
+$radius: 10px;
+
+
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: calc(100vh - 60px);
+    color: $ink;
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+
+    @include mobile {
+        height: auto;
+        min-height: calc(100vh - 60px);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+        margin: 0;
+    }
+}
+
+// Top bar
+
+.topBar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.titleBlock {
+    h1 {
+        font-size: 1.6em;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    p {
+        margin-top: 4px;
+        color: $muted;
+        font-size: 0.9em;
+    }
+}
+
+.summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.summaryCard {
+    display: flex;
+    flex-direction: column;
+    min-width: 130px;
+    padding: 10px 14px;
+    border: 1px solid $line;
+    border-radius: $radius;
+    background: $surface;
+}
+
+.summaryLabel {
+    font-size: 0.7em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $muted;
+}
+
+.summaryValue {
+    margin-top: 2px;
+    font-size: 1.3em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+
+.summaryMeta {
+    font-size: 0.78em;
+    color: $ink-2;
+}
+
+.refreshButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    border: 1px solid $line;
+    border-radius: $radius;
+    background: $surface;
+    color: $ink-2;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition:
+        background-color 0.15s,
+        color 0.15s;
+
+    &:hover:not(:disabled) {
+        background: $hover;
+        color: $primary-color;
+    }
+
+    &:disabled {
+        cursor: progress;
+    }
+}
+
+// Split pane
+
+.split {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+    border: 1px solid $line;
+    border-radius: 14px;
+    background: $surface;
+    overflow: hidden;
+
+    @include mobile {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+        border: none;
+        background: none;
+
+        &.hasSelection .queue {
+            display: none;
+        }
+
+        &:not(.hasSelection) .detail {
+            display: none;
+        }
+    }
+}
+
+.queue {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border-right: 1px solid $line;
+    background: $surface;
+
+    @include mobile {
+        border: 1px solid $line;
+        border-radius: 14px;
+    }
+}
+
+.tabs {
+    display: flex;
+    gap: 2px;
+    padding: 10px 10px 0;
+    border-bottom: 1px solid $line;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 8px 10px 10px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: $muted;
+    font-family: inherit;
+    font-size: 0.8em;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        color 0.15s,
+        border-color 0.15s;
+
+    &:hover {
+        color: $ink;
+    }
+}
+
+.tabActive {
+    color: $ink;
+    border-bottom-color: $primary-color;
+
+    .tabCount {
+        background: $primary-color;
+        color: white;
+    }
+}
+
+.tabCount {
+    min-width: 18px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: $gray-bg;
+    color: $ink-2;
+    font-size: 0.85em;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px;
+    padding: 0 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    color: $muted;
+    font-size: 0.85em;
+    transition:
+        border-color 0.15s,
+        box-shadow 0.15s;
+
+    &:focus-within {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.12);
+    }
+
+    input {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 0;
+        border: none;
+        outline: none;
+        background: none;
+        color: $ink;
+        font-family: inherit;
+        font-size: 1em;
+    }
+}
+
+.list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+
+    @include mobile {
+        max-height: none;
+    }
+}
+
+.row {
+    @include div-button;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border-bottom: 1px solid $line;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    color: $ink;
+    transition: background-color 0.1s;
+
+    &:hover {
+        background: $hover;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $primary-color;
+        outline-offset: -2px;
+    }
+}
+
+.rowSelected,
+.rowSelected:hover {
+    background: $selected;
+    border-left-color: $primary-color;
+}
+
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $primary-color-light;
+    color: $primary-color;
+    font-size: 0.72em;
+    font-weight: 700;
+}
+
+.avatarLarge {
+    width: 44px;
+    height: 44px;
+    font-size: 0.9em;
+}
+
+.rowMain {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.rowName {
+    font-size: 0.88em;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rowMeta {
+    font-size: 0.75em;
+    color: $muted;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rowSide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.rowAmount {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.overCapIcon {
+    color: $amber;
+    font-size: 0.85em;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.68em;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+}
+
+.chip_pending {
+    background: $amber-bg;
+    color: $amber;
+}
+
+.chip_approved {
+    background: $green-bg;
+    color: $green;
+}
+
+.chip_rejected {
+    background: $red-bg;
+    color: $red-ink;
+}
+
+.chip_incomplete {
+    background: $gray-bg;
+    color: $ink-2;
+}
+
+.keyHint {
+    padding: 8px 14px;
+    border-top: 1px solid $line;
+    color: $muted;
+    font-size: 0.72em;
+
+    kbd {
+        display: inline-block;
+        min-width: 14px;
+        margin-right: 3px;
+        padding: 1px 5px;
+        border: 1px solid $line-strong;
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        background: $canvas;
+        font-family: inherit;
+        font-size: 0.95em;
+        text-align: center;
+    }
+
+    @include mobile {
+        display: none;
+    }
+}
+
+// Empty and error states
+
+.listEmpty,
+.detailEmpty,
+.errorState,
+.previewEmpty,
+.previewMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px 24px;
+    text-align: center;
+    color: $ink-2;
+
+    h3 {
+        color: $ink;
+        font-size: 1em;
+    }
+
+    p {
+        max-width: 340px;
+        font-size: 0.85em;
+        line-height: 1.5;
+    }
+
+    button {
+        margin-top: 8px;
+    }
+}
+
+.detailEmpty {
+    height: 100%;
+    background: $canvas;
+}
+
+.errorState {
+    flex: 1;
+    border: 1px solid $line;
+    border-radius: 14px;
+}
+
+.emptyIcon,
+.previewEmptyIcon {
+    font-size: 1.8em;
+    color: $line-strong;
+    margin-bottom: 4px;
+}
+
+// Detail
+
+.detail {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: $canvas;
+
+    @include mobile {
+        border: 1px solid $line;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+}
+
+.detailInner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.detailHeader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding: 16px 20px;
+    border-bottom: 1px solid $line;
+    background: $surface;
+}
+
+.backButton {
+    display: none;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    color: $primary-color;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85em;
+    text-align: left;
+    cursor: pointer;
+
+    @include mobile {
+        display: block;
+    }
+}
+
+.detailWho {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+
+    h2 {
+        font-size: 1.1em;
+        font-weight: 700;
+    }
+
+    p {
+        margin-top: 2px;
+        color: $muted;
+        font-size: 0.8em;
+        word-break: break-all;
+    }
+}
+
+.detailAmount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.bigAmount {
+    font-size: 1.7em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.detailBody {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 16px;
+    padding: 16px;
+    overflow: hidden;
+
+    @media (max-width: 1280px) {
+        grid-template-columns: minmax(0, 1fr) 260px;
+    }
+
+    @include mobile {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+}
+
+// Receipt preview
+
+.preview {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border: 1px solid $line;
+    border-radius: $radius;
+    background: $surface;
+    overflow: hidden;
+
+    @include mobile {
+        height: 60vh;
+    }
+}
+
+.previewEmpty {
+    border: 1px dashed $line-strong;
+    border-radius: $radius;
+    background: $surface;
+
+    @include mobile {
+        min-height: 240px;
+    }
+}
+
+.previewToolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px 6px 14px;
+    border-bottom: 1px solid $line;
+}
+
+.previewFile {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: $ink-2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.previewTools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.iconButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: $ink-2;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        background: $hover;
+        color: $ink;
+    }
+
+    &:disabled {
+        color: $line-strong;
+        cursor: default;
+    }
+}
+
+.zoomLabel {
+    min-width: 48px;
+    padding: 4px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: $ink-2;
+    font-family: inherit;
+    font-size: 0.75em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+
+    &:hover {
+        background: $hover;
+    }
+}
+
+.previewBody {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    background: $canvas;
+
+    > .previewMessage {
+        flex: 1;
+    }
+}
+
+.pdfFrame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: white;
+}
+
+.imageScroller {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+    text-align: center;
+}
+
+.receiptImage {
+    max-width: none;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);
+    background: white;
+}
+
+// Context panel
+
+.context {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.contextSection {
+    padding: 14px;
+    border: 1px solid $line;
+    border-radius: $radius;
+    background: $surface;
+
+    h4 {
+        margin-bottom: 10px;
+        font-size: 0.7em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: $muted;
+    }
+
+    dl {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px 12px;
+        margin: 0;
+        font-size: 0.82em;
+    }
+
+    dt {
+        color: $muted;
+    }
+
+    dd {
+        margin: 0;
+        text-align: right;
+        font-weight: 500;
+    }
+}
+
+.mono {
+    font-variant-numeric: tabular-nums;
+}
+
+.breakAll {
+    word-break: break-all;
+}
+
+.copyButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    color: $ink;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    word-break: break-all;
+    text-align: right;
+
+    svg {
+        flex-shrink: 0;
+        color: $muted;
+        font-size: 0.85em;
+    }
+
+    &:hover svg {
+        color: $primary-color;
+    }
+}
+
+.warning {
+    display: flex;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid color.adjust($amber, $lightness: 40%);
+    border-radius: $radius;
+    background: $amber-bg;
+    color: $amber;
+    font-size: 0.82em;
+
+    svg {
+        margin-top: 2px;
+    }
+
+    p {
+        margin-top: 2px;
+        color: color.adjust($amber, $lightness: -10%);
+    }
+}
+
+.rejectedNote {
+    padding: 12px 14px;
+    border: 1px solid color.adjust($red-ink, $lightness: 45%);
+    border-radius: $radius;
+    background: $red-bg;
+    color: $red-ink;
+    font-size: 0.82em;
+
+    p {
+        margin-top: 4px;
+        line-height: 1.4;
+    }
+}
+
+.fieldLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.7em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $muted;
+}
+
+.required {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: $red-bg;
+    color: $red-ink;
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+}
+
+.textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    outline: none;
+    resize: vertical;
+    color: $ink;
+    font-family: inherit;
+    font-size: 0.85em;
+    line-height: 1.4;
+    transition:
+        border-color 0.15s,
+        box-shadow 0.15s;
+
+    &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.12);
+    }
+
+    &:disabled {
+        background: $canvas;
+    }
+}
+
+// Actions
+
+.actionBar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 12px 20px;
+    border-top: 1px solid $line;
+    background: $surface;
+
+    @include mobile {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+    }
+}
+
+.actionHint {
+    color: $muted;
+    font-size: 0.78em;
+
+    @include phone {
+        display: none;
+    }
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+
+    @include phone {
+        width: 100%;
+
+        button {
+            flex: 1;
+        }
+    }
+}
+
+%button-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.15s,
+        border-color 0.15s,
+        color 0.15s;
+
+    &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+}
+
+.primaryButton {
+    @extend %button-base;
+    border: 1px solid $ink;
+    background: $ink;
+    color: white;
+    font-variant-numeric: tabular-nums;
+
+    &:hover:not(:disabled) {
+        background: $green;
+        border-color: $green;
+    }
+}
+
+.dangerButton {
+    @extend %button-base;
+    border: 1px solid $line-strong;
+    background: $surface;
+    color: $red-ink;
+
+    &:hover:not(:disabled) {
+        border-color: $red-ink;
+        background: $red-bg;
+    }
+
+    &[type="submit"] {
+        border-color: $red-ink;
+        background: $red-ink;
+        color: white;
+
+        &:hover:not(:disabled) {
+            background: color.adjust($red-ink, $lightness: -8%);
+        }
+    }
+}
+
+.secondaryButton {
+    @extend %button-base;
+    border: 1px solid $line-strong;
+    background: $surface;
+    color: $ink-2;
+
+    &:hover:not(:disabled) {
+        background: $hover;
+        color: $ink;
+    }
+}
+
+// Reject modal
+
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(22, 24, 29, 0.45);
+}
+
+.modal {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+    border-radius: 14px;
+    background: $surface;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    color: $ink;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+
+    h2 {
+        font-size: 1.1em;
+    }
+
+    p {
+        margin-top: 4px;
+        color: $muted;
+        font-size: 0.82em;
+    }
+}
+
+.quickReasons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.quickReason {
+    padding: 5px 10px;
+    border: 1px solid $line;
+    border-radius: 999px;
+    background: $surface;
+    color: $ink-2;
+    font-family: inherit;
+    font-size: 0.75em;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $line-strong;
+        background: $hover;
+    }
+}
+
+.quickReasonActive,
+.quickReasonActive:hover {
+    border-color: $red-ink;
+    background: $red-bg;
+    color: $red-ink;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+}
