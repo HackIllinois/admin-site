@@ -245,6 +245,7 @@ export default function Events() {
                                             name: `${event.name} (Copy)`,
                                             eventId: undefined,
                                             _id: undefined, // Required to not break API
+                                            exp: undefined, // The original's expiration would block check-in for the copy
                                         } as Partial<Event>)
                                     }}
                                     key={event.eventId}
