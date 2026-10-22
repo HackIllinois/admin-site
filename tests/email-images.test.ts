@@ -57,3 +57,15 @@ test("inserted HTML escapes attributes and retains the image in the outgoing ema
         renderEmailBody(html, "https://admin.hackillinois.org").includes(html),
     )
 })
+
+test("newsletter previews show the unsubscribe footer while operational previews omit it", () => {
+    const baseUrl = "https://admin.hackillinois.org"
+    assert.match(
+        renderEmailBody("<p>News</p>", baseUrl, true),
+        /Unsubscribe from this mailing list/,
+    )
+    assert.doesNotMatch(
+        renderEmailBody("<p>Registration</p>", baseUrl),
+        /Unsubscribe/,
+    )
+})

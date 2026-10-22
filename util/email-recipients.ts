@@ -20,7 +20,7 @@ export function newsletterRecipients(subscribers: string[]): string[] {
 
 type PreparedGroup =
     | { kind: "registration"; label: string }
-    | { kind: "newsletter"; label: string; emails: string[] }
+    | { kind: "newsletter"; listName: string; label: string; emails: string[] }
 
 export function groupConfirmation(group: PreparedGroup): string {
     const audience =
@@ -56,15 +56,20 @@ export async function sendEmailToGroup(
             throw new Error(
                 "This newsletter group has no recipients. No email was sent.",
             )
-        group = { kind: "newsletter", label: `Newsletter: ${id}`, emails }
+        group = {
+            kind: "newsletter",
+            listName: id,
+            label: `Newsletter: ${id}`,
+            emails,
+        }
     }
 
     if (!confirm(group)) return null
     const response =
         group.kind === "registration"
             ? await MailService.postMailSendAttendees({ body: message })
-            : await MailService.postMailSend({
-                  body: { ...message, emails: group.emails },
+            : await MailService.postMailSendNewsletter({
+                  body: { ...message, listName: group.listName },
               })
     return handleError(response)
 }
