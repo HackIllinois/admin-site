@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { afterEach, beforeEach, test } from "node:test"
 import { client } from "../generated/client.gen"
+import type { MailBulkSendResult } from "../generated"
 import {
     DEFAULT_EMAIL_GROUP,
     groupConfirmation,
@@ -15,7 +16,7 @@ const success = { success: true, successCount: 2, failedCount: 0, errors: [] }
 let requests: Request[] = []
 let subscribers: string[] = []
 let newsletterStatus = 200
-let sendResult = success
+let sendResult: MailBulkSendResult = success
 
 beforeEach(() => {
     requests = []
@@ -73,7 +74,7 @@ test("registration_submissions is the default and retains the existing attendee 
     assert.deepEqual(await requests[0].json(), message)
 })
 
-test("newsletter send confirms and sends only its freshly fetched unique subscribers", async () => {
+test("newsletter send confirms fresh subscribers and sends the list identity for server-side delivery", async () => {
     subscribers = [
         " One@example.com ",
         "one@example.com",
@@ -98,10 +99,10 @@ test("newsletter send confirms and sends only its freshly fetched unique subscri
     )
     assert.deepEqual(result, success)
     assert.equal(new URL(requests[0].url).pathname, "/newsletter/marketing/")
-    assert.equal(new URL(requests[1].url).pathname, "/mail/send/")
+    assert.equal(new URL(requests[1].url).pathname, "/mail/send/newsletter/")
     assert.deepEqual(await requests[1].json(), {
         ...message,
-        emails: ["one@example.com", "two@example.com"],
+        listName: "marketing",
     })
 })
 
@@ -115,7 +116,8 @@ test("a newsletter named registration_submissions does not select the registrati
         new URL(requests[0].url).pathname,
         "/newsletter/registration_submissions/",
     )
-    assert.equal(new URL(requests[1].url).pathname, "/mail/send/")
+    assert.equal(new URL(requests[1].url).pathname, "/mail/send/newsletter/")
+    assert.equal((await requests[1].json()).listName, DEFAULT_EMAIL_GROUP)
 })
 
 test("cancelling either confirmation sends no email", async () => {

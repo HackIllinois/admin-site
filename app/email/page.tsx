@@ -113,13 +113,14 @@ export default function Email() {
                 renderEmailBody(
                     '<div id="email-preview-body"></div>',
                     assetBaseUrl,
+                    !registrationSelected,
                 ),
             )
         } catch {
             // The existing email error reports invalid artwork configuration.
             return ""
         }
-    }, [assetBaseUrl])
+    }, [assetBaseUrl, registrationSelected])
 
     const updatePreviewBody = useCallback(() => {
         const container =
@@ -134,7 +135,7 @@ export default function Email() {
         if (document) document.title = subject
     }, [subject])
 
-    useEffect(updatePreviewBody, [updatePreviewBody])
+    useEffect(updatePreviewBody, [updatePreviewBody, previewHtml])
     useEffect(updatePreviewTitle, [updatePreviewTitle])
 
     const handleSendSelf = async () => {
@@ -142,7 +143,13 @@ export default function Email() {
         setSendState({ status: "sending-self" })
         try {
             const result = await MailService.postMailSendSelf({
-                body: { subject, body: email.body },
+                body: {
+                    subject,
+                    body: email.body,
+                    ...(!registrationSelected && selectedNewsletter
+                        ? { newsletterId: selectedNewsletter.newsletterId }
+                        : {}),
+                },
             })
             handleError(result)
             setSendState({ status: "sent-self" })
@@ -270,7 +277,7 @@ export default function Email() {
                 <p className={styles.editorHint} id="email-recipient-hint">
                     {registrationSelected
                         ? "Current registration audience: submissions matched to attendee profiles. No year filter is applied."
-                        : `${recipientCount} unique recipients in this newsletter. The latest subscriber list is checked before confirmation.`}
+                        : `${recipientCount} unique recipients in this newsletter. Subscribers are checked again when sending. Each email includes a personal unsubscribe link.`}
                 </p>
                 {groupsError && (
                     <p className={styles.errorMessage} role="alert">

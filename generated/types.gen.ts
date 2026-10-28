@@ -111,6 +111,28 @@ export type DeleteSponsorRequest = {
     userId: UserId;
 };
 
+/**
+ * Seeded users available to the local debug picker
+ */
+export type DevListUsersResponse = {
+    users: Array<UserInfo>;
+};
+
+/**
+ * How many fresh users to seed. Empty body seeds one user with the default prefix.
+ */
+export type DevSeedFreshUserRequest = {
+    count?: number;
+    prefix?: SeedPrefix;
+};
+
+/**
+ * Freshly seeded users with tokens the debug picker can use
+ */
+export type DevSeedFreshUserResponse = {
+    users: Array<SeededUser>;
+};
+
 export type Duel = {
     hostId: string;
     guestId: string;
@@ -276,6 +298,12 @@ export type MailSendAttendees = {
     body: string;
 };
 
+export type MailSendNewsletter = {
+    subject: string;
+    body: string;
+    listName: NewsletterId;
+};
+
 export type MailSendResult = {
     success: boolean;
     message?: string;
@@ -284,6 +312,7 @@ export type MailSendResult = {
 export type MailSendSelf = {
     subject: string;
     body: string;
+    newsletterId?: NewsletterId;
 };
 
 export type MentorAttendanceRequest = {
@@ -568,6 +597,19 @@ export type ScanEvent = {
 
 export type ScanEventRequest = {
     eventId: EventId;
+};
+
+/**
+ * Prefix for seeded user ids. Must start with github so ids match the provider format.
+ */
+export type SeedPrefix = string;
+
+export type SeededUser = {
+    user: UserInfo;
+    /**
+     * JWT for the seeded user, signed with the local secret
+     */
+    jwt: string;
 };
 
 export type Shifts = {
@@ -1437,6 +1479,62 @@ export type DeleteCtfByIdResponses = {
 
 export type DeleteCtfByIdResponse = DeleteCtfByIdResponses[keyof DeleteCtfByIdResponses];
 
+export type PostDevSeedFreshUserData = {
+    body?: DevSeedFreshUserRequest;
+    path?: never;
+    query?: never;
+    url: '/dev/seed/fresh-user/';
+};
+
+export type PostDevSeedFreshUserErrors = {
+    /**
+     * Dev endpoints are disabled in production
+     */
+    403: {
+        error: 'DevDisabled';
+        message: 'Dev endpoints are disabled in production';
+    };
+};
+
+export type PostDevSeedFreshUserError = PostDevSeedFreshUserErrors[keyof PostDevSeedFreshUserErrors];
+
+export type PostDevSeedFreshUserResponses = {
+    /**
+     * Seeded users with JWTs
+     */
+    200: DevSeedFreshUserResponse;
+};
+
+export type PostDevSeedFreshUserResponse = PostDevSeedFreshUserResponses[keyof PostDevSeedFreshUserResponses];
+
+export type GetDevUsersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/dev/users/';
+};
+
+export type GetDevUsersErrors = {
+    /**
+     * Dev endpoints are disabled in production
+     */
+    403: {
+        error: 'DevDisabled';
+        message: 'Dev endpoints are disabled in production';
+    };
+};
+
+export type GetDevUsersError = GetDevUsersErrors[keyof GetDevUsersErrors];
+
+export type GetDevUsersResponses = {
+    /**
+     * Seeded users
+     */
+    200: DevListUsersResponse;
+};
+
+export type GetDevUsersResponse = GetDevUsersResponses[keyof GetDevUsersResponses];
+
 export type PostDuelData = {
     body?: DuelCreateRequest;
     path?: never;
@@ -2137,6 +2235,41 @@ export type PostMailSendAttendeesResponses = {
 
 export type PostMailSendAttendeesResponse = PostMailSendAttendeesResponses[keyof PostMailSendAttendeesResponses];
 
+export type PostMailSendNewsletterData = {
+    body?: MailSendNewsletter;
+    path?: never;
+    query?: never;
+    url: '/mail/send/newsletter/';
+};
+
+export type PostMailSendNewsletterErrors = {
+    /**
+     * Newsletter audience is empty or invalid
+     */
+    400: {
+        error: 'NewsletterRecipientsInvalid';
+        message: 'This newsletter has no valid audience. Check that it is nonempty and all subscriber addresses are valid.';
+    };
+    /**
+     * Newsletter not found
+     */
+    404: {
+        error: 'NotFound';
+        message: "That newsletter doesn't exist!";
+    };
+};
+
+export type PostMailSendNewsletterError = PostMailSendNewsletterErrors[keyof PostMailSendNewsletterErrors];
+
+export type PostMailSendNewsletterResponses = {
+    /**
+     * Bulk send results
+     */
+    200: MailBulkSendResult;
+};
+
+export type PostMailSendNewsletterResponse = PostMailSendNewsletterResponses[keyof PostMailSendNewsletterResponses];
+
 export type PostMailSendSelfData = {
     body?: MailSendSelf;
     path?: never;
@@ -2444,6 +2577,68 @@ export type PostNewsletterSubscribeResponses = {
 };
 
 export type PostNewsletterSubscribeResponse = PostNewsletterSubscribeResponses[keyof PostNewsletterSubscribeResponses];
+
+export type GetNewsletterUnsubscribeData = {
+    body?: never;
+    path?: never;
+    query?: {
+        token?: string;
+    };
+    url: '/newsletter/unsubscribe/';
+};
+
+export type GetNewsletterUnsubscribeErrors = {
+    /**
+     * Invalid unsubscribe link
+     */
+    400: string;
+    /**
+     * Temporary unsubscribe failure
+     */
+    500: string;
+};
+
+export type GetNewsletterUnsubscribeError = GetNewsletterUnsubscribeErrors[keyof GetNewsletterUnsubscribeErrors];
+
+export type GetNewsletterUnsubscribeResponses = {
+    /**
+     * Unsubscribe page
+     */
+    200: string;
+};
+
+export type GetNewsletterUnsubscribeResponse = GetNewsletterUnsubscribeResponses[keyof GetNewsletterUnsubscribeResponses];
+
+export type PostNewsletterUnsubscribeData = {
+    body?: never;
+    path?: never;
+    query?: {
+        token?: string;
+    };
+    url: '/newsletter/unsubscribe/';
+};
+
+export type PostNewsletterUnsubscribeErrors = {
+    /**
+     * Invalid unsubscribe link
+     */
+    400: string;
+    /**
+     * Temporary unsubscribe failure
+     */
+    500: string;
+};
+
+export type PostNewsletterUnsubscribeError = PostNewsletterUnsubscribeErrors[keyof PostNewsletterUnsubscribeErrors];
+
+export type PostNewsletterUnsubscribeResponses = {
+    /**
+     * Unsubscribe page
+     */
+    200: string;
+};
+
+export type PostNewsletterUnsubscribeResponse = PostNewsletterUnsubscribeResponses[keyof PostNewsletterUnsubscribeResponses];
 
 export type GetNewsletterByIdData = {
     body?: never;
