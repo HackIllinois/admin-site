@@ -69,7 +69,12 @@ tag. This inserts at the cursor or replaces selected HTML.
 The speedrun Alpha banner is served from:
 
 ```html
-<img src="https://admin.hackillinois.org/email/speedrun_alpha_graphic.png" alt="speedrun Alpha" width="760" style="display:block;width:100%;max-width:760px;height:auto;border:0;margin:0 0 24px 0;">
+<img
+    src="https://admin.hackillinois.org/email/speedrun_alpha_graphic.png"
+    alt="speedrun Alpha"
+    width="760"
+    style="display:block;width:100%;max-width:760px;height:auto;border:0;margin:0 0 24px 0;"
+/>
 ```
 
 The picker uses the same origin (or `NEXT_PUBLIC_EMAIL_ASSET_BASE_URL` override)

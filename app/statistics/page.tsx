@@ -1,5 +1,4 @@
 "use client"
-
 import Loading from "@/components/Loading"
 import { Event, StatisticLog } from "@/generated"
 import {

@@ -40,6 +40,15 @@ export function setupClient() {
 
 // Redirects to authentication url
 export function authenticate(provider: Provider = "google") {
+    const isLocal = process.env.NEXT_PUBLIC_API_URL !== undefined
+
+    if (isLocal) {
+        if (window.location.pathname !== "/account") {
+            window.location.replace("/account")
+        }
+        return
+    }
+
     const redirectURI = window.location.toString()
     const authURL = `${client.getConfig().baseUrl}/auth/login/${provider}?redirect=${redirectURI}`
     window.location.replace(authURL)
