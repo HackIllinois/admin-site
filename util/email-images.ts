@@ -16,6 +16,38 @@ export const EMAIL_IMAGES = [
         label: "HackIllinois 2027 footer",
         alt: "",
     },
+    // Reusable 2027 Wild West theme assets (public/email/assets/2027/)
+    {
+        path: "/email/assets/2027/canyon_hero.jpg",
+        label: "2027 canyon sunset hero",
+        alt: "",
+    },
+    {
+        path: "/email/assets/2027/horse_divider.png",
+        label: "2027 horse divider",
+        alt: "",
+    },
+    {
+        path: "/email/assets/2027/wood_plank_blank.png",
+        label: "2027 wood plank (blank)",
+        alt: "",
+    },
+    // Newsletter, November 2, 2026 (public/email/newsletter-2026-11-02/)
+    {
+        path: "/email/newsletter-2026-11-02/btn_theme_reveal.png",
+        label: "Nov 2 newsletter: Watch the theme reveal button",
+        alt: "Watch the theme reveal",
+    },
+    {
+        path: "/email/newsletter-2026-11-02/btn_visa_roles.png",
+        label: "Nov 2 newsletter: Explore Visa roles button",
+        alt: "Explore Visa roles",
+    },
+    {
+        path: "/email/newsletter-2026-11-02/btn_hardware_survey.png",
+        label: "Nov 2 newsletter: Take the hardware survey button",
+        alt: "Take the hardware survey",
+    },
 ] as const
 
 export function emailImageUrl(path: string, assetBaseUrl: string): string {

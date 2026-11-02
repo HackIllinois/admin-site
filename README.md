@@ -83,7 +83,10 @@ as the automatic header/footer. Always use the full public URL in sent emails;
 
 To add another image:
 
-1. Add the PNG, JPEG, or GIF to `public/email/` with a unique filename.
+1. Add the PNG, JPEG, or GIF to `public/email/` with a unique filename. Put
+   reusable theme artwork in `public/email/assets/<year>/` (for example
+   `public/email/assets/2027/` for the Wild West assets) and artwork made for a
+   single email in a dated folder such as `public/email/newsletter-2026-11-02/`.
 2. Add its public path, display label, and alt text to `EMAIL_IMAGES` in
    `util/email-images.ts`. Public paths start with `/email/`, not `/public/`.
 3. Commit and deploy the site. The image and picker entry deploy together.
