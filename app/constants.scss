@@ -1,5 +1,29 @@
 @use "sass:color";
-$primary-color: #505f85;
+// Design tokens for the admin redesign. Page PRs should reuse these.
+$page-bg: #fbfaf7;
+$surface: #ffffff;
+$border: #ece7e0;
+$border-input: #ddd6cd;
+$text: #1a1714;
+$text-nav: #4a4540;
+$text-muted: #5e5852;
+$text-subtle: #6e675f;
+$accent: #b4481a;
+$accent-hover: #8e3611;
+$selected-bg: #fcede4;
+$hover-bg: #f2eee8;
+$row-hover-bg: #fbf8f3;
+$status-ok: #1e9e5a;
+$radius-card: 12px;
+$radius-control: 8px;
+$header-height: 56px;
+$sidebar-width: 240px;
+
+$font-ui: var(--font-ui), "Plus Jakarta Sans", system-ui, sans-serif;
+$font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+
+// Legacy names used by existing pages now point at the new accent
+$primary-color: $accent;
 $secondary-color: #5e997a;
 $red: #cc0000;
 $success: #00cc00;
@@ -11,6 +35,14 @@ $secondary-color-light: color.adjust($secondary-color, $lightness: 40%);
     // allows you to import these variables from javascript
     --primarycolor: #{$primary-color};
     --primarycolorlight: #{$primary-color-light};
+    --page-bg: #{$page-bg};
+    --surface: #{$surface};
+    --border: #{$border};
+    --text: #{$text};
+    --text-muted: #{$text-muted};
+    --accent: #{$accent};
+    --accent-hover: #{$accent-hover};
+    --selected-bg: #{$selected-bg};
     --secondarycolor: #{$secondary-color};
     --secondarycolorlight: #{$secondary-color-light};
 }
@@ -41,7 +73,7 @@ $desktop-min-width: 1024px;
     display: block;
     margin: 17px 0;
     font-size: 1em;
-    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    font-family: $font-ui;
     box-shadow: 0 0 0 1px hsl(0, 0%, 80%);
     transition: box-shadow 0.2s;
     box-sizing: border-box;
@@ -106,4 +138,10 @@ $desktop-min-width: 1024px;
     text-align: left;
 
     // calling style should set something for &:hover and &:focus to indicate such
+}
+
+// 2px accent outline for keyboard focus
+@mixin focus-ring {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
 }

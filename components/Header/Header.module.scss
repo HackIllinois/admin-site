@@ -1,0 +1,98 @@
+@use "../../app/constants.scss" as *;
+
+.header {
+    height: $header-height;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-sizing: border-box;
+    background: $surface;
+    border-bottom: 1px solid $border;
+
+    @include phone {
+        padding: 0 12px;
+    }
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.slash {
+    color: #b8b0a6;
+}
+
+.section {
+    font-size: 14px;
+    color: $text-muted;
+}
+
+.menuButton {
+    display: none;
+    background: none;
+    border: none;
+    padding: 6px 8px;
+    border-radius: $radius-control;
+    font-size: 18px;
+    color: $text;
+    cursor: pointer;
+
+    &:hover {
+        background: $hover-bg;
+    }
+
+    &:focus-visible {
+        @include focus-ring;
+    }
+
+    @include mobile {
+        display: block;
+    }
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: $text-muted;
+}
+
+.environment {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    @include phone {
+        display: none;
+    }
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: $status-ok;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f6e3d6;
+    color: $accent-hover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+}

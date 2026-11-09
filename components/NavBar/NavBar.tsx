@@ -1,65 +1,75 @@
-import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useState } from "react"
-import logo from "@/public/logo.svg"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useEffect } from "react"
 import styles from "./NavBar.module.scss"
 
 // Fix font awesome scaling issue by manually importing css
 import { config } from "@fortawesome/fontawesome-svg-core"
+import { groupRoutes, isRouteActive } from "@/util/nav-groups"
 import { routes } from "@/util/routes"
 config.autoAddCss = false
 import "../../node_modules/@fortawesome/fontawesome-svg-core/styles.css"
 
-export default function NavBar() {
-    const path = usePathname()
-    const [menuOpen, setMenuOpen] = useState(false)
+const groups = groupRoutes(routes)
+
+export default function NavBar({
+    open,
+    onClose,
+}: {
+    open: boolean
+    onClose: () => void
+}) {
+    const path = usePathname() || ""
+
+    useEffect(() => {
+        if (!open) return
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
+        window.addEventListener("keydown", onKey)
+        return () => window.removeEventListener("keydown", onKey)
+    }, [open, onClose])
+
     return (
         <>
-            <div className={styles.button} onClick={() => setMenuOpen(true)}>
-                <FontAwesomeIcon icon={faBars} fixedWidth />
-                <div className={styles.highlight} />
-            </div>
-
             <div
-                className={
-                    styles.background + (menuOpen ? " " + styles.open : "")
-                }
-                onClick={() => setMenuOpen(false)}
+                className={styles.background + (open ? " " + styles.open : "")}
+                onClick={onClose}
             />
-
-            <div
-                className={
-                    styles.container + (menuOpen ? " " + styles.open : "")
-                }
+            <nav
+                id="site-navigation"
+                aria-label="Sections"
+                className={styles.container + (open ? " " + styles.open : "")}
             >
-                <div className={styles.menu}>
-                    <div className={styles.logo}>
-                        <Image src={logo} alt="HackIllinois Logo" />
+                {groups.map((group) => (
+                    <div className={styles.group} key={group.id}>
+                        <span className={styles.groupLabel}>{group.label}</span>
+                        {group.routes.map((route) => {
+                            const active = isRouteActive(path, route.path)
+                            return (
+                                <Link
+                                    href={route.path}
+                                    className={
+                                        active
+                                            ? styles.link + " " + styles.active
+                                            : styles.link
+                                    }
+                                    aria-current={active ? "page" : undefined}
+                                    onClick={onClose}
+                                    key={route.name}
+                                    prefetch={false}
+                                >
+                                    <FontAwesomeIcon
+                                        className={styles.icon}
+                                        icon={route.icon}
+                                        fixedWidth
+                                    />
+                                    <span>{route.name}</span>
+                                </Link>
+                            )
+                        })}
                     </div>
-                    {routes.map((route) => (
-                        <Link
-                            href={route.path}
-                            className={
-                                path === route.path
-                                    ? styles.link + " " + styles.active
-                                    : styles.link
-                            }
-                            onClick={() => setMenuOpen(false)}
-                            key={route.name}
-                            prefetch={false}
-                        >
-                            <FontAwesomeIcon
-                                className={styles.icon}
-                                icon={route.icon}
-                            />
-                            <span>&nbsp; {route.name}</span>
-                        </Link>
-                    ))}
-                </div>
-            </div>
+                ))}
+            </nav>
         </>
     )
 }
