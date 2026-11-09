@@ -306,6 +306,23 @@
         margin-top: 12px;
     }
 
+    .skippedNotice {
+        margin-top: 12px;
+        color: #444;
+        font-size: 0.95em;
+
+        strong {
+            color: $red;
+        }
+
+        ul {
+            margin: 4px 0 0 20px;
+            padding: 0;
+            font-size: 0.9em;
+            overflow-wrap: anywhere;
+        }
+    }
+
     .successMessage {
         color: $success;
         font-weight: bold;

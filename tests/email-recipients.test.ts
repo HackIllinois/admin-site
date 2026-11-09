@@ -10,6 +10,8 @@ import {
     groupConfirmation,
     newsletterGroupValue,
     sendEmailToGroup,
+    splitValidEmails,
+    ADMIN_ONLY_SEND_MESSAGE,
     tagGroupValue,
     tagRecipients,
 } from "../util/email-recipients"
@@ -23,6 +25,7 @@ let subscribers: string[] = []
 let tagEmails: Record<string, string[]> = {}
 let newsletterStatus = 200
 let sendResult: MailBulkSendResult = success
+let sendStatus = 200
 
 beforeEach(() => {
     requests = []
@@ -30,6 +33,7 @@ beforeEach(() => {
     tagEmails = {}
     newsletterStatus = 200
     sendResult = success
+    sendStatus = 200
     globalThis.alert = () => {}
     client.setConfig({
         baseUrl: "https://email-test.invalid",
@@ -58,7 +62,12 @@ beforeEach(() => {
                       )
             }
             assert.equal(request.method, "POST")
-            return Response.json(sendResult)
+            return sendStatus === 200
+                ? Response.json(sendResult)
+                : Response.json(
+                      { error: "Forbidden", message: "Forbidden" },
+                      { status: sendStatus },
+                  )
         },
     })
 })
@@ -307,4 +316,77 @@ test("cancelling a tag send posts nothing", async () => {
         null,
     )
     assert.equal(requests.length, 1)
+})
+
+test("splitValidEmails separates malformed addresses, normalizes and dedupes", () => {
+    assert.deepEqual(
+        splitValidEmails([
+            " A@x.com ",
+            "a@x.com",
+            "b@sub.x.edu",
+            "no-at-sign",
+            "two words@x.com",
+            "a@b",
+            "@x.com",
+            "a@@x.com",
+            "dot..dot@x.com",
+            "Bad Address",
+            "bad address",
+            "",
+            "  ",
+            "o'brien+tag@x.io",
+        ]),
+        {
+            valid: ["a@x.com", "b@sub.x.edu", "o'brien+tag@x.io"],
+            invalid: [
+                "no-at-sign",
+                "two words@x.com",
+                "a@b",
+                "@x.com",
+                "a@@x.com",
+                "dot..dot@x.com",
+                "bad address",
+            ],
+        },
+    )
+    assert.deepEqual(splitValidEmails([]), { valid: [], invalid: [] })
+})
+
+test("tag send posts only valid emails and reports skipped ones before confirming", async () => {
+    tagEmails = { ADMITTED: ["a@x.com", "oops", "b@x.com", "bad@"] }
+    let seenInvalid: string[] = []
+    await sendEmailToGroup(tagGroupValue(["ADMITTED"]), message, (group) => {
+        assert.ok(group.kind === "tags")
+        seenInvalid = group.invalid
+        assert.match(groupConfirmation(group), /2 recipients/)
+        assert.match(groupConfirmation(group), /Skipping 2 invalid/)
+        return true
+    })
+    assert.deepEqual(seenInvalid, ["oops", "bad@"])
+    assert.deepEqual((await requests[1].json()).emails, ["a@x.com", "b@x.com"])
+})
+
+test("tag send with only invalid emails never confirms or posts", async () => {
+    tagEmails = { ADMITTED: ["oops", "bad@"] }
+    await assert.rejects(
+        sendEmailToGroup(tagGroupValue(["ADMITTED"]), message, () => {
+            assert.fail("must not confirm an empty audience")
+        }),
+        /no valid recipients/,
+    )
+    assert.ok(requests.every((r) => r.method === "GET"))
+})
+
+test("a 403 from the tag send gives the admin-only message without an alert", async () => {
+    tagEmails = { ADMITTED: ["a@x.com"] }
+    sendStatus = 403
+    globalThis.alert = () => assert.fail("must not alert")
+    await assert.rejects(
+        sendEmailToGroup(tagGroupValue(["ADMITTED"]), message, () => true),
+        (err: Error) => err.message === ADMIN_ONLY_SEND_MESSAGE,
+    )
+    assert.equal(
+        ADMIN_ONLY_SEND_MESSAGE,
+        "Only admins can send email. Ask an admin to send this list.",
+    )
 })

@@ -54,6 +54,7 @@ export default function Email() {
     > | null>(null)
     const [tagsError, setTagsError] = useState("")
     const [listStatus, setListStatus] = useState("")
+    const [skipped, setSkipped] = useState<string[]>([])
     const bodyRef = useRef<HTMLTextAreaElement>(null)
     const selectionRef = useRef({ start: 0, end: 0 })
     const previewRef = useRef<HTMLIFrameElement>(null)
@@ -137,6 +138,7 @@ export default function Email() {
         )
         setSendState({ status: "editing" })
         setSendResult(null)
+        setSkipped([])
     }
 
     const copyList = async (
@@ -259,11 +261,13 @@ export default function Email() {
         if (!email.body || !groupReady || sendState.status !== "sent-self")
             return
         setSendState({ status: "preparing-group" })
+        setSkipped([])
         try {
             const data = await sendEmailToGroup(
                 tagsSelected ? tagGroupValue(selectedTags) : recipientGroup,
                 { subject, body: email.body },
                 (group) => {
+                    setSkipped(group.kind === "tags" ? group.invalid : [])
                     if (!window.confirm(groupConfirmation(group))) return false
                     setSendState({ status: "sending-group" })
                     return true
@@ -284,6 +288,7 @@ export default function Email() {
     }
 
     const handleEdit = () => {
+        setSkipped([])
         setSendState({ status: "editing" })
         setSendResult(null)
     }
@@ -329,6 +334,7 @@ export default function Email() {
                         aria-describedby="email-recipient-hint"
                         onChange={(event) => {
                             setRecipientGroup(event.target.value)
+                            setSkipped([])
                             setSendState({ status: "editing" })
                             setSendResult(null)
                         }}
@@ -554,6 +560,21 @@ export default function Email() {
             {email.error && (
                 <div className={styles.errorMessage} role="alert">
                     {email.error}
+                </div>
+            )}
+
+            {skipped.length > 0 && (
+                <div className={styles.skippedNotice} role="status">
+                    <strong>
+                        {skipped.length} invalid{" "}
+                        {skipped.length === 1 ? "address" : "addresses"} skipped
+                    </strong>{" "}
+                    (not sent):
+                    <ul>
+                        {skipped.map((address) => (
+                            <li key={address}>{address}</li>
+                        ))}
+                    </ul>
                 </div>
             )}
 
