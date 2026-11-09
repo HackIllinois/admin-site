@@ -17,6 +17,56 @@ export type AdmissionDecisionUpdate = {
     reimbursementValue: number;
 };
 
+export type Applicant = {
+    userId: UserId;
+    name: string;
+    email: string;
+    school: string;
+    reviewers: Array<{
+        reviewerId: UserId;
+        score: number | null;
+    }>;
+    aiScore: number | null;
+    finalScore: number | null;
+    edited: boolean;
+    tag: ApplicantTag;
+};
+
+export type ApplicantEmails = {
+    emails: Array<string>;
+};
+
+export type ApplicantTag = 'IN_REVIEW' | 'ADMITTED' | 'ADMITTED_REIMBURSED' | 'WAITLISTED' | 'REJECTED';
+
+export type ApplicationReview = ApplicationReviewRequest & {
+    reviewerId: UserId;
+};
+
+export type ApplicationReviewDetails = {
+    reviews: Array<ApplicationReview>;
+    aiScore: number | null;
+    aiReasons: Array<string>;
+    aiGradedAt: number | null;
+    finalScore: number | null;
+    finalScoreSetBy: string | null;
+    finalScoreSetAt: number | null;
+};
+
+export type ApplicationReviewRequest = {
+    score: number;
+    comment?: string;
+};
+
+export type ApplicationReviewSummary = {
+    userId: UserId;
+    reviewCount: number;
+    averageScore: number | null;
+};
+
+export type ApplicationReviewerRequest = {
+    reviewerId: UserId;
+};
+
 export type AttendeeProfile = {
     userId: UserId;
     displayName: string;
@@ -64,6 +114,108 @@ export type AttendeeTeam = {
     points: number;
     members: number;
 };
+
+export type AuctionBidHistory = {
+    bids: Array<{
+        userId: UserId;
+        displayName: string | null;
+        amount: number;
+        time: number;
+    }>;
+};
+
+export type AuctionBidRequest = {
+    amount: number;
+};
+
+export type AuctionItemCreateRequest = {
+    name: string;
+    description: string;
+    imageURL: string;
+    startPrice: number;
+    step: number;
+    closeTime: number;
+};
+
+export type AuctionItemId = string;
+
+export type AuctionItemUpdateRequest = {
+    name?: string;
+    description?: string;
+    imageURL?: string;
+    startPrice?: number;
+    step?: number;
+    closeTime?: number;
+};
+
+/**
+ * Attendee view. Contains no names or user ids.
+ */
+export type AuctionItemView = {
+    itemId: AuctionItemId;
+    name: string;
+    description: string;
+    imageURL: string;
+    startPrice: number;
+    step: number;
+    closeTime: number;
+    originalCloseTime: number;
+    status: AuctionStatus;
+    highBid: number | null;
+    nextMinimum: number;
+    bidCount: number;
+    youLead: boolean;
+};
+
+export type AuctionItemsView = {
+    items: Array<AuctionItemView>;
+};
+
+export type AuctionMeView = {
+    leading: Array<AuctionItemView>;
+    /**
+     * Attendee view. Contains no names or user ids.
+     */
+    won: Array<AuctionItemView & {
+        paid: number;
+    }>;
+};
+
+export type AuctionReopenRequest = {
+    closeTime: number;
+};
+
+export type AuctionResults = {
+    items: Array<AuctionStaffItem>;
+};
+
+export type AuctionStaffItem = {
+    itemId: AuctionItemId;
+    name: string;
+    description: string;
+    imageURL: string;
+    startPrice: number;
+    step: number;
+    closeTime: number;
+    originalCloseTime: number;
+    status: AuctionStatus;
+    highBid: {
+        userId: UserId;
+        displayName: string | null;
+        amount: number;
+        time: number;
+    } | null;
+    nextMinimum: number;
+    bidCount: number;
+    winnerPaid: boolean;
+    needsReview: boolean;
+    pickedUp: {
+        by: UserId;
+        at: number;
+    } | null;
+};
+
+export type AuctionStatus = 'OPEN' | 'CLOSED' | 'CANCELLED';
 
 export type Ctf = {
     flagId: string;
@@ -492,6 +644,10 @@ export type RegistrationApplicationDraftRequest = {
     mlhNewsletter?: boolean;
 };
 
+export type RegistrationApplicationSubmitted = RegistrationApplicationSubmittedRequest & {
+    userId: UserId;
+};
+
 export type RegistrationApplicationSubmittedRequest = {
     firstName: string;
     lastName: string;
@@ -808,6 +964,46 @@ export type PutAdmissionAcceptResponses = {
 
 export type PutAdmissionAcceptResponse = PutAdmissionAcceptResponses[keyof PutAdmissionAcceptResponses];
 
+export type GetAdmissionApplicantsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        tag?: ApplicantTag;
+        /**
+         * A reviewer's user ID, or "none" for no reviewers
+         */
+        reviewerId?: string;
+    };
+    url: '/admission/applicants/';
+};
+
+export type GetAdmissionApplicantsResponses = {
+    /**
+     * The matching applicants
+     */
+    200: Array<Applicant>;
+};
+
+export type GetAdmissionApplicantsResponse = GetAdmissionApplicantsResponses[keyof GetAdmissionApplicantsResponses];
+
+export type GetAdmissionApplicantsEmailsData = {
+    body?: never;
+    path?: never;
+    query: {
+        tag: ApplicantTag;
+    };
+    url: '/admission/applicants/emails/';
+};
+
+export type GetAdmissionApplicantsEmailsResponses = {
+    /**
+     * The emails
+     */
+    200: ApplicantEmails;
+};
+
+export type GetAdmissionApplicantsEmailsResponse = GetAdmissionApplicantsEmailsResponses[keyof GetAdmissionApplicantsEmailsResponses];
+
 export type GetAdmissionNotsentData = {
     body?: never;
     path?: never;
@@ -823,6 +1019,184 @@ export type GetAdmissionNotsentResponses = {
 };
 
 export type GetAdmissionNotsentResponse = GetAdmissionNotsentResponses[keyof GetAdmissionNotsentResponses];
+
+export type GetAdmissionReviewData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/admission/review/';
+};
+
+export type GetAdmissionReviewResponses = {
+    /**
+     * The review summaries
+     */
+    200: Array<ApplicationReviewSummary>;
+};
+
+export type GetAdmissionReviewResponse = GetAdmissionReviewResponses[keyof GetAdmissionReviewResponses];
+
+export type GetAdmissionReviewNextData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/admission/review/next/';
+};
+
+export type GetAdmissionReviewNextErrors = {
+    /**
+     * No applications left to review
+     */
+    404: {
+        error: 'NoApplicationsToReview';
+        message: 'There are no applications left for you to review';
+    };
+};
+
+export type GetAdmissionReviewNextError = GetAdmissionReviewNextErrors[keyof GetAdmissionReviewNextErrors];
+
+export type GetAdmissionReviewNextResponses = {
+    /**
+     * The application to review
+     */
+    200: RegistrationApplicationSubmitted;
+};
+
+export type GetAdmissionReviewNextResponse = GetAdmissionReviewNextResponses[keyof GetAdmissionReviewNextResponses];
+
+export type GetAdmissionReviewByIdData = {
+    body?: never;
+    path: {
+        id: UserId;
+    };
+    query?: never;
+    url: '/admission/review/{id}/';
+};
+
+export type GetAdmissionReviewByIdErrors = {
+    /**
+     * Couldn't find the application
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type GetAdmissionReviewByIdError = GetAdmissionReviewByIdErrors[keyof GetAdmissionReviewByIdErrors];
+
+export type GetAdmissionReviewByIdResponses = {
+    /**
+     * The reviews and scores
+     */
+    200: ApplicationReviewDetails;
+};
+
+export type GetAdmissionReviewByIdResponse = GetAdmissionReviewByIdResponses[keyof GetAdmissionReviewByIdResponses];
+
+export type PutAdmissionReviewByIdData = {
+    body?: ApplicationReviewRequest;
+    path: {
+        id: UserId;
+    };
+    query?: never;
+    url: '/admission/review/{id}/';
+};
+
+export type PutAdmissionReviewByIdErrors = {
+    /**
+     * Couldn't find the application
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type PutAdmissionReviewByIdError = PutAdmissionReviewByIdErrors[keyof PutAdmissionReviewByIdErrors];
+
+export type PutAdmissionReviewByIdResponses = {
+    /**
+     * Successfully submitted
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PutAdmissionReviewByIdResponse = PutAdmissionReviewByIdResponses[keyof PutAdmissionReviewByIdResponses];
+
+export type PutAdmissionReviewByIdReviewersData = {
+    body?: ApplicationReviewerRequest;
+    path: {
+        id: UserId;
+    };
+    query?: never;
+    url: '/admission/review/{id}/reviewers/';
+};
+
+export type PutAdmissionReviewByIdReviewersErrors = {
+    /**
+     * Couldn't find the application
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type PutAdmissionReviewByIdReviewersError = PutAdmissionReviewByIdReviewersErrors[keyof PutAdmissionReviewByIdReviewersErrors];
+
+export type PutAdmissionReviewByIdReviewersResponses = {
+    /**
+     * The reviewer is assigned
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type PutAdmissionReviewByIdReviewersResponse = PutAdmissionReviewByIdReviewersResponses[keyof PutAdmissionReviewByIdReviewersResponses];
+
+export type DeleteAdmissionReviewByIdReviewersByReviewerIdData = {
+    body?: never;
+    path: {
+        id: UserId;
+        reviewerId: UserId;
+    };
+    query?: never;
+    url: '/admission/review/{id}/reviewers/{reviewerId}/';
+};
+
+export type DeleteAdmissionReviewByIdReviewersByReviewerIdErrors = {
+    /**
+     * Couldn't find the application
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+    /**
+     * The reviewer has already scored the application
+     */
+    409: {
+        error: 'ReviewAlreadyScored';
+        message: 'This reviewer has already scored the application, so they cannot be removed';
+    };
+};
+
+export type DeleteAdmissionReviewByIdReviewersByReviewerIdError = DeleteAdmissionReviewByIdReviewersByReviewerIdErrors[keyof DeleteAdmissionReviewByIdReviewersByReviewerIdErrors];
+
+export type DeleteAdmissionReviewByIdReviewersByReviewerIdResponses = {
+    /**
+     * The reviewer is no longer assigned
+     */
+    200: {
+        success: true;
+    };
+};
+
+export type DeleteAdmissionReviewByIdReviewersByReviewerIdResponse = DeleteAdmissionReviewByIdReviewersByReviewerIdResponses[keyof DeleteAdmissionReviewByIdReviewersByReviewerIdResponses];
 
 export type GetAdmissionRsvpData = {
     body?: never;
@@ -1040,6 +1414,417 @@ export type DeleteAttendeeTeamByIdResponses = {
 };
 
 export type DeleteAttendeeTeamByIdResponse = DeleteAttendeeTeamByIdResponses[keyof DeleteAttendeeTeamByIdResponses];
+
+export type GetAuctionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auction/';
+};
+
+export type GetAuctionResponses = {
+    /**
+     * The items
+     */
+    200: AuctionItemsView;
+};
+
+export type GetAuctionResponse = GetAuctionResponses[keyof GetAuctionResponses];
+
+export type PostAuctionItemData = {
+    body?: AuctionItemCreateRequest;
+    path?: never;
+    query?: never;
+    url: '/auction/item/';
+};
+
+export type PostAuctionItemErrors = {
+    /**
+     * Close time is not in the future
+     */
+    400: {
+        error: 'InvalidCloseTime';
+        message: 'The close time must be in the future';
+    };
+};
+
+export type PostAuctionItemError = PostAuctionItemErrors[keyof PostAuctionItemErrors];
+
+export type PostAuctionItemResponses = {
+    /**
+     * The new item
+     */
+    200: AuctionStaffItem;
+};
+
+export type PostAuctionItemResponse = PostAuctionItemResponses[keyof PostAuctionItemResponses];
+
+export type PutAuctionItemByIdData = {
+    body?: AuctionItemUpdateRequest;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/item/{id}/';
+};
+
+export type PutAuctionItemByIdErrors = {
+    /**
+     * One of:
+     * - HasBids: The item has bids
+     * - InvalidCloseTime: Close time is not in the future
+     * - AuctionClosed: The item is closed
+     * - AuctionCancelled: The item was cancelled
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'HasBids';
+        message: 'This item has bids, so it can only be cancelled';
+    } | {
+        error: 'InvalidCloseTime';
+        message: 'The close time must be in the future';
+    } | {
+        error: 'AuctionClosed';
+        message: 'This auction is closed';
+    } | {
+        error: 'AuctionCancelled';
+        message: 'This auction was cancelled';
+    };
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    };
+    /**
+     * Another change happened at the same time, try again
+     */
+    409: {
+        error: 'BidConflict';
+        message: 'Another change happened at the same time, try again';
+    };
+};
+
+export type PutAuctionItemByIdError = PutAuctionItemByIdErrors[keyof PutAuctionItemByIdErrors];
+
+export type PutAuctionItemByIdResponses = {
+    /**
+     * The edited item
+     */
+    200: AuctionStaffItem;
+};
+
+export type PutAuctionItemByIdResponse = PutAuctionItemByIdResponses[keyof PutAuctionItemByIdResponses];
+
+export type GetAuctionItemByIdBidsData = {
+    body?: never;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/item/{id}/bids/';
+};
+
+export type GetAuctionItemByIdBidsErrors = {
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    };
+};
+
+export type GetAuctionItemByIdBidsError = GetAuctionItemByIdBidsErrors[keyof GetAuctionItemByIdBidsErrors];
+
+export type GetAuctionItemByIdBidsResponses = {
+    /**
+     * The bids, oldest first
+     */
+    200: AuctionBidHistory;
+};
+
+export type GetAuctionItemByIdBidsResponse = GetAuctionItemByIdBidsResponses[keyof GetAuctionItemByIdBidsResponses];
+
+export type PostAuctionItemByIdCancelData = {
+    body?: never;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/item/{id}/cancel/';
+};
+
+export type PostAuctionItemByIdCancelErrors = {
+    /**
+     * One of:
+     * - AuctionClosed: The item is closed
+     * - AuctionCancelled: The item was cancelled
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'AuctionClosed';
+        message: 'This auction is closed';
+    } | {
+        error: 'AuctionCancelled';
+        message: 'This auction was cancelled';
+    };
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    };
+    /**
+     * Another change happened at the same time, try again
+     */
+    409: {
+        error: 'BidConflict';
+        message: 'Another change happened at the same time, try again';
+    };
+};
+
+export type PostAuctionItemByIdCancelError = PostAuctionItemByIdCancelErrors[keyof PostAuctionItemByIdCancelErrors];
+
+export type PostAuctionItemByIdCancelResponses = {
+    /**
+     * The cancelled item
+     */
+    200: AuctionStaffItem;
+};
+
+export type PostAuctionItemByIdCancelResponse = PostAuctionItemByIdCancelResponses[keyof PostAuctionItemByIdCancelResponses];
+
+export type PostAuctionItemByIdPickupData = {
+    body?: never;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/item/{id}/pickup/';
+};
+
+export type PostAuctionItemByIdPickupErrors = {
+    /**
+     * One of:
+     * - NoWinner: No paid winner
+     * - AlreadyPickedUp: Already picked up
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'NoWinner';
+        message: 'This item has no paid winner';
+    } | {
+        error: 'AlreadyPickedUp';
+        message: 'This item was already picked up';
+    };
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    };
+};
+
+export type PostAuctionItemByIdPickupError = PostAuctionItemByIdPickupErrors[keyof PostAuctionItemByIdPickupErrors];
+
+export type PostAuctionItemByIdPickupResponses = {
+    /**
+     * The item
+     */
+    200: AuctionStaffItem;
+};
+
+export type PostAuctionItemByIdPickupResponse = PostAuctionItemByIdPickupResponses[keyof PostAuctionItemByIdPickupResponses];
+
+export type PostAuctionItemByIdReopenData = {
+    body?: AuctionReopenRequest;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/item/{id}/reopen/';
+};
+
+export type PostAuctionItemByIdReopenErrors = {
+    /**
+     * One of:
+     * - NotUnsold: Not a closed item with no bids
+     * - InvalidCloseTime: Close time is not in the future
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'NotUnsold';
+        message: 'Only a closed item with no bids can be reopened';
+    } | {
+        error: 'InvalidCloseTime';
+        message: 'The close time must be in the future';
+    };
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    };
+    /**
+     * Another change happened at the same time, try again
+     */
+    409: {
+        error: 'BidConflict';
+        message: 'Another change happened at the same time, try again';
+    };
+};
+
+export type PostAuctionItemByIdReopenError = PostAuctionItemByIdReopenErrors[keyof PostAuctionItemByIdReopenErrors];
+
+export type PostAuctionItemByIdReopenResponses = {
+    /**
+     * The reopened item
+     */
+    200: AuctionStaffItem;
+};
+
+export type PostAuctionItemByIdReopenResponse = PostAuctionItemByIdReopenResponses[keyof PostAuctionItemByIdReopenResponses];
+
+export type GetAuctionMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auction/me/';
+};
+
+export type GetAuctionMeResponses = {
+    /**
+     * My auction items
+     */
+    200: AuctionMeView;
+};
+
+export type GetAuctionMeResponse = GetAuctionMeResponses[keyof GetAuctionMeResponses];
+
+export type GetAuctionResultsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auction/results/';
+};
+
+export type GetAuctionResultsResponses = {
+    /**
+     * All items, staff view
+     */
+    200: AuctionResults;
+};
+
+export type GetAuctionResultsResponse = GetAuctionResultsResponses[keyof GetAuctionResultsResponses];
+
+export type GetAuctionByIdData = {
+    body?: never;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/{id}/';
+};
+
+export type GetAuctionByIdErrors = {
+    /**
+     * Item doesn't exist
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    };
+};
+
+export type GetAuctionByIdError = GetAuctionByIdErrors[keyof GetAuctionByIdErrors];
+
+export type GetAuctionByIdResponses = {
+    /**
+     * The item
+     */
+    200: AuctionItemView;
+};
+
+export type GetAuctionByIdResponse = GetAuctionByIdResponses[keyof GetAuctionByIdResponses];
+
+export type PostAuctionByIdBidData = {
+    body?: AuctionBidRequest;
+    path: {
+        id: AuctionItemId;
+    };
+    query?: never;
+    url: '/auction/{id}/bid/';
+};
+
+export type PostAuctionByIdBidErrors = {
+    /**
+     * One of:
+     * - BidTooLow: Bid is below the minimum
+     * - AuctionClosed: The item is closed
+     * - AuctionCancelled: The item was cancelled
+     *
+     * **See examples dropdown below**
+     */
+    400: {
+        error: 'BidTooLow';
+        message: 'Your bid is below the minimum bid';
+        minimum: number;
+    } | {
+        error: 'AuctionClosed';
+        message: 'This auction is closed';
+    } | {
+        error: 'AuctionCancelled';
+        message: 'This auction was cancelled';
+    };
+    /**
+     * Not enough points
+     */
+    402: {
+        error: 'InsufficientFunds';
+        message: "You don't have enough points for that bid";
+    };
+    /**
+     * One of:
+     * - NotFound: Item doesn't exist
+     * - NoProfile: No attendee profile
+     *
+     * **See examples dropdown below**
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find that auction item";
+    } | {
+        error: 'NoProfile';
+        message: 'You need an attendee profile to bid';
+    };
+    /**
+     * Another change happened at the same time, try again
+     */
+    409: {
+        error: 'BidConflict';
+        message: 'Another change happened at the same time, try again';
+    };
+};
+
+export type PostAuctionByIdBidError = PostAuctionByIdBidErrors[keyof PostAuctionByIdBidErrors];
+
+export type PostAuctionByIdBidResponses = {
+    /**
+     * The item after the bid
+     */
+    200: AuctionItemView;
+};
+
+export type PostAuctionByIdBidResponse = PostAuctionByIdBidResponses[keyof PostAuctionByIdBidResponses];
 
 export type GetAuthLoginByProviderData = {
     body?: never;
@@ -1677,6 +2462,18 @@ export type PostEventData = {
     url: '/event/';
 };
 
+export type PostEventErrors = {
+    /**
+     * The event expires before it starts
+     */
+    400: {
+        error: 'ExpiresBeforeStart';
+        message: 'The event expiration (exp) must be after its start time, or 0 for no expiration';
+    };
+};
+
+export type PostEventError = PostEventErrors[keyof PostEventErrors];
+
 export type PostEventResponses = {
     /**
      * The new event
@@ -1694,6 +2491,13 @@ export type PutEventData = {
 };
 
 export type PutEventErrors = {
+    /**
+     * The updated event expires before it starts
+     */
+    400: {
+        error: 'ExpiresBeforeStart';
+        message: 'The event expiration (exp) must be after its start time, or 0 for no expiration';
+    };
     /**
      * Couldn't find the event to update
      */
@@ -4683,5 +5487,5 @@ export type PostVersionIosByVersionResponses = {
 export type PostVersionIosByVersionResponse = PostVersionIosByVersionResponses[keyof PostVersionIosByVersionResponses];
 
 export type ClientOptions = {
-    baseUrl: 'https://adonix.hackillinois.org' | (string & {});
+    baseUrl: 'http://localhost:3000' | (string & {});
 };
