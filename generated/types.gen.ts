@@ -8,6 +8,7 @@ export type AdmissionDecision = {
     emailSent: boolean;
     reimbursementValue: number;
     correctProChallenge: boolean;
+    proChallengeScore: number;
 };
 
 export type AdmissionDecisionUpdate = {
@@ -15,6 +16,33 @@ export type AdmissionDecisionUpdate = {
     status: 'TBD' | 'ACCEPTED' | 'REJECTED' | 'WAITLISTED';
     admittedPro: boolean;
     reimbursementValue: number;
+};
+
+export type AiGradeRequest = {
+    limit?: number;
+    dryRun?: boolean;
+    /**
+     * Also pick applications whose earlier AI grading failed
+     */
+    retryFailed?: boolean;
+};
+
+export type AiGradeResponse = {
+    graded: number;
+    failed: number;
+    /**
+     * Applications already graded by AI
+     */
+    skipped: number;
+    dryRun: boolean;
+    /**
+     * Ungraded applications that failed earlier and are skipped unless `retryFailed` is true
+     */
+    previouslyFailed: number;
+    /**
+     * Graded (or, in a dry run, would-be graded) users
+     */
+    userIds: Array<UserId>;
 };
 
 export type Applicant = {
@@ -37,6 +65,18 @@ export type ApplicantEmails = {
 };
 
 export type ApplicantTag = 'IN_REVIEW' | 'ADMITTED' | 'ADMITTED_REIMBURSED' | 'WAITLISTED' | 'REJECTED';
+
+export type ApplicantTagUpdateRequest = {
+    tag: ApplicantTag;
+    /**
+     * Required (greater than 0) for ADMITTED_REIMBURSED, ignored for other tags
+     */
+    reimbursementValue?: number;
+};
+
+export type ApplicantTagUpdateResponse = AdmissionDecision & {
+    tag: ApplicantTag;
+};
 
 export type ApplicationReview = ApplicationReviewRequest & {
     reviewerId: UserId;
@@ -222,6 +262,21 @@ export type Ctf = {
     flag: string;
     points: number;
 };
+
+export type ChallengeGradeReport = {
+    instance: string;
+    score: number;
+    totalContracts: number;
+    completed: number;
+    onTime: number;
+    lateMinutes: number;
+    travelMinutes: number;
+    errors: Array<{
+        mercenary: string;
+        index: number;
+        message: string;
+    }>;
+} | null;
 
 export type CreateAttendeeTeamRequest = {
     name: string;
@@ -677,10 +732,25 @@ export type RegistrationApplicationSubmittedRequest = {
 };
 
 export type RegistrationChallengeStatus = {
-    inputFileId: string;
+    instanceId: string;
     attempts: number;
     complete: boolean;
+    bestScore: number;
+    /**
+     * bestScore divided by the reference score, or null if this instance isn't calibrated yet
+     */
+    normalizedScore: number | null;
+    /**
+     * normalizedScore needed to pass
+     */
+    passRatio: number;
+    lastReport: ChallengeGradeReport;
 };
+
+/**
+ * The Saloon Rush floor plan (world.json) assigned to this user
+ */
+export type RegistrationChallengeWorld = unknown;
 
 /**
  * If registration is currently open or not
@@ -964,6 +1034,34 @@ export type PutAdmissionAcceptResponses = {
 
 export type PutAdmissionAcceptResponse = PutAdmissionAcceptResponses[keyof PutAdmissionAcceptResponses];
 
+export type PostAdmissionAiGradeData = {
+    body?: AiGradeRequest;
+    path?: never;
+    query?: never;
+    url: '/admission/ai-grade/';
+};
+
+export type PostAdmissionAiGradeErrors = {
+    /**
+     * Lumen is not configured (only when dryRun is false)
+     */
+    503: {
+        error: 'AiGradingNotConfigured';
+        message: 'LUMEN_API_KEY, LUMEN_BASE_URL and LUMEN_MODEL must be set to grade with AI';
+    };
+};
+
+export type PostAdmissionAiGradeError = PostAdmissionAiGradeErrors[keyof PostAdmissionAiGradeErrors];
+
+export type PostAdmissionAiGradeResponses = {
+    /**
+     * The grading result
+     */
+    200: AiGradeResponse;
+};
+
+export type PostAdmissionAiGradeResponse = PostAdmissionAiGradeResponses[keyof PostAdmissionAiGradeResponses];
+
 export type GetAdmissionApplicantsData = {
     body?: never;
     path?: never;
@@ -1003,6 +1101,36 @@ export type GetAdmissionApplicantsEmailsResponses = {
 };
 
 export type GetAdmissionApplicantsEmailsResponse = GetAdmissionApplicantsEmailsResponses[keyof GetAdmissionApplicantsEmailsResponses];
+
+export type PutAdmissionApplicantsByIdTagData = {
+    body?: ApplicantTagUpdateRequest;
+    path: {
+        id: UserId;
+    };
+    query?: never;
+    url: '/admission/applicants/{id}/tag/';
+};
+
+export type PutAdmissionApplicantsByIdTagErrors = {
+    /**
+     * Couldn't find the application
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type PutAdmissionApplicantsByIdTagError = PutAdmissionApplicantsByIdTagErrors[keyof PutAdmissionApplicantsByIdTagErrors];
+
+export type PutAdmissionApplicantsByIdTagResponses = {
+    /**
+     * The applicant's tag and decision
+     */
+    200: ApplicantTagUpdateResponse;
+};
+
+export type PutAdmissionApplicantsByIdTagResponse = PutAdmissionApplicantsByIdTagResponses[keyof PutAdmissionApplicantsByIdTagResponses];
 
 export type GetAdmissionNotsentData = {
     body?: never;
@@ -3904,17 +4032,22 @@ export type PostRegistrationChallengeData = {
 export type PostRegistrationChallengeErrors = {
     /**
      * One of:
-     * - IncorrectSolution: Incorrect answer, try again
-     * - AlreadySolved: Already solved correctly
+     * - InvalidPlan: The plan couldn't be graded (bad JSON, wrong shape, wrong instance, unknown ids)
+     * - NoFileUploaded: No .json file was uploaded
+     * - NoChallengeFound: No registration or challenge exists yet
      *
      * **See examples dropdown below**
      */
     400: {
-        error: 'IncorrectSolution';
-        message: "That's not the correct answer, try again!";
+        error: 'InvalidPlan';
+        message: "Your plan.json couldn't be graded";
+        reason: string;
     } | {
-        error: 'AlreadySolved';
-        message: "You've already solved the challenge!";
+        error: 'NoFileUploaded';
+        message: 'Please upload your plan.json';
+    } | {
+        error: 'NoChallengeFound';
+        message: 'No challenge found. Please request a challenge first.';
     };
     /**
      * Registration is closed
@@ -3929,12 +4062,47 @@ export type PostRegistrationChallengeError = PostRegistrationChallengeErrors[key
 
 export type PostRegistrationChallengeResponses = {
     /**
-     * Successfully solved, the new challenge status is returned
+     * The plan was graded, the new challenge status is returned
      */
     200: RegistrationChallengeStatus;
 };
 
 export type PostRegistrationChallengeResponse = PostRegistrationChallengeResponses[keyof PostRegistrationChallengeResponses];
+
+export type GetRegistrationChallengeWorldData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/registration/challenge/world/';
+};
+
+export type GetRegistrationChallengeWorldErrors = {
+    /**
+     * You are not registered for this track
+     */
+    403: {
+        error: 'MissingPro';
+        message: 'You are not registered for this track';
+    };
+    /**
+     * Couldn't find your registration
+     */
+    404: {
+        error: 'NotFound';
+        message: "Couldn't find your registration";
+    };
+};
+
+export type GetRegistrationChallengeWorldError = GetRegistrationChallengeWorldErrors[keyof GetRegistrationChallengeWorldErrors];
+
+export type GetRegistrationChallengeWorldResponses = {
+    /**
+     * The floor plan, as world.json
+     */
+    200: RegistrationChallengeWorld;
+};
+
+export type GetRegistrationChallengeWorldResponse = GetRegistrationChallengeWorldResponses[keyof GetRegistrationChallengeWorldResponses];
 
 export type GetRegistrationDraftData = {
     body?: never;
