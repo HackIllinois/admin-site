@@ -3,19 +3,23 @@ import {
     AuthService,
     RegistrationService,
     ResumeService,
+    type Applicant,
     type ApplicantTag,
     type ApplicationReviewDetails,
     type RegistrationApplicationDraft,
     type UserInfo,
 } from "@/generated"
-import { tagToDecision } from "@/util/review-decision"
+import { resumeMessage } from "@/util/resume-status"
+import { tagRequest } from "@/util/review-decision"
 
 export type ReviewData = {
     id: string
     registration: RegistrationApplicationDraft
     details: ApplicationReviewDetails
     tag: ApplicantTag
+    reviewers: Applicant["reviewers"]
     resumeUrl: string | null
+    resumeError: string | null
     staff: UserInfo[]
     myId: string
 }
@@ -57,14 +61,18 @@ export async function loadReview(id: string): Promise<ReviewData> {
             ResumeService.getResumeDownloadById({ path: { id } }),
         ])
 
-    const applicantRows = unwrap(applicants)
+    const row = unwrap(applicants).find((a) => a.userId === id)
+    const resumeUrl = resume.error ? null : (resume.data?.url ?? null)
     return {
         id,
         registration: unwrap(registration),
         details: unwrap(details),
-        tag: applicantRows.find((a) => a.userId === id)?.tag ?? "IN_REVIEW",
+        tag: row?.tag ?? "IN_REVIEW",
+        // Pending (unscored) reviewers appear here, not in the review details.
+        reviewers: row?.reviewers ?? [],
         // A missing resume is not fatal; the page shows a note instead.
-        resumeUrl: resume.error ? null : (resume.data?.url ?? null),
+        resumeUrl,
+        resumeError: resumeUrl ? null : resumeMessage(resume.response?.status),
         staff: unwrap(staff).userInfo,
         myId: unwrap(me).id,
     }
@@ -100,14 +108,17 @@ export async function submitScore(
     )
 }
 
+// Sets the tag with the silent tag endpoint. It never emails the applicant.
 export async function submitTag(
     id: string,
     tag: ApplicantTag,
     reimbursement: number,
-) {
-    unwrap(
-        await AdmissionService.putAdmissionUpdate({
-            body: [{ userId: id, ...tagToDecision(tag, reimbursement) }],
+): Promise<ApplicantTag> {
+    const updated = unwrap(
+        await AdmissionService.putAdmissionApplicantsByIdTag({
+            path: { id },
+            body: tagRequest(tag, reimbursement),
         }),
     )
+    return updated.tag
 }

@@ -1,56 +1,16 @@
-import type { AdmissionDecisionUpdate, ApplicantTag } from "@/generated"
+import type { ApplicantTag, ApplicantTagUpdateRequest } from "@/generated"
 
 export type ScoreMode = "keep" | "change"
-export type DecisionBody = Omit<AdmissionDecisionUpdate, "userId">
 
-export function tagToDecision(
+// Body for PUT /admission/applicants/{id}/tag/. Only ADMITTED_REIMBURSED
+// takes an amount.
+export function tagRequest(
     tag: ApplicantTag,
     reimbursement: number,
-): DecisionBody {
-    switch (tag) {
-        case "IN_REVIEW":
-            return { status: "TBD", admittedPro: false, reimbursementValue: 0 }
-        case "ADMITTED":
-            return {
-                status: "ACCEPTED",
-                admittedPro: false,
-                reimbursementValue: 0,
-            }
-        case "ADMITTED_REIMBURSED":
-            return {
-                status: "ACCEPTED",
-                admittedPro: false,
-                reimbursementValue: reimbursement,
-            }
-        case "WAITLISTED":
-            return {
-                status: "WAITLISTED",
-                admittedPro: false,
-                reimbursementValue: 0,
-            }
-        case "REJECTED":
-            return {
-                status: "REJECTED",
-                admittedPro: false,
-                reimbursementValue: 0,
-            }
-    }
-}
-
-export function decisionToTag(
-    status: AdmissionDecisionUpdate["status"],
-    reimbursementValue: number,
-): ApplicantTag {
-    switch (status) {
-        case "TBD":
-            return "IN_REVIEW"
-        case "ACCEPTED":
-            return reimbursementValue > 0 ? "ADMITTED_REIMBURSED" : "ADMITTED"
-        case "WAITLISTED":
-            return "WAITLISTED"
-        case "REJECTED":
-            return "REJECTED"
-    }
+): ApplicantTagUpdateRequest {
+    return tag === "ADMITTED_REIMBURSED"
+        ? { tag, reimbursementValue: reimbursement }
+        : { tag }
 }
 
 function isValidScore(n: number | null): n is number {

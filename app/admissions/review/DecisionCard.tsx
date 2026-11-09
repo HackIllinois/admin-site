@@ -1,15 +1,9 @@
 import type { ApplicantTag, UserInfo } from "@/generated"
 import { APPLICANT_TAGS } from "@/util/applicant-tags"
 import { canRemoveReviewer, reviewerStatus } from "@/util/review-decision"
+import type { ReviewerRow } from "@/util/review-reviewers"
 import { TagPill } from "./TagPill"
 import styles from "./style.module.scss"
-
-export type ReviewerRow = {
-    reviewerId: string
-    name: string
-    score: number | null
-    isMe: boolean
-}
 
 type Props = {
     tag: ApplicantTag

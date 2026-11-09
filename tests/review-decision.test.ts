@@ -5,40 +5,23 @@ import {
     isEdited,
     parseReimbursement,
     scoreToSubmit,
-    tagToDecision,
-    decisionToTag,
+    tagRequest,
     reviewerStatus,
     canRemoveReviewer,
     shouldSendDecision,
 } from "../util/review-decision"
 
-test("tagToDecision maps each tag to the update body", () => {
-    assert.deepEqual(tagToDecision("IN_REVIEW", 0), {
-        status: "TBD",
-        admittedPro: false,
-        reimbursementValue: 0,
-    })
-    assert.deepEqual(tagToDecision("ADMITTED", 99), {
-        status: "ACCEPTED",
-        admittedPro: false,
-        reimbursementValue: 0,
-    })
-    assert.deepEqual(tagToDecision("ADMITTED_REIMBURSED", 150), {
-        status: "ACCEPTED",
-        admittedPro: false,
-        reimbursementValue: 150,
-    })
-    assert.equal(tagToDecision("WAITLISTED", 5).status, "WAITLISTED")
-    assert.equal(tagToDecision("WAITLISTED", 5).reimbursementValue, 0)
-    assert.equal(tagToDecision("REJECTED", 5).status, "REJECTED")
+test("tagRequest sends the tag alone for tags without an amount", () => {
+    assert.deepEqual(tagRequest("IN_REVIEW", 99), { tag: "IN_REVIEW" })
+    assert.deepEqual(tagRequest("ADMITTED", 99), { tag: "ADMITTED" })
+    assert.deepEqual(tagRequest("REJECTED", 5), { tag: "REJECTED" })
 })
 
-test("decisionToTag is the reverse mapping", () => {
-    assert.equal(decisionToTag("TBD", 0), "IN_REVIEW")
-    assert.equal(decisionToTag("ACCEPTED", 0), "ADMITTED")
-    assert.equal(decisionToTag("ACCEPTED", 40), "ADMITTED_REIMBURSED")
-    assert.equal(decisionToTag("WAITLISTED", 0), "WAITLISTED")
-    assert.equal(decisionToTag("REJECTED", 0), "REJECTED")
+test("tagRequest sends the amount with ADMITTED_REIMBURSED", () => {
+    assert.deepEqual(tagRequest("ADMITTED_REIMBURSED", 150), {
+        tag: "ADMITTED_REIMBURSED",
+        reimbursementValue: 150,
+    })
 })
 
 test("scoreToSubmit: keep sends the AI score", () => {

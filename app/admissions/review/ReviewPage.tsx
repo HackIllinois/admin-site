@@ -9,6 +9,8 @@ import {
     isEdited,
     type ScoreMode,
 } from "@/util/review-decision"
+import { mergeReviewComment, parseReviewComment } from "@/util/review-comment"
+import { reviewerRows } from "@/util/review-reviewers"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
@@ -22,7 +24,7 @@ import {
     submitTag,
     type ReviewData,
 } from "./api"
-import { DecisionCard, type ReviewerRow } from "./DecisionCard"
+import { DecisionCard } from "./DecisionCard"
 import { ScoreCard } from "./ScoreCard"
 import { TagPill } from "./TagPill"
 import styles from "./style.module.scss"
@@ -67,7 +69,8 @@ export function ReviewPage() {
         setData(d)
         setTag(d.tag)
         setReimbursement("")
-        setNotes("")
+        // Earlier notes load into the box, so saving edits them, not erases them.
+        setNotes(parseReviewComment(mine?.comment).notes)
         setReason("")
         setSaveError(null)
         if (ai !== null && (myScore === null || myScore === ai)) {
@@ -131,7 +134,15 @@ export function ReviewPage() {
     const refreshReviewers = useCallback(async () => {
         if (!data) return
         const fresh = await loadReview(data.id)
-        setData((prev) => (prev ? { ...prev, details: fresh.details } : prev))
+        setData((prev) =>
+            prev
+                ? {
+                      ...prev,
+                      details: fresh.details,
+                      reviewers: fresh.reviewers,
+                  }
+                : prev,
+        )
     }, [data])
 
     const changeReviewer = async (action: () => Promise<void>) => {
@@ -170,23 +181,21 @@ export function ReviewPage() {
             amount = parsed
         }
 
-        const edited = isEdited(mode, details.aiScore, picked)
-        const comment =
-            [
-                edited && reason.trim()
-                    ? `Score changed: ${reason.trim()}`
-                    : "",
-                notes.trim() ? `Notes: ${notes.trim()}` : "",
-            ]
-                .filter(Boolean)
-                .join("\n\n") || undefined
+        const mine = details.reviews.find((x) => x.reviewerId === data.myId)
+        const comment = mergeReviewComment(mine?.comment, {
+            edited: isEdited(mode, details.aiScore, picked),
+            reason,
+            notes,
+        })
 
         setSaving(true)
         setSaveError(null)
         try {
             await submitScore(data.id, score, comment)
             if (shouldSendDecision(data.tag, tag, reimbursement)) {
-                await submitTag(data.id, tag, amount)
+                const saved = await submitTag(data.id, tag, amount)
+                setTag(saved)
+                setData((prev) => (prev ? { ...prev, tag: saved } : prev))
             }
             router.push("/admissions/review")
         } catch (e) {
@@ -219,12 +228,7 @@ export function ReviewPage() {
     const reg = data.registration
     const fullName = [reg.firstName, reg.lastName].filter(Boolean).join(" ")
     const names = new Map(data.staff.map((u) => [u.userId, u.name]))
-    const reviewers: ReviewerRow[] = data.details.reviews.map((r) => ({
-        reviewerId: r.reviewerId,
-        name: names.get(r.reviewerId) ?? r.reviewerId,
-        score: typeof r.score === "number" ? r.score : null,
-        isMe: r.reviewerId === data.myId,
-    }))
+    const reviewers = reviewerRows(data.reviewers, names, data.myId)
     const assigned = new Set(reviewers.map((r) => r.reviewerId))
     const addable = data.staff.filter((u) => !assigned.has(u.userId))
 
@@ -299,7 +303,7 @@ export function ReviewPage() {
                             </div>
                         ) : (
                             <p className={styles.placeholder}>
-                                No resume found for this applicant.
+                                {data.resumeError}
                             </p>
                         )}
                     </div>
