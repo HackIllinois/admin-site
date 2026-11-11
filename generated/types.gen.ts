@@ -52,6 +52,10 @@ export type Applicant = {
     school: string;
     reviewers: Array<{
         reviewerId: UserId;
+        /**
+         * The reviewer's name, or null if unknown
+         */
+        name: string | null;
         score: number | null;
     }>;
     aiScore: number | null;
