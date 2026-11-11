@@ -11,6 +11,7 @@ import {
     reviewerOptions,
     tagCounts,
     TagFilter,
+    aiScoreText,
 } from "@/util/admissions-list"
 import styles from "./style.module.scss"
 
@@ -297,10 +298,14 @@ export default function Admissions() {
                                                 : "Unassigned"}
                                         </span>
                                         <span
-                                            className={styles.score}
+                                            className={
+                                                r.aiGradeFailed
+                                                    ? styles.aiFailed
+                                                    : styles.score
+                                            }
                                             role="cell"
                                         >
-                                            {scoreText(r.aiScore)}
+                                            {aiScoreText(r)}
                                         </span>
                                         <span
                                             className={styles.finalCell}

@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import { test } from "node:test"
 import type { Applicant } from "../generated"
 import {
+    aiScoreText,
     computeStats,
     filterApplicants,
     reviewerOptions,
@@ -16,6 +17,7 @@ function row(over: Partial<Applicant>): Applicant {
         school: "UIUC",
         reviewers: [],
         aiScore: null,
+        aiGradeFailed: false,
         finalScore: null,
         edited: false,
         tag: "IN_REVIEW",
@@ -125,4 +127,13 @@ test("reviewerOptions lists All, Unassigned, then sorted unique ids", () => {
         { value: "r1", label: "r1" },
         { value: "r2", label: "r2" },
     ])
+})
+
+test("aiScoreText shows the AI score, a dash when ungraded, and AI failed after a failed grade", () => {
+    assert.equal(aiScoreText(row({ aiScore: 4 })), "4")
+    assert.equal(aiScoreText(row({ aiScore: null })), "—")
+    assert.equal(
+        aiScoreText(row({ aiScore: null, aiGradeFailed: true })),
+        "AI failed",
+    )
 })

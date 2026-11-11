@@ -79,3 +79,8 @@ export function reviewerOptions(
         ...[...ids].sort().map((id) => ({ value: id, label: id })),
     ]
 }
+
+export function aiScoreText(row: Applicant): string {
+    if (row.aiScore !== null) return String(row.aiScore)
+    return row.aiGradeFailed ? "AI failed" : "—"
+}
