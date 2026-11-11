@@ -21,10 +21,6 @@ export type AdmissionDecisionUpdate = {
 export type AiGradeRequest = {
     limit?: number;
     dryRun?: boolean;
-    /**
-     * Also pick applications whose earlier AI grading failed
-     */
-    retryFailed?: boolean;
 };
 
 export type AiGradeResponse = {
@@ -36,9 +32,13 @@ export type AiGradeResponse = {
     skipped: number;
     dryRun: boolean;
     /**
-     * Ungraded applications that failed earlier and are skipped unless `retryFailed` is true
+     * Applications picked again in this run because an earlier attempt failed
      */
-    previouslyFailed: number;
+    retried: number;
+    /**
+     * Ungraded applications that reached the maximum failed attempts and are never picked again
+     */
+    gaveUp: number;
     /**
      * Graded (or, in a dry run, would-be graded) users
      */
@@ -57,6 +57,10 @@ export type Applicant = {
     aiScore: number | null;
     finalScore: number | null;
     edited: boolean;
+    /**
+     * AI grading failed and the application has no AI score
+     */
+    aiGradeFailed: boolean;
     tag: ApplicantTag;
 };
 
