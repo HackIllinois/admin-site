@@ -71,13 +71,22 @@ export function tagCounts(
 export function reviewerOptions(
     rows: Applicant[],
 ): { value: string; label: string }[] {
-    const ids = new Set<string>()
-    for (const r of rows) for (const v of r.reviewers) ids.add(v.reviewerId)
+    const labels = new Map<string, string>()
+    for (const r of rows)
+        for (const v of r.reviewers)
+            if (!labels.has(v.reviewerId) || v.name)
+                labels.set(v.reviewerId, v.name ?? v.reviewerId)
     return [
         { value: "all", label: "All reviewers" },
         { value: "none", label: "Unassigned" },
-        ...[...ids].sort().map((id) => ({ value: id, label: id })),
+        ...[...labels.keys()]
+            .sort()
+            .map((id) => ({ value: id, label: labels.get(id)! })),
     ]
+}
+
+export function reviewerNames(row: Applicant): string {
+    return row.reviewers.map((v) => v.name ?? v.reviewerId).join(", ")
 }
 
 export function aiScoreText(row: Applicant): string {

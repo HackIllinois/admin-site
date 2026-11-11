@@ -8,6 +8,7 @@ import { tagLabel, tagStyle, APPLICANT_TAGS } from "@/util/applicant-tags"
 import {
     computeStats,
     filterApplicants,
+    reviewerNames,
     reviewerOptions,
     tagCounts,
     TagFilter,
@@ -292,9 +293,7 @@ export default function Admissions() {
                                             role="cell"
                                         >
                                             {r.reviewers.length
-                                                ? r.reviewers
-                                                      .map((v) => v.reviewerId)
-                                                      .join(", ")
+                                                ? reviewerNames(r)
                                                 : "Unassigned"}
                                         </span>
                                         <span

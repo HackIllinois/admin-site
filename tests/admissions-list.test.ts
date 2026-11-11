@@ -5,6 +5,7 @@ import {
     aiScoreText,
     computeStats,
     filterApplicants,
+    reviewerNames,
     reviewerOptions,
     tagCounts,
 } from "../util/admissions-list"
@@ -28,7 +29,7 @@ function row(over: Partial<Applicant>): Applicant {
 const rows: Applicant[] = [
     row({
         userId: "a",
-        reviewers: [{ reviewerId: "r1", score: 4 }],
+        reviewers: [{ reviewerId: "r1", name: "Rae Reviewer", score: 4 }],
         aiScore: 4,
         edited: true,
         tag: "ADMITTED",
@@ -39,8 +40,8 @@ const rows: Applicant[] = [
         email: "marcusj@example.com",
         school: "Purdue University",
         reviewers: [
-            { reviewerId: "r2", score: null },
-            { reviewerId: "r1", score: null },
+            { reviewerId: "r2", name: null, score: null },
+            { reviewerId: "r1", name: "Rae Reviewer", score: null },
         ],
         aiScore: 3,
     }),
@@ -120,11 +121,11 @@ test("tagCounts reflect the reviewer filter", () => {
     assert.equal(tagCounts(rows, "none").all, 1)
 })
 
-test("reviewerOptions lists All, Unassigned, then sorted unique ids", () => {
+test("reviewerOptions lists All, Unassigned, then unique reviewers sorted by id, labeled by name or id", () => {
     assert.deepEqual(reviewerOptions(rows), [
         { value: "all", label: "All reviewers" },
         { value: "none", label: "Unassigned" },
-        { value: "r1", label: "r1" },
+        { value: "r1", label: "Rae Reviewer" },
         { value: "r2", label: "r2" },
     ])
 })
@@ -135,5 +136,19 @@ test("aiScoreText shows the AI score, a dash when ungraded, and AI failed after 
     assert.equal(
         aiScoreText(row({ aiScore: null, aiGradeFailed: true })),
         "AI failed",
+    )
+})
+
+test("reviewerNames shows names, with the id when the name is unknown", () => {
+    assert.equal(
+        reviewerNames(
+            row({
+                reviewers: [
+                    { reviewerId: "r1", name: "Rae Reviewer", score: 4 },
+                    { reviewerId: "r9", name: null, score: null },
+                ],
+            }),
+        ),
+        "Rae Reviewer, r9",
     )
 })
