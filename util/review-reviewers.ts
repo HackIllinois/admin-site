@@ -15,7 +15,7 @@ export function reviewerRows(
 ): ReviewerRow[] {
     return (reviewers ?? []).map((r) => ({
         reviewerId: r.reviewerId,
-        name: names.get(r.reviewerId) ?? r.reviewerId,
+        name: r.name ?? names.get(r.reviewerId) ?? r.reviewerId,
         score: r.score,
         isMe: r.reviewerId === myId,
     }))

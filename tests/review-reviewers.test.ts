@@ -10,8 +10,8 @@ const names = new Map([
 test("reviewerRows shows pending reviewers as null score", () => {
     const rows = reviewerRows(
         [
-            { reviewerId: "a", score: 4 },
-            { reviewerId: "b", score: null },
+            { reviewerId: "a", name: null, score: 4 },
+            { reviewerId: "b", name: null, score: null },
         ],
         names,
         "b",
@@ -23,10 +23,23 @@ test("reviewerRows shows pending reviewers as null score", () => {
 })
 
 test("reviewerRows falls back to the id for unknown staff", () => {
-    const rows = reviewerRows([{ reviewerId: "z", score: null }], names, "a")
+    const rows = reviewerRows(
+        [{ reviewerId: "z", name: null, score: null }],
+        names,
+        "a",
+    )
     assert.equal(rows[0].name, "z")
 })
 
 test("reviewerRows is empty for a missing list", () => {
     assert.deepEqual(reviewerRows(undefined, names, "a"), [])
+})
+
+test("reviewerRows prefers the name from the applicant list", () => {
+    const rows = reviewerRows(
+        [{ reviewerId: "a", name: "Ada Lovelace", score: null }],
+        names,
+        "b",
+    )
+    assert.equal(rows[0].name, "Ada Lovelace")
 })
