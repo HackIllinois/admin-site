@@ -51,6 +51,136 @@
         }
     }
 
+    .tagPicker {
+        margin-bottom: 8px;
+    }
+
+    .tagChips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .tagChip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 20px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        background: $surface;
+        color: $text-nav;
+        border: 1px solid $border-input;
+
+        &:focus-visible {
+            outline: 2px solid $accent;
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    }
+
+    .tagChipOn {
+        background: #fff8f3;
+        color: $text;
+        border-color: #efb394;
+    }
+
+    .tagDot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .tagCount {
+        font-family: $font-mono;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+    .tagTotal {
+        margin: 10px 0 0;
+        font-size: 13px;
+        color: $text-muted;
+
+        strong {
+            font-family: $font-mono;
+            font-weight: 500;
+            color: $text;
+        }
+    }
+
+    .mailingLists {
+        background: $surface;
+        border: 1px solid $border;
+        border-radius: $radius-card;
+        padding: 22px;
+        margin-bottom: 16px;
+
+        h2 {
+            margin: 0 0 8px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: $text-subtle;
+        }
+    }
+
+    .listRow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid $border;
+        flex-wrap: wrap;
+
+        button {
+            height: 36px;
+            padding: 0 10px;
+            border-radius: $radius-control;
+            border: 1px solid $border-input;
+            background: $surface;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            color: $text;
+            cursor: pointer;
+
+            &:hover {
+                background: $hover-bg;
+            }
+
+            &:focus-visible {
+                outline: 2px solid $accent;
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    .listInfo {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .listName {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .listMeta {
+        font-size: 12px;
+        color: $text-subtle;
+    }
+
     .sendHint {
         color: #666;
         font-size: 13px;
@@ -174,6 +304,23 @@
         color: $red;
         font-weight: bold;
         margin-top: 12px;
+    }
+
+    .skippedNotice {
+        margin-top: 12px;
+        color: #444;
+        font-size: 0.95em;
+
+        strong {
+            color: $red;
+        }
+
+        ul {
+            margin: 4px 0 0 20px;
+            padding: 0;
+            font-size: 0.9em;
+            overflow-wrap: anywhere;
+        }
     }
 
     .successMessage {
