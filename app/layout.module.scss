@@ -1,19 +1,31 @@
-@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap");
+@use "./constants.scss" as *;
 
 .body {
     margin: 0;
+    min-height: 100vh;
     display: flex;
-    font-family: "Montserrat", "Segoe UI", "Roboto", sans-serif;
+    flex-direction: column;
+    background: $page-bg;
+    color: $text;
+    font-family: $font-ui;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
     max-width: 100%;
+}
+
+.shell {
+    display: flex;
+    flex: 1;
+    min-width: 0;
 
     main {
         min-width: 0; // Allows content to shrink down
         flex: 1; // Makes content fill remaining space
-        padding: 30px;
-        max-height: 100vh;
+        padding: 28px 32px 48px;
         box-sizing: border-box;
+
+        @include phone {
+            padding: 20px 16px 40px;
+        }
     }
 }
