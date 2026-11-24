@@ -3,6 +3,7 @@ import { UserService } from "@/generated"
 import { initialsOf } from "@/util/nav-groups"
 import { faBars } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import Image from "next/image"
 import { useEffect, useState } from "react"
 import styles from "./Header.module.scss"
 
@@ -30,30 +31,16 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
                 >
                     <FontAwesomeIcon icon={faBars} fixedWidth />
                 </button>
-                <svg
-                    width="22"
-                    height="26"
-                    viewBox="0 0 22 26"
+                <Image
+                    src="/hack_logo.png"
+                    alt=""
+                    width={673}
+                    height={1001}
+                    className={styles.logo}
                     aria-hidden="true"
-                >
-                    <rect
-                        x="2"
-                        y="0"
-                        width="18"
-                        height="6"
-                        rx="1"
-                        fill="#F29A2E"
-                    />
-                    <rect x="7" y="6" width="8" height="14" fill="#E8692C" />
-                    <rect
-                        x="0"
-                        y="20"
-                        width="22"
-                        height="6"
-                        rx="1"
-                        fill="#F29A2E"
-                    />
-                </svg>
+                    priority
+                    unoptimized
+                />
                 <span className={styles.title}>HackIllinois</span>
                 <span className={styles.slash} aria-hidden="true">
                     /
