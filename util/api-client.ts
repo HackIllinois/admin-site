@@ -2,6 +2,7 @@ import { AuthService, Provider, Role } from "@/generated"
 import { client } from "@/generated/client.gen"
 import { RequestResult } from "@hey-api/client-fetch"
 import { useEffect, useState } from "react"
+import { getSignInUrl, isLocalApi } from "@/util/auth"
 
 // If the error provided is an authentication error, authenticate
 function handleAuthErrors(error: unknown): boolean {
@@ -40,18 +41,12 @@ export function setupClient() {
 
 // Redirects to authentication url
 export function authenticate(provider: Provider = "google") {
-    const isLocal = process.env.NEXT_PUBLIC_API_URL !== undefined
-
-    if (isLocal) {
-        if (window.location.pathname !== "/account") {
-            window.location.replace("/account")
-        }
+    if (isLocalApi() && window.location.pathname === "/account") {
         return
     }
-
-    const redirectURI = window.location.toString()
-    const authURL = `${client.getConfig().baseUrl}/auth/login/${provider}?redirect=${redirectURI}`
-    window.location.replace(authURL)
+    window.location.replace(
+        getSignInUrl(new URL(window.location.toString()), provider),
+    )
 }
 
 // Handles errors with alert dialog, returns data if no error
